@@ -11,7 +11,9 @@ This document is the **single source of truth** for all technical decisions in t
 3. [Relational Database Schema](#3-relational-database-schema)
 4. [Monorepo File Structure](#4-monorepo-file-structure)
 5. [Critical Implementation Details](#5-critical-implementation-details)
-6. [Guiding Principles](#6-guiding-principles)
+6. [Additional Architecture Decisions](#6-additional-architecture-decisions)
+7. [Guiding Principles](#7-guiding-principles)
+8. [Responsive Layout Architecture](#8-responsive-layout-architecture)
 
 ---
 
@@ -554,3 +556,141 @@ These are **non-negotiables** that must be respected in every PR.
 | 5 | **Pooled connections only.** Never use Supabase's direct connection string in serverless functions. | Supavisor prevents connection exhaustion under load. |
 | 6 | **Two-phase migrations.** Never drop a column in a single deploy. | Guarantees zero-downtime deployments and instant rollback. |
 | 7 | **Canvas crashes are contained.** Error Boundaries wrap the canvas, not the page. | Users never lose access to navigation or sidebar on canvas failure. |
+| 8 | **Mobile-first layouts.** All dashboard components are designed for the smallest screen first. Desktop enhancements are progressive overrides. | Ensures a quality experience for the majority of users on mobile devices. |
+
+---
+
+## 8. Responsive Layout Architecture
+
+> **Cross-reference:** See [UI_STYLE_GUIDE.md](./UI_STYLE_GUIDE.md) for the full design system, color palette, breakpoint strategy, and component patterns.
+
+The dashboard uses a **shell-based responsive layout** that composes four components — `DashboardShell`, `Sidebar`, `BottomNav`, and `MobileDrawer` — to provide the correct navigation experience at every screen size.
+
+### Component Roles
+
+| Component | Rendered On | Description |
+|---|---|---|
+| `DashboardShell` | All screens | Root wrapper. Composes all layout pieces. Sets `h-[100dvh]`. |
+| `Sidebar` | `md`+ (desktop) | Fixed left sidebar, 256px wide, icon + label navigation |
+| `BottomNav` | `< md` (mobile) | Fixed bottom tab bar with 5 primary tabs |
+| `MobileDrawer` | `< md` (mobile) | Top bar hamburger → shadcn `Sheet` sliding from the left with full nav |
+
+### File Structure
+
+```
+apps/web/src/
+├── app/
+│   └── (dashboard)/
+│       ├── layout.tsx          # Wraps all dashboard pages in DashboardShell
+│       └── page.tsx            # Dashboard home page
+│
+└── features/
+    └── dashboard/
+        ├── components/
+        │   ├── DashboardShell.tsx
+        │   ├── Sidebar.tsx
+        │   ├── BottomNav.tsx
+        │   └── MobileDrawer.tsx
+        └── index.ts            # Barrel export
+```
+
+### `(dashboard)/layout.tsx`
+
+```tsx
+import { DashboardShell } from '@/features/dashboard/components/DashboardShell';
+
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  return <DashboardShell>{children}</DashboardShell>;
+}
+```
+
+### `DashboardShell.tsx`
+
+```tsx
+'use client';
+import { ReactNode } from 'react';
+import { Sidebar } from './Sidebar';
+import { BottomNav } from './BottomNav';
+import { MobileDrawer } from './MobileDrawer';
+
+interface DashboardShellProps {
+  children: ReactNode;
+}
+
+export function DashboardShell({ children }: DashboardShellProps) {
+  return (
+    <div className="flex h-[100dvh] flex-col md:flex-row">
+      <aside className="hidden md:flex md:w-64 md:flex-col md:border-r">
+        <Sidebar />
+      </aside>
+      <header className="flex items-center justify-between border-b px-4 py-3 md:hidden">
+        <MobileDrawer />
+        <h1 className="text-lg font-semibold">Memory Palace</h1>
+        <button className="rounded-full p-2">🔔</button>
+      </header>
+      <main className="flex-1 overflow-y-auto pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+          {children}
+        </div>
+      </main>
+      <nav className="fixed inset-x-0 bottom-0 z-50 border-t bg-background pb-[env(safe-area-inset-bottom)] md:hidden">
+        <BottomNav />
+      </nav>
+    </div>
+  );
+}
+```
+
+**Key decisions:**
+- `h-[100dvh]` — dynamic viewport height handles mobile browser chrome correctly (see [UI_STYLE_GUIDE.md §1](./UI_STYLE_GUIDE.md#1-mobile-first-design-strategy))
+- `pb-[calc(4rem+env(safe-area-inset-bottom))]` — main content scrolls above the bottom nav + iOS home indicator
+- `pb-[env(safe-area-inset-bottom)]` — bottom nav itself pads for the iOS home indicator
+
+### `BottomNav.tsx`
+
+```tsx
+'use client';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Home, Calendar, Gamepad2, Trophy, Map } from 'lucide-react';
+import { cn } from '@/shared/utils/cn';
+
+const tabs = [
+  { href: '/',         icon: Home,      label: 'Home' },
+  { href: '/daily',    icon: Calendar,  label: 'Daily' },
+  { href: '/games',    icon: Gamepad2,  label: 'Games' },
+  { href: '/progress', icon: Trophy,    label: 'Progress' },
+  { href: '/palace',   icon: Map,       label: 'Palaces' },
+];
+
+export function BottomNav() {
+  const pathname = usePathname();
+  return (
+    <div className="flex h-16 items-center justify-around">
+      {tabs.map(({ href, icon: Icon, label }) => {
+        const isActive = pathname === href || pathname.startsWith(href + '/');
+        return (
+          <Link
+            key={href}
+            href={href}
+            className={cn(
+              'flex flex-col items-center justify-center gap-0.5 px-3 py-2',
+              'min-w-[48px] min-h-[48px]',
+              'transition-colors duration-150',
+              isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+            )}
+          >
+            <Icon className="h-5 w-5" strokeWidth={isActive ? 2.5 : 2} />
+            <span className="text-[0.625rem] font-medium leading-none">{label}</span>
+          </Link>
+        );
+      })}
+    </div>
+  );
+}
+```
+
+**Key decisions:**
+- `min-w-[48px] min-h-[48px]` — meets Apple HIG and Material Design 48px minimum touch target requirement
+- Active state uses `strokeWidth={2.5}` for a bold filled feel without needing separate icon variants
+- `text-[0.625rem]` (10px) labels — small enough to not compete with icons on narrow screens
