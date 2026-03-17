@@ -43,6 +43,9 @@ Goal: Stand up the full monorepo structure and prove that a user can authenticat
 - [ ] **Mobile-first responsive shell** — `DashboardShell`, `BottomNav`, `Sidebar`, `MobileDrawer` components (see [ARCHITECTURE.md §8](./ARCHITECTURE.md#8-responsive-layout-architecture))
 - [ ] **`viewport-fit=cover` meta tag** and safe area CSS setup in root `layout.tsx`
 - [ ] **Bottom navigation component** with 5 primary tabs (Home, Daily, Games, Progress, Palaces)
+- [ ] Install and configure `next-themes` for dark/light mode with `prefers-color-scheme` detection
+- [ ] Add dark mode CSS custom properties to `globals.css` (see [UI_STYLE_GUIDE.md §10](./UI_STYLE_GUIDE.md#10-dark-mode-best-practices))
+- [ ] Dark mode toggle in header and command palette
 
 ### Deliverable
 
@@ -71,6 +74,8 @@ Goal: Build the complete data layer with security guarantees.
 - [ ] **Palace card grid** with responsive layout (`grid-cols-1 md:grid-cols-2 lg:grid-cols-3`)
 - [ ] **Skeleton loading states** for all data-fetching views (palace list, room list, node list)
 - [ ] **Touch-friendly card components** — all interactive elements minimum 48px touch targets
+- [ ] `EmptyState` component for all list views (palaces, rooms, nodes, search results)
+- [ ] Empty state illustrations and copy for each view (see [UI_STYLE_GUIDE.md §12](./UI_STYLE_GUIDE.md#12-empty-states))
 
 ### Deliverable
 
@@ -107,6 +112,16 @@ Goal: Build the interactive canvas with real-time sync and offline support.
 - [ ] **Bottom sheet node editor on mobile** — node editing via shadcn `Sheet` (`side="bottom"`) on `< md` screens
 - [ ] **Full-screen takeover mode** for canvas — hide all navigation during canvas editing session
 - [ ] **Larger node touch targets** on mobile (`min-w-[60px] min-h-[60px]`)
+- [ ] Install `kbar` and implement command palette with core navigation + creation actions (see [UI_STYLE_GUIDE.md §8](./UI_STYLE_GUIDE.md#8-command-palette-cmdk))
+- [ ] Keyboard shortcuts system: navigation (`g+h`, `g+d`, `g+p`), canvas (`Space`, `Delete`, `Cmd+Z`), global (`Cmd+K`, `?`, `Esc`) (see [UI_STYLE_GUIDE.md §9](./UI_STYLE_GUIDE.md#9-keyboard-shortcuts-system))
+- [ ] Keyboard shortcuts overlay modal triggered by `?` key
+- [ ] Canvas floating contextual toolbar on node selection (see [UI_STYLE_GUIDE.md §13](./UI_STYLE_GUIDE.md#13-canvas-specific-ux-patterns))
+- [ ] Canvas multi-select with lasso (click+drag on empty area)
+- [ ] Canvas snap-to-grid toggle (`G` key) with alignment guides
+- [ ] Canvas right-click context menu for nodes, edges, and empty canvas
+- [ ] Canvas undo/redo with Yjs `UndoManager` + `Cmd+Z`/`Cmd+Shift+Z`
+- [ ] Canvas fit-to-content (`F` key) and zoom shortcuts (`Cmd+0`, `Cmd++`, `Cmd+-`)
+- [ ] Install `framer-motion` for page transitions and node enter/exit animations
 
 ### Deliverable
 
@@ -141,6 +156,9 @@ Goal: Make the app production-ready — monitored, tested, accessible, and ready
 - [ ] **Public landing page** (`/`) — hero section, feature cards, stats bar, CTA (see [FEATURES.md §7.1](./FEATURES.md#71-landing-page-))
 - [ ] **About page** (`/about`) — Memory Palace technique explainer, team, GitHub link
 - [ ] **Onboarding wizard** (`/join`) — step-by-step signup flow with stepper UI (see [FEATURES.md §7.3](./FEATURES.md#73-join--onboarding-wizard-join))
+- [ ] Interactive onboarding tutorial for first-time users (5-step guided flow)
+- [ ] Contextual tooltips system (show-once per feature)
+- [ ] Shortcut coaching hints after repeated manual actions
 
 ### Deliverable
 
@@ -185,6 +203,16 @@ Goal: Drive daily retention with TalantulApp-inspired engagement mechanics adapt
 - [ ] Activity history charts (daily/weekly/monthly) using `recharts` or equivalent
 - [ ] Personal best records stored per user (best score, best time, highest streak)
 - [ ] Progress page (`/progress`) with all stats, rings, charts, and achievement badges
+- [ ] **Spaced repetition engine** — SM-2 algorithm for node review scheduling (Again/Hard/Good/Easy ratings)
+- [ ] **Node maturity badges** — 🔴 New → 🟡 Learning → 🟢 Known → 💎 Mastered (displayed on canvas and study mode)
+- [ ] **Review queue** on dashboard — "X nodes due today" with estimated time
+- [ ] **Leech detection** — flag nodes failed >5 times as "Difficult" with ⚠️ badge
+- [ ] **Retention heatmap** — GitHub-style calendar showing daily review activity (CSS Grid, green intensity scale)
+- [ ] **Review forecast chart** — bar chart showing predicted review workload for next 7 days (`recharts`)
+- [ ] **Palace mastery donut charts** — per-palace breakdown of New/Learning/Known/Mastered nodes
+- [ ] **Backlinks panel** — "What links to this node?" sidebar showing all incoming edges
+- [ ] **Node reference syntax** — `[[Node Name]]` autocomplete in node content creates edges
+- [ ] **Orphan node detection** — dashboard widget highlighting unconnected nodes
 
 #### Study Mode
 - [ ] Browse nodes by palace → room hierarchy at `/study`

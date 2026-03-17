@@ -16,6 +16,10 @@ This document defines all features of the Memory Palace App, including core func
 6. [Review Generator](#6-review-generator)
 7. [Public Pages](#7-public-pages)
 8. [Canvas Features](#8-canvas-features-react-flow)
+9. [Spaced Repetition Engine](#9-spaced-repetition-engine)
+10. [Retention & Activity Visualization](#10-retention--activity-visualization)
+11. [Onboarding & Progressive Disclosure](#11-onboarding--progressive-disclosure)
+12. [Backlinks & Node Connections](#12-backlinks--node-connections)
 
 ---
 
@@ -329,3 +333,204 @@ When editing a palace room, the canvas takes over the full viewport:
 - Bottom nav and top bar are hidden
 - An "Exit Canvas" button is fixed in the top-right corner
 - Node count and room name displayed in a minimal top bar
+
+---
+
+## 9. Spaced Repetition Engine
+
+**Inspired by: Anki, RemNote** — ⭐⭐⭐ HIGH PRIORITY
+
+Go beyond the daily review with a proper spaced repetition system built on the SM-2 algorithm. See [ARCHITECTURE.md §1](./ARCHITECTURE.md#1-technology-stack) for the supporting tech stack.
+
+### SM-2 Algorithm
+
+After reviewing a node, the user rates their recall:
+
+| Rating | Action | Next Interval |
+|---|---|---|
+| **Again** (fail) | Failed to recall | Review tomorrow (interval = 1 day) |
+| **Hard** | Recalled with difficulty | Current interval × 1.2 |
+| **Good** | Recalled correctly | Current interval × 2.5 |
+| **Easy** | Recalled instantly | Current interval × 3.5 |
+
+### Node Maturity Levels
+
+Based on the current interval, each node has a maturity badge:
+
+| Badge | Level | Interval |
+|---|---|---|
+| 🔴 | **New** | Never reviewed |
+| 🟡 | **Learning** | Interval < 7 days |
+| 🟢 | **Known** | Interval 7–30 days |
+| 💎 | **Mastered** | Interval > 30 days |
+
+Maturity badges are displayed on each node in canvas view and in study mode.
+
+### Review Queue
+
+- Dashboard widget: "You have **X nodes** due today" with estimated time
+- Clicking the widget navigates directly to the daily review session
+- Nodes are sorted by urgency: overdue first, then due today, then upcoming
+
+### Leech Detection
+
+Nodes failed more than 5 times are automatically flagged as **"Difficult"**:
+- A ⚠️ badge is shown on the node in canvas and study mode
+- Dashboard widget: "You have N difficult nodes — suggested for focused review"
+- Clicking navigates to a filtered review session with only leech nodes
+
+### Mobile Behaviour
+
+Rating buttons (Again / Hard / Good / Easy) are displayed as a full-width horizontal row at the bottom of the review card, with minimum `48px` height per button. On very narrow screens (< 360px), labels are abbreviated: "A / H / G / E".
+
+---
+
+## 10. Retention & Activity Visualization
+
+**Inspired by: Anki heatmap, GitHub contribution graph** — ⭐⭐ MEDIUM PRIORITY
+
+See [ARCHITECTURE.md §1](./ARCHITECTURE.md#1-technology-stack) for the `recharts` library used for charts.
+
+### Retention Heatmap
+
+A GitHub-style calendar grid (7 rows × 52 columns) showing daily review activity:
+
+- Each cell represents one day; color intensity scales with nodes reviewed
+- Scale: 0 nodes → lightest shade, 20+ nodes → darkest shade
+- Tooltip on hover: "15 nodes reviewed on March 12, 2026"
+- Streak visualization: consecutive colored cells stand out visually
+- Implementation: CSS Grid with dynamic `bg-green-100` through `bg-green-500` classes
+
+```tsx
+// Heatmap cell color utility
+function getHeatmapColor(count: number): string {
+  if (count === 0)  return 'bg-muted';
+  if (count < 5)   return 'bg-green-100 dark:bg-green-900';
+  if (count < 10)  return 'bg-green-200 dark:bg-green-800';
+  if (count < 20)  return 'bg-green-400 dark:bg-green-600';
+  return 'bg-green-500 dark:bg-green-500';
+}
+```
+
+### Review Forecast Chart
+
+A bar chart showing predicted review workload for the next 7 days:
+
+- "Tomorrow: 12 nodes due · Thursday: 28 nodes due"
+- Helps users plan their study time
+- Implementation: `recharts` `AreaChart`
+
+### Palace Mastery Overview
+
+For each palace, a donut chart showing the distribution of node maturity:
+
+- Segments: % New, % Learning, % Known, % Mastered
+- Summary label: "Genesis: 72% mastered"
+- Clicking a palace card navigates to that palace
+
+### Mobile Behaviour
+
+Heatmap: horizontally scrollable on mobile (most recent weeks visible without scrolling). Charts: full-width, horizontally scrollable if they exceed the viewport. Donut charts: inline with palace cards, scaled to `48px` diameter on mobile.
+
+---
+
+## 11. Onboarding & Progressive Disclosure
+
+**Inspired by: Superhuman, Todoist, Duolingo** — ⭐⭐ MEDIUM PRIORITY
+
+First-time users need guided hand-holding without overwhelming them with all features at once.
+
+### Interactive Tutorial (First Login)
+
+A 5-step guided flow triggered automatically on first login:
+
+1. **"Welcome! Let's create your first Memory Palace"** → guided palace creation form
+2. **"Now add a room"** → guided room creation with highlighted input
+3. **"Great! Open the canvas and place your first node"** → canvas interaction with highlighted empty area and animated pointer
+4. **"Perfect! Come back tomorrow to review"** → show daily review CTA with explanation of streaks
+5. **"You're all set!"** → confetti celebration animation → redirect to dashboard
+
+Each step occupies the full viewport on mobile (`100dvh`), with a "Next" CTA fixed at the bottom.
+
+### Contextual Tooltips
+
+Show-once tooltips that appear the first time a user encounters a feature, then are dismissed permanently:
+
+- First time opening canvas: "Drag to create connections between nodes"
+- First time on progress page: "Complete daily reviews to build your streak"
+- First time viewing a node: "Long-press a node to open the context menu"
+
+Tooltip state stored in `localStorage` (or user profile for cross-device sync).
+
+### Progressive Feature Unlocking
+
+Optional gating to prevent overwhelming new users:
+
+| Feature | Unlocks After |
+|---|---|
+| Games | 10 nodes created |
+| Review Generator | First daily review completed |
+| Advanced canvas tools (lasso, snap-to-grid) | 20 nodes created |
+
+Locked features show a subtle lock badge and a short tooltip explaining how to unlock them.
+
+### Shortcut Coaching
+
+During the first week, show shortcut hints after repeated manual actions:
+
+- After clicking "New Palace" button 3 times: "Tip: Press `C` then `P` to create a palace faster!"
+- After opening settings manually 3 times: "Tip: Press `G` then `S` to open Settings instantly"
+
+### Mobile Behaviour
+
+Tutorial steps are full-screen on mobile. Contextual tooltips appear as bottom-anchored banners (not floating tooltips) to avoid being obscured by the keyboard. Progressive unlocking lock badges are visible on both the bottom nav tab icons and the feature cards.
+
+---
+
+## 12. Backlinks & Node Connections
+
+**Inspired by: Obsidian, RemNote** — ⭐⭐ MEDIUM PRIORITY
+
+Enhance the canvas with knowledge-graph features that surface implicit connections between memories.
+
+### Backlinks Panel
+
+When viewing or editing a node, a **"What links here?"** panel is shown:
+
+- Lists all nodes that have an edge pointing **to** this node
+- Each backlink entry shows: source node title, palace/room breadcrumb, and a navigation arrow
+- Clicking any backlink navigates to that node on its canvas
+- Empty state: "No other nodes link to this one yet"
+
+### Node Reference Syntax
+
+In node content, typing `[[` opens an autocomplete dropdown to link to another node:
+
+```
+This relates to [[Genesis 1:1]]
+```
+
+- Autocomplete searches all node titles across all palaces
+- Selecting a suggestion inserts the reference and creates an edge in the graph automatically
+- Referenced nodes render as clickable chips within the content
+- Clicking a chip navigates to the referenced node
+
+### Bi-Directional Edges
+
+Creating a `[[reference]]` in content automatically creates a directed edge in React Flow. The reverse direction (backlink) is surfaced in the backlinks panel without creating a second visible edge.
+
+### Orphan Node Detection
+
+Nodes with zero edges are highlighted with a subtle indicator:
+
+- Canvas view: faint dashed border on orphan nodes
+- Dashboard widget: "You have 5 unconnected nodes — connect them to strengthen your memory palace"
+- Clicking the widget opens the canvas filtered to show only orphan nodes
+
+### Connection Strength
+
+Edges become visually more prominent (thicker stroke, higher opacity) as both connected nodes are reviewed together more frequently. This visualises which connections are well-established vs. recently formed.
+
+### Mobile Behaviour
+
+Backlinks panel opens as a bottom sheet (`Sheet` with `side="bottom"`) on mobile. Node reference autocomplete is triggered by a toolbar button (since typing `[[` on mobile soft keyboards may not reliably fire). Orphan node indicators are visible on canvas nodes on mobile.

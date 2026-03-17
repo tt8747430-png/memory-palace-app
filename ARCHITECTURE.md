@@ -39,6 +39,11 @@ This document is the **single source of truth** for all technical decisions in t
 | **E2E Testing** | Playwright | Headless browser drag-and-drop testing |
 | **Search** | Supabase PostgreSQL `tsvector` full-text search | Finding memories across palaces |
 | **Quality** | TypeScript (Strict), ESLint (`eslint-plugin-boundaries`), Prettier | Automated code quality enforcement |
+| **Command Palette** | kbar | Universal keyboard-driven command palette (`Cmd+K`) |
+| **Animations** | Framer Motion | Page transitions, node animations, flashcard flips |
+| **Celebrations** | canvas-confetti | Achievement unlocks, streak milestones, daily review completion |
+| **Charts** | Recharts | Activity history, retention heatmap, review forecast |
+| **Theme** | next-themes | Dark/light mode toggle with OS preference detection |
 
 ---
 
