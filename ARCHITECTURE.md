@@ -453,7 +453,95 @@ export async function checkRateLimit() {
 
 ---
 
-## 6. Guiding Principles
+## 6. Additional Architecture Decisions
+
+### Soft Deletes Strategy
+
+Palaces, rooms, and nodes are **never hard-deleted**. This protects users from accidental data loss and enables a Trash/restore workflow.
+
+**Implementation:**
+- Add a `deleted_at` column (nullable `timestamptz`) to the `palaces`, `rooms`, and `nodes` tables
+- All list queries filter `WHERE deleted_at IS NULL` by default
+- A scheduled cleanup job permanently deletes rows where `deleted_at` is older than 30 days
+- Users can restore deleted items from a "Trash" view (filtered by `deleted_at IS NOT NULL`)
+
+```sql
+ALTER TABLE palaces ADD COLUMN deleted_at timestamptz DEFAULT NULL;
+ALTER TABLE rooms   ADD COLUMN deleted_at timestamptz DEFAULT NULL;
+ALTER TABLE nodes   ADD COLUMN deleted_at timestamptz DEFAULT NULL;
+```
+
+### Pagination Strategy
+
+All list endpoints use **cursor-based pagination** — not offset pagination. Cursor pagination is stable (no skipped or duplicated rows when new items are inserted) and performs well at scale.
+
+- **Cursor:** Composite of `created_at` timestamp + `id` for deterministic ordering
+- **Default page size:** 20 items
+- **Direction:** Descending by `created_at` (newest first)
+
+```typescript
+async function listPalaces(userId: string, cursor?: { createdAt: Date; id: string }) {
+  return db.select().from(palaces)
+    .where(and(
+      eq(palaces.userId, userId),
+      isNull(palaces.deletedAt),
+      cursor ? or(
+        lt(palaces.createdAt, cursor.createdAt),
+        and(eq(palaces.createdAt, cursor.createdAt), lt(palaces.id, cursor.id))
+      ) : undefined
+    ))
+    .orderBy(desc(palaces.createdAt), desc(palaces.id))
+    .limit(20);
+}
+```
+
+### Data Export/Import
+
+Users can export their entire palace data as a single JSON file. This serves as both a user-facing feature and a personal disaster recovery mechanism.
+
+**Export includes:**
+- Palace metadata (name, description, timestamps)
+- All rooms with dimensions and background image references
+- All nodes with coordinates, content, and type
+- All edges (connections between nodes)
+- All tags and node-tag associations
+
+**Import flow:**
+1. User selects a previously exported JSON file
+2. A Server Action validates the entire JSON structure with Zod before any insert
+3. All records are inserted in a single database transaction
+4. Conflicts (duplicate IDs) are handled via `ON CONFLICT DO NOTHING`
+
+### Server Action Response Standard
+
+All Server Actions return a discriminated union type to allow type-safe error handling on the client:
+
+```typescript
+type ActionResponse<T> =
+  | { success: true; data: T }
+  | { success: false; error: { code: ErrorCode; message: string } };
+
+type ErrorCode =
+  | 'RATE_LIMITED'
+  | 'VALIDATION_FAILED'
+  | 'NOT_FOUND'
+  | 'UNAUTHORIZED'
+  | 'CONFLICT'
+  | 'INTERNAL_ERROR';
+```
+
+TanStack Query's `onError` handler receives the typed `error` object. The UI can render specific messages based on `error.code` (e.g., show a toast with a retry button on `RATE_LIMITED`).
+
+### Server Action Naming Convention
+
+- **Pattern:** `[verb][Entity]` in camelCase
+- **Examples:** `createPalace`, `updateNode`, `batchUpdateNodes`, `searchNodes`, `deletePalace`
+- All actions live in their feature's `actions/` directory (e.g., `src/features/memory-nodes/actions/`)
+- All actions are `async` functions that return `ActionResponse<T>`
+
+---
+
+## 7. Guiding Principles
 
 These are **non-negotiables** that must be respected in every PR.
 

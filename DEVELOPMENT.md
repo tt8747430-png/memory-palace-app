@@ -308,3 +308,49 @@ Developer machine
               ├── Migration (if changed) 🗄️
               └── git tag v0.X.0 → GitHub Release 📦
 ```
+
+---
+
+## 12. Monitoring & Alerting Rules
+
+The following alerts are configured across Sentry, Vercel, Supabase, and GitHub to detect production issues early:
+
+| Alert | Trigger | Channel |
+|---|---|---|
+| Error spike | > 10 Sentry errors in 5 minutes | Email / Discord webhook |
+| Database connection exhaustion | Supabase dashboard > 80% pool usage | Email |
+| Serverless function timeout | Vercel function exceeds 10s | Sentry + Vercel alerts |
+| Rate limit spike | Unusual Upstash blocking patterns | Discord webhook |
+| Build failure on main | GitHub Actions CI fails after merge | GitHub notification |
+| Lighthouse regression | Performance score drops below 85 | GitHub PR comment |
+
+### Alert Setup Checklist
+
+- [ ] Configure Sentry alert rule: "10+ errors in 5 minutes" → email + Discord
+- [ ] Enable Supabase database connection usage alerts in project settings
+- [ ] Enable Vercel function timeout alerts in the Vercel dashboard
+- [ ] Set up Upstash monitoring dashboard and Discord webhook for rate limit spikes
+- [ ] GitHub Actions failure notifications are on by default for the repo owner
+
+---
+
+## 13. Dependency Audit in CI
+
+Add the `pnpm audit --audit-level=high` step to the CI pipeline to catch known vulnerabilities in dependencies before they reach production:
+
+```yaml
+  dependency-audit:
+    name: Dependency Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm audit --audit-level=high
+```
+
+See `SECURITY.md` §6 for the full dependency auditing strategy.

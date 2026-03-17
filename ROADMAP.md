@@ -35,6 +35,9 @@ Goal: Stand up the full monorepo structure and prove that a user can authenticat
 - [ ] Auth middleware at `middleware.ts`
 - [ ] GitHub Actions CI pipeline (`ci.yml`)
 - [ ] Vercel project setup and `deploy.yml`
+- [ ] i18n readiness: install `next-intl`, create `/messages/en.json`, wrap app in i18n provider
+- [ ] Create `.env.example` file with all required variables documented
+- [ ] Set up local Supabase via Docker for development
 
 ### Deliverable
 
@@ -85,6 +88,11 @@ Goal: Build the interactive canvas with real-time sync and offline support.
 - [ ] `y-indexeddb` for offline-first persistence
 - [ ] Canvas Error Boundary wrapping only the React Flow canvas
 - [ ] Drag-and-drop tested with Playwright
+- [ ] Keyboard navigation for all canvas nodes
+- [ ] `aria-live` announcements for drag operations
+- [ ] `prefers-reduced-motion` support for canvas animations
+- [ ] WCAG 2.1 AA color contrast compliance audit and fixes
+- [ ] Install `eslint-plugin-jsx-a11y` and enforce in ESLint config
 
 ### Deliverable
 
@@ -111,6 +119,11 @@ Goal: Make the app production-ready — monitored, tested, accessible, and ready
 - [ ] `src/features/3d-room/` stub scaffolded for future React Three Fiber
 - [ ] `release.yml` workflow with `git-cliff` changelog generation
 - [ ] Performance budget: Lighthouse CI score targets
+- [ ] Data backup strategy: weekly `pg_dump` via scheduled GitHub Action (or Supabase Pro auto-backups)
+- [ ] Soft delete implementation with 30-day retention
+- [ ] Data export/import feature (JSON format)
+- [ ] Monitoring & alerting setup (Sentry alerts, Vercel alerts, Upstash monitoring)
+- [ ] Lighthouse CI integration for performance regression detection
 
 ### Deliverable
 
