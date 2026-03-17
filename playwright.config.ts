@@ -12,15 +12,21 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
   },
-  projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
-    { name: 'mobile-chrome', use: { ...devices['Pixel 5'] } },
-  ],
+  projects: process.env.CI
+    ? [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }]
+    : [
+        { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+        { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+        { name: 'mobile-chrome', use: { ...devices['Pixel 5'] } },
+      ],
   webServer: {
-    command:
-      'pnpm turbo build --filter=@memory-palace/web && pnpm turbo start --filter=@memory-palace/web',
+    // In CI the app is pre-built by the workflow; just start it.
+    // Locally, build + start so Playwright can serve a production build.
+    command: process.env.CI
+      ? 'pnpm --filter @memory-palace/web start'
+      : 'pnpm turbo build --filter=@memory-palace/web && pnpm --filter @memory-palace/web start',
     port: 3000,
     reuseExistingServer: !process.env.CI,
+    timeout: 120_000,
   },
 });

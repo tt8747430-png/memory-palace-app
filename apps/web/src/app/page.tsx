@@ -13,4 +13,3 @@ function HomePage() {
 
 // Next.js App Router requires a default export for route segment entry files.
 export default HomePage;
-

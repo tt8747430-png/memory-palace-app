@@ -107,4 +107,3 @@ describe('LoginForm', () => {
     expect(screen.getByRole('button', { name: /signing in/i })).toBeDisabled();
   });
 });
-

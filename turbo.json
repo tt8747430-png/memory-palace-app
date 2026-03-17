@@ -14,6 +14,11 @@
       "cache": false,
       "persistent": true
     },
+    "start": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "persistent": true
+    },
     "format": {
       "cache": false
     },
@@ -27,6 +32,9 @@
     "test:integration": {
       "dependsOn": ["^build"],
       "outputs": []
+    },
+    "seed": {
+      "cache": false
     }
   }
 }

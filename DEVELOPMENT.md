@@ -269,6 +269,8 @@ git push origin v0.1.0
 | `UPSTASH_REDIS_REST_URL`        | Upstash Redis endpoint                                   | Rate limiting               | GitHub Secrets, Vercel Env              |
 | `UPSTASH_REDIS_REST_TOKEN`      | Upstash Redis auth token                                 | Rate limiting               | GitHub Secrets, Vercel Env              |
 | `VERCEL_TOKEN`                  | Vercel API token for deployments                         | `deploy.yml`                | GitHub Secrets                          |
+| `VERCEL_ORG_ID`                 | Vercel team/account identifier for CLI project linking   | `deploy.yml`                | GitHub Secrets                          |
+| `VERCEL_PROJECT_ID`             | Vercel project identifier for CLI project linking        | `deploy.yml`                | GitHub Secrets                          |
 | `SENTRY_DSN`                    | Sentry error reporting endpoint                          | Client + Server Sentry init | GitHub Secrets, Vercel Env              |
 | `TURBO_TOKEN`                   | Turborepo remote caching token                           | `ci.yml` build cache        | GitHub Secrets                          |
 

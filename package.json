@@ -8,6 +8,10 @@
     "typecheck": "turbo typecheck",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "check:guardrails": "node scripts/ci/check-guardrails.mjs",
+    "check:vercel-config": "node scripts/ci/validate-vercel-config.mjs",
+    "check:prepush": "pnpm check:guardrails && pnpm check:vercel-config && pnpm turbo lint && pnpm format:check && pnpm turbo build --filter=@memory-palace/web",
+    "hooks:install": "sh ./scripts/setup-git-hooks.sh",
     "test:unit": "turbo test:unit",
     "test:integration": "turbo test:integration"
   },
@@ -20,6 +24,7 @@
     "@playwright/test": "^1.58.2",
     "@types/node": "^20",
     "@vitest/coverage-v8": "^4.1.0",
+    "git-cliff": "^2.12.0",
     "prettier": "^3.4.0",
     "turbo": "^2.3.0",
     "vitest": "^4.1.0"

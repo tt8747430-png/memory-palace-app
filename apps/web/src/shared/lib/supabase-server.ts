@@ -12,9 +12,7 @@ export async function createSupabaseServer() {
           return cookieStore.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options),
-          );
+          cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
         },
       },
     },
@@ -25,4 +23,3 @@ export async function auth() {
   const supabase = await createSupabaseServer();
   return supabase.auth.getUser();
 }
-

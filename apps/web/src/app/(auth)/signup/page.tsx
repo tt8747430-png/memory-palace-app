@@ -18,4 +18,3 @@ function SignupPage() {
 
 // Next.js App Router requires a default export for route entry files.
 export default SignupPage;
-

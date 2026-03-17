@@ -78,6 +78,9 @@ cd memory-palace-app
 # 2. Install dependencies
 pnpm install
 
+# 2.1 Install local git hooks (recommended)
+pnpm hooks:install
+
 # 3. Start local Supabase (requires Docker)
 npx supabase init
 npx supabase start
@@ -153,14 +156,17 @@ VERCEL_TOKEN=
 
 ### Development
 
-| Command                   | Description                        |
-| ------------------------- | ---------------------------------- |
-| `pnpm turbo dev`          | Start all apps in development mode |
-| `pnpm turbo build`        | Build all apps and packages        |
-| `pnpm turbo lint`         | Run ESLint across all packages     |
-| `pnpm turbo typecheck`    | Run TypeScript strict check        |
-| `pnpm turbo format:check` | Check Prettier formatting          |
-| `pnpm turbo format`       | Auto-fix Prettier formatting       |
+| Command                    | Description                                         |
+| -------------------------- | --------------------------------------------------- |
+| `pnpm turbo dev`           | Start all apps in development mode                  |
+| `pnpm turbo build`         | Build all apps and packages                         |
+| `pnpm turbo lint`          | Run ESLint across all packages                      |
+| `pnpm turbo typecheck`     | Run TypeScript strict check                         |
+| `pnpm turbo format:check`  | Check Prettier formatting                           |
+| `pnpm turbo format`        | Auto-fix Prettier formatting                        |
+| `pnpm check:guardrails`    | Fail if Next.js proxy entrypoints are misconfigured |
+| `pnpm check:vercel-config` | Validate `vercel.json` syntax and required keys     |
+| `pnpm check:prepush`       | Run guardrails + lint + format + web build checks   |
 
 ### Database
 
