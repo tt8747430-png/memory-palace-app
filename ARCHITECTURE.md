@@ -1,0 +1,468 @@
+# Architecture Blueprint — Memory Palace App
+
+This document is the **single source of truth** for all technical decisions in the Memory Palace application. Every technology choice, data model, and implementation pattern is documented here.
+
+---
+
+## Table of Contents
+
+1. [Technology Stack](#1-technology-stack)
+2. [System Architecture & Data Flow](#2-system-architecture--data-flow)
+3. [Relational Database Schema](#3-relational-database-schema)
+4. [Monorepo File Structure](#4-monorepo-file-structure)
+5. [Critical Implementation Details](#5-critical-implementation-details)
+6. [Guiding Principles](#6-guiding-principles)
+
+---
+
+## 1. Technology Stack
+
+| Layer | Tool | Purpose |
+|---|---|---|
+| **Framework** | Next.js (App Router) | React foundation, routing, Server Actions, SSR |
+| **Hosting** | Vercel (Hobby Tier) | Serverless deployment, global CDN, auto-scaling |
+| **Database** | Supabase PostgreSQL (**pooled connection via Supavisor**) | Relational data, real-time websockets, image storage |
+| **ORM** | Drizzle ORM | End-to-end TypeScript-safe database queries |
+| **Auth & Security** | Supabase Auth + Row Level Security (RLS) | Database-level user isolation |
+| **Spatial Canvas** | React Flow (2D MVP) + future React Three Fiber (3D) | Interactive node-mapping canvas |
+| **Transient State** | Zustand | 60fps drag-and-drop without re-renders |
+| **Server State** | TanStack Query (React Query) | Caching, optimistic updates, background syncing |
+| **Multiplayer/Sync** | Yjs (CRDTs) + y-supabase provider | Conflict-free multi-device & multi-user coordinate merging |
+| **Offline Support** | y-indexeddb | Local-first persistence, seamless reconnection sync |
+| **Validation** | Zod | Server Action input validation |
+| **Rate Limiting** | Upstash Redis (`@upstash/ratelimit`) | Abuse prevention at the edge |
+| **Monorepo** | Turborepo (pnpm) | Physical package boundaries, caching, parallel builds |
+| **Styling** | Tailwind CSS + shadcn/ui | Accessible, customizable design system |
+| **Observability** | Sentry (Client + Server) | Error boundaries, canvas memory leak detection, Long Task tracking |
+| **E2E Testing** | Playwright | Headless browser drag-and-drop testing |
+| **Search** | Supabase PostgreSQL `tsvector` full-text search | Finding memories across palaces |
+| **Quality** | TypeScript (Strict), ESLint (`eslint-plugin-boundaries`), Prettier | Automated code quality enforcement |
+
+---
+
+## 2. System Architecture & Data Flow
+
+### Architecture Diagram
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        USER'S BROWSER                           │
+│                                                                 │
+│  ┌──────────┐    drag @ 60fps    ┌──────────┐                  │
+│  │React Flow├───────────────────►│ Zustand   │                  │
+│  │ Canvas   │◄───────────────────┤ Store     │                  │
+│  └────┬─────┘    read coords     └─────┬────┘                  │
+│       │                                │                        │
+│       │ on drop                        │ sync via Yjs doc       │
+│       ▼                                ▼                        │
+│  ┌──────────┐  optimistic save   ┌──────────┐                  │
+│  │ TanStack ├───────────────────►│   Yjs    │◄──y-indexeddb──► │
+│  │  Query   │                    │  (CRDT)  │   (offline)      │
+│  └────┬─────┘                    └─────┬────┘                  │
+│       │                                │                        │
+└───────┼────────────────────────────────┼────────────────────────┘
+        │ Server Action call             │ Supabase Realtime WS
+        ▼                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                     VERCEL SERVERLESS EDGE                      │
+│                                                                 │
+│  ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌────────────┐  │
+│  │  Upstash │──►│   Zod    │──►│ Drizzle  │──►│ Supabase   │  │
+│  │  Rate    │   │ Validate │   │   ORM    │   │ PostgreSQL │  │
+│  │  Limiter │   │          │   │          │   │ (pooled)   │  │
+│  └──────────┘   └──────────┘   └──────────┘   └────────────┘  │
+│                                                                 │
+│       If rate exceeded → 429 BLOCKED before DB is touched       │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Request Lifecycle — Step by Step
+
+1. **Drag** → Zustand updates local coordinates at 60fps. React Flow reads from Zustand via selectors (no global re-renders).
+2. **Drop** → TanStack Query fires an optimistic mutation. UI assumes success instantly.
+3. **Edge Bouncer** → Upstash checks: "Has this user exceeded 10 saves/5 seconds?" If yes → 429. If no → proceed.
+4. **Validation** → Zod verifies the payload shape.
+5. **Database** → Drizzle ORM executes the UPDATE via the pooled Supabase connection string.
+6. **Realtime Broadcast** → Supabase Realtime pushes the change to all connected sessions → Yjs merges it conflict-free.
+7. **Offline Resilience** → If the user was offline, y-indexeddb persisted changes locally. On reconnection, Yjs auto-syncs.
+
+---
+
+## 3. Relational Database Schema
+
+### Tables
+
+#### `users`
+| Column | Type | Notes |
+|---|---|---|
+| `id` | `uuid` | Primary Key (from Supabase Auth) |
+| `email` | `text` | Unique, not null |
+| `display_name` | `text` | |
+| `avatar_url` | `text` | |
+| `created_at` | `timestamptz` | Default `now()` |
+
+#### `palaces`
+| Column | Type | Notes |
+|---|---|---|
+| `id` | `uuid` | Primary Key |
+| `user_id` | `uuid` | FK → `users.id` |
+| `name` | `text` | Not null |
+| `description` | `text` | |
+| `created_at` | `timestamptz` | Default `now()` |
+| `updated_at` | `timestamptz` | Auto-updated |
+
+**Indexes:** `idx_palaces_user_id` on `user_id`
+
+#### `rooms`
+| Column | Type | Notes |
+|---|---|---|
+| `id` | `uuid` | Primary Key |
+| `palace_id` | `uuid` | FK → `palaces.id` |
+| `name` | `text` | Not null |
+| `bg_image_url` | `text` | |
+| `width` | `integer` | Canvas width in pixels |
+| `height` | `integer` | Canvas height in pixels |
+| `order` | `integer` | Display order within palace |
+| `created_at` | `timestamptz` | Default `now()` |
+| `updated_at` | `timestamptz` | Auto-updated |
+
+**Indexes:** `idx_rooms_palace_id` on `palace_id`
+
+#### `nodes`
+| Column | Type | Notes |
+|---|---|---|
+| `id` | `uuid` | Primary Key |
+| `room_id` | `uuid` | FK → `rooms.id` |
+| `user_id` | `uuid` | FK → `users.id` |
+| `title` | `text` | Not null |
+| `content` | `text` | Searchable body |
+| `position_x` | `float8` | X coordinate on canvas |
+| `position_y` | `float8` | Y coordinate on canvas |
+| `position_z` | `float8` | Z-index / depth (for future 3D) |
+| `node_type` | `text` | e.g. `image`, `text`, `link` |
+| `created_at` | `timestamptz` | Default `now()` |
+| `updated_at` | `timestamptz` | Auto-updated |
+
+**Indexes:**
+- `idx_nodes_room_id` on `room_id`
+- `idx_nodes_user_id` on `user_id`
+- `idx_nodes_content_fts` — GIN index on `to_tsvector('english', content)`
+
+#### `edges`
+| Column | Type | Notes |
+|---|---|---|
+| `id` | `uuid` | Primary Key |
+| `source_node_id` | `uuid` | FK → `nodes.id` |
+| `target_node_id` | `uuid` | FK → `nodes.id` |
+| `label` | `text` | |
+| `created_at` | `timestamptz` | Default `now()` |
+
+**Indexes:** Composite `idx_edges_source_target` on `(source_node_id, target_node_id)`
+
+#### `tags`
+| Column | Type | Notes |
+|---|---|---|
+| `id` | `uuid` | Primary Key |
+| `name` | `text` | Not null |
+| `user_id` | `uuid` | FK → `users.id` |
+
+**Indexes:** `idx_tags_user_id` on `user_id`
+
+#### `node_tags`
+| Column | Type | Notes |
+|---|---|---|
+| `node_id` | `uuid` | FK → `nodes.id` |
+| `tag_id` | `uuid` | FK → `tags.id` |
+
+**Primary Key:** Composite `(node_id, tag_id)`
+
+### Row Level Security (RLS)
+
+RLS is enabled on all tables. Example policy:
+
+```sql
+-- Users can only access their own palaces
+CREATE POLICY "Users can only access their own data"
+ON palaces FOR ALL
+USING (auth.uid() = user_id);
+
+-- Nodes inherit access through room → palace → user ownership
+CREATE POLICY "Users can only access nodes in their rooms"
+ON nodes FOR ALL
+USING (
+  EXISTS (
+    SELECT 1 FROM rooms r
+    JOIN palaces p ON r.palace_id = p.id
+    WHERE r.id = nodes.room_id
+    AND p.user_id = auth.uid()
+  )
+);
+```
+
+### Full-Text Search Index
+
+```sql
+CREATE INDEX idx_nodes_content_fts
+ON nodes
+USING GIN (to_tsvector('english', coalesce(title, '') || ' ' || coalesce(content, '')));
+```
+
+---
+
+## 4. Monorepo File Structure
+
+Full Turborepo + Feature-Sliced Design directory tree:
+
+```
+memory-palace-app/
+├── turbo.json
+├── package.json
+├── pnpm-workspace.yaml
+├── .github/
+│   └── workflows/
+│       ├── ci.yml
+│       ├── deploy.yml
+│       ├── migrate.yml
+│       └── release.yml
+│
+├── apps/
+│   └── web/                            # Next.js Application
+│       ├── src/
+│       │   ├── app/                    # App Router routes
+│       │   │   ├── (auth)/login/page.tsx
+│       │   │   ├── (auth)/signup/page.tsx
+│       │   │   ├── (dashboard)/page.tsx
+│       │   │   ├── palace/[palaceId]/room/[roomId]/page.tsx
+│       │   │   ├── layout.tsx
+│       │   │   └── error.tsx
+│       │   ├── features/
+│       │   │   ├── spatial-canvas/     # React Flow, Zustand store, canvas actions
+│       │   │   ├── memory-nodes/       # Node CRUD, Zod schemas
+│       │   │   ├── search/             # Full-text search
+│       │   │   ├── auth/               # Login/signup components
+│       │   │   └── 3d-room/            # FUTURE: React Three Fiber
+│       │   ├── shared/
+│       │   │   ├── components/         # ErrorBoundary, LoadingSpinner
+│       │   │   ├── lib/                # Supabase clients, rate-limit, yjs-provider
+│       │   │   └── utils/
+│       │   └── middleware.ts
+│       ├── next.config.mjs
+│       └── package.json
+│
+├── packages/
+│   ├── db/                             # Drizzle schema, migrations, client
+│   ├── ui/                             # shadcn/ui components
+│   ├── eslint-config/
+│   └── typescript-config/
+│
+└── playwright/                         # E2E tests
+```
+
+---
+
+## 5. Critical Implementation Details
+
+### A. Database Connection Pooling
+
+**MUST** use the Supavisor pooler URL — never the direct connection string in serverless functions.
+
+```typescript
+// packages/db/src/client.ts
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
+
+// ✅ CORRECT: pooled connection via Supavisor (port 6543)
+const sql = postgres(process.env.DATABASE_URL!); // db.pooler.supabase.com:6543
+
+export const db = drizzle(sql);
+```
+
+```
+# .env.local
+# ✅ Pooled (Supavisor) — use this everywhere in serverless
+DATABASE_URL=postgresql://postgres.<ref>:<password>@db.pooler.supabase.com:6543/postgres
+
+# ❌ Direct — only for migrations from a long-lived process
+# DIRECT_DATABASE_URL=postgresql://postgres:<password>@db.<ref>.supabase.com:5432/postgres
+```
+
+### B. Canvas Error Boundary
+
+Wraps **only** the canvas element. The sidebar and navigation remain alive if the canvas crashes.
+
+```typescript
+// src/features/spatial-canvas/components/CanvasErrorBoundary.tsx
+'use client';
+
+import { Component, ReactNode } from 'react';
+
+interface Props { children: ReactNode; }
+interface State { hasError: boolean; }
+
+export class CanvasErrorBoundary extends Component<Props, State> {
+  state: State = { hasError: false };
+
+  static getDerivedStateFromError(): State {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error) {
+    // Report to Sentry — canvas memory leak, Long Task, etc.
+    console.error('[Canvas Error]', error);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex items-center justify-center h-full">
+          <p>Canvas crashed. <button onClick={() => this.setState({ hasError: false })}>Retry</button></p>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+```
+
+```typescript
+// Usage in the room page
+<CanvasErrorBoundary>
+  <ReactFlowCanvas roomId={roomId} />
+</CanvasErrorBoundary>
+```
+
+### C. Batch Saving
+
+All multi-node position updates are sent in a **single Server Action** using a SQL transaction — not one call per node.
+
+```typescript
+// src/features/spatial-canvas/actions/batchUpdateNodes.ts
+'use server';
+
+import { db } from '@memory-palace/db';
+import { nodes } from '@memory-palace/db/schema';
+import { eq } from 'drizzle-orm';
+import { z } from 'zod';
+import { checkRateLimit } from '@/shared/lib/rate-limit';
+
+const NodePositionSchema = z.object({
+  id: z.string().uuid(),
+  position_x: z.number(),
+  position_y: z.number(),
+});
+
+const BatchUpdateSchema = z.object({
+  roomId: z.string().uuid(),
+  updates: z.array(NodePositionSchema).min(1).max(100),
+});
+
+export async function batchUpdateNodes(input: unknown) {
+  const { roomId, updates } = BatchUpdateSchema.parse(input);
+
+  await checkRateLimit(); // throws 429 if exceeded
+
+  await db.transaction(async (tx) => {
+    for (const update of updates) {
+      await tx
+        .update(nodes)
+        .set({ position_x: update.position_x, position_y: update.position_y, updated_at: new Date() })
+        .where(eq(nodes.id, update.id));
+    }
+  });
+}
+```
+
+### D. Full-Text Search
+
+PostgreSQL `tsvector` GIN index enables sub-millisecond search across all node content.
+
+```typescript
+// src/features/search/actions/searchNodes.ts
+'use server';
+
+import { db } from '@memory-palace/db';
+import { sql } from 'drizzle-orm';
+
+export async function searchNodes(query: string, userId: string) {
+  return db.execute(sql`
+    SELECT id, title, content, room_id,
+           ts_rank(to_tsvector('english', coalesce(title,'') || ' ' || coalesce(content,'')),
+                   plainto_tsquery('english', ${query})) AS rank
+    FROM nodes
+    WHERE user_id = ${userId}
+      AND to_tsvector('english', coalesce(title,'') || ' ' || coalesce(content,''))
+          @@ plainto_tsquery('english', ${query})
+    ORDER BY rank DESC
+    LIMIT 20
+  `);
+}
+```
+
+### E. Migration Rollback Strategy
+
+**Two-phase approach** — never drop a column in a single deploy.
+
+```
+Phase 1 (current release): Add new column, backfill data, update code to write to both old + new columns.
+Phase 2 (next release):    Remove the old column after confirming Phase 1 is stable.
+```
+
+```typescript
+// ✅ Phase 1 migration — add new column safely
+export async function up(db: NodePgDatabase) {
+  await db.execute(sql`ALTER TABLE nodes ADD COLUMN content_v2 text`);
+  await db.execute(sql`UPDATE nodes SET content_v2 = content`);
+  // Application code now writes to BOTH content and content_v2
+}
+
+// ✅ Phase 2 migration (next release) — remove old column
+export async function up(db: NodePgDatabase) {
+  await db.execute(sql`ALTER TABLE nodes DROP COLUMN content`);
+  await db.execute(sql`ALTER TABLE nodes RENAME COLUMN content_v2 TO content`);
+}
+```
+
+### F. Rate Limiting
+
+Upstash sliding window — 10 requests per 5 seconds — checked **before** any database operation.
+
+```typescript
+// src/shared/lib/rate-limit.ts
+import { Ratelimit } from '@upstash/ratelimit';
+import { Redis } from '@upstash/redis';
+import { auth } from '@/shared/lib/supabase-server';
+
+const ratelimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(10, '5 s'),
+  analytics: true,
+});
+
+export async function checkRateLimit() {
+  const { data: { user } } = await auth();
+  if (!user) throw new Error('Unauthorized');
+
+  const { success } = await ratelimit.limit(`user:${user.id}`);
+  if (!success) {
+    const error = new Error('Rate limit exceeded');
+    (error as any).status = 429;
+    throw error;
+  }
+}
+```
+
+---
+
+## 6. Guiding Principles
+
+These are **non-negotiables** that must be respected in every PR.
+
+| # | Principle | Rationale |
+|---|---|---|
+| 1 | **The UI is dumb.** Components display data and fire events. Logic lives in hooks, stores, and Server Actions. | Prevents business logic sprawl; simplifies testing. |
+| 2 | **Trust no client.** Every Server Action validates with Zod, then checks Upstash rate limit, then touches Drizzle. | Defense-in-depth against malformed/malicious payloads. |
+| 3 | **Transient state stays local.** X/Y coordinates live in Zustand only. They hit the database only on drop via batch save. | 60fps drag requires zero server round-trips during motion. |
+| 4 | **Indexes from Day 1.** Every foreign key gets an index. Search gets a GIN index. No exceptions. | Prevents N+1 query performance cliffs at scale. |
+| 5 | **Pooled connections only.** Never use Supabase's direct connection string in serverless functions. | Supavisor prevents connection exhaustion under load. |
+| 6 | **Two-phase migrations.** Never drop a column in a single deploy. | Guarantees zero-downtime deployments and instant rollback. |
+| 7 | **Canvas crashes are contained.** Error Boundaries wrap the canvas, not the page. | Users never lose access to navigation or sidebar on canvas failure. |

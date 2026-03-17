@@ -1,0 +1,40 @@
+name: Database Migration
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/db/migrations/**'
+
+jobs:
+  migrate:
+    name: Run Drizzle Migrations
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run migrations
+        run: pnpm --filter @memory-palace/db drizzle-kit migrate
+        env:
+          # Use the DIRECT connection (not pooled) for migrations — Supavisor
+          # does not support DDL statements over the pooled connection.
+          DATABASE_URL: ${{ secrets.DIRECT_DATABASE_URL }}
