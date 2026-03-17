@@ -15,8 +15,8 @@ Turborepo + pnpm workspaces. `apps/web/` = Next.js App Router. `packages/db/` = 
 ```typescript
 // ✅ src/features/memory-nodes/actions/createNode.ts
 'use server';
-const parsed = Schema.parse(input);   // 1. Zod
-await checkRateLimit();                // 2. Rate limit
+const parsed = Schema.parse(input); // 1. Zod
+await checkRateLimit(); // 2. Rate limit
 return db.insert(nodes).values(parsed); // 3. Drizzle
 ```
 
@@ -52,4 +52,3 @@ Pooled Supavisor connection only (port 6543) — never direct connect in serverl
 ## Commits
 
 Conventional: `feat(canvas):`, `fix(auth):`, `chore(db):`. Squash merge to `main` only.
-

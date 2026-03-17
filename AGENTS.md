@@ -68,17 +68,16 @@ npx supabase db reset  # Drops all local data
 
 ## Key Files & Docs
 
-| Path | Purpose |
-|---|---|
-| `ARCHITECTURE.md` | Single source of truth for all tech decisions, schema, file structure |
-| `UI_STYLE_GUIDE.md` | Mobile-first design system, color palette, component patterns |
-| `FEATURES.md` | Feature specifications — dashboard, gamification, games, review, public pages |
-| `ROADMAP.md` | Step-by-step implementation guide with exact commands per phase |
-| `DEVELOPMENT.md` | DevOps plan — branching, CI/CD pipelines, secrets, daily workflow |
-| `CONTRIBUTING.md §5` | Full command reference table |
-| `CONTRIBUTING.md §8` | Code style rules with ✅/❌ examples |
-| `TESTING.md` | 4-layer testing strategy with examples |
-| `SECURITY.md` | CSP headers, RLS policies, rate limiting layers |
-| `PERFORMANCE.md` | Canvas virtualization, debounce strategy, bundle budgets |
-| `cliff.toml` | git-cliff config for changelog generation |
-
+| Path                 | Purpose                                                                       |
+| -------------------- | ----------------------------------------------------------------------------- |
+| `ARCHITECTURE.md`    | Single source of truth for all tech decisions, schema, file structure         |
+| `UI_STYLE_GUIDE.md`  | Mobile-first design system, color palette, component patterns                 |
+| `FEATURES.md`        | Feature specifications — dashboard, gamification, games, review, public pages |
+| `ROADMAP.md`         | Step-by-step implementation guide with exact commands per phase               |
+| `DEVELOPMENT.md`     | DevOps plan — branching, CI/CD pipelines, secrets, daily workflow             |
+| `CONTRIBUTING.md §5` | Full command reference table                                                  |
+| `CONTRIBUTING.md §8` | Code style rules with ✅/❌ examples                                          |
+| `TESTING.md`         | 4-layer testing strategy with examples                                        |
+| `SECURITY.md`        | CSP headers, RLS policies, rate limiting layers                               |
+| `PERFORMANCE.md`     | Canvas virtualization, debounce strategy, bundle budgets                      |
+| `cliff.toml`         | git-cliff config for changelog generation                                     |

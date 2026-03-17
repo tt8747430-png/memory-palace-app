@@ -48,14 +48,14 @@ main (production — always deployable)
 
 ## 2. Branch Naming Convention
 
-| Prefix | Use Case | Example |
-|---|---|---|
-| `feat/` | New feature | `feat/yjs-realtime-sync` |
-| `fix/` | Bug fix | `fix/zustand-stale-coordinates` |
-| `chore/` | Maintenance, deps, config | `chore/eslint-boundary-rules` |
-| `refactor/` | Code restructuring | `refactor/extract-canvas-hooks` |
-| `docs/` | Documentation only | `docs/architecture-readme` |
-| `test/` | Adding or fixing tests | `test/playwright-drag-drop` |
+| Prefix      | Use Case                  | Example                         |
+| ----------- | ------------------------- | ------------------------------- |
+| `feat/`     | New feature               | `feat/yjs-realtime-sync`        |
+| `fix/`      | Bug fix                   | `fix/zustand-stale-coordinates` |
+| `chore/`    | Maintenance, deps, config | `chore/eslint-boundary-rules`   |
+| `refactor/` | Code restructuring        | `refactor/extract-canvas-hooks` |
+| `docs/`     | Documentation only        | `docs/architecture-readme`      |
+| `test/`     | Adding or fixing tests    | `test/playwright-drag-drop`     |
 
 ---
 
@@ -63,13 +63,13 @@ main (production — always deployable)
 
 ### Semantic Versioning
 
-| Tag | Meaning |
-|---|---|
-| `v0.1.0` | Phase 1 complete — Infrastructure Skeleton |
-| `v0.2.0` | Phase 2 complete — Data Core & Security |
+| Tag      | Meaning                                          |
+| -------- | ------------------------------------------------ |
+| `v0.1.0` | Phase 1 complete — Infrastructure Skeleton       |
+| `v0.2.0` | Phase 2 complete — Data Core & Security          |
 | `v0.3.0` | Phase 3 complete — Spatial Canvas & State Engine |
-| `v1.0.0` | First production release — Phase 4 complete |
-| `v1.x.y` | Post-launch patches and features |
+| `v1.0.0` | First production release — Phase 4 complete      |
+| `v1.x.y` | Post-launch patches and features                 |
 
 ### Changelog Generation
 
@@ -109,16 +109,16 @@ test(e2e): add Playwright drag-and-drop spec
 
 ### Types
 
-| Type | When to use |
-|---|---|
-| `feat` | A new feature |
-| `fix` | A bug fix |
-| `chore` | Build process, dependencies, tooling |
+| Type       | When to use                                     |
+| ---------- | ----------------------------------------------- |
+| `feat`     | A new feature                                   |
+| `fix`      | A bug fix                                       |
+| `chore`    | Build process, dependencies, tooling            |
 | `refactor` | Code change that is neither a fix nor a feature |
-| `docs` | Documentation only |
-| `test` | Adding or fixing tests |
-| `perf` | Performance improvements |
-| `ci` | CI/CD pipeline changes |
+| `docs`     | Documentation only                              |
+| `test`     | Adding or fixing tests                          |
+| `perf`     | Performance improvements                        |
+| `ci`       | CI/CD pipeline changes                          |
 
 ---
 
@@ -155,16 +155,16 @@ Runs on every pull request. All checks must pass before merge is allowed.
 
 ## 6. Branch Protection Rules for `main`
 
-| Rule | Status |
-|---|---|
-| Require a pull request before merging | ✅ Enabled |
-| Require status checks to pass: `lint`, `typecheck`, `migration-check`, `test-e2e` | ✅ Enabled |
-| Require branches to be up to date before merging | ✅ Enabled |
-| Require conversation resolution before merging | ✅ Enabled |
-| Merge method | Squash merge only |
-| Automatically delete head branches | ✅ Enabled |
-| Allow force pushes | ❌ Disabled |
-| Allow deletions of `main` | ❌ Disabled |
+| Rule                                                                              | Status            |
+| --------------------------------------------------------------------------------- | ----------------- |
+| Require a pull request before merging                                             | ✅ Enabled        |
+| Require status checks to pass: `lint`, `typecheck`, `migration-check`, `test-e2e` | ✅ Enabled        |
+| Require branches to be up to date before merging                                  | ✅ Enabled        |
+| Require conversation resolution before merging                                    | ✅ Enabled        |
+| Merge method                                                                      | Squash merge only |
+| Automatically delete head branches                                                | ✅ Enabled        |
+| Allow force pushes                                                                | ❌ Disabled       |
+| Allow deletions of `main`                                                         | ❌ Disabled       |
 
 ---
 
@@ -172,32 +172,32 @@ Runs on every pull request. All checks must pass before merge is allowed.
 
 ### Type Labels
 
-| Label | Color | Description |
-|---|---|---|
-| `feature` | `#22c55e` (green) | New feature or request |
-| `bug` | `#ef4444` (red) | Something isn't working |
-| `chore` | `#eab308` (yellow) | Maintenance, deps, config |
-| `docs` | `#3b82f6` (blue) | Documentation improvements |
-| `refactor` | `#a855f7` (purple) | Code restructuring |
+| Label      | Color              | Description                |
+| ---------- | ------------------ | -------------------------- |
+| `feature`  | `#22c55e` (green)  | New feature or request     |
+| `bug`      | `#ef4444` (red)    | Something isn't working    |
+| `chore`    | `#eab308` (yellow) | Maintenance, deps, config  |
+| `docs`     | `#3b82f6` (blue)   | Documentation improvements |
+| `refactor` | `#a855f7` (purple) | Code restructuring         |
 
 ### Phase Labels
 
-| Label | Description |
-|---|---|
-| `phase:1-skeleton` | Phase 1 — Infrastructure Skeleton |
-| `phase:2-data-core` | Phase 2 — Data Core & Security |
-| `phase:3-canvas` | Phase 3 — Spatial Canvas & State Engine |
-| `phase:4-polish` | Phase 4 — Polish, Assets & Observability |
+| Label               | Description                              |
+| ------------------- | ---------------------------------------- |
+| `phase:1-skeleton`  | Phase 1 — Infrastructure Skeleton        |
+| `phase:2-data-core` | Phase 2 — Data Core & Security           |
+| `phase:3-canvas`    | Phase 3 — Spatial Canvas & State Engine  |
+| `phase:4-polish`    | Phase 4 — Polish, Assets & Observability |
 
 ### Domain Labels
 
-| Label | Description |
-|---|---|
-| `canvas` | React Flow, Zustand, drag-and-drop |
-| `database` | Drizzle schema, migrations, RLS |
-| `auth` | Supabase Auth, session management |
-| `search` | Full-text search, tsvector |
-| `ci-cd` | GitHub Actions, Vercel, deployments |
+| Label      | Description                         |
+| ---------- | ----------------------------------- |
+| `canvas`   | React Flow, Zustand, drag-and-drop  |
+| `database` | Drizzle schema, migrations, RLS     |
+| `auth`     | Supabase Auth, session management   |
+| `search`   | Full-text search, tsvector          |
+| `ci-cd`    | GitHub Actions, Vercel, deployments |
 
 ---
 
@@ -205,13 +205,13 @@ Runs on every pull request. All checks must pass before merge is allowed.
 
 The project board uses a standard Kanban layout:
 
-| Column | Definition |
-|---|---|
-| **Backlog** | Planned but not yet scheduled |
-| **Sprint** | Scheduled for the current sprint |
-| **In Progress** | Being actively worked on |
-| **In Review** | PR open, awaiting review |
-| **Done** | Merged to `main` |
+| Column          | Definition                       |
+| --------------- | -------------------------------- |
+| **Backlog**     | Planned but not yet scheduled    |
+| **Sprint**      | Scheduled for the current sprint |
+| **In Progress** | Being actively worked on         |
+| **In Review**   | PR open, awaiting review         |
+| **Done**        | Merged to `main`                 |
 
 ---
 
@@ -259,26 +259,26 @@ git push origin v0.1.0
 
 ### Secret Table
 
-| Secret | Description | Used In | Stored In |
-|---|---|---|---|
-| `DATABASE_URL` | Pooled Supabase connection string (Supavisor, port 6543) | Server Actions, Drizzle | GitHub Secrets (production), Vercel Env |
-| `TEST_DATABASE_URL` | Isolated test database | `ci.yml` E2E tests | GitHub Secrets |
-| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL (public) | Client-side Supabase init | GitHub Secrets, Vercel Env |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon/public key | Client-side Supabase init | GitHub Secrets, Vercel Env |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase admin key (server only) | Migration scripts | GitHub Secrets (production only) |
-| `UPSTASH_REDIS_REST_URL` | Upstash Redis endpoint | Rate limiting | GitHub Secrets, Vercel Env |
-| `UPSTASH_REDIS_REST_TOKEN` | Upstash Redis auth token | Rate limiting | GitHub Secrets, Vercel Env |
-| `VERCEL_TOKEN` | Vercel API token for deployments | `deploy.yml` | GitHub Secrets |
-| `SENTRY_DSN` | Sentry error reporting endpoint | Client + Server Sentry init | GitHub Secrets, Vercel Env |
-| `TURBO_TOKEN` | Turborepo remote caching token | `ci.yml` build cache | GitHub Secrets |
+| Secret                          | Description                                              | Used In                     | Stored In                               |
+| ------------------------------- | -------------------------------------------------------- | --------------------------- | --------------------------------------- |
+| `DATABASE_URL`                  | Pooled Supabase connection string (Supavisor, port 6543) | Server Actions, Drizzle     | GitHub Secrets (production), Vercel Env |
+| `TEST_DATABASE_URL`             | Isolated test database                                   | `ci.yml` E2E tests          | GitHub Secrets                          |
+| `NEXT_PUBLIC_SUPABASE_URL`      | Supabase project URL (public)                            | Client-side Supabase init   | GitHub Secrets, Vercel Env              |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon/public key                                 | Client-side Supabase init   | GitHub Secrets, Vercel Env              |
+| `SUPABASE_SERVICE_ROLE_KEY`     | Supabase admin key (server only)                         | Migration scripts           | GitHub Secrets (production only)        |
+| `UPSTASH_REDIS_REST_URL`        | Upstash Redis endpoint                                   | Rate limiting               | GitHub Secrets, Vercel Env              |
+| `UPSTASH_REDIS_REST_TOKEN`      | Upstash Redis auth token                                 | Rate limiting               | GitHub Secrets, Vercel Env              |
+| `VERCEL_TOKEN`                  | Vercel API token for deployments                         | `deploy.yml`                | GitHub Secrets                          |
+| `SENTRY_DSN`                    | Sentry error reporting endpoint                          | Client + Server Sentry init | GitHub Secrets, Vercel Env              |
+| `TURBO_TOKEN`                   | Turborepo remote caching token                           | `ci.yml` build cache        | GitHub Secrets                          |
 
 ### Environment Tiers
 
-| Environment | Branch / Trigger | Secrets Source |
-|---|---|---|
-| **Development** | Local machine | `.env.local` (never committed) |
-| **Preview** | Any PR branch | Vercel Preview Environment |
-| **Production** | `main` branch | Vercel Production Environment + GitHub Secrets |
+| Environment     | Branch / Trigger | Secrets Source                                 |
+| --------------- | ---------------- | ---------------------------------------------- |
+| **Development** | Local machine    | `.env.local` (never committed)                 |
+| **Preview**     | Any PR branch    | Vercel Preview Environment                     |
+| **Production**  | `main` branch    | Vercel Production Environment + GitHub Secrets |
 
 ---
 
@@ -315,14 +315,14 @@ Developer machine
 
 The following alerts are configured across Sentry, Vercel, Supabase, and GitHub to detect production issues early:
 
-| Alert | Trigger | Channel |
-|---|---|---|
-| Error spike | > 10 Sentry errors in 5 minutes | Email / Discord webhook |
-| Database connection exhaustion | Supabase dashboard > 80% pool usage | Email |
-| Serverless function timeout | Vercel function exceeds 10s | Sentry + Vercel alerts |
-| Rate limit spike | Unusual Upstash blocking patterns | Discord webhook |
-| Build failure on main | GitHub Actions CI fails after merge | GitHub notification |
-| Lighthouse regression | Performance score drops below 85 | GitHub PR comment |
+| Alert                          | Trigger                             | Channel                 |
+| ------------------------------ | ----------------------------------- | ----------------------- |
+| Error spike                    | > 10 Sentry errors in 5 minutes     | Email / Discord webhook |
+| Database connection exhaustion | Supabase dashboard > 80% pool usage | Email                   |
+| Serverless function timeout    | Vercel function exceeds 10s         | Sentry + Vercel alerts  |
+| Rate limit spike               | Unusual Upstash blocking patterns   | Discord webhook         |
+| Build failure on main          | GitHub Actions CI fails after merge | GitHub notification     |
+| Lighthouse regression          | Performance score drops below 85    | GitHub PR comment       |
 
 ### Alert Setup Checklist
 
@@ -339,18 +339,18 @@ The following alerts are configured across Sentry, Vercel, Supabase, and GitHub 
 Add the `pnpm audit --audit-level=high` step to the CI pipeline to catch known vulnerabilities in dependencies before they reach production:
 
 ```yaml
-  dependency-audit:
-    name: Dependency Security Audit
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "pnpm"
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm audit --audit-level=high
+dependency-audit:
+  name: Dependency Security Audit
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v4
+    - uses: pnpm/action-setup@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'pnpm'
+    - run: pnpm install --frozen-lockfile
+    - run: pnpm audit --audit-level=high
 ```
 
 See `SECURITY.md` §6 for the full dependency auditing strategy.

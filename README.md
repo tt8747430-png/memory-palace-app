@@ -4,17 +4,17 @@ A spatial, interactive learning platform where users create virtual "palaces" wi
 
 ## Documentation
 
-| Document | Description |
-|---|---|
-| [ARCHITECTURE.md](./ARCHITECTURE.md) | Master architecture blueprint — technology stack, data flow, schema, file structure, and guiding principles |
-| [UI_STYLE_GUIDE.md](./UI_STYLE_GUIDE.md) | Mobile-first UI/UX style guide — responsive design, color system, component patterns, and navigation architecture |
-| [FEATURES.md](./FEATURES.md) | Feature specifications — dashboard, gamification, memory games, review system, and public pages |
-| [DEVELOPMENT.md](./DEVELOPMENT.md) | Complete development & DevOps plan — branching strategy, CI/CD pipelines, secrets management, and daily workflow |
-| [ROADMAP.md](./ROADMAP.md) | Phased execution plan — phases from infrastructure skeleton to production-ready polish |
-| [TESTING.md](./TESTING.md) | Complete testing strategy — unit, component, integration, E2E, visual regression, coverage thresholds, and CI jobs |
-| [SECURITY.md](./SECURITY.md) | Security policies — threat model, input validation, RLS, rate limiting, and vulnerability reporting |
-| [CONTRIBUTING.md](./CONTRIBUTING.md) | Contribution guide — PR process, commit conventions, branch naming, and code review standards |
-| [PERFORMANCE.md](./PERFORMANCE.md) | Performance targets — canvas rendering, database query budgets, bundle size limits, and profiling guides |
+| Document                                 | Description                                                                                                        |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| [ARCHITECTURE.md](./ARCHITECTURE.md)     | Master architecture blueprint — technology stack, data flow, schema, file structure, and guiding principles        |
+| [UI_STYLE_GUIDE.md](./UI_STYLE_GUIDE.md) | Mobile-first UI/UX style guide — responsive design, color system, component patterns, and navigation architecture  |
+| [FEATURES.md](./FEATURES.md)             | Feature specifications — dashboard, gamification, memory games, review system, and public pages                    |
+| [DEVELOPMENT.md](./DEVELOPMENT.md)       | Complete development & DevOps plan — branching strategy, CI/CD pipelines, secrets management, and daily workflow   |
+| [ROADMAP.md](./ROADMAP.md)               | Phased execution plan — phases from infrastructure skeleton to production-ready polish                             |
+| [TESTING.md](./TESTING.md)               | Complete testing strategy — unit, component, integration, E2E, visual regression, coverage thresholds, and CI jobs |
+| [SECURITY.md](./SECURITY.md)             | Security policies — threat model, input validation, RLS, rate limiting, and vulnerability reporting                |
+| [CONTRIBUTING.md](./CONTRIBUTING.md)     | Contribution guide — PR process, commit conventions, branch naming, and code review standards                      |
+| [PERFORMANCE.md](./PERFORMANCE.md)       | Performance targets — canvas rendering, database query budgets, bundle size limits, and profiling guides           |
 
 ## Quick Start
 

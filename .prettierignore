@@ -1,0 +1,9 @@
+node_modules
+.next
+.turbo
+dist
+coverage
+packages/db/migrations
+next-env.d.ts
+pnpm-lock.yaml
+

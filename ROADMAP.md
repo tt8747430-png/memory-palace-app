@@ -9,44 +9,44 @@
 
 Each step follows this format:
 
-| Icon | Meaning |
-|------|---------|
-| 🔧 | **Command** — exact shell command to run |
-| 📁 | **File** — exact file path to create or edit |
-| ✅ | **Test** — which testing layer, what to assert |
-| 🎯 | **Outcome** — what you should see when done |
-| 📖 | **Docs ref** — cross-link to ARCHITECTURE.md, SECURITY.md, TESTING.md, etc. |
+| Icon | Meaning                                                                     |
+| ---- | --------------------------------------------------------------------------- |
+| 🔧   | **Command** — exact shell command to run                                    |
+| 📁   | **File** — exact file path to create or edit                                |
+| ✅   | **Test** — which testing layer, what to assert                              |
+| 🎯   | **Outcome** — what you should see when done                                 |
+| 📖   | **Docs ref** — cross-link to ARCHITECTURE.md, SECURITY.md, TESTING.md, etc. |
 
 ---
 
 ## Overview
 
-| Phase | Title | Timeline | Sub-Phases |
-|---|---|---|---|
-| **1** | Foundation & DevOps | Week 1 | 1A: Monorepo Scaffold · 1B: Auth & DB · 1C: CI/CD & Deploy |
-| **2** | Responsive Shell & Theming | Week 2 | 2A: Layout Components · 2B: Theme System · 2C: Base Components |
-| **3** | Data Layer & Security | Weeks 3–4 | 3A: DB Schema & Migrations · 3B: RLS & Server Actions · 3C: Rate Limiting & Search |
-| **4** | Dashboard & Core Pages | Weeks 5–6 | 4A: Dashboard Home · 4B: Palace/Room CRUD · 4C: Settings & Profile |
-| **5** | Spatial Canvas | Weeks 7–9 | 5A: React Flow Setup · 5B: Drag & Persistence · 5C: Realtime Sync & Offline · 5D: Advanced Canvas UX |
-| **6** | Command Palette & Shortcuts | Week 10 | kbar, 20+ shortcuts, `?` overlay, mobile trigger |
-| **7** | Animations & Polish | Week 11 | framer-motion, canvas-confetti, reduced-motion |
-| **8** | Production Readiness | Week 12 | 8A: Observability · 8B: A11y & SEO · 8C: Public Pages · 8D: Security Hardening · 8E: Launch Checklist → **v1.0.0** |
-| **9** | Gamification & Engagement | Weeks 13–16 | 9A: Daily Review · 9B: Spaced Repetition · 9C: Games · 9D: Points/Badges · 9E: Review Generator |
-| **10** | Backlinks & Knowledge Graph | Weeks 17–18 | `[[references]]`, orphan detection, connection strength |
-| **11** | 3D Canvas | Post-v1.5.0 | React Three Fiber, WebXR stretch goal |
+| Phase  | Title                       | Timeline    | Sub-Phases                                                                                                         |
+| ------ | --------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------ |
+| **1**  | Foundation & DevOps         | Week 1      | 1A: Monorepo Scaffold · 1B: Auth & DB · 1C: CI/CD & Deploy                                                         |
+| **2**  | Responsive Shell & Theming  | Week 2      | 2A: Layout Components · 2B: Theme System · 2C: Base Components                                                     |
+| **3**  | Data Layer & Security       | Weeks 3–4   | 3A: DB Schema & Migrations · 3B: RLS & Server Actions · 3C: Rate Limiting & Search                                 |
+| **4**  | Dashboard & Core Pages      | Weeks 5–6   | 4A: Dashboard Home · 4B: Palace/Room CRUD · 4C: Settings & Profile                                                 |
+| **5**  | Spatial Canvas              | Weeks 7–9   | 5A: React Flow Setup · 5B: Drag & Persistence · 5C: Realtime Sync & Offline · 5D: Advanced Canvas UX               |
+| **6**  | Command Palette & Shortcuts | Week 10     | kbar, 20+ shortcuts, `?` overlay, mobile trigger                                                                   |
+| **7**  | Animations & Polish         | Week 11     | framer-motion, canvas-confetti, reduced-motion                                                                     |
+| **8**  | Production Readiness        | Week 12     | 8A: Observability · 8B: A11y & SEO · 8C: Public Pages · 8D: Security Hardening · 8E: Launch Checklist → **v1.0.0** |
+| **9**  | Gamification & Engagement   | Weeks 13–16 | 9A: Daily Review · 9B: Spaced Repetition · 9C: Games · 9D: Points/Badges · 9E: Review Generator                    |
+| **10** | Backlinks & Knowledge Graph | Weeks 17–18 | `[[references]]`, orphan detection, connection strength                                                            |
+| **11** | 3D Canvas                   | Post-v1.5.0 | React Three Fiber, WebXR stretch goal                                                                              |
 
 ### Version Tags
 
-| Tag | Phase | Meaning |
-|---|---|---|
-| `v0.1.0` | Phase 1 complete | Infrastructure skeleton, auth works |
-| `v0.2.0` | Phase 3 complete | Data core, CRUD, search, RLS |
-| `v0.3.0` | Phase 5 complete | Spatial canvas, realtime, offline |
-| `v0.4.0` | Phase 6 complete | Command palette, shortcuts |
-| `v0.5.0` | Phase 7 complete | Animations, micro-interactions |
-| `v1.0.0` | Phase 8 complete | Production-ready launch |
-| `v1.5.0` | Phase 9 complete | Gamification & engagement |
-| `v2.0.0` | Phase 11 complete | 3D canvas |
+| Tag      | Phase             | Meaning                             |
+| -------- | ----------------- | ----------------------------------- |
+| `v0.1.0` | Phase 1 complete  | Infrastructure skeleton, auth works |
+| `v0.2.0` | Phase 3 complete  | Data core, CRUD, search, RLS        |
+| `v0.3.0` | Phase 5 complete  | Spatial canvas, realtime, offline   |
+| `v0.4.0` | Phase 6 complete  | Command palette, shortcuts          |
+| `v0.5.0` | Phase 7 complete  | Animations, micro-interactions      |
+| `v1.0.0` | Phase 8 complete  | Production-ready launch             |
+| `v1.5.0` | Phase 9 complete  | Gamification & engagement           |
+| `v2.0.0` | Phase 11 complete | 3D canvas                           |
 
 ---
 
@@ -61,12 +61,14 @@ Each step follows this format:
 #### Step 1.A.1 — Initialize the Turborepo monorepo
 
 🔧 **Command:**
+
 ```bash
 pnpx create-turbo@latest memory-palace-app --package-manager pnpm
 cd memory-palace-app
 ```
 
 📁 **Files created:**
+
 ```
 memory-palace-app/
 ├── turbo.json
@@ -86,18 +88,21 @@ memory-palace-app/
 #### Step 1.A.2 — Configure pnpm workspace
 
 🔧 **Command:**
+
 ```bash
 # Edit pnpm-workspace.yaml
 ```
 
 📁 **File:** `pnpm-workspace.yaml`
+
 ```yaml
 packages:
-  - "apps/*"
-  - "packages/*"
+  - 'apps/*'
+  - 'packages/*'
 ```
 
 📁 **File:** `turbo.json`
+
 ```json
 {
   "$schema": "https://turbo.build/schema.json",
@@ -134,12 +139,14 @@ packages:
 #### Step 1.A.3 — Create Next.js App Router in `apps/web`
 
 🔧 **Command:**
+
 ```bash
 rm -rf apps/web
 pnpx create-next-app@latest apps/web --typescript --tailwind --eslint --app --src-dir --import-alias "@/*" --use-pnpm
 ```
 
 📁 **Files created:**
+
 ```
 apps/web/
 ├── src/
@@ -165,6 +172,7 @@ apps/web/
 #### Step 1.A.4 — Create `packages/db` (Drizzle ORM)
 
 🔧 **Command:**
+
 ```bash
 mkdir -p packages/db/src packages/db/migrations
 cd packages/db
@@ -175,6 +183,7 @@ cd ../..
 ```
 
 📁 **File:** `packages/db/package.json`
+
 ```json
 {
   "name": "@memory-palace/db",
@@ -199,6 +208,7 @@ cd ../..
 ```
 
 📁 **File:** `packages/db/src/client.ts`
+
 ```typescript
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
@@ -210,6 +220,7 @@ export const db = drizzle(sql);
 ```
 
 📁 **File:** `packages/db/drizzle.config.ts`
+
 ```typescript
 import { defineConfig } from 'drizzle-kit';
 
@@ -232,6 +243,7 @@ export default defineConfig({
 #### Step 1.A.5 — Create `packages/ui` (shadcn/ui base)
 
 🔧 **Command:**
+
 ```bash
 mkdir -p packages/ui/src/components
 cd packages/ui
@@ -241,6 +253,7 @@ pnpm add -D tailwindcss @tailwindcss/typography --filter @memory-palace/ui
 ```
 
 📁 **File:** `packages/ui/package.json`
+
 ```json
 {
   "name": "@memory-palace/ui",
@@ -251,6 +264,7 @@ pnpm add -D tailwindcss @tailwindcss/typography --filter @memory-palace/ui
 ```
 
 📁 **File:** `packages/ui/src/index.ts`
+
 ```typescript
 // Barrel export for all UI components
 export { Button } from './components/button';
@@ -267,11 +281,13 @@ export { Skeleton } from './components/skeleton';
 #### Step 1.A.6 — Create `packages/eslint-config` and `packages/typescript-config`
 
 🔧 **Command:**
+
 ```bash
 mkdir -p packages/eslint-config packages/typescript-config
 ```
 
 📁 **File:** `packages/eslint-config/package.json`
+
 ```json
 {
   "name": "@memory-palace/eslint-config",
@@ -281,6 +297,7 @@ mkdir -p packages/eslint-config packages/typescript-config
 ```
 
 📁 **File:** `packages/eslint-config/index.js`
+
 ```javascript
 module.exports = {
   extends: ['next/core-web-vitals', 'next/typescript', 'prettier'],
@@ -292,18 +309,22 @@ module.exports = {
     ],
   },
   rules: {
-    'boundaries/element-types': ['error', {
-      default: 'disallow',
-      rules: [
-        { from: 'app', allow: ['package'] },
-        { from: 'package', allow: ['package'] },
-      ],
-    }],
+    'boundaries/element-types': [
+      'error',
+      {
+        default: 'disallow',
+        rules: [
+          { from: 'app', allow: ['package'] },
+          { from: 'package', allow: ['package'] },
+        ],
+      },
+    ],
   },
 };
 ```
 
 📁 **File:** `packages/typescript-config/base.json`
+
 ```json
 {
   "$schema": "https://json.schemastore.org/tsconfig",
@@ -326,6 +347,7 @@ module.exports = {
 ```
 
 🔧 **Command:**
+
 ```bash
 pnpm add -D eslint-plugin-boundaries --filter @memory-palace/eslint-config
 ```
@@ -339,6 +361,7 @@ pnpm add -D eslint-plugin-boundaries --filter @memory-palace/eslint-config
 #### Step 1.A.7 — Create `.env.example` and environment structure
 
 📁 **File:** `.env.example`
+
 ```bash
 # ────── Supabase ──────
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
@@ -368,6 +391,7 @@ TEST_DATABASE_URL=postgresql://postgres:password@localhost:5432/test_db
 ```
 
 📁 **File:** `.gitignore` (add to existing)
+
 ```
 .env.local
 .env.*.local
@@ -384,6 +408,7 @@ TEST_DATABASE_URL=postgresql://postgres:password@localhost:5432/test_db
 #### Step 1.B.1 — Create Supabase project
 
 🔧 **Command:**
+
 ```bash
 # Via Supabase Dashboard (https://app.supabase.com)
 # 1. Create a new project (free tier)
@@ -392,6 +417,7 @@ TEST_DATABASE_URL=postgresql://postgres:password@localhost:5432/test_db
 ```
 
 📁 **File:** `apps/web/.env.local`
+
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGci...
@@ -409,6 +435,7 @@ DATABASE_URL=postgresql://postgres.xxxxx:password@db.pooler.supabase.com:6543/po
 #### Step 1.B.2 — Set up local Supabase via Docker
 
 🔧 **Command:**
+
 ```bash
 pnpm add -D supabase --filter web
 npx supabase init
@@ -416,6 +443,7 @@ npx supabase start
 ```
 
 📁 **Files created:**
+
 ```
 supabase/
 ├── config.toml
@@ -432,11 +460,13 @@ supabase/
 #### Step 1.B.3 — Install and configure Supabase Auth with `@supabase/ssr`
 
 🔧 **Command:**
+
 ```bash
 pnpm add @supabase/supabase-js @supabase/ssr --filter web
 ```
 
 📁 **File:** `apps/web/src/shared/lib/supabase-server.ts`
+
 ```typescript
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
@@ -448,14 +478,14 @@ export function createSupabaseServer() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() { return cookieStore.getAll(); },
+        getAll() {
+          return cookieStore.getAll();
+        },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options)
-          );
+          cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
         },
       },
-    }
+    },
   );
 }
 
@@ -466,18 +496,20 @@ export async function auth() {
 ```
 
 📁 **File:** `apps/web/src/shared/lib/supabase-browser.ts`
+
 ```typescript
 import { createBrowserClient } from '@supabase/ssr';
 
 export function createSupabaseBrowser() {
   return createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   );
 }
 ```
 
 📁 **File:** `apps/web/src/middleware.ts`
+
 ```typescript
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
@@ -490,27 +522,32 @@ export async function middleware(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() { return request.cookies.getAll(); },
+        getAll() {
+          return request.cookies.getAll();
+        },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
           supabaseResponse = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
+            supabaseResponse.cookies.set(name, value, options),
           );
         },
       },
-    }
+    },
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   // Redirect unauthenticated users to login
-  if (!user && !request.nextUrl.pathname.startsWith('/login') &&
-      !request.nextUrl.pathname.startsWith('/signup') &&
-      !request.nextUrl.pathname.startsWith('/about') &&
-      request.nextUrl.pathname !== '/') {
+  if (
+    !user &&
+    !request.nextUrl.pathname.startsWith('/login') &&
+    !request.nextUrl.pathname.startsWith('/signup') &&
+    !request.nextUrl.pathname.startsWith('/about') &&
+    request.nextUrl.pathname !== '/'
+  ) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
     return NextResponse.redirect(url);
@@ -533,6 +570,7 @@ export const config = {
 #### Step 1.B.4 — Create Login and Signup pages
 
 📁 **File:** `apps/web/src/app/(auth)/login/page.tsx`
+
 ```typescript
 import { LoginForm } from '@/features/auth/components/LoginForm';
 
@@ -552,6 +590,7 @@ export default function LoginPage() {
 ```
 
 📁 **File:** `apps/web/src/app/(auth)/signup/page.tsx`
+
 ```typescript
 import { SignupForm } from '@/features/auth/components/SignupForm';
 
@@ -571,6 +610,7 @@ export default function SignupPage() {
 ```
 
 📁 **File:** `apps/web/src/features/auth/components/LoginForm.tsx`
+
 ```typescript
 'use client';
 import { createSupabaseBrowser } from '@/shared/lib/supabase-browser';
@@ -624,11 +664,13 @@ export function LoginForm() {
 #### Step 1.B.5 — Install `next-intl` for i18n readiness
 
 🔧 **Command:**
+
 ```bash
 pnpm add next-intl --filter web
 ```
 
 📁 **File:** `apps/web/messages/en.json`
+
 ```json
 {
   "common": {
@@ -653,6 +695,7 @@ pnpm add next-intl --filter web
 #### Step 1.C.1 — Create GitHub Actions CI pipeline
 
 📁 **File:** `.github/workflows/ci.yml`
+
 ```yaml
 name: CI Quality Gate
 
@@ -674,7 +717,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "pnpm"
+          cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm turbo lint
 
@@ -687,7 +730,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "pnpm"
+          cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm turbo typecheck
 
@@ -700,7 +743,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "pnpm"
+          cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm audit --audit-level=high
 
@@ -713,7 +756,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "pnpm"
+          cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm turbo test:unit
 
@@ -727,7 +770,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "pnpm"
+          cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm turbo build --filter=web
@@ -747,6 +790,7 @@ jobs:
 #### Step 1.C.2 — Create Vercel deploy workflow
 
 📁 **File:** `.github/workflows/deploy.yml`
+
 ```yaml
 name: Deploy
 
@@ -779,6 +823,7 @@ jobs:
 #### Step 1.C.3 — Create database migration workflow
 
 📁 **File:** `.github/workflows/migrate.yml`
+
 ```yaml
 name: Database Migration
 
@@ -798,7 +843,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "pnpm"
+          cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @memory-palace/db migrate
         env:
@@ -814,11 +859,13 @@ jobs:
 #### Step 1.C.4 — Create release workflow with `git-cliff`
 
 🔧 **Command:**
+
 ```bash
 pnpm add -D git-cliff -w
 ```
 
 📁 **File:** `.github/workflows/release.yml`
+
 ```yaml
 name: Release
 
@@ -859,18 +906,19 @@ jobs:
 #### Step 1.C.5 — Configure branch protection rules
 
 🔧 **Command (GitHub CLI):**
+
 ```bash
 # Via GitHub Settings → Branches → Branch protection rules → main
 ```
 
-| Rule | Setting |
-|------|---------|
-| Require PR before merging | ✅ |
-| Required status checks | `lint`, `typecheck`, `test-unit`, `test-e2e` |
-| Require up-to-date branches | ✅ |
-| Merge method | Squash only |
-| Delete head branches | ✅ |
-| Force pushes | ❌ |
+| Rule                        | Setting                                      |
+| --------------------------- | -------------------------------------------- |
+| Require PR before merging   | ✅                                           |
+| Required status checks      | `lint`, `typecheck`, `test-unit`, `test-e2e` |
+| Require up-to-date branches | ✅                                           |
+| Merge method                | Squash only                                  |
+| Delete head branches        | ✅                                           |
+| Force pushes                | ❌                                           |
 
 🎯 **Outcome:** Direct pushes to `main` are blocked. All changes go through reviewed PRs.
 
@@ -900,6 +948,7 @@ git push origin v0.1.0
 #### Step 2.A.1 — Create the `DashboardShell` component
 
 📁 **File:** `apps/web/src/features/dashboard/components/DashboardShell.tsx`
+
 ```typescript
 'use client';
 import { ReactNode } from 'react';
@@ -950,6 +999,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
 #### Step 2.A.2 — Create the `BottomNav` component
 
 📁 **File:** `apps/web/src/features/dashboard/components/BottomNav.tsx`
+
 ```typescript
 'use client';
 import Link from 'next/link';
@@ -1003,6 +1053,7 @@ export function BottomNav() {
 #### Step 2.A.3 — Create `Sidebar` and `MobileDrawer` components
 
 📁 **File:** `apps/web/src/features/dashboard/components/Sidebar.tsx`
+
 ```typescript
 'use client';
 import Link from 'next/link';
@@ -1047,6 +1098,7 @@ export function Sidebar() {
 ```
 
 📁 **File:** `apps/web/src/features/dashboard/components/MobileDrawer.tsx`
+
 ```typescript
 'use client';
 import { Sheet, SheetContent, SheetTrigger } from '@memory-palace/ui';
@@ -1070,6 +1122,7 @@ export function MobileDrawer() {
 ```
 
 📁 **File:** `apps/web/src/features/dashboard/index.ts`
+
 ```typescript
 export { DashboardShell } from './components/DashboardShell';
 export { BottomNav } from './components/BottomNav';
@@ -1086,6 +1139,7 @@ export { MobileDrawer } from './components/MobileDrawer';
 #### Step 2.A.4 — Create dashboard layout wrapper
 
 📁 **File:** `apps/web/src/app/(dashboard)/layout.tsx`
+
 ```typescript
 import { DashboardShell } from '@/features/dashboard';
 
@@ -1095,6 +1149,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 ```
 
 📁 **File:** `apps/web/src/app/(dashboard)/page.tsx`
+
 ```typescript
 export default function DashboardHomePage() {
   return (
@@ -1117,6 +1172,7 @@ export default function DashboardHomePage() {
 #### Step 2.A.5 — Configure viewport meta tag and safe area CSS
 
 📁 **File:** `apps/web/src/app/layout.tsx` (edit the root layout)
+
 ```typescript
 import type { Viewport, Metadata } from 'next';
 import './globals.css';
@@ -1152,11 +1208,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 #### Step 2.B.1 — Install and configure `next-themes`
 
 🔧 **Command:**
+
 ```bash
 pnpm add next-themes --filter web
 ```
 
 📁 **File:** `apps/web/src/app/layout.tsx` (update)
+
 ```typescript
 import { ThemeProvider } from 'next-themes';
 
@@ -1174,6 +1232,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 ```
 
 📁 **File:** `apps/web/src/app/globals.css` (add color tokens)
+
 ```css
 @tailwind base;
 @tailwind components;
@@ -1246,6 +1305,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 #### Step 2.B.2 — Create `ThemeToggle` component
 
 📁 **File:** `apps/web/src/shared/components/ThemeToggle.tsx`
+
 ```typescript
 'use client';
 import { useTheme } from 'next-themes';
@@ -1274,15 +1334,13 @@ export function ThemeToggle() {
 #### Step 2.B.3 — Configure Tailwind with custom extensions
 
 📁 **File:** `apps/web/tailwind.config.ts` (extend)
+
 ```typescript
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
   darkMode: 'class',
-  content: [
-    './src/**/*.{ts,tsx}',
-    '../../packages/ui/src/**/*.{ts,tsx}',
-  ],
+  content: ['./src/**/*.{ts,tsx}', '../../packages/ui/src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       spacing: {
@@ -1300,8 +1358,8 @@ const config: Config = {
         'top-bar': '3.5rem',
         'screen-dynamic': '100dvh',
       },
-      minWidth: { 'touch': '48px' },
-      minHeight: { 'touch': '48px' },
+      minWidth: { touch: '48px' },
+      minHeight: { touch: '48px' },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
@@ -1309,8 +1367,14 @@ const config: Config = {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
-        secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
-        destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
+        },
         muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
         accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
         card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
@@ -1342,6 +1406,7 @@ export default config;
 #### Step 2.C.1 — Create `EmptyState` component
 
 📁 **File:** `apps/web/src/shared/components/EmptyState.tsx`
+
 ```typescript
 import { Button } from '@memory-palace/ui';
 
@@ -1377,6 +1442,7 @@ export function EmptyState({ icon, title, description, action }: EmptyStateProps
 #### Step 2.C.2 — Create skeleton loading components
 
 📁 **File:** `apps/web/src/shared/components/PalaceCardSkeleton.tsx`
+
 ```typescript
 import { Skeleton } from '@memory-palace/ui';
 
@@ -1401,6 +1467,7 @@ export function PalaceCardSkeleton() {
 #### Step 2.C.3 — Create `cn()` utility
 
 📁 **File:** `apps/web/src/shared/utils/cn.ts`
+
 ```typescript
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -1411,6 +1478,7 @@ export function cn(...inputs: ClassValue[]) {
 ```
 
 🔧 **Command:**
+
 ```bash
 pnpm add clsx tailwind-merge --filter web
 ```
@@ -1430,8 +1498,18 @@ pnpm add clsx tailwind-merge --filter web
 #### Step 3.A.1 — Define the Drizzle ORM schema
 
 📁 **File:** `packages/db/src/schema.ts`
+
 ```typescript
-import { pgTable, uuid, text, timestamptz, float8, integer, primaryKey, index } from 'drizzle-orm/pg-core';
+import {
+  pgTable,
+  uuid,
+  text,
+  timestamptz,
+  float8,
+  integer,
+  primaryKey,
+  index,
+} from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
 export const users = pgTable('users', {
@@ -1442,78 +1520,121 @@ export const users = pgTable('users', {
   createdAt: timestamptz('created_at').defaultNow().notNull(),
 });
 
-export const palaces = pgTable('palaces', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  userId: uuid('user_id').notNull().references(() => users.id),
-  name: text('name').notNull(),
-  description: text('description'),
-  deletedAt: timestamptz('deleted_at'),
-  createdAt: timestamptz('created_at').defaultNow().notNull(),
-  updatedAt: timestamptz('updated_at').defaultNow().notNull(),
-}, (table) => ({
-  userIdIdx: index('idx_palaces_user_id').on(table.userId),
-}));
+export const palaces = pgTable(
+  'palaces',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id),
+    name: text('name').notNull(),
+    description: text('description'),
+    deletedAt: timestamptz('deleted_at'),
+    createdAt: timestamptz('created_at').defaultNow().notNull(),
+    updatedAt: timestamptz('updated_at').defaultNow().notNull(),
+  },
+  (table) => ({
+    userIdIdx: index('idx_palaces_user_id').on(table.userId),
+  }),
+);
 
-export const rooms = pgTable('rooms', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  palaceId: uuid('palace_id').notNull().references(() => palaces.id),
-  name: text('name').notNull(),
-  bgImageUrl: text('bg_image_url'),
-  width: integer('width'),
-  height: integer('height'),
-  order: integer('order'),
-  deletedAt: timestamptz('deleted_at'),
-  createdAt: timestamptz('created_at').defaultNow().notNull(),
-  updatedAt: timestamptz('updated_at').defaultNow().notNull(),
-}, (table) => ({
-  palaceIdIdx: index('idx_rooms_palace_id').on(table.palaceId),
-}));
+export const rooms = pgTable(
+  'rooms',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    palaceId: uuid('palace_id')
+      .notNull()
+      .references(() => palaces.id),
+    name: text('name').notNull(),
+    bgImageUrl: text('bg_image_url'),
+    width: integer('width'),
+    height: integer('height'),
+    order: integer('order'),
+    deletedAt: timestamptz('deleted_at'),
+    createdAt: timestamptz('created_at').defaultNow().notNull(),
+    updatedAt: timestamptz('updated_at').defaultNow().notNull(),
+  },
+  (table) => ({
+    palaceIdIdx: index('idx_rooms_palace_id').on(table.palaceId),
+  }),
+);
 
-export const nodes = pgTable('nodes', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  roomId: uuid('room_id').notNull().references(() => rooms.id),
-  userId: uuid('user_id').notNull().references(() => users.id),
-  title: text('title').notNull(),
-  content: text('content'),
-  positionX: float8('position_x'),
-  positionY: float8('position_y'),
-  positionZ: float8('position_z'),
-  nodeType: text('node_type').default('text'),
-  deletedAt: timestamptz('deleted_at'),
-  createdAt: timestamptz('created_at').defaultNow().notNull(),
-  updatedAt: timestamptz('updated_at').defaultNow().notNull(),
-}, (table) => ({
-  roomIdIdx: index('idx_nodes_room_id').on(table.roomId),
-  userIdIdx: index('idx_nodes_user_id').on(table.userId),
-}));
+export const nodes = pgTable(
+  'nodes',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    roomId: uuid('room_id')
+      .notNull()
+      .references(() => rooms.id),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id),
+    title: text('title').notNull(),
+    content: text('content'),
+    positionX: float8('position_x'),
+    positionY: float8('position_y'),
+    positionZ: float8('position_z'),
+    nodeType: text('node_type').default('text'),
+    deletedAt: timestamptz('deleted_at'),
+    createdAt: timestamptz('created_at').defaultNow().notNull(),
+    updatedAt: timestamptz('updated_at').defaultNow().notNull(),
+  },
+  (table) => ({
+    roomIdIdx: index('idx_nodes_room_id').on(table.roomId),
+    userIdIdx: index('idx_nodes_user_id').on(table.userId),
+  }),
+);
 
-export const edges = pgTable('edges', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  sourceNodeId: uuid('source_node_id').notNull().references(() => nodes.id),
-  targetNodeId: uuid('target_node_id').notNull().references(() => nodes.id),
-  label: text('label'),
-  createdAt: timestamptz('created_at').defaultNow().notNull(),
-}, (table) => ({
-  sourceTargetIdx: index('idx_edges_source_target').on(table.sourceNodeId, table.targetNodeId),
-}));
+export const edges = pgTable(
+  'edges',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    sourceNodeId: uuid('source_node_id')
+      .notNull()
+      .references(() => nodes.id),
+    targetNodeId: uuid('target_node_id')
+      .notNull()
+      .references(() => nodes.id),
+    label: text('label'),
+    createdAt: timestamptz('created_at').defaultNow().notNull(),
+  },
+  (table) => ({
+    sourceTargetIdx: index('idx_edges_source_target').on(table.sourceNodeId, table.targetNodeId),
+  }),
+);
 
-export const tags = pgTable('tags', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  name: text('name').notNull(),
-  userId: uuid('user_id').notNull().references(() => users.id),
-}, (table) => ({
-  userIdIdx: index('idx_tags_user_id').on(table.userId),
-}));
+export const tags = pgTable(
+  'tags',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    name: text('name').notNull(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id),
+  },
+  (table) => ({
+    userIdIdx: index('idx_tags_user_id').on(table.userId),
+  }),
+);
 
-export const nodeTags = pgTable('node_tags', {
-  nodeId: uuid('node_id').notNull().references(() => nodes.id),
-  tagId: uuid('tag_id').notNull().references(() => tags.id),
-}, (table) => ({
-  pk: primaryKey({ columns: [table.nodeId, table.tagId] }),
-}));
+export const nodeTags = pgTable(
+  'node_tags',
+  {
+    nodeId: uuid('node_id')
+      .notNull()
+      .references(() => nodes.id),
+    tagId: uuid('tag_id')
+      .notNull()
+      .references(() => tags.id),
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.nodeId, table.tagId] }),
+  }),
+);
 ```
 
 📁 **File:** `packages/db/src/index.ts`
+
 ```typescript
 export { db } from './client';
 export * from './schema';
@@ -1530,6 +1651,7 @@ export * from './schema';
 #### Step 3.A.2 — Generate and run the first migration
 
 🔧 **Command:**
+
 ```bash
 cd packages/db
 pnpm generate
@@ -1546,6 +1668,7 @@ cd ../..
 🔧 **Command:** Create a manual SQL migration file:
 
 📁 **File:** `packages/db/migrations/0002_add_fts_index.sql`
+
 ```sql
 CREATE INDEX idx_nodes_content_fts
 ON nodes
@@ -1553,6 +1676,7 @@ USING GIN (to_tsvector('english', coalesce(title, '') || ' ' || coalesce(content
 ```
 
 🔧 **Command:**
+
 ```bash
 pnpm --filter @memory-palace/db migrate
 ```
@@ -1568,6 +1692,7 @@ pnpm --filter @memory-palace/db migrate
 #### Step 3.B.1 — Create Row Level Security policies
 
 📁 **File:** `packages/db/migrations/0003_rls_policies.sql`
+
 ```sql
 -- Enable RLS on all tables
 ALTER TABLE palaces ENABLE ROW LEVEL SECURITY;
@@ -1621,6 +1746,7 @@ ON tags FOR ALL USING (auth.uid() = user_id);
 #### Step 3.B.2 — Create Zod validation schemas
 
 📁 **File:** `apps/web/src/features/memory-nodes/schemas.ts`
+
 ```typescript
 import { z } from 'zod';
 
@@ -1652,11 +1778,16 @@ export const nodePositionSchema = z.object({
 
 export const batchUpdateSchema = z.object({
   roomId: z.string().uuid(),
-  updates: z.array(z.object({
-    id: z.string().uuid(),
-    position_x: z.number().finite(),
-    position_y: z.number().finite(),
-  })).min(1).max(100),
+  updates: z
+    .array(
+      z.object({
+        id: z.string().uuid(),
+        position_x: z.number().finite(),
+        position_y: z.number().finite(),
+      }),
+    )
+    .min(1)
+    .max(100),
 });
 ```
 
@@ -1671,6 +1802,7 @@ export const batchUpdateSchema = z.object({
 #### Step 3.B.3 — Create Server Actions for Palace CRUD
 
 📁 **File:** `apps/web/src/features/memory-nodes/actions/createPalace.ts`
+
 ```typescript
 'use server';
 
@@ -1681,35 +1813,56 @@ import { checkRateLimit } from '@/shared/lib/rate-limit';
 import { auth } from '@/shared/lib/supabase-server';
 import type { ActionResponse } from '@/shared/types';
 
-export async function createPalace(input: unknown): Promise<ActionResponse<typeof palaces.$inferSelect>> {
+export async function createPalace(
+  input: unknown,
+): Promise<ActionResponse<typeof palaces.$inferSelect>> {
   try {
-    const { data: { user } } = await auth();
-    if (!user) return { success: false, error: { code: 'UNAUTHORIZED', message: 'Not authenticated' } };
+    const {
+      data: { user },
+    } = await auth();
+    if (!user)
+      return { success: false, error: { code: 'UNAUTHORIZED', message: 'Not authenticated' } };
 
     await checkRateLimit();
 
     const parsed = createPalaceSchema.safeParse(input);
-    if (!parsed.success) return { success: false, error: { code: 'VALIDATION_FAILED', message: parsed.error.message } };
+    if (!parsed.success)
+      return {
+        success: false,
+        error: { code: 'VALIDATION_FAILED', message: parsed.error.message },
+      };
 
-    const [palace] = await db.insert(palaces).values({
-      userId: user.id,
-      name: parsed.data.name,
-      description: parsed.data.description,
-    }).returning();
+    const [palace] = await db
+      .insert(palaces)
+      .values({
+        userId: user.id,
+        name: parsed.data.name,
+        description: parsed.data.description,
+      })
+      .returning();
 
     return { success: true, data: palace };
   } catch (error: any) {
-    if (error.status === 429) return { success: false, error: { code: 'RATE_LIMITED', message: 'Too many requests' } };
-    return { success: false, error: { code: 'INTERNAL_ERROR', message: 'Failed to create palace' } };
+    if (error.status === 429)
+      return { success: false, error: { code: 'RATE_LIMITED', message: 'Too many requests' } };
+    return {
+      success: false,
+      error: { code: 'INTERNAL_ERROR', message: 'Failed to create palace' },
+    };
   }
 }
 ```
 
 📁 **File:** `apps/web/src/shared/types.ts`
+
 ```typescript
 export type ErrorCode =
-  | 'RATE_LIMITED' | 'VALIDATION_FAILED' | 'NOT_FOUND'
-  | 'UNAUTHORIZED' | 'CONFLICT' | 'INTERNAL_ERROR';
+  | 'RATE_LIMITED'
+  | 'VALIDATION_FAILED'
+  | 'NOT_FOUND'
+  | 'UNAUTHORIZED'
+  | 'CONFLICT'
+  | 'INTERNAL_ERROR';
 
 export type ActionResponse<T> =
   | { success: true; data: T }
@@ -1727,6 +1880,7 @@ export type ActionResponse<T> =
 #### Step 3.B.4 — Create `batchUpdateNodes` Server Action
 
 📁 **File:** `apps/web/src/features/spatial-canvas/actions/batchUpdateNodes.ts`
+
 ```typescript
 'use server';
 
@@ -1742,8 +1896,13 @@ export async function batchUpdateNodes(input: unknown) {
 
   await db.transaction(async (tx) => {
     for (const update of updates) {
-      await tx.update(nodes)
-        .set({ position_x: update.position_x, position_y: update.position_y, updated_at: new Date() })
+      await tx
+        .update(nodes)
+        .set({
+          position_x: update.position_x,
+          position_y: update.position_y,
+          updated_at: new Date(),
+        })
         .where(eq(nodes.id, update.id));
     }
   });
@@ -1763,11 +1922,13 @@ export async function batchUpdateNodes(input: unknown) {
 #### Step 3.C.1 — Install and configure Upstash rate limiting
 
 🔧 **Command:**
+
 ```bash
 pnpm add @upstash/ratelimit @upstash/redis --filter web
 ```
 
 📁 **File:** `apps/web/src/shared/lib/rate-limit.ts`
+
 ```typescript
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
@@ -1780,7 +1941,9 @@ const ratelimit = new Ratelimit({
 });
 
 export async function checkRateLimit() {
-  const { data: { user } } = await auth();
+  const {
+    data: { user },
+  } = await auth();
   if (!user) throw new Error('Unauthorized');
 
   const { success } = await ratelimit.limit(`user:${user.id}`);
@@ -1803,6 +1966,7 @@ export async function checkRateLimit() {
 #### Step 3.C.2 — Create `searchNodes` Server Action
 
 📁 **File:** `apps/web/src/features/search/actions/searchNodes.ts`
+
 ```typescript
 'use server';
 
@@ -1811,7 +1975,9 @@ import { sql } from 'drizzle-orm';
 import { auth } from '@/shared/lib/supabase-server';
 
 export async function searchNodes(query: string) {
-  const { data: { user } } = await auth();
+  const {
+    data: { user },
+  } = await auth();
   if (!user) throw new Error('Unauthorized');
 
   return db.execute(sql`
@@ -1840,12 +2006,14 @@ export async function searchNodes(query: string) {
 #### Step 3.C.3 — Install DOMPurify for input sanitization
 
 🔧 **Command:**
+
 ```bash
 pnpm add isomorphic-dompurify --filter web
 pnpm add -D @types/dompurify --filter web
 ```
 
 📁 **File:** `apps/web/src/shared/lib/sanitize.ts`
+
 ```typescript
 import DOMPurify from 'isomorphic-dompurify';
 
@@ -1884,6 +2052,7 @@ git push origin v0.2.0
 #### Step 4.A.1 — Create the Welcome Banner
 
 📁 **File:** `apps/web/src/features/dashboard/components/WelcomeBanner.tsx`
+
 ```typescript
 'use client';
 
@@ -1919,6 +2088,7 @@ export function WelcomeBanner({ displayName, streak, reviewCompleted }: WelcomeB
 #### Step 4.A.2 — Create the Quick Stats Row
 
 📁 **File:** `apps/web/src/features/dashboard/components/QuickStatsRow.tsx`
+
 ```typescript
 'use client';
 import { Zap, Map, Flame, Target } from 'lucide-react';
@@ -2020,15 +2190,21 @@ Server Action to export all palace data as JSON, and import with Zod validation 
 #### Step 5.A.1 — Install React Flow and Zustand
 
 🔧 **Command:**
+
 ```bash
 pnpm add reactflow zustand --filter web
 ```
 
 📁 **File:** `apps/web/src/features/spatial-canvas/store/useRoomStore.ts`
+
 ```typescript
 import { create } from 'zustand';
 
-interface NodePosition { id: string; x: number; y: number; }
+interface NodePosition {
+  id: string;
+  x: number;
+  y: number;
+}
 
 interface RoomState {
   nodePositions: Map<string, NodePosition>;
@@ -2057,6 +2233,7 @@ export const useRoomStore = create<RoomState>((set) => ({
 #### Step 5.A.2 — Create the React Flow canvas component
 
 📁 **File:** `apps/web/src/features/spatial-canvas/components/ReactFlowCanvas.tsx`
+
 ```typescript
 'use client';
 import ReactFlow, { MiniMap, Controls, Background, BackgroundVariant } from 'reactflow';
@@ -2108,6 +2285,7 @@ Wraps **only** the canvas. Sidebar and navigation remain alive if canvas crashes
 #### Step 5.B.1 — Install TanStack Query
 
 🔧 **Command:**
+
 ```bash
 pnpm add @tanstack/react-query --filter web
 ```
@@ -2123,15 +2301,16 @@ React Flow reads from Zustand via selectors (zero re-renders). On drop, `batchUp
 #### Step 5.B.3 — Install debounce for text editing
 
 🔧 **Command:**
+
 ```bash
 pnpm add use-debounce --filter web
 ```
 
-| Action | Strategy | Timing |
-|--------|----------|--------|
-| Node drag | Save on drop | Immediate on `dragend` |
-| Node text editing | Debounced save | 500ms after last keystroke |
-| Multi-node drag | Batch save on drop | Single transaction |
+| Action            | Strategy           | Timing                     |
+| ----------------- | ------------------ | -------------------------- |
+| Node drag         | Save on drop       | Immediate on `dragend`     |
+| Node text editing | Debounced save     | 500ms after last keystroke |
+| Multi-node drag   | Batch save on drop | Single transaction         |
 
 📖 **Docs ref:** [PERFORMANCE.md §3 — Debounced Auto-Save Strategy](./PERFORMANCE.md#3-debounced-auto-save-strategy)
 
@@ -2142,6 +2321,7 @@ pnpm add use-debounce --filter web
 #### Step 5.C.1 — Install Yjs for CRDT-based sync
 
 🔧 **Command:**
+
 ```bash
 pnpm add yjs y-indexeddb y-supabase --filter web
 ```
@@ -2162,12 +2342,12 @@ pnpm add yjs y-indexeddb y-supabase --filter web
 
 #### Step 5.D.1 — Mobile canvas optimizations
 
-| Feature | Implementation |
-|---------|---------------|
-| FAB toolbar | Collapsible radial menu (`md:hidden`) |
-| Bottom sheet node editor | shadcn `Sheet` (`side="bottom"`) on `< md` |
-| Larger node touch targets | `min-w-[60px] min-h-[60px]` on mobile |
-| Full-screen takeover | Hide nav during canvas editing |
+| Feature                   | Implementation                             |
+| ------------------------- | ------------------------------------------ |
+| FAB toolbar               | Collapsible radial menu (`md:hidden`)      |
+| Bottom sheet node editor  | shadcn `Sheet` (`side="bottom"`) on `< md` |
+| Larger node touch targets | `min-w-[60px] min-h-[60px]` on mobile      |
+| Full-screen takeover      | Hide nav during canvas editing             |
 
 📖 **Docs ref:** [UI_STYLE_GUIDE.md §2 — Canvas on Mobile](./UI_STYLE_GUIDE.md#2-canvas-on-mobile-react-flow)
 
@@ -2202,6 +2382,7 @@ git push origin v0.3.0
 #### Step 6.1 — Install kbar and create command palette
 
 🔧 **Command:**
+
 ```bash
 pnpm add kbar --filter web
 ```
@@ -2220,30 +2401,31 @@ pnpm add kbar --filter web
 #### Step 6.2 — Register 20+ keyboard shortcuts
 
 🔧 **Command:**
+
 ```bash
 pnpm add react-hotkeys-hook --filter web
 ```
 
-| Category | Shortcut | Action |
-|----------|----------|--------|
-| **Navigation** | `g` then `h` | Go Home |
-| | `g` then `d` | Go to Daily Review |
-| | `g` then `p` | Go to Palaces |
-| | `g` then `s` | Go to Settings |
-| **Creation** | `c` then `p` | Create new palace |
-| | `c` then `n` | Create new node |
-| **Canvas** | `Space` (hold) | Pan tool |
-| | `Delete` | Delete selected |
-| | `Cmd+Z` | Undo |
-| | `Cmd+Shift+Z` | Redo |
-| | `Cmd+A` | Select all |
-| | `Cmd+D` | Duplicate selected |
-| | `F` | Fit all nodes |
-| | `G` | Toggle snap-to-grid |
-| **Global** | `Cmd+K` | Command palette |
-| | `?` | Shortcuts overlay |
-| | `t` then `d` | Toggle dark mode |
-| | `Esc` | Close panel/modal |
+| Category       | Shortcut       | Action              |
+| -------------- | -------------- | ------------------- |
+| **Navigation** | `g` then `h`   | Go Home             |
+|                | `g` then `d`   | Go to Daily Review  |
+|                | `g` then `p`   | Go to Palaces       |
+|                | `g` then `s`   | Go to Settings      |
+| **Creation**   | `c` then `p`   | Create new palace   |
+|                | `c` then `n`   | Create new node     |
+| **Canvas**     | `Space` (hold) | Pan tool            |
+|                | `Delete`       | Delete selected     |
+|                | `Cmd+Z`        | Undo                |
+|                | `Cmd+Shift+Z`  | Redo                |
+|                | `Cmd+A`        | Select all          |
+|                | `Cmd+D`        | Duplicate selected  |
+|                | `F`            | Fit all nodes       |
+|                | `G`            | Toggle snap-to-grid |
+| **Global**     | `Cmd+K`        | Command palette     |
+|                | `?`            | Shortcuts overlay   |
+|                | `t` then `d`   | Toggle dark mode    |
+|                | `Esc`          | Close panel/modal   |
 
 📖 **Docs ref:** [UI_STYLE_GUIDE.md §9 — Keyboard Shortcuts System](./UI_STYLE_GUIDE.md#9-keyboard-shortcuts-system)
 
@@ -2271,6 +2453,7 @@ git push origin v0.4.0
 #### Step 7.1 — Install framer-motion and canvas-confetti
 
 🔧 **Command:**
+
 ```bash
 pnpm add framer-motion canvas-confetti --filter web
 pnpm add -D @types/canvas-confetti --filter web
@@ -2288,15 +2471,15 @@ All `motion.div` elements use `className="motion-reduce:transition-none"`.
 
 ### Animation Reference
 
-| Trigger | Duration | Implementation |
-|---------|----------|---------------|
-| Page transition | 200ms | `framer-motion` `AnimatePresence` |
-| Card hover | 150ms | `hover:shadow-lg hover:-translate-y-0.5 transition-all` |
-| Node creation | 300ms | `framer-motion` `scale: 0 → 1` |
-| Node deletion | 200ms | `framer-motion` `scale: 1 → 0.8` |
-| Badge unlock | 1500ms | `canvas-confetti` |
-| Button press | 100ms | `active:scale-95 transition-transform` |
-| Flashcard flip | 400ms | `framer-motion` `rotateY` |
+| Trigger         | Duration | Implementation                                          |
+| --------------- | -------- | ------------------------------------------------------- |
+| Page transition | 200ms    | `framer-motion` `AnimatePresence`                       |
+| Card hover      | 150ms    | `hover:shadow-lg hover:-translate-y-0.5 transition-all` |
+| Node creation   | 300ms    | `framer-motion` `scale: 0 → 1`                          |
+| Node deletion   | 200ms    | `framer-motion` `scale: 1 → 0.8`                        |
+| Badge unlock    | 1500ms   | `canvas-confetti`                                       |
+| Button press    | 100ms    | `active:scale-95 transition-transform`                  |
+| Flashcard flip  | 400ms    | `framer-motion` `rotateY`                               |
 
 📖 **Docs ref:** [UI_STYLE_GUIDE.md §11 — Micro-Interactions & Animation System](./UI_STYLE_GUIDE.md#11-micro-interactions--animation-system)
 
@@ -2320,6 +2503,7 @@ git push origin v0.5.0
 #### Step 8.A.1 — Install and configure Sentry
 
 🔧 **Command:**
+
 ```bash
 pnpm add @sentry/nextjs --filter web
 npx @sentry/wizard@latest -i nextjs
@@ -2334,19 +2518,22 @@ Client + server error reporting. Canvas memory leak and Long Task tracking.
 #### Step 8.A.3 — Add Lighthouse CI to pipeline
 
 📁 **File:** `lighthouse-budget.json`
+
 ```json
-[{
-  "path": "/*",
-  "timings": [
-    { "metric": "interactive", "budget": 3500 },
-    { "metric": "first-contentful-paint", "budget": 2000 },
-    { "metric": "largest-contentful-paint", "budget": 2500 }
-  ],
-  "resourceSizes": [
-    { "resourceType": "script", "budget": 200 },
-    { "resourceType": "total", "budget": 500 }
-  ]
-}]
+[
+  {
+    "path": "/*",
+    "timings": [
+      { "metric": "interactive", "budget": 3500 },
+      { "metric": "first-contentful-paint", "budget": 2000 },
+      { "metric": "largest-contentful-paint", "budget": 2500 }
+    ],
+    "resourceSizes": [
+      { "resourceType": "script", "budget": 200 },
+      { "resourceType": "total", "budget": 500 }
+    ]
+  }
+]
 ```
 
 📖 **Docs ref:** [PERFORMANCE.md §1 — Performance Budget](./PERFORMANCE.md#1-performance-budget), [PERFORMANCE.md §6 — Lighthouse CI](./PERFORMANCE.md#6-lighthouse-ci-github-action)
@@ -2462,13 +2649,13 @@ git push origin v1.0.0
 
 5 game modes, all in full-screen takeover:
 
-| Game | Description |
-|------|------------|
-| Matching Game | Flip cards to match title ↔ content |
-| Fill in the Blank | Recall blanked key terms |
-| Flashcard Stack | Swipeable flashcards (Space/→/←) |
-| Association Challenge | Recall nodes from edge labels |
-| Typing Practice | Type content from memory with diff |
+| Game                  | Description                         |
+| --------------------- | ----------------------------------- |
+| Matching Game         | Flip cards to match title ↔ content |
+| Fill in the Blank     | Recall blanked key terms            |
+| Flashcard Stack       | Swipeable flashcards (Space/→/←)    |
+| Association Challenge | Recall nodes from edge labels       |
+| Typing Practice       | Type content from memory with diff  |
 
 📖 **Docs ref:** [FEATURES.md §3 — Memory Games](./FEATURES.md#3-memory-games)
 
@@ -2489,6 +2676,7 @@ git push origin v1.0.0
 **Progress page:** Activity charts (`recharts`), retention heatmap, palace mastery donuts, achievement grid.
 
 🔧 **Command:**
+
 ```bash
 pnpm add recharts --filter web
 ```
@@ -2539,6 +2727,7 @@ git push origin v1.6.0
 **Goal:** Upgrade to 3D spatial experience.
 
 🔧 **Command:**
+
 ```bash
 pnpm add @react-three/fiber @react-three/drei three --filter web
 pnpm add -D @types/three --filter web
@@ -2564,25 +2753,25 @@ git push origin v2.0.0
 
 Every phase must pass its testing gate before release:
 
-| Phase | Unit | Component | Integration | E2E | Visual |
-|-------|------|-----------|-------------|-----|--------|
-| 1 | ESLint, TS | — | — | Auth flow | — |
-| 2 | `cn()` | Shell, BottomNav | — | Layout | — |
-| 3 | Zod, sanitize | — | All Server Actions | Search, rate limit | — |
-| 4 | — | Cards, Grid, Empty | CRUD | Palace CRUD | — |
-| 5 | Zustand store | — | batchUpdate | Drag, offline, sync | Canvas |
-| 6 | — | CommandPalette | — | `Cmd+K` | — |
-| 7 | — | PageTransition | — | — | Animations |
-| 8 | — | — | — | Full regression | All pages |
-| 9 | SM-2 | Games | Review actions | Daily, games | — |
-| 10 | — | Backlinks | Reference edges | `[[ref]]` | — |
+| Phase | Unit          | Component          | Integration        | E2E                 | Visual     |
+| ----- | ------------- | ------------------ | ------------------ | ------------------- | ---------- |
+| 1     | ESLint, TS    | —                  | —                  | Auth flow           | —          |
+| 2     | `cn()`        | Shell, BottomNav   | —                  | Layout              | —          |
+| 3     | Zod, sanitize | —                  | All Server Actions | Search, rate limit  | —          |
+| 4     | —             | Cards, Grid, Empty | CRUD               | Palace CRUD         | —          |
+| 5     | Zustand store | —                  | batchUpdate        | Drag, offline, sync | Canvas     |
+| 6     | —             | CommandPalette     | —                  | `Cmd+K`             | —          |
+| 7     | —             | PageTransition     | —                  | —                   | Animations |
+| 8     | —             | —                  | —                  | Full regression     | All pages  |
+| 9     | SM-2          | Games              | Review actions     | Daily, games        | —          |
+| 10    | —             | Backlinks          | Reference edges    | `[[ref]]`           | —          |
 
 ### Coverage Thresholds
 
-| Metric | Minimum | Target |
-|--------|---------|--------|
-| Unit test coverage | 80% | 90%+ |
-| Integration test coverage | 70% | 85%+ |
+| Metric                     | Minimum          | Target       |
+| -------------------------- | ---------------- | ------------ |
+| Unit test coverage         | 80%              | 90%+         |
+| Integration test coverage  | 70%              | 85%+         |
 | E2E critical path coverage | 100% happy paths | + edge cases |
 
 📖 **Docs ref:** [TESTING.md §8 — Coverage Thresholds](./TESTING.md#8-coverage-thresholds--testing-rules)
@@ -2591,16 +2780,16 @@ Every phase must pass its testing gate before release:
 
 ## Guiding Principles (Non-Negotiables)
 
-| # | Principle | Rationale |
-|---|-----------|-----------|
-| 1 | **The UI is dumb.** | Logic lives in hooks, stores, Server Actions. |
-| 2 | **Trust no client.** | Zod → Upstash → Drizzle on every action. |
-| 3 | **Transient state stays local.** | 60fps drag = zero server round-trips. |
-| 4 | **Indexes from Day 1.** | Prevents N+1 performance cliffs. |
-| 5 | **Pooled connections only.** | Supavisor prevents exhaustion. |
-| 6 | **Two-phase migrations.** | Zero-downtime deploys. |
-| 7 | **Canvas crashes are contained.** | Error boundaries wrap canvas, not page. |
-| 8 | **Mobile-first layouts.** | Design smallest screen first. |
+| #   | Principle                         | Rationale                                     |
+| --- | --------------------------------- | --------------------------------------------- |
+| 1   | **The UI is dumb.**               | Logic lives in hooks, stores, Server Actions. |
+| 2   | **Trust no client.**              | Zod → Upstash → Drizzle on every action.      |
+| 3   | **Transient state stays local.**  | 60fps drag = zero server round-trips.         |
+| 4   | **Indexes from Day 1.**           | Prevents N+1 performance cliffs.              |
+| 5   | **Pooled connections only.**      | Supavisor prevents exhaustion.                |
+| 6   | **Two-phase migrations.**         | Zero-downtime deploys.                        |
+| 7   | **Canvas crashes are contained.** | Error boundaries wrap canvas, not page.       |
+| 8   | **Mobile-first layouts.**         | Design smallest screen first.                 |
 
 📖 **Docs ref:** [ARCHITECTURE.md §7 — Guiding Principles](./ARCHITECTURE.md#7-guiding-principles)
 
@@ -2608,16 +2797,16 @@ Every phase must pass its testing gate before release:
 
 ## Cross-Reference Index
 
-| Document | Sections Referenced |
-|----------|-------------------|
-| [ARCHITECTURE.md](./ARCHITECTURE.md) | §1 Tech Stack · §2 Data Flow · §3 Schema · §4 File Structure · §5 Implementation · §6 Decisions · §7 Principles · §8 Layout |
+| Document                                 | Sections Referenced                                                                                                                                                                                                  |
+| ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [ARCHITECTURE.md](./ARCHITECTURE.md)     | §1 Tech Stack · §2 Data Flow · §3 Schema · §4 File Structure · §5 Implementation · §6 Decisions · §7 Principles · §8 Layout                                                                                          |
 | [UI_STYLE_GUIDE.md](./UI_STYLE_GUIDE.md) | §1 Mobile-First · §2 Canvas Mobile · §3 Colors · §4 Tailwind · §5 Typography · §6 Components · §7 Navigation · §8 Command Palette · §9 Shortcuts · §10 Dark Mode · §11 Animations · §12 Empty States · §13 Canvas UX |
-| [FEATURES.md](./FEATURES.md) | §1 Dashboard · §2 Daily Review · §3 Games · §4 Gamification · §5 Study · §6 Review Generator · §7 Public Pages · §8 Canvas · §9 Spaced Repetition · §10 Visualization · §11 Onboarding · §12 Backlinks |
-| [DEVELOPMENT.md](./DEVELOPMENT.md) | §1 Branching · §3 Releases · §4 Commits · §5 CI/CD · §6 Branch Protection · §9 Workflow · §10 Secrets · §12 Monitoring · §13 Audit |
-| [TESTING.md](./TESTING.md) | §1 Pyramid · §2 Tools · §3 Unit · §4 Component · §5 Integration · §6 E2E · §7 Visual · §8 Coverage · §9 File Structure |
-| [SECURITY.md](./SECURITY.md) | §1 CSP · §2 CORS · §3 Sanitization · §4 File Upload · §5 Service Role Key · §6 Audit · §7 Rate Limiting |
-| [PERFORMANCE.md](./PERFORMANCE.md) | §1 Budget · §2 Virtualization · §3 Auto-Save · §4 Images · §5 Bundle · §6 Lighthouse CI |
+| [FEATURES.md](./FEATURES.md)             | §1 Dashboard · §2 Daily Review · §3 Games · §4 Gamification · §5 Study · §6 Review Generator · §7 Public Pages · §8 Canvas · §9 Spaced Repetition · §10 Visualization · §11 Onboarding · §12 Backlinks               |
+| [DEVELOPMENT.md](./DEVELOPMENT.md)       | §1 Branching · §3 Releases · §4 Commits · §5 CI/CD · §6 Branch Protection · §9 Workflow · §10 Secrets · §12 Monitoring · §13 Audit                                                                                   |
+| [TESTING.md](./TESTING.md)               | §1 Pyramid · §2 Tools · §3 Unit · §4 Component · §5 Integration · §6 E2E · §7 Visual · §8 Coverage · §9 File Structure                                                                                               |
+| [SECURITY.md](./SECURITY.md)             | §1 CSP · §2 CORS · §3 Sanitization · §4 File Upload · §5 Service Role Key · §6 Audit · §7 Rate Limiting                                                                                                              |
+| [PERFORMANCE.md](./PERFORMANCE.md)       | §1 Budget · §2 Virtualization · §3 Auto-Save · §4 Images · §5 Bundle · §6 Lighthouse CI                                                                                                                              |
 
 ---
 
-*This roadmap was generated by synthesizing all 7 documentation files into a step-by-step implementation guide. Follow it start-to-finish as a complete build guide for the Memory Palace App.*
+_This roadmap was generated by synthesizing all 7 documentation files into a step-by-step implementation guide. Follow it start-to-finish as a complete build guide for the Memory Palace App._

@@ -49,15 +49,15 @@ Skipping either layer means either slow feedback cycles (everything in E2E) or b
 
 ## 2. Testing Tools Stack
 
-| Layer | Tool | Why This Tool |
-|---|---|---|
-| **Unit** | Vitest | Native ESM support, Turborepo compatible, 10x faster than Jest |
-| **Component** | Vitest + React Testing Library | DOM-based component testing without a browser |
-| **Integration** | Vitest + Drizzle + Test DB | Server Actions tested against a real PostgreSQL instance |
-| **E2E** | Playwright | Only tool that can reliably simulate drag-and-drop on `<canvas>` |
-| **Visual Regression** | Playwright Screenshots + Percy (or Argos CI) | Catch UI changes that don't break logic but break layout |
-| **Load/Stress** | k6 (optional, Phase 4+) | Simulate 1,000 concurrent users saving nodes |
-| **Coverage** | `@vitest/coverage-v8` | Enforce minimum coverage thresholds |
+| Layer                 | Tool                                         | Why This Tool                                                    |
+| --------------------- | -------------------------------------------- | ---------------------------------------------------------------- |
+| **Unit**              | Vitest                                       | Native ESM support, Turborepo compatible, 10x faster than Jest   |
+| **Component**         | Vitest + React Testing Library               | DOM-based component testing without a browser                    |
+| **Integration**       | Vitest + Drizzle + Test DB                   | Server Actions tested against a real PostgreSQL instance         |
+| **E2E**               | Playwright                                   | Only tool that can reliably simulate drag-and-drop on `<canvas>` |
+| **Visual Regression** | Playwright Screenshots + Percy (or Argos CI) | Catch UI changes that don't break logic but break layout         |
+| **Load/Stress**       | k6 (optional, Phase 4+)                      | Simulate 1,000 concurrent users saving nodes                     |
+| **Coverage**          | `@vitest/coverage-v8`                        | Enforce minimum coverage thresholds                              |
 
 ---
 
@@ -67,14 +67,14 @@ Unit tests cover pure functions, Zod schemas, Zustand store logic, and utility h
 
 ### What to Unit Test
 
-| Target | Example | Test |
-|---|---|---|
-| **Zod schemas** | `nodePositionSchema` | Valid/invalid payloads, edge cases (negative coordinates, NaN, Infinity) |
-| **Math utilities** | `calculateDistance()`, `snapToGrid()` | Boundary values, floating point precision |
-| **Zustand store logic** | `useRoomStore.moveNode()` | State transitions, immutability |
-| **Action response builders** | `createSuccessResponse()` | Correct shape for all error codes |
-| **Pagination cursor encoding** | `encodeCursor()` / `decodeCursor()` | Round-trip encoding, malformed input |
-| **Sanitization** | `sanitizeNodeContent()` | XSS payloads stripped, valid HTML preserved |
+| Target                         | Example                               | Test                                                                     |
+| ------------------------------ | ------------------------------------- | ------------------------------------------------------------------------ |
+| **Zod schemas**                | `nodePositionSchema`                  | Valid/invalid payloads, edge cases (negative coordinates, NaN, Infinity) |
+| **Math utilities**             | `calculateDistance()`, `snapToGrid()` | Boundary values, floating point precision                                |
+| **Zustand store logic**        | `useRoomStore.moveNode()`             | State transitions, immutability                                          |
+| **Action response builders**   | `createSuccessResponse()`             | Correct shape for all error codes                                        |
+| **Pagination cursor encoding** | `encodeCursor()` / `decodeCursor()`   | Round-trip encoding, malformed input                                     |
+| **Sanitization**               | `sanitizeNodeContent()`               | XSS payloads stripped, valid HTML preserved                              |
 
 ### Example: Zod Schema Unit Test
 
@@ -175,14 +175,14 @@ Component tests render React components into JSDOM and assert on the resulting D
 
 ### What to Component Test
 
-| Component | What to Test |
-|---|---|
-| `<LoginForm />` | Renders inputs, validates email format, shows error states, calls auth action |
-| `<NodeCard />` | Renders title/content, sanitized HTML displays correctly, edit mode toggles |
-| `<SearchBar />` | Debounces input, calls search action, displays results |
-| `<PalaceList />` | Renders palace cards, empty state, loading skeleton, pagination triggers |
-| `<ErrorBoundary />` | Catches thrown errors, renders fallback UI, reports to Sentry mock |
-| `<NodeEditor />` | Form validation, save triggers Server Action mock, cancel discards changes |
+| Component           | What to Test                                                                  |
+| ------------------- | ----------------------------------------------------------------------------- |
+| `<LoginForm />`     | Renders inputs, validates email format, shows error states, calls auth action |
+| `<NodeCard />`      | Renders title/content, sanitized HTML displays correctly, edit mode toggles   |
+| `<SearchBar />`     | Debounces input, calls search action, displays results                        |
+| `<PalaceList />`    | Renders palace cards, empty state, loading skeleton, pagination triggers      |
+| `<ErrorBoundary />` | Catches thrown errors, renders fallback UI, reports to Sentry mock            |
+| `<NodeEditor />`    | Form validation, save triggers Server Action mock, cancel discards changes    |
 
 ### Example: NodeCard Component Test
 
@@ -258,13 +258,13 @@ export async function cleanupTestDb() {
 
 ### What to Integration Test
 
-| Server Action | Test Cases |
-|---|---|
-| `createPalace` | Creates with valid data, rejects invalid Zod input, rejects unauthenticated, rate limited after threshold |
+| Server Action      | Test Cases                                                                                                    |
+| ------------------ | ------------------------------------------------------------------------------------------------------------- |
+| `createPalace`     | Creates with valid data, rejects invalid Zod input, rejects unauthenticated, rate limited after threshold     |
 | `batchUpdateNodes` | Updates multiple coordinates in single transaction, rolls back if one fails, validates all positions with Zod |
-| `searchNodes` | Returns matching results, respects RLS (user A can't see user B's nodes), handles empty results |
-| `deletePalace` | Soft-deletes (sets `deleted_at`), cascades to rooms and nodes, doesn't actually remove rows |
-| `exportPalace` | Returns complete JSON with rooms/nodes/edges, respects RLS |
+| `searchNodes`      | Returns matching results, respects RLS (user A can't see user B's nodes), handles empty results               |
+| `deletePalace`     | Soft-deletes (sets `deleted_at`), cascades to rooms and nodes, doesn't actually remove rows                   |
+| `exportPalace`     | Returns complete JSON with rooms/nodes/edges, respects RLS                                                    |
 
 ### Example: batchUpdateNodes Integration Test
 
@@ -275,8 +275,12 @@ import { setupTestDb, cleanupTestDb, testDb } from '@memory-palace/db/test-setup
 import { batchUpdateNodes } from '../actions/batchUpdateNodes';
 
 describe('batchUpdateNodes', () => {
-  beforeAll(async () => { await setupTestDb(); });
-  afterEach(async () => { await cleanupTestDb(); });
+  beforeAll(async () => {
+    await setupTestDb();
+  });
+  afterEach(async () => {
+    await cleanupTestDb();
+  });
 
   it('updates multiple node positions in a single transaction', async () => {
     const palace = await createTestPalace();
@@ -292,7 +296,10 @@ describe('batchUpdateNodes', () => {
     });
 
     expect(result.success).toBe(true);
-    const updated = await testDb.select().from(schema.nodes).where(eq(schema.nodes.roomId, room.id));
+    const updated = await testDb
+      .select()
+      .from(schema.nodes)
+      .where(eq(schema.nodes.roomId, room.id));
     expect(updated[0].positionX).toBe(100);
     expect(updated[1].positionX).toBe(300);
     expect(updated[2].positionX).toBe(500);
@@ -313,7 +320,10 @@ describe('batchUpdateNodes', () => {
     expect(result.success).toBe(false);
     expect(result.error.code).toBe('NOT_FOUND');
 
-    const unchanged = await testDb.select().from(schema.nodes).where(eq(schema.nodes.id, nodes[0].id));
+    const unchanged = await testDb
+      .select()
+      .from(schema.nodes)
+      .where(eq(schema.nodes.id, nodes[0].id));
     expect(unchanged[0].positionX).not.toBe(100);
   });
 });
@@ -327,18 +337,18 @@ E2E tests drive a real Chromium instance against the full application stack. The
 
 ### What to E2E Test
 
-| Flow | Steps | Assertions |
-|---|---|---|
-| **Auth flow** | Sign up → verify email → log in → see dashboard | Dashboard shows empty palace list |
-| **Palace CRUD** | Create palace → rename → delete → verify gone | Palace appears/disappears in list |
-| **Canvas drag** | Open room → drag node from (100,100) to (300,400) → reload page | Node is at (300,400) after reload (persisted) |
-| **Multi-node drag** | Select 3 nodes → drag group → drop → reload | All 3 nodes at new positions |
-| **Node editing** | Double-click node → type content → click away → reload | Content persisted |
-| **Search** | Create 5 nodes → search by keyword → verify results | Only matching nodes returned |
-| **Offline resilience** | Drag node → go offline → drag again → go online | Both changes persisted after reconnection |
-| **Cross-tab sync** | Open room in Tab A and Tab B → drag node in Tab A | Node moves in Tab B via Yjs |
-| **Rate limiting** | Fire 20 rapid saves | First 10 succeed, remaining return 429 |
-| **Error recovery** | Force canvas error → verify error boundary renders → click recover | Sidebar stays alive, canvas reloads |
+| Flow                   | Steps                                                              | Assertions                                    |
+| ---------------------- | ------------------------------------------------------------------ | --------------------------------------------- |
+| **Auth flow**          | Sign up → verify email → log in → see dashboard                    | Dashboard shows empty palace list             |
+| **Palace CRUD**        | Create palace → rename → delete → verify gone                      | Palace appears/disappears in list             |
+| **Canvas drag**        | Open room → drag node from (100,100) to (300,400) → reload page    | Node is at (300,400) after reload (persisted) |
+| **Multi-node drag**    | Select 3 nodes → drag group → drop → reload                        | All 3 nodes at new positions                  |
+| **Node editing**       | Double-click node → type content → click away → reload             | Content persisted                             |
+| **Search**             | Create 5 nodes → search by keyword → verify results                | Only matching nodes returned                  |
+| **Offline resilience** | Drag node → go offline → drag again → go online                    | Both changes persisted after reconnection     |
+| **Cross-tab sync**     | Open room in Tab A and Tab B → drag node in Tab A                  | Node moves in Tab B via Yjs                   |
+| **Rate limiting**      | Fire 20 rapid saves                                                | First 10 succeed, remaining return 429        |
+| **Error recovery**     | Force canvas error → verify error boundary renders → click recover | Sidebar stays alive, canvas reloads           |
 
 ### Example: Canvas Drag-and-Drop with Position Persistence
 
@@ -358,7 +368,10 @@ test.describe('Canvas drag-and-drop', () => {
     const canvasBounds = await canvas.boundingBox();
 
     // Drag node from its current position to (300, 400) relative to canvas
-    await page.mouse.move(nodeBounds!.x + nodeBounds!.width / 2, nodeBounds!.y + nodeBounds!.height / 2);
+    await page.mouse.move(
+      nodeBounds!.x + nodeBounds!.width / 2,
+      nodeBounds!.y + nodeBounds!.height / 2,
+    );
     await page.mouse.down();
     await page.mouse.move(canvasBounds!.x + 300, canvasBounds!.y + 400, { steps: 10 });
     await page.mouse.up();
@@ -462,10 +475,7 @@ export default defineConfig({
   timeout: 30000,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: [
-    ['html', { open: 'never' }],
-    ['github'],
-  ],
+  reporter: [['html', { open: 'never' }], ['github']],
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000',
     trace: 'on-first-retry',
@@ -508,7 +518,7 @@ test('canvas layout matches snapshot', async ({ page }) => {
 
   await expect(page.locator('[data-testid="canvas-container"]')).toHaveScreenshot(
     'canvas-default-layout.png',
-    { maxDiffPixelRatio: 0.01 }
+    { maxDiffPixelRatio: 0.01 },
   );
 });
 ```
@@ -525,12 +535,12 @@ pnpm exec playwright test visual-regression.spec.ts --update-snapshots
 
 ### Coverage Thresholds
 
-| Metric | Minimum | Target |
-|---|---|---|
-| **Unit test coverage** | 80% | 90%+ |
-| **Integration test coverage** | 70% (Server Actions) | 85%+ |
-| **E2E critical path coverage** | 100% of happy paths | + edge cases |
-| **Visual regression** | All canvas layouts | All + responsive breakpoints |
+| Metric                         | Minimum              | Target                       |
+| ------------------------------ | -------------------- | ---------------------------- |
+| **Unit test coverage**         | 80%                  | 90%+                         |
+| **Integration test coverage**  | 70% (Server Actions) | 85%+                         |
+| **E2E critical path coverage** | 100% of happy paths  | + edge cases                 |
+| **Visual regression**          | All canvas layouts   | All + responsive breakpoints |
 
 ### Testing Non-Negotiables
 
@@ -595,4 +605,4 @@ memory-palace-app/
 
 ---
 
-*See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full system design, [SECURITY.md](./SECURITY.md) for security policies including input validation and RLS, and [CONTRIBUTING.md](./CONTRIBUTING.md) for the PR process that enforces these testing rules.*
+_See [ARCHITECTURE.md](./ARCHITECTURE.md) for the full system design, [SECURITY.md](./SECURITY.md) for security policies including input validation and RLS, and [CONTRIBUTING.md](./CONTRIBUTING.md) for the PR process that enforces these testing rules._

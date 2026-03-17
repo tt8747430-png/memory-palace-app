@@ -30,11 +30,13 @@ The dashboard is the first screen authenticated users see. It provides a quick o
 ### Components
 
 #### Welcome Banner
+
 - Personalised greeting: "Good morning, {displayName} 👋"
 - Current daily streak counter with flame icon (e.g. "🔥 7-day streak")
 - Prompt to start or continue today's review if not yet completed
 
 #### Quick Stats Row
+
 - Horizontal scrollable row of stat chips on mobile, inline row on desktop
 - Stats displayed: **Points**, **Palaces count**, **Streak (days)**, **Accuracy %**
 - Each chip: icon + value + label, minimum `48px` height
@@ -50,22 +52,26 @@ The dashboard is the first screen authenticated users see. It provides a quick o
 ```
 
 #### Daily Review CTA
+
 - Prominent card with "Start Today's Review" button — `w-full` on mobile
 - Shows nodes due for review today (count) and estimated time
 - If already completed: shows score, streak maintained badge
 
 #### Recent Activity
+
 - Last 5 user interactions (node created, review completed, game played)
 - Compact list items with icon, description, and relative timestamp
 - Skeleton loading state while fetching
 
 #### Achievements Grid
+
 - 2-column grid on mobile, 4-column on desktop
 - Each badge: icon (emoji or SVG), name, locked/unlocked state
 - Locked badges are greyed out with a lock overlay
 - Tapping a badge shows a bottom sheet with description and unlock criteria
 
 #### Palace Card Grid
+
 - All user palaces displayed as cards
 - Grid: `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`
 - Each card: thumbnail, name, room count, node count, last accessed
@@ -73,6 +79,7 @@ The dashboard is the first screen authenticated users see. It provides a quick o
 - Empty state: Illustration + "Create your first palace" CTA
 
 ### Mobile Behaviour
+
 - All sections scroll vertically as a single page
 - Sticky section headers are not used (avoids competing with the browser's own sticky elements)
 - Pull-to-refresh triggers a full dashboard data refetch
@@ -84,6 +91,7 @@ The dashboard is the first screen authenticated users see. It provides a quick o
 Inspired by TalantulApp's Daily Quiz. Encourages a consistent daily practice habit.
 
 ### Rules
+
 - One attempt per day per user
 - 10 nodes randomly selected from all user's palaces for recall
 - Timed session (configurable default: 5 minutes total, ~30 seconds per node)
@@ -101,11 +109,13 @@ Inspired by TalantulApp's Daily Quiz. Encourages a consistent daily practice hab
 4. **Completion animation** — Podium / confetti animation on screen; streak badge awarded if maintained
 
 ### Streak Tracking
+
 - Streak increments when the daily review is completed on consecutive days
 - If a day is missed, streak resets to 0
 - Streak freeze items (bonus rewards) can prevent a reset once per 7 days
 
 ### Mobile Behaviour
+
 - Full-screen mode during the session (hides bottom nav and top bar)
 - Large touch-friendly answer inputs (min `48px` height)
 - Timer displayed in the top bar area of the full-screen view
@@ -117,6 +127,7 @@ Inspired by TalantulApp's Daily Quiz. Encourages a consistent daily practice hab
 Inspired by TalantulApp's Games section. Multiple distinct game modes keep the review experience varied and engaging. All games operate in **full-screen takeover mode** — navigation is hidden during gameplay.
 
 ### 3.1 Matching Game
+
 - Grid of cards showing either node title or content (face-down)
 - User flips two cards at a time trying to match title ↔ content
 - Incorrect matches flip back; correct matches stay revealed
@@ -124,12 +135,14 @@ Inspired by TalantulApp's Games section. Multiple distinct game modes keep the r
 - Grid sizes: 4×4 (easy), 5×4 (medium), 6×4 (hard)
 
 ### 3.2 Fill in the Blank
+
 - Node content displayed with one or more key terms blanked out
 - User types the missing term(s) from memory
 - Case-insensitive matching; minor typo tolerance (Levenshtein distance ≤ 1)
 - 10 questions per session, timed
 
 ### 3.3 Flashcard Stack
+
 - Full-screen swipeable flashcard interface
 - Front: node title / prompt
 - Back: node content
@@ -139,17 +152,20 @@ Inspired by TalantulApp's Games section. Multiple distinct game modes keep the r
 - Session ends when all cards have been reviewed at least once
 
 ### 3.4 Association Challenge
+
 - User is shown an edge/connection label and must recall both nodes it connects
 - Multiple choice (4 options) or free-form typing mode
 - 10 questions per session
 
 ### 3.5 Typing Practice
+
 - Node title displayed; user types the complete content from memory
 - Real-time diff highlighting as the user types
 - Accuracy percentage calculated on submission
 - Useful for deepening memorisation of specific content
 
 ### Mobile Behaviour for All Games
+
 - Full-screen takeover — navigation hidden
 - Large touch targets for all interactive elements (`min-h-[48px]`)
 - Swipe gestures where applicable (flashcards, matching grid)
@@ -163,27 +179,27 @@ Inspired by TalantulApp's leaderboard and gamification system. Motivates consist
 
 ### Points System
 
-| Action | Points Awarded |
-|---|---|
-| Create a new node | +5 pts |
-| Complete daily review (any score) | +20 pts |
-| Perfect daily review (10/10) | +50 pts bonus |
-| Complete a memory game | +10 pts |
-| 7-day streak maintained | +100 pts bonus |
-| Create a new palace | +10 pts |
+| Action                            | Points Awarded |
+| --------------------------------- | -------------- |
+| Create a new node                 | +5 pts         |
+| Complete daily review (any score) | +20 pts        |
+| Perfect daily review (10/10)      | +50 pts bonus  |
+| Complete a memory game            | +10 pts        |
+| 7-day streak maintained           | +100 pts bonus |
+| Create a new palace               | +10 pts        |
 
 ### Achievement Badges
 
-| Badge | Unlock Criteria |
-|---|---|
-| 🏛️ First Palace | Create your first palace |
-| 🔗 Connected | Create your first edge |
-| 💯 Century | Create 100 nodes total |
-| 🔥 Week Warrior | Maintain a 7-day streak |
-| 🎯 Perfect | Complete a daily review with 100% accuracy |
-| 🧠 Memory Master | Complete 30 daily reviews |
-| 🚀 Explorer | Create palaces in 5 different topics |
-| 📚 Scholar | Study 500 unique nodes |
+| Badge            | Unlock Criteria                            |
+| ---------------- | ------------------------------------------ |
+| 🏛️ First Palace  | Create your first palace                   |
+| 🔗 Connected     | Create your first edge                     |
+| 💯 Century       | Create 100 nodes total                     |
+| 🔥 Week Warrior  | Maintain a 7-day streak                    |
+| 🎯 Perfect       | Complete a daily review with 100% accuracy |
+| 🧠 Memory Master | Complete 30 daily reviews                  |
+| 🚀 Explorer      | Create palaces in 5 different topics       |
+| 📚 Scholar       | Study 500 unique nodes                     |
 
 ### Progress Rings
 
@@ -205,6 +221,7 @@ Each palace shows a circular progress ring representing the retention rate (perc
 - Displayed on the results screen after each daily review
 
 ### Mobile Behaviour
+
 - Stats page: scrollable single column with charts that are horizontally scrollable if wide
 - Achievement grid: 2 columns on mobile
 - Progress rings: inline with palace cards
@@ -224,6 +241,7 @@ Inspired by TalantulApp's Study Mode. A browsable, filterable library of all the
 - **Tag-based browsing:** Click a tag to filter all nodes with that tag
 
 ### Mobile Behaviour
+
 - Filter panel opens as a bottom sheet on mobile
 - Nodes displayed as stacked accordion cards
 - Sticky search bar at the top of the list
@@ -236,14 +254,14 @@ Inspired by TalantulApp's Test Generator. Lets users build a custom review sessi
 
 ### Configuration Options
 
-| Setting | Options |
-|---|---|
-| Source palaces | Multi-select; all palaces or specific ones |
-| Source rooms | Multi-select; all rooms or specific ones |
-| Node types | Text, image, link, or all |
-| Tags | Filter to specific tags |
-| Question count | 5, 10, 20, or custom (max 50) |
-| Review mode | Flashcards, Fill in the Blank, Typing Practice |
+| Setting        | Options                                        |
+| -------------- | ---------------------------------------------- |
+| Source palaces | Multi-select; all palaces or specific ones     |
+| Source rooms   | Multi-select; all rooms or specific ones       |
+| Node types     | Text, image, link, or all                      |
+| Tags           | Filter to specific tags                        |
+| Question count | 5, 10, 20, or custom (max 50)                  |
+| Review mode    | Flashcards, Fill in the Blank, Typing Practice |
 
 ### Session Flow
 
@@ -281,6 +299,7 @@ Inspired by TalantulApp's marketing and onboarding pages. These are publicly acc
 - **Final CTA section**: Repeated sign-up prompt at the bottom of the page
 
 ### 7.2 About Page (`/about`)
+
 - How the Memory Palace technique works (the Method of Loci)
 - Feature overview with more detail than the landing page
 - Team / project background
@@ -297,6 +316,7 @@ Step-by-step onboarding using a **stepper UI component**:
 5. **Complete!** — Redirect to dashboard with celebration animation
 
 **Mobile behaviour:**
+
 - Each step occupies the full viewport height (`100dvh`)
 - Step indicator at the top (dots or numbered bar)
 - "Next" button is `w-full` and fixed at the bottom above the safe area
@@ -310,18 +330,18 @@ The canvas is the core differentiator of the Memory Palace App. All canvas featu
 
 ### Feature Summary
 
-| Feature | Mobile | Desktop |
-|---|---|---|
-| Pan canvas | Touch drag (one finger) | Mouse drag |
-| Zoom | Pinch to zoom | Scroll or trackpad |
-| Create node | FAB → tap empty canvas area | Double-click canvas or toolbar button |
-| Edit node | Bottom sheet slides up | Side panel |
-| Create edge | Long-press source node → drag to target | Drag from node handle |
-| Delete node/edge | Select → trash button in bottom sheet / toolbar | Select → `Delete` key or toolbar |
-| Mini-map | Hidden (`hidden md:block`) | Visible (bottom-right corner) |
-| Zoom controls | Shown (`md:hidden`) | Hidden (use scroll/trackpad) |
-| Toolbar | FAB + radial menu | Fixed toolbar panel |
-| Node size | `min-w-[60px] min-h-[60px]` | `min-w-[120px] min-h-[60px]` |
+| Feature          | Mobile                                          | Desktop                               |
+| ---------------- | ----------------------------------------------- | ------------------------------------- |
+| Pan canvas       | Touch drag (one finger)                         | Mouse drag                            |
+| Zoom             | Pinch to zoom                                   | Scroll or trackpad                    |
+| Create node      | FAB → tap empty canvas area                     | Double-click canvas or toolbar button |
+| Edit node        | Bottom sheet slides up                          | Side panel                            |
+| Create edge      | Long-press source node → drag to target         | Drag from node handle                 |
+| Delete node/edge | Select → trash button in bottom sheet / toolbar | Select → `Delete` key or toolbar      |
+| Mini-map         | Hidden (`hidden md:block`)                      | Visible (bottom-right corner)         |
+| Zoom controls    | Shown (`md:hidden`)                             | Hidden (use scroll/trackpad)          |
+| Toolbar          | FAB + radial menu                               | Fixed toolbar panel                   |
+| Node size        | `min-w-[60px] min-h-[60px]`                     | `min-w-[120px] min-h-[60px]`          |
 
 ### React Flow Configuration
 
@@ -330,6 +350,7 @@ See [UI_STYLE_GUIDE.md §2](./UI_STYLE_GUIDE.md#2-canvas-on-mobile-react-flow) f
 ### Full-Screen Canvas Mode
 
 When editing a palace room, the canvas takes over the full viewport:
+
 - Bottom nav and top bar are hidden
 - An "Exit Canvas" button is fixed in the top-right corner
 - Node count and room name displayed in a minimal top bar
@@ -346,23 +367,23 @@ Go beyond the daily review with a proper spaced repetition system built on the S
 
 After reviewing a node, the user rates their recall:
 
-| Rating | Action | Next Interval |
-|---|---|---|
-| **Again** (fail) | Failed to recall | Review tomorrow (interval = 1 day) |
-| **Hard** | Recalled with difficulty | Current interval × 1.2 |
-| **Good** | Recalled correctly | Current interval × 2.5 |
-| **Easy** | Recalled instantly | Current interval × 3.5 |
+| Rating           | Action                   | Next Interval                      |
+| ---------------- | ------------------------ | ---------------------------------- |
+| **Again** (fail) | Failed to recall         | Review tomorrow (interval = 1 day) |
+| **Hard**         | Recalled with difficulty | Current interval × 1.2             |
+| **Good**         | Recalled correctly       | Current interval × 2.5             |
+| **Easy**         | Recalled instantly       | Current interval × 3.5             |
 
 ### Node Maturity Levels
 
 Based on the current interval, each node has a maturity badge:
 
-| Badge | Level | Interval |
-|---|---|---|
-| 🔴 | **New** | Never reviewed |
-| 🟡 | **Learning** | Interval < 7 days |
-| 🟢 | **Known** | Interval 7–30 days |
-| 💎 | **Mastered** | Interval > 30 days |
+| Badge | Level        | Interval           |
+| ----- | ------------ | ------------------ |
+| 🔴    | **New**      | Never reviewed     |
+| 🟡    | **Learning** | Interval < 7 days  |
+| 🟢    | **Known**    | Interval 7–30 days |
+| 💎    | **Mastered** | Interval > 30 days |
 
 Maturity badges are displayed on each node in canvas view and in study mode.
 
@@ -375,6 +396,7 @@ Maturity badges are displayed on each node in canvas view and in study mode.
 ### Leech Detection
 
 Nodes failed more than 5 times are automatically flagged as **"Difficult"**:
+
 - A ⚠️ badge is shown on the node in canvas and study mode
 - Dashboard widget: "You have N difficult nodes — suggested for focused review"
 - Clicking navigates to a filtered review session with only leech nodes
@@ -404,10 +426,10 @@ A GitHub-style calendar grid (7 rows × 52 columns) showing daily review activit
 ```tsx
 // Heatmap cell color utility
 function getHeatmapColor(count: number): string {
-  if (count === 0)  return 'bg-muted';
-  if (count < 5)   return 'bg-green-100 dark:bg-green-900';
-  if (count < 10)  return 'bg-green-200 dark:bg-green-800';
-  if (count < 20)  return 'bg-green-400 dark:bg-green-600';
+  if (count === 0) return 'bg-muted';
+  if (count < 5) return 'bg-green-100 dark:bg-green-900';
+  if (count < 10) return 'bg-green-200 dark:bg-green-800';
+  if (count < 20) return 'bg-green-400 dark:bg-green-600';
   return 'bg-green-500 dark:bg-green-500';
 }
 ```
@@ -466,11 +488,11 @@ Tooltip state stored in `localStorage` (or user profile for cross-device sync).
 
 Optional gating to prevent overwhelming new users:
 
-| Feature | Unlocks After |
-|---|---|
-| Games | 10 nodes created |
-| Review Generator | First daily review completed |
-| Advanced canvas tools (lasso, snap-to-grid) | 20 nodes created |
+| Feature                                     | Unlocks After                |
+| ------------------------------------------- | ---------------------------- |
+| Games                                       | 10 nodes created             |
+| Review Generator                            | First daily review completed |
+| Advanced canvas tools (lasso, snap-to-grid) | 20 nodes created             |
 
 Locked features show a subtle lock badge and a short tooltip explaining how to unlock them.
 

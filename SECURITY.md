@@ -31,19 +31,19 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-eval'",  // Required for React Flow canvas
-      "style-src 'self' 'unsafe-inline'",  // Required for Tailwind
+      "script-src 'self' 'unsafe-eval'", // Required for React Flow canvas
+      "style-src 'self' 'unsafe-inline'", // Required for Tailwind
       "img-src 'self' blob: data: *.supabase.co",
       "connect-src 'self' *.supabase.co *.upstash.io",
       "font-src 'self'",
       "frame-ancestors 'none'",
-    ].join('; ')
+    ].join('; '),
   },
   { key: 'X-Frame-Options', value: 'DENY' },
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
-]
+];
 ```
 
 Apply the headers via the `headers()` export in `next.config.mjs`:
@@ -137,16 +137,17 @@ function sanitizeNodeContent(content: string): string {
 ```
 
 Use this function:
+
 - In the Server Action that writes node content to the database (sanitize before persisting)
 - In any component that renders node content as HTML (sanitize before `dangerouslySetInnerHTML`)
 
 ### Where to Apply
 
-| Location | Rationale |
-|---|---|
-| `updateNodeContent` Server Action | Sanitize before writing to the database |
-| `createNode` Server Action | Sanitize title and content on creation |
-| React Flow node renderer | Last line of defence if data came from a pre-sanitization era |
+| Location                          | Rationale                                                     |
+| --------------------------------- | ------------------------------------------------------------- |
+| `updateNodeContent` Server Action | Sanitize before writing to the database                       |
+| `createNode` Server Action        | Sanitize title and content on creation                        |
+| React Flow node renderer          | Last line of defence if data came from a pre-sanitization era |
 
 ---
 
@@ -190,7 +191,7 @@ export async function uploadRoomBackground(formData: FormData) {
   const parsed = FileUploadSchema.parse({
     fileName: file.name,
     fileSize: file.size,
-    mimeType: detectedMime,  // Use detected MIME type, not the client-provided type
+    mimeType: detectedMime, // Use detected MIME type, not the client-provided type
     roomId: formData.get('roomId'),
   });
 
@@ -200,14 +201,25 @@ export async function uploadRoomBackground(formData: FormData) {
 
 function detectMimeType(bytes: Uint8Array): string {
   // JPEG: FF D8 FF
-  if (bytes[0] === 0xFF && bytes[1] === 0xD8 && bytes[2] === 0xFF) return 'image/jpeg';
+  if (bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return 'image/jpeg';
   // PNG: 89 50 4E 47
-  if (bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4E && bytes[3] === 0x47) return 'image/png';
+  if (bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47)
+    return 'image/png';
   // GIF: 47 49 46 38
-  if (bytes[0] === 0x47 && bytes[1] === 0x49 && bytes[2] === 0x46 && bytes[3] === 0x38) return 'image/gif';
+  if (bytes[0] === 0x47 && bytes[1] === 0x49 && bytes[2] === 0x46 && bytes[3] === 0x38)
+    return 'image/gif';
   // WebP: 52 49 46 46 ... 57 45 42 50
-  if (bytes[0] === 0x52 && bytes[1] === 0x49 && bytes[2] === 0x46 && bytes[3] === 0x46 &&
-      bytes[8] === 0x57 && bytes[9] === 0x45 && bytes[10] === 0x42 && bytes[11] === 0x50) return 'image/webp';
+  if (
+    bytes[0] === 0x52 &&
+    bytes[1] === 0x49 &&
+    bytes[2] === 0x46 &&
+    bytes[3] === 0x46 &&
+    bytes[8] === 0x57 &&
+    bytes[9] === 0x45 &&
+    bytes[10] === 0x42 &&
+    bytes[11] === 0x50
+  )
+    return 'image/webp';
   return 'application/octet-stream'; // Unknown type — will fail Zod validation
 }
 ```
@@ -215,6 +227,7 @@ function detectMimeType(bytes: Uint8Array): string {
 ### Supabase Storage Bucket Policy
 
 In addition to server-side validation, configure the Supabase Storage bucket with:
+
 - **Max file size:** 5MB
 - **Allowed MIME types:** `image/jpeg,image/png,image/webp,image/gif`
 - **Public access:** Disabled by default — generate signed URLs for access
@@ -242,18 +255,19 @@ The `SUPABASE_SERVICE_ROLE_KEY` bypasses **ALL** Row Level Security (RLS) polici
 
 ### Key Usage Reference Table
 
-| Location | Key to Use | Reason |
-|---|---|---|
-| Client-side Supabase init | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public key, RLS enforced |
-| Server-side Supabase (SSR, cookies) | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | RLS enforced, user context preserved |
-| Server Actions (via Drizzle) | `DATABASE_URL` (pooled, no Supabase key) | Drizzle + RLS, no service role needed |
-| `migrate.yml` workflow | `SUPABASE_SERVICE_ROLE_KEY` | Migration runner needs unrestricted access |
-| Seed scripts (local dev only) | `SUPABASE_SERVICE_ROLE_KEY` | Only on local database, never production |
-| Admin maintenance scripts | `SUPABASE_SERVICE_ROLE_KEY` | Restricted to GitHub Actions secrets, never in app code |
+| Location                            | Key to Use                               | Reason                                                  |
+| ----------------------------------- | ---------------------------------------- | ------------------------------------------------------- |
+| Client-side Supabase init           | `NEXT_PUBLIC_SUPABASE_ANON_KEY`          | Public key, RLS enforced                                |
+| Server-side Supabase (SSR, cookies) | `NEXT_PUBLIC_SUPABASE_ANON_KEY`          | RLS enforced, user context preserved                    |
+| Server Actions (via Drizzle)        | `DATABASE_URL` (pooled, no Supabase key) | Drizzle + RLS, no service role needed                   |
+| `migrate.yml` workflow              | `SUPABASE_SERVICE_ROLE_KEY`              | Migration runner needs unrestricted access              |
+| Seed scripts (local dev only)       | `SUPABASE_SERVICE_ROLE_KEY`              | Only on local database, never production                |
+| Admin maintenance scripts           | `SUPABASE_SERVICE_ROLE_KEY`              | Restricted to GitHub Actions secrets, never in app code |
 
 ### Environment Variable Security
 
 Store `SUPABASE_SERVICE_ROLE_KEY` **only** in:
+
 - GitHub Actions Secrets (for `migrate.yml` and seed workflows)
 - Local `.env.local` (never committed)
 
@@ -268,21 +282,22 @@ Store `SUPABASE_SERVICE_ROLE_KEY` **only** in:
 Add the following job to the CI pipeline (`.github/workflows/ci.yml`) to automatically audit dependencies for known vulnerabilities on every pull request:
 
 ```yaml
-  dependency-audit:
-    name: Dependency Security Audit
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "pnpm"
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm audit --audit-level=high
+dependency-audit:
+  name: Dependency Security Audit
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v4
+    - uses: pnpm/action-setup@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'pnpm'
+    - run: pnpm install --frozen-lockfile
+    - run: pnpm audit --audit-level=high
 ```
 
 This job:
+
 - Installs dependencies from the lockfile (no version drift)
 - Fails the CI pipeline if any **high** or **critical** severity vulnerability is found
 - Allows **low** and **moderate** findings to pass (adjust `--audit-level` as needed)
@@ -340,8 +355,8 @@ The application uses a **defense-in-depth** rate limiting strategy with three in
 
 ### Summary
 
-| Layer | Tool | Protection Type | Scope |
-|---|---|---|---|
-| Layer 1 | Vercel Edge Middleware + Upstash | Bot blocking, IP-level throttling | Per IP / per route |
-| Layer 2 | Upstash Redis sliding window | Application-level throttling | Per authenticated user |
-| Layer 3 | Supabase Supavisor | Connection pool exhaustion prevention | Global database tier |
+| Layer   | Tool                             | Protection Type                       | Scope                  |
+| ------- | -------------------------------- | ------------------------------------- | ---------------------- |
+| Layer 1 | Vercel Edge Middleware + Upstash | Bot blocking, IP-level throttling     | Per IP / per route     |
+| Layer 2 | Upstash Redis sliding window     | Application-level throttling          | Per authenticated user |
+| Layer 3 | Supabase Supavisor               | Connection pool exhaustion prevention | Global database tier   |

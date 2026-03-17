@@ -19,31 +19,31 @@ This document is the **single source of truth** for all technical decisions in t
 
 ## 1. Technology Stack
 
-| Layer | Tool | Purpose |
-|---|---|---|
-| **Framework** | Next.js (App Router) | React foundation, routing, Server Actions, SSR |
-| **Hosting** | Vercel (Hobby Tier) | Serverless deployment, global CDN, auto-scaling |
-| **Database** | Supabase PostgreSQL (**pooled connection via Supavisor**) | Relational data, real-time websockets, image storage |
-| **ORM** | Drizzle ORM | End-to-end TypeScript-safe database queries |
-| **Auth & Security** | Supabase Auth + Row Level Security (RLS) | Database-level user isolation |
-| **Spatial Canvas** | React Flow (2D MVP) + future React Three Fiber (3D) | Interactive node-mapping canvas |
-| **Transient State** | Zustand | 60fps drag-and-drop without re-renders |
-| **Server State** | TanStack Query (React Query) | Caching, optimistic updates, background syncing |
-| **Multiplayer/Sync** | Yjs (CRDTs) + y-supabase provider | Conflict-free multi-device & multi-user coordinate merging |
-| **Offline Support** | y-indexeddb | Local-first persistence, seamless reconnection sync |
-| **Validation** | Zod | Server Action input validation |
-| **Rate Limiting** | Upstash Redis (`@upstash/ratelimit`) | Abuse prevention at the edge |
-| **Monorepo** | Turborepo (pnpm) | Physical package boundaries, caching, parallel builds |
-| **Styling** | Tailwind CSS + shadcn/ui | Accessible, customizable design system |
-| **Observability** | Sentry (Client + Server) | Error boundaries, canvas memory leak detection, Long Task tracking |
-| **E2E Testing** | Playwright | Headless browser drag-and-drop testing |
-| **Search** | Supabase PostgreSQL `tsvector` full-text search | Finding memories across palaces |
-| **Quality** | TypeScript (Strict), ESLint (`eslint-plugin-boundaries`), Prettier | Automated code quality enforcement |
-| **Command Palette** | kbar | Universal keyboard-driven command palette (`Cmd+K`) |
-| **Animations** | Framer Motion | Page transitions, node animations, flashcard flips |
-| **Celebrations** | canvas-confetti | Achievement unlocks, streak milestones, daily review completion |
-| **Charts** | Recharts | Activity history, retention heatmap, review forecast |
-| **Theme** | next-themes | Dark/light mode toggle with OS preference detection |
+| Layer                | Tool                                                               | Purpose                                                            |
+| -------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| **Framework**        | Next.js (App Router)                                               | React foundation, routing, Server Actions, SSR                     |
+| **Hosting**          | Vercel (Hobby Tier)                                                | Serverless deployment, global CDN, auto-scaling                    |
+| **Database**         | Supabase PostgreSQL (**pooled connection via Supavisor**)          | Relational data, real-time websockets, image storage               |
+| **ORM**              | Drizzle ORM                                                        | End-to-end TypeScript-safe database queries                        |
+| **Auth & Security**  | Supabase Auth + Row Level Security (RLS)                           | Database-level user isolation                                      |
+| **Spatial Canvas**   | React Flow (2D MVP) + future React Three Fiber (3D)                | Interactive node-mapping canvas                                    |
+| **Transient State**  | Zustand                                                            | 60fps drag-and-drop without re-renders                             |
+| **Server State**     | TanStack Query (React Query)                                       | Caching, optimistic updates, background syncing                    |
+| **Multiplayer/Sync** | Yjs (CRDTs) + y-supabase provider                                  | Conflict-free multi-device & multi-user coordinate merging         |
+| **Offline Support**  | y-indexeddb                                                        | Local-first persistence, seamless reconnection sync                |
+| **Validation**       | Zod                                                                | Server Action input validation                                     |
+| **Rate Limiting**    | Upstash Redis (`@upstash/ratelimit`)                               | Abuse prevention at the edge                                       |
+| **Monorepo**         | Turborepo (pnpm)                                                   | Physical package boundaries, caching, parallel builds              |
+| **Styling**          | Tailwind CSS + shadcn/ui                                           | Accessible, customizable design system                             |
+| **Observability**    | Sentry (Client + Server)                                           | Error boundaries, canvas memory leak detection, Long Task tracking |
+| **E2E Testing**      | Playwright                                                         | Headless browser drag-and-drop testing                             |
+| **Search**           | Supabase PostgreSQL `tsvector` full-text search                    | Finding memories across palaces                                    |
+| **Quality**          | TypeScript (Strict), ESLint (`eslint-plugin-boundaries`), Prettier | Automated code quality enforcement                                 |
+| **Command Palette**  | kbar                                                               | Universal keyboard-driven command palette (`Cmd+K`)                |
+| **Animations**       | Framer Motion                                                      | Page transitions, node animations, flashcard flips                 |
+| **Celebrations**     | canvas-confetti                                                    | Achievement unlocks, streak milestones, daily review completion    |
+| **Charts**           | Recharts                                                           | Activity history, retention heatmap, review forecast               |
+| **Theme**            | next-themes                                                        | Dark/light mode toggle with OS preference detection                |
 
 ---
 
@@ -100,86 +100,94 @@ This document is the **single source of truth** for all technical decisions in t
 ### Tables
 
 #### `users`
-| Column | Type | Notes |
-|---|---|---|
-| `id` | `uuid` | Primary Key (from Supabase Auth) |
-| `email` | `text` | Unique, not null |
-| `display_name` | `text` | |
-| `avatar_url` | `text` | |
-| `created_at` | `timestamptz` | Default `now()` |
+
+| Column         | Type          | Notes                            |
+| -------------- | ------------- | -------------------------------- |
+| `id`           | `uuid`        | Primary Key (from Supabase Auth) |
+| `email`        | `text`        | Unique, not null                 |
+| `display_name` | `text`        |                                  |
+| `avatar_url`   | `text`        |                                  |
+| `created_at`   | `timestamptz` | Default `now()`                  |
 
 #### `palaces`
-| Column | Type | Notes |
-|---|---|---|
-| `id` | `uuid` | Primary Key |
-| `user_id` | `uuid` | FK → `users.id` |
-| `name` | `text` | Not null |
-| `description` | `text` | |
-| `created_at` | `timestamptz` | Default `now()` |
-| `updated_at` | `timestamptz` | Auto-updated |
+
+| Column        | Type          | Notes           |
+| ------------- | ------------- | --------------- |
+| `id`          | `uuid`        | Primary Key     |
+| `user_id`     | `uuid`        | FK → `users.id` |
+| `name`        | `text`        | Not null        |
+| `description` | `text`        |                 |
+| `created_at`  | `timestamptz` | Default `now()` |
+| `updated_at`  | `timestamptz` | Auto-updated    |
 
 **Indexes:** `idx_palaces_user_id` on `user_id`
 
 #### `rooms`
-| Column | Type | Notes |
-|---|---|---|
-| `id` | `uuid` | Primary Key |
-| `palace_id` | `uuid` | FK → `palaces.id` |
-| `name` | `text` | Not null |
-| `bg_image_url` | `text` | |
-| `width` | `integer` | Canvas width in pixels |
-| `height` | `integer` | Canvas height in pixels |
-| `order` | `integer` | Display order within palace |
-| `created_at` | `timestamptz` | Default `now()` |
-| `updated_at` | `timestamptz` | Auto-updated |
+
+| Column         | Type          | Notes                       |
+| -------------- | ------------- | --------------------------- |
+| `id`           | `uuid`        | Primary Key                 |
+| `palace_id`    | `uuid`        | FK → `palaces.id`           |
+| `name`         | `text`        | Not null                    |
+| `bg_image_url` | `text`        |                             |
+| `width`        | `integer`     | Canvas width in pixels      |
+| `height`       | `integer`     | Canvas height in pixels     |
+| `order`        | `integer`     | Display order within palace |
+| `created_at`   | `timestamptz` | Default `now()`             |
+| `updated_at`   | `timestamptz` | Auto-updated                |
 
 **Indexes:** `idx_rooms_palace_id` on `palace_id`
 
 #### `nodes`
-| Column | Type | Notes |
-|---|---|---|
-| `id` | `uuid` | Primary Key |
-| `room_id` | `uuid` | FK → `rooms.id` |
-| `user_id` | `uuid` | FK → `users.id` |
-| `title` | `text` | Not null |
-| `content` | `text` | Searchable body |
-| `position_x` | `float8` | X coordinate on canvas |
-| `position_y` | `float8` | Y coordinate on canvas |
-| `position_z` | `float8` | Z-index / depth (for future 3D) |
-| `node_type` | `text` | e.g. `image`, `text`, `link` |
-| `created_at` | `timestamptz` | Default `now()` |
-| `updated_at` | `timestamptz` | Auto-updated |
+
+| Column       | Type          | Notes                           |
+| ------------ | ------------- | ------------------------------- |
+| `id`         | `uuid`        | Primary Key                     |
+| `room_id`    | `uuid`        | FK → `rooms.id`                 |
+| `user_id`    | `uuid`        | FK → `users.id`                 |
+| `title`      | `text`        | Not null                        |
+| `content`    | `text`        | Searchable body                 |
+| `position_x` | `float8`      | X coordinate on canvas          |
+| `position_y` | `float8`      | Y coordinate on canvas          |
+| `position_z` | `float8`      | Z-index / depth (for future 3D) |
+| `node_type`  | `text`        | e.g. `image`, `text`, `link`    |
+| `created_at` | `timestamptz` | Default `now()`                 |
+| `updated_at` | `timestamptz` | Auto-updated                    |
 
 **Indexes:**
+
 - `idx_nodes_room_id` on `room_id`
 - `idx_nodes_user_id` on `user_id`
 - `idx_nodes_content_fts` — GIN index on `to_tsvector('english', content)`
 
 #### `edges`
-| Column | Type | Notes |
-|---|---|---|
-| `id` | `uuid` | Primary Key |
-| `source_node_id` | `uuid` | FK → `nodes.id` |
-| `target_node_id` | `uuid` | FK → `nodes.id` |
-| `label` | `text` | |
-| `created_at` | `timestamptz` | Default `now()` |
+
+| Column           | Type          | Notes           |
+| ---------------- | ------------- | --------------- |
+| `id`             | `uuid`        | Primary Key     |
+| `source_node_id` | `uuid`        | FK → `nodes.id` |
+| `target_node_id` | `uuid`        | FK → `nodes.id` |
+| `label`          | `text`        |                 |
+| `created_at`     | `timestamptz` | Default `now()` |
 
 **Indexes:** Composite `idx_edges_source_target` on `(source_node_id, target_node_id)`
 
 #### `tags`
-| Column | Type | Notes |
-|---|---|---|
-| `id` | `uuid` | Primary Key |
-| `name` | `text` | Not null |
+
+| Column    | Type   | Notes           |
+| --------- | ------ | --------------- |
+| `id`      | `uuid` | Primary Key     |
+| `name`    | `text` | Not null        |
 | `user_id` | `uuid` | FK → `users.id` |
 
 **Indexes:** `idx_tags_user_id` on `user_id`
 
 #### `node_tags`
-| Column | Type | Notes |
-|---|---|---|
+
+| Column    | Type   | Notes           |
+| --------- | ------ | --------------- |
 | `node_id` | `uuid` | FK → `nodes.id` |
-| `tag_id` | `uuid` | FK → `tags.id` |
+| `tag_id`  | `uuid` | FK → `tags.id`  |
 
 **Primary Key:** Composite `(node_id, tag_id)`
 
@@ -372,7 +380,11 @@ export async function batchUpdateNodes(input: unknown) {
     for (const update of updates) {
       await tx
         .update(nodes)
-        .set({ position_x: update.position_x, position_y: update.position_y, updated_at: new Date() })
+        .set({
+          position_x: update.position_x,
+          position_y: update.position_y,
+          updated_at: new Date(),
+        })
         .where(eq(nodes.id, update.id));
     }
   });
@@ -446,7 +458,9 @@ const ratelimit = new Ratelimit({
 });
 
 export async function checkRateLimit() {
-  const { data: { user } } = await auth();
+  const {
+    data: { user },
+  } = await auth();
   if (!user) throw new Error('Unauthorized');
 
   const { success } = await ratelimit.limit(`user:${user.id}`);
@@ -467,6 +481,7 @@ export async function checkRateLimit() {
 Palaces, rooms, and nodes are **never hard-deleted**. This protects users from accidental data loss and enables a Trash/restore workflow.
 
 **Implementation:**
+
 - Add a `deleted_at` column (nullable `timestamptz`) to the `palaces`, `rooms`, and `nodes` tables
 - All list queries filter `WHERE deleted_at IS NULL` by default
 - A scheduled cleanup job permanently deletes rows where `deleted_at` is older than 30 days
@@ -488,15 +503,21 @@ All list endpoints use **cursor-based pagination** — not offset pagination. Cu
 
 ```typescript
 async function listPalaces(userId: string, cursor?: { createdAt: Date; id: string }) {
-  return db.select().from(palaces)
-    .where(and(
-      eq(palaces.userId, userId),
-      isNull(palaces.deletedAt),
-      cursor ? or(
-        lt(palaces.createdAt, cursor.createdAt),
-        and(eq(palaces.createdAt, cursor.createdAt), lt(palaces.id, cursor.id))
-      ) : undefined
-    ))
+  return db
+    .select()
+    .from(palaces)
+    .where(
+      and(
+        eq(palaces.userId, userId),
+        isNull(palaces.deletedAt),
+        cursor
+          ? or(
+              lt(palaces.createdAt, cursor.createdAt),
+              and(eq(palaces.createdAt, cursor.createdAt), lt(palaces.id, cursor.id)),
+            )
+          : undefined,
+      ),
+    )
     .orderBy(desc(palaces.createdAt), desc(palaces.id))
     .limit(20);
 }
@@ -507,6 +528,7 @@ async function listPalaces(userId: string, cursor?: { createdAt: Date; id: strin
 Users can export their entire palace data as a single JSON file. This serves as both a user-facing feature and a personal disaster recovery mechanism.
 
 **Export includes:**
+
 - Palace metadata (name, description, timestamps)
 - All rooms with dimensions and background image references
 - All nodes with coordinates, content, and type
@@ -514,6 +536,7 @@ Users can export their entire palace data as a single JSON file. This serves as 
 - All tags and node-tag associations
 
 **Import flow:**
+
 1. User selects a previously exported JSON file
 2. A Server Action validates the entire JSON structure with Zod before any insert
 3. All records are inserted in a single database transaction
@@ -552,16 +575,16 @@ TanStack Query's `onError` handler receives the typed `error` object. The UI can
 
 These are **non-negotiables** that must be respected in every PR.
 
-| # | Principle | Rationale |
-|---|---|---|
-| 1 | **The UI is dumb.** Components display data and fire events. Logic lives in hooks, stores, and Server Actions. | Prevents business logic sprawl; simplifies testing. |
-| 2 | **Trust no client.** Every Server Action validates with Zod, then checks Upstash rate limit, then touches Drizzle. | Defense-in-depth against malformed/malicious payloads. |
-| 3 | **Transient state stays local.** X/Y coordinates live in Zustand only. They hit the database only on drop via batch save. | 60fps drag requires zero server round-trips during motion. |
-| 4 | **Indexes from Day 1.** Every foreign key gets an index. Search gets a GIN index. No exceptions. | Prevents N+1 query performance cliffs at scale. |
-| 5 | **Pooled connections only.** Never use Supabase's direct connection string in serverless functions. | Supavisor prevents connection exhaustion under load. |
-| 6 | **Two-phase migrations.** Never drop a column in a single deploy. | Guarantees zero-downtime deployments and instant rollback. |
-| 7 | **Canvas crashes are contained.** Error Boundaries wrap the canvas, not the page. | Users never lose access to navigation or sidebar on canvas failure. |
-| 8 | **Mobile-first layouts.** All dashboard components are designed for the smallest screen first. Desktop enhancements are progressive overrides. | Ensures a quality experience for the majority of users on mobile devices. |
+| #   | Principle                                                                                                                                      | Rationale                                                                 |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| 1   | **The UI is dumb.** Components display data and fire events. Logic lives in hooks, stores, and Server Actions.                                 | Prevents business logic sprawl; simplifies testing.                       |
+| 2   | **Trust no client.** Every Server Action validates with Zod, then checks Upstash rate limit, then touches Drizzle.                             | Defense-in-depth against malformed/malicious payloads.                    |
+| 3   | **Transient state stays local.** X/Y coordinates live in Zustand only. They hit the database only on drop via batch save.                      | 60fps drag requires zero server round-trips during motion.                |
+| 4   | **Indexes from Day 1.** Every foreign key gets an index. Search gets a GIN index. No exceptions.                                               | Prevents N+1 query performance cliffs at scale.                           |
+| 5   | **Pooled connections only.** Never use Supabase's direct connection string in serverless functions.                                            | Supavisor prevents connection exhaustion under load.                      |
+| 6   | **Two-phase migrations.** Never drop a column in a single deploy.                                                                              | Guarantees zero-downtime deployments and instant rollback.                |
+| 7   | **Canvas crashes are contained.** Error Boundaries wrap the canvas, not the page.                                                              | Users never lose access to navigation or sidebar on canvas failure.       |
+| 8   | **Mobile-first layouts.** All dashboard components are designed for the smallest screen first. Desktop enhancements are progressive overrides. | Ensures a quality experience for the majority of users on mobile devices. |
 
 ---
 
@@ -573,12 +596,12 @@ The dashboard uses a **shell-based responsive layout** that composes four compon
 
 ### Component Roles
 
-| Component | Rendered On | Description |
-|---|---|---|
-| `DashboardShell` | All screens | Root wrapper. Composes all layout pieces. Sets `h-[100dvh]`. |
-| `Sidebar` | `md`+ (desktop) | Fixed left sidebar, 256px wide, icon + label navigation |
-| `BottomNav` | `< md` (mobile) | Fixed bottom tab bar with 5 primary tabs |
-| `MobileDrawer` | `< md` (mobile) | Top bar hamburger → shadcn `Sheet` sliding from the left with full nav |
+| Component        | Rendered On     | Description                                                            |
+| ---------------- | --------------- | ---------------------------------------------------------------------- |
+| `DashboardShell` | All screens     | Root wrapper. Composes all layout pieces. Sets `h-[100dvh]`.           |
+| `Sidebar`        | `md`+ (desktop) | Fixed left sidebar, 256px wide, icon + label navigation                |
+| `BottomNav`      | `< md` (mobile) | Fixed bottom tab bar with 5 primary tabs                               |
+| `MobileDrawer`   | `< md` (mobile) | Top bar hamburger → shadcn `Sheet` sliding from the left with full nav |
 
 ### File Structure
 
@@ -634,9 +657,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
         <button className="rounded-full p-2">🔔</button>
       </header>
       <main className="flex-1 overflow-y-auto pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          {children}
-        </div>
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</div>
       </main>
       <nav className="fixed inset-x-0 bottom-0 z-50 border-t bg-background pb-[env(safe-area-inset-bottom)] md:hidden">
         <BottomNav />
@@ -647,6 +668,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
 ```
 
 **Key decisions:**
+
 - `h-[100dvh]` — dynamic viewport height handles mobile browser chrome correctly (see [UI_STYLE_GUIDE.md §1](./UI_STYLE_GUIDE.md#1-mobile-first-design-strategy))
 - `pb-[calc(4rem+env(safe-area-inset-bottom))]` — main content scrolls above the bottom nav + iOS home indicator
 - `pb-[env(safe-area-inset-bottom)]` — bottom nav itself pads for the iOS home indicator
@@ -661,11 +683,11 @@ import { Home, Calendar, Gamepad2, Trophy, Map } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
 
 const tabs = [
-  { href: '/',         icon: Home,      label: 'Home' },
-  { href: '/daily',    icon: Calendar,  label: 'Daily' },
-  { href: '/games',    icon: Gamepad2,  label: 'Games' },
-  { href: '/progress', icon: Trophy,    label: 'Progress' },
-  { href: '/palace',   icon: Map,       label: 'Palaces' },
+  { href: '/', icon: Home, label: 'Home' },
+  { href: '/daily', icon: Calendar, label: 'Daily' },
+  { href: '/games', icon: Gamepad2, label: 'Games' },
+  { href: '/progress', icon: Trophy, label: 'Progress' },
+  { href: '/palace', icon: Map, label: 'Palaces' },
 ];
 
 export function BottomNav() {
@@ -682,7 +704,7 @@ export function BottomNav() {
               'flex flex-col items-center justify-center gap-0.5 px-3 py-2',
               'min-w-[48px] min-h-[48px]',
               'transition-colors duration-150',
-              isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+              isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground',
             )}
           >
             <Icon className="h-5 w-5" strokeWidth={isActive ? 2.5 : 2} />
@@ -696,6 +718,7 @@ export function BottomNav() {
 ```
 
 **Key decisions:**
+
 - `min-w-[48px] min-h-[48px]` — meets Apple HIG and Material Design 48px minimum touch target requirement
 - Active state uses `strokeWidth={2.5}` for a bold filled feel without needing separate icon variants
 - `text-[0.625rem]` (10px) labels — small enough to not compete with icons on narrow screens

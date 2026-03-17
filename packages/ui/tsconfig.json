@@ -1,0 +1,9 @@
+{
+  "extends": "@memory-palace/typescript-config/base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "jsx": "react-jsx"
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules", "dist"]
+}

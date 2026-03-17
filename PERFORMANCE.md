@@ -19,23 +19,23 @@ This document defines the performance targets, measurement tools, and implementa
 
 The following targets must be met on the production build. CI will fail if any target is regressed by more than 10%.
 
-| Metric | Target | Tool to Enforce |
-|---|---|---|
-| First Load JS | < 200KB gzipped | `@next/bundle-analyzer` |
-| Largest Contentful Paint (LCP) | < 2.5s | Lighthouse CI |
-| First Input Delay (FID) | < 100ms | Lighthouse CI |
-| Cumulative Layout Shift (CLS) | < 0.1 | Lighthouse CI |
-| Canvas Frame Rate | Stable 60fps during drag | Sentry Long Task monitoring |
-| Time to Interactive (TTI) | < 3.5s | Lighthouse CI |
+| Metric                         | Target                   | Tool to Enforce             |
+| ------------------------------ | ------------------------ | --------------------------- |
+| First Load JS                  | < 200KB gzipped          | `@next/bundle-analyzer`     |
+| Largest Contentful Paint (LCP) | < 2.5s                   | Lighthouse CI               |
+| First Input Delay (FID)        | < 100ms                  | Lighthouse CI               |
+| Cumulative Layout Shift (CLS)  | < 0.1                    | Lighthouse CI               |
+| Canvas Frame Rate              | Stable 60fps during drag | Sentry Long Task monitoring |
+| Time to Interactive (TTI)      | < 3.5s                   | Lighthouse CI               |
 
 ### Lighthouse Score Minimums
 
-| Category | Minimum Score |
-|---|---|
-| Performance | 85 |
-| Accessibility | 90 |
-| Best Practices | 90 |
-| SEO | 80 |
+| Category       | Minimum Score |
+| -------------- | ------------- |
+| Performance    | 85            |
+| Accessibility  | 90            |
+| Best Practices | 90            |
+| SEO            | 80            |
 
 ---
 
@@ -64,12 +64,12 @@ import ReactFlow from 'reactflow';
 
 ### Guidelines
 
-| Room Size | Configuration |
-|---|---|
-| < 50 nodes | Virtualization optional |
-| 50–200 nodes | Enable `onlyRenderVisibleElements` |
-| 200+ nodes | Enable `onlyRenderVisibleElements` + monitor with Sentry Long Task |
-| 500+ nodes | Consider paginating nodes by spatial region |
+| Room Size    | Configuration                                                      |
+| ------------ | ------------------------------------------------------------------ |
+| < 50 nodes   | Virtualization optional                                            |
+| 50–200 nodes | Enable `onlyRenderVisibleElements`                                 |
+| 200+ nodes   | Enable `onlyRenderVisibleElements` + monitor with Sentry Long Task |
+| 500+ nodes   | Consider paginating nodes by spatial region                        |
 
 ### Why `nodeExtent`?
 
@@ -83,12 +83,12 @@ Saving on every canvas event would generate hundreds of database writes per seco
 
 ### Save Timing by Action
 
-| Action | Strategy | Timing |
-|---|---|---|
-| Node drag (position change) | Save on drop (not during drag) | Immediate on `dragend` |
-| Node text editing | Debounced save | 500ms after last keystroke |
-| Node resize | Debounced save | 300ms after resize ends |
-| Multi-node selection + drag | Batch save on drop | Immediate, single transaction |
+| Action                      | Strategy                       | Timing                        |
+| --------------------------- | ------------------------------ | ----------------------------- |
+| Node drag (position change) | Save on drop (not during drag) | Immediate on `dragend`        |
+| Node text editing           | Debounced save                 | 500ms after last keystroke    |
+| Node resize                 | Debounced save                 | 300ms after resize ends       |
+| Multi-node selection + drag | Batch save on drop             | Immediate, single transaction |
 
 ### Implementation
 
@@ -107,7 +107,7 @@ const debouncedSave = useDebouncedCallback(
   (nodeId: string, content: string) => {
     updateNodeContent({ nodeId, content }); // Server Action
   },
-  500 // ms
+  500, // ms
 );
 ```
 
@@ -121,7 +121,7 @@ const onNodeDragStop = useCallback(
       updates: [{ id: node.id, position_x: node.position.x, position_y: node.position.y }],
     });
   },
-  [roomId]
+  [roomId],
 );
 ```
 
@@ -132,14 +132,14 @@ const onSelectionDragStop = useCallback(
   (event: React.MouseEvent, nodes: Node[]) => {
     batchUpdateNodes({
       roomId,
-      updates: nodes.map(n => ({
+      updates: nodes.map((n) => ({
         id: n.id,
         position_x: n.position.x,
         position_y: n.position.y,
       })),
     });
   },
-  [roomId]
+  [roomId],
 );
 ```
 
@@ -209,12 +209,12 @@ This opens a visual treemap in the browser showing the size contribution of ever
 
 ### Common Optimizations
 
-| Issue | Solution |
-|---|---|
-| Large date library (e.g., `moment.js`) | Replace with `date-fns` (tree-shakeable) |
-| Full `lodash` import | Use `lodash-es` with named imports |
-| Icons library bundling all icons | Use individual icon imports |
-| Database client in client bundle | Move to Server Actions or ensure it's `server-only` |
+| Issue                                  | Solution                                            |
+| -------------------------------------- | --------------------------------------------------- |
+| Large date library (e.g., `moment.js`) | Replace with `date-fns` (tree-shakeable)            |
+| Full `lodash` import                   | Use `lodash-es` with named imports                  |
+| Icons library bundling all icons       | Use individual icon imports                         |
+| Database client in client bundle       | Move to Server Actions or ensure it's `server-only` |
 
 ---
 
@@ -223,18 +223,18 @@ This opens a visual treemap in the browser showing the size contribution of ever
 Add the following job to `.github/workflows/ci.yml` to automatically audit performance on every PR against the preview deployment:
 
 ```yaml
-  lighthouse:
-    name: Lighthouse Performance Audit
-    runs-on: ubuntu-latest
-    needs: [lint, typecheck]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: treosh/lighthouse-ci-action@v12
-        with:
-          urls: |
-            ${{ env.PREVIEW_URL }}
-          budgetPath: ./lighthouse-budget.json
-          uploadArtifacts: true
+lighthouse:
+  name: Lighthouse Performance Audit
+  runs-on: ubuntu-latest
+  needs: [lint, typecheck]
+  steps:
+    - uses: actions/checkout@v4
+    - uses: treosh/lighthouse-ci-action@v12
+      with:
+        urls: |
+          ${{ env.PREVIEW_URL }}
+        budgetPath: ./lighthouse-budget.json
+        uploadArtifacts: true
 ```
 
 ### `lighthouse-budget.json`

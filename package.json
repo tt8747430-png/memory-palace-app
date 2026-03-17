@@ -1,0 +1,27 @@
+{
+  "name": "memory-palace-app",
+  "private": true,
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test:unit": "turbo test:unit",
+    "test:integration": "turbo test:integration"
+  },
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^20",
+    "@vitest/coverage-v8": "^4.1.0",
+    "prettier": "^3.4.0",
+    "turbo": "^2.3.0",
+    "vitest": "^4.1.0"
+  }
+}

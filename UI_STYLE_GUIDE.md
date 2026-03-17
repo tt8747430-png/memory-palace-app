@@ -30,13 +30,13 @@ This document is the **single source of truth** for all UI/UX decisions in the M
 
 Design from the smallest viewport up. Never write desktop-first styles and override them for mobile.
 
-| Breakpoint | Width | Layout |
-|---|---|---|
-| Default | < 640px | Single column, bottom nav, stacked cards |
-| `sm` | ≥ 640px | Slightly wider cards, increased padding |
-| `md` | ≥ 768px | 2-column grid, side navigation appears |
-| `lg` | ≥ 1024px | 3-column grid, full sidebar + canvas |
-| `xl` | ≥ 1280px | Canvas reaches maximum width, detail panels visible |
+| Breakpoint | Width    | Layout                                              |
+| ---------- | -------- | --------------------------------------------------- |
+| Default    | < 640px  | Single column, bottom nav, stacked cards            |
+| `sm`       | ≥ 640px  | Slightly wider cards, increased padding             |
+| `md`       | ≥ 768px  | 2-column grid, side navigation appears              |
+| `lg`       | ≥ 1024px | 3-column grid, full sidebar + canvas                |
+| `xl`       | ≥ 1280px | Canvas reaches maximum width, detail panels visible |
 
 **Rule:** Always write base styles for mobile, then add `md:`, `lg:`, `xl:` overrides.
 
@@ -52,13 +52,13 @@ Design from the smallest viewport up. Never write desktop-first styles and overr
 
 On mobile (< `md` breakpoint), the sidebar is replaced entirely by a **bottom tab bar** with 5 primary tabs:
 
-| Tab | Icon | Route |
-|---|---|---|
-| Home | `Home` | `/` |
-| Daily | `Calendar` | `/daily` |
-| Games | `Gamepad2` | `/games` |
-| Progress | `Trophy` | `/progress` |
-| Palaces | `Map` | `/palace` |
+| Tab      | Icon       | Route       |
+| -------- | ---------- | ----------- |
+| Home     | `Home`     | `/`         |
+| Daily    | `Calendar` | `/daily`    |
+| Games    | `Gamepad2` | `/games`    |
+| Progress | `Trophy`   | `/progress` |
+| Palaces  | `Map`      | `/palace`   |
 
 - Each tab item: minimum `48px × 48px` touch target
 - Active tab: `text-primary` with stroke-width `2.5`
@@ -84,7 +84,7 @@ import { Menu } from 'lucide-react';
   <SheetContent side="left" className="w-72">
     {/* Secondary navigation items */}
   </SheetContent>
-</Sheet>
+</Sheet>;
 ```
 
 ### Safe Area Insets (iOS)
@@ -156,10 +156,7 @@ During immersive sessions (canvas editing, flashcards, quizzes, memory games) **
 // Hide bottom nav and top bar during immersive mode
 <div className="fixed inset-0 z-[100] bg-background">
   {/* Immersive content — canvas, flashcards, quiz */}
-  <button
-    className="absolute top-4 right-4 min-w-[48px] min-h-[48px]"
-    onClick={exitImmersiveMode}
-  >
+  <button className="absolute top-4 right-4 min-w-[48px] min-h-[48px]" onClick={exitImmersiveMode}>
     <X className="h-5 w-5" />
   </button>
 </div>
@@ -186,11 +183,11 @@ Implement pull-to-refresh on all list and data views using a touch event listene
 
 ### Swipe Gestures
 
-| Interaction | Gesture | Implementation |
-|---|---|---|
-| Flashcard navigation | Swipe left / right | `onTouchStart` + `onTouchEnd` delta detection |
-| Delete palace/room | Swipe left to reveal action | CSS `translateX` + threshold |
-| Dismiss notification | Swipe up | Touch event or `useSwipeable` |
+| Interaction          | Gesture                     | Implementation                                |
+| -------------------- | --------------------------- | --------------------------------------------- |
+| Flashcard navigation | Swipe left / right          | `onTouchStart` + `onTouchEnd` delta detection |
+| Delete palace/room   | Swipe left to reveal action | CSS `translateX` + threshold                  |
+| Dismiss notification | Swipe up                    | Touch event or `useSwipeable`                 |
 
 ---
 
@@ -219,9 +216,7 @@ Canvas nodes must be large enough to tap accurately on a touchscreen:
 
 ```tsx
 // Node component styles
-<div className="min-w-[60px] min-h-[60px] rounded-lg border p-3">
-  {/* Node content */}
-</div>
+<div className="min-w-[60px] min-h-[60px] rounded-lg border p-3">{/* Node content */}</div>
 ```
 
 ### Mini-Map
@@ -237,10 +232,7 @@ The mini-map is a desktop-only feature. Hide it on mobile to save space:
 Show zoom controls on mobile as a replacement for the hidden mini-map:
 
 ```tsx
-<Controls
-  className="md:hidden"
-  showInteractive={false}
-/>
+<Controls className="md:hidden" showInteractive={false} />
 ```
 
 ### Mobile Toolbar (FAB + Radial Menu)
@@ -249,9 +241,11 @@ On mobile, the canvas toolbar collapses to a Floating Action Button (FAB). Tappi
 
 ```tsx
 // FAB positioned above the bottom navigation
-<button className="fixed bottom-[calc(4rem+env(safe-area-inset-bottom)+1rem)] right-4
+<button
+  className="fixed bottom-[calc(4rem+env(safe-area-inset-bottom)+1rem)] right-4
                    min-w-[56px] min-h-[56px] rounded-full bg-primary text-primary-foreground
-                   shadow-lg flex items-center justify-center z-40 md:hidden">
+                   shadow-lg flex items-center justify-center z-40 md:hidden"
+>
   <Plus className="h-6 w-6" />
 </button>
 ```
@@ -298,13 +292,13 @@ Based on shadcn/ui theming with CSS custom properties. All colors are defined as
 
 ### Palette
 
-| Token | Light Mode | Dark Mode | Tailwind Class | Usage |
-|---|---|---|---|---|
+| Token   | Light Mode           | Dark Mode            | Tailwind Class                | Usage                   |
+| ------- | -------------------- | -------------------- | ----------------------------- | ----------------------- |
 | Primary | `hsl(220, 90%, 56%)` | `hsl(220, 90%, 65%)` | `bg-primary` / `text-primary` | CTAs, active nav states |
-| Success | `hsl(142, 76%, 36%)` | `hsl(142, 76%, 50%)` | `bg-success` / `text-success` | Streaks, completions |
-| Warning | `hsl(38, 92%, 50%)` | `hsl(38, 92%, 60%)` | `bg-warning` / `text-warning` | Alerts, badges |
-| Surface | `hsl(0, 0%, 98%)` | `hsl(240, 10%, 10%)` | `bg-surface` | Card backgrounds |
-| Accent | `hsl(262, 83%, 58%)` | `hsl(262, 83%, 70%)` | `bg-accent` / `text-accent` | Gamification elements |
+| Success | `hsl(142, 76%, 36%)` | `hsl(142, 76%, 50%)` | `bg-success` / `text-success` | Streaks, completions    |
+| Warning | `hsl(38, 92%, 50%)`  | `hsl(38, 92%, 60%)`  | `bg-warning` / `text-warning` | Alerts, badges          |
+| Surface | `hsl(0, 0%, 98%)`    | `hsl(240, 10%, 10%)` | `bg-surface`                  | Card backgrounds        |
+| Accent  | `hsl(262, 83%, 58%)` | `hsl(262, 83%, 70%)` | `bg-accent` / `text-accent`   | Gamification elements   |
 
 ### CSS Custom Properties (globals.css)
 
@@ -371,16 +365,16 @@ const config: Config = {
       },
       // Component-specific heights
       height: {
-        'bottom-nav': '4rem',       // 64px bottom navigation bar
-        'top-bar': '3.5rem',        // 56px mobile top bar
+        'bottom-nav': '4rem', // 64px bottom navigation bar
+        'top-bar': '3.5rem', // 56px mobile top bar
         'screen-dynamic': '100dvh', // Dynamic viewport height
       },
       // Minimum touch target sizes
       minWidth: {
-        'touch': '48px',
+        touch: '48px',
       },
       minHeight: {
-        'touch': '48px',
+        touch: '48px',
       },
     },
   },
@@ -397,21 +391,21 @@ All font sizes are defined mobile-first and scale up at wider breakpoints.
 
 ### Heading Scale
 
-| Level | Mobile | `md` (768px+) | `lg` (1024px+) | Tailwind |
-|---|---|---|---|---|
-| H1 — Page title | `1.75rem / 700` | `2.25rem / 700` | `3rem / 800` | `text-mobile-h1 md:text-4xl lg:text-5xl font-bold` |
-| H2 — Section title | `1.25rem / 600` | `1.5rem / 600` | `1.875rem / 700` | `text-mobile-h2 md:text-2xl lg:text-3xl font-semibold` |
-| H3 — Card title | `1rem / 600` | `1.125rem / 600` | `1.25rem / 600` | `text-base md:text-lg font-semibold` |
-| H4 — Sub-section | `0.875rem / 600` | `1rem / 600` | — | `text-sm md:text-base font-semibold` |
+| Level              | Mobile           | `md` (768px+)    | `lg` (1024px+)   | Tailwind                                               |
+| ------------------ | ---------------- | ---------------- | ---------------- | ------------------------------------------------------ |
+| H1 — Page title    | `1.75rem / 700`  | `2.25rem / 700`  | `3rem / 800`     | `text-mobile-h1 md:text-4xl lg:text-5xl font-bold`     |
+| H2 — Section title | `1.25rem / 600`  | `1.5rem / 600`   | `1.875rem / 700` | `text-mobile-h2 md:text-2xl lg:text-3xl font-semibold` |
+| H3 — Card title    | `1rem / 600`     | `1.125rem / 600` | `1.25rem / 600`  | `text-base md:text-lg font-semibold`                   |
+| H4 — Sub-section   | `0.875rem / 600` | `1rem / 600`     | —                | `text-sm md:text-base font-semibold`                   |
 
 ### Body & UI Text
 
-| Use | Size | Tailwind |
-|---|---|---|
-| Body text | `0.9375rem` (15px) | `text-mobile-body` |
-| UI labels | `0.875rem` (14px) | `text-sm` |
-| Caption / meta | `0.75rem` (12px) | `text-mobile-caption` |
-| Bottom nav labels | `0.625rem` (10px) | `text-[0.625rem]` |
+| Use               | Size               | Tailwind              |
+| ----------------- | ------------------ | --------------------- |
+| Body text         | `0.9375rem` (15px) | `text-mobile-body`    |
+| UI labels         | `0.875rem` (14px)  | `text-sm`             |
+| Caption / meta    | `0.75rem` (12px)   | `text-mobile-caption` |
+| Bottom nav labels | `0.625rem` (10px)  | `text-[0.625rem]`     |
 
 ### Font Family
 
@@ -427,8 +421,10 @@ Palace cards, room cards, and node cards all follow the same base pattern with c
 
 ```tsx
 // Palace card — responsive grid item
-<div className="rounded-xl border bg-card shadow-sm hover:shadow-md transition-shadow
-                p-4 flex flex-col gap-3 cursor-pointer">
+<div
+  className="rounded-xl border bg-card shadow-sm hover:shadow-md transition-shadow
+                p-4 flex flex-col gap-3 cursor-pointer"
+>
   {/* Thumbnail */}
   <div className="aspect-video w-full rounded-lg bg-muted overflow-hidden">
     <img src={palace.thumbnailUrl} alt={palace.name} className="object-cover w-full h-full" />
@@ -450,7 +446,9 @@ Palace cards, room cards, and node cards all follow the same base pattern with c
 
 ```tsx
 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-  {palaces.map(palace => <PalaceCard key={palace.id} palace={palace} />)}
+  {palaces.map((palace) => (
+    <PalaceCard key={palace.id} palace={palace} />
+  ))}
 </div>
 ```
 
@@ -474,9 +472,10 @@ function PalaceCardSkeleton() {
 }
 
 // Usage
-{isLoading
-  ? Array.from({ length: 6 }).map((_, i) => <PalaceCardSkeleton key={i} />)
-  : palaces.map(p => <PalaceCard key={p.id} palace={p} />)
+{
+  isLoading
+    ? Array.from({ length: 6 }).map((_, i) => <PalaceCardSkeleton key={i} />)
+    : palaces.map((p) => <PalaceCard key={p.id} palace={p} />);
 }
 ```
 
@@ -531,8 +530,12 @@ The primary "New Palace" action is a fixed FAB positioned above the bottom navig
 Long content areas use shadcn `Accordion` to keep the mobile view compact.
 
 ```tsx
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger }
-  from '@/packages/ui/components/accordion';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/packages/ui/components/accordion';
 
 <Accordion type="single" collapsible>
   <AccordionItem value="rooms">
@@ -540,10 +543,12 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger }
       Rooms ({palace.rooms.length})
     </AccordionTrigger>
     <AccordionContent>
-      {palace.rooms.map(room => <RoomCard key={room.id} room={room} />)}
+      {palace.rooms.map((room) => (
+        <RoomCard key={room.id} room={room} />
+      ))}
     </AccordionContent>
   </AccordionItem>
-</Accordion>
+</Accordion>;
 ```
 
 ### Stacked Layout (Responsive Grid)
@@ -558,9 +563,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger }
 All primary action buttons must be full-width on mobile, auto-width on larger screens:
 
 ```tsx
-<Button className="w-full md:w-auto">
-  Start Today's Review
-</Button>
+<Button className="w-full md:w-auto">Start Today's Review</Button>
 ```
 
 ---
@@ -569,25 +572,25 @@ All primary action buttons must be full-width on mobile, auto-width on larger sc
 
 ### Overview
 
-| Screen | Navigation Type | Component |
-|---|---|---|
-| Mobile (< `md`) | Bottom tab bar + hamburger top bar | `BottomNav` + `MobileDrawer` |
-| Desktop (≥ `md`) | Fixed left sidebar | `Sidebar` |
+| Screen           | Navigation Type                    | Component                    |
+| ---------------- | ---------------------------------- | ---------------------------- |
+| Mobile (< `md`)  | Bottom tab bar + hamburger top bar | `BottomNav` + `MobileDrawer` |
+| Desktop (≥ `md`) | Fixed left sidebar                 | `Sidebar`                    |
 
 ### Sidebar Items (Desktop)
 
-| Icon | Label | Route | Notes |
-|---|---|---|---|
-| 🏠 | Home | `/` | Dashboard overview |
-| 🗓️ | Daily Review | `/daily` | Spaced repetition daily challenge |
-| 🗺️ | Palaces | `/palace` | Palace list and management |
-| 🎮 | Games | `/games` | Memory games |
-| 🏆 | Progress | `/progress` | Stats, streaks, achievements |
-| 📚 | Study | `/study` | Browse content |
-| 📝 | Review Generator | `/review` | Custom review and export |
-| 🔍 | Search | `/search` | Full-text search |
-| ⚙️ | Settings | `/settings` | App preferences |
-| 👤 | Profile | `/profile` | User profile |
+| Icon | Label            | Route       | Notes                             |
+| ---- | ---------------- | ----------- | --------------------------------- |
+| 🏠   | Home             | `/`         | Dashboard overview                |
+| 🗓️   | Daily Review     | `/daily`    | Spaced repetition daily challenge |
+| 🗺️   | Palaces          | `/palace`   | Palace list and management        |
+| 🎮   | Games            | `/games`    | Memory games                      |
+| 🏆   | Progress         | `/progress` | Stats, streaks, achievements      |
+| 📚   | Study            | `/study`    | Browse content                    |
+| 📝   | Review Generator | `/review`   | Custom review and export          |
+| 🔍   | Search           | `/search`   | Full-text search                  |
+| ⚙️   | Settings         | `/settings` | App preferences                   |
+| 👤   | Profile          | `/profile`  | User profile                      |
 
 ### DashboardShell
 
@@ -636,13 +639,33 @@ import {
 } from 'kbar';
 
 const actions = [
-  { id: 'home',       name: 'Go Home',             shortcut: ['g', 'h'], perform: () => router.push('/') },
-  { id: 'new-palace', name: 'Create New Palace',    shortcut: ['c', 'p'], perform: () => openCreatePalace() },
-  { id: 'new-node',   name: 'Create New Node',      shortcut: ['c', 'n'], perform: () => openCreateNode() },
-  { id: 'search',     name: 'Search All Nodes…',    shortcut: ['/', '/'], perform: () => focusSearch() },
-  { id: 'daily',      name: 'Start Daily Review',   shortcut: ['g', 'd'], perform: () => router.push('/daily') },
-  { id: 'dark-mode',  name: 'Toggle Dark Mode',     shortcut: ['t', 'd'], perform: () => toggleTheme() },
-  { id: 'settings',   name: 'Open Settings',        shortcut: ['g', 's'], perform: () => router.push('/settings') },
+  { id: 'home', name: 'Go Home', shortcut: ['g', 'h'], perform: () => router.push('/') },
+  {
+    id: 'new-palace',
+    name: 'Create New Palace',
+    shortcut: ['c', 'p'],
+    perform: () => openCreatePalace(),
+  },
+  {
+    id: 'new-node',
+    name: 'Create New Node',
+    shortcut: ['c', 'n'],
+    perform: () => openCreateNode(),
+  },
+  { id: 'search', name: 'Search All Nodes…', shortcut: ['/', '/'], perform: () => focusSearch() },
+  {
+    id: 'daily',
+    name: 'Start Daily Review',
+    shortcut: ['g', 'd'],
+    perform: () => router.push('/daily'),
+  },
+  { id: 'dark-mode', name: 'Toggle Dark Mode', shortcut: ['t', 'd'], perform: () => toggleTheme() },
+  {
+    id: 'settings',
+    name: 'Open Settings',
+    shortcut: ['g', 's'],
+    perform: () => router.push('/settings'),
+  },
 ];
 // openCreatePalace, openCreateNode, focusSearch: implement via Zustand store actions or dialog state
 // toggleTheme: implement via next-themes useTheme() hook — see §10 Dark Mode Best Practices
@@ -686,25 +709,25 @@ On mobile, `Cmd+K` is not available. Trigger the command palette via a **search 
 
 ### Full Shortcut Reference
 
-| Category | Shortcut | Action |
-|---|---|---|
-| **Navigation** | `g` then `h` | Go Home |
-| | `g` then `d` | Go to Daily Review |
-| | `g` then `p` | Go to Palaces |
-| | `g` then `s` | Go to Settings |
-| **Creation** | `c` then `p` | Create new palace |
-| | `c` then `n` | Create new node (in canvas) |
-| **Canvas** | `Space` (hold) | Pan tool (hand mode) |
-| | `Delete` / `Backspace` | Delete selected node(s) |
-| | `Cmd/Ctrl + Z` | Undo last action |
-| | `Cmd/Ctrl + Shift + Z` | Redo |
-| | `Cmd/Ctrl + A` | Select all nodes |
-| | `Cmd/Ctrl + D` | Duplicate selected node(s) |
-| | `F` | Fit all nodes in view |
-| **Global** | `Cmd/Ctrl + K` | Open command palette |
-| | `?` | Show keyboard shortcuts overlay |
-| | `t` then `d` | Toggle dark/light mode |
-| | `Esc` | Close any open panel/modal/sheet |
+| Category       | Shortcut               | Action                           |
+| -------------- | ---------------------- | -------------------------------- |
+| **Navigation** | `g` then `h`           | Go Home                          |
+|                | `g` then `d`           | Go to Daily Review               |
+|                | `g` then `p`           | Go to Palaces                    |
+|                | `g` then `s`           | Go to Settings                   |
+| **Creation**   | `c` then `p`           | Create new palace                |
+|                | `c` then `n`           | Create new node (in canvas)      |
+| **Canvas**     | `Space` (hold)         | Pan tool (hand mode)             |
+|                | `Delete` / `Backspace` | Delete selected node(s)          |
+|                | `Cmd/Ctrl + Z`         | Undo last action                 |
+|                | `Cmd/Ctrl + Shift + Z` | Redo                             |
+|                | `Cmd/Ctrl + A`         | Select all nodes                 |
+|                | `Cmd/Ctrl + D`         | Duplicate selected node(s)       |
+|                | `F`                    | Fit all nodes in view            |
+| **Global**     | `Cmd/Ctrl + K`         | Open command palette             |
+|                | `?`                    | Show keyboard shortcuts overlay  |
+|                | `t` then `d`           | Toggle dark/light mode           |
+|                | `Esc`                  | Close any open panel/modal/sheet |
 
 ### Implementation
 
@@ -723,7 +746,7 @@ export function useGlobalShortcuts() {
   useHotkeys('g+d', () => router.push('/daily'), { scopes: 'global' });
   useHotkeys('g+p', () => router.push('/palace'), { scopes: 'global' });
   useHotkeys('g+s', () => router.push('/settings'), { scopes: 'global' });
-  useHotkeys('?',   () => openShortcutsOverlay(), { scopes: 'global' });
+  useHotkeys('?', () => openShortcutsOverlay(), { scopes: 'global' });
   useHotkeys('Escape', () => closeActivePanel(), { scopes: 'global' });
 }
 ```
@@ -736,8 +759,10 @@ export function useGlobalShortcuts() {
 
 ```tsx
 // Keyboard shortcut badge component
-<kbd className="inline-flex items-center gap-0.5 text-xs font-mono
-                border rounded px-1 py-0.5 bg-muted text-muted-foreground">
+<kbd
+  className="inline-flex items-center gap-0.5 text-xs font-mono
+                border rounded px-1 py-0.5 bg-muted text-muted-foreground"
+>
   ⌘K
 </kbd>
 ```
@@ -756,14 +781,14 @@ Extends the §3 Color & Theme System with comprehensive dark mode specifics.
 
 ### Color Token Reference
 
-| Element | Light Mode | Dark Mode | Rule |
-|---|---|---|---|
-| Background | `hsl(0, 0%, 100%)` | `hsl(222, 20%, 7%)` | Never pure black — use dark navy/charcoal |
-| Surface (Cards) | `hsl(0, 0%, 98%)` | `hsl(222, 15%, 12%)` | Cards slightly lighter than background |
-| Border | `hsl(220, 13%, 91%)` | `hsl(222, 15%, 18%)` | Subtle, never harsh white lines |
-| Text Primary | `hsl(222, 47%, 11%)` | `hsl(210, 40%, 96%)` | Never pure white — use off-white |
-| Text Secondary | `hsl(215, 16%, 47%)` | `hsl(215, 20%, 65%)` | Same muted tone in both modes |
-| Elevated Surface | `white` | `hsl(222, 15%, 15%)` | Tooltips, dropdowns, command palette |
+| Element          | Light Mode           | Dark Mode            | Rule                                      |
+| ---------------- | -------------------- | -------------------- | ----------------------------------------- |
+| Background       | `hsl(0, 0%, 100%)`   | `hsl(222, 20%, 7%)`  | Never pure black — use dark navy/charcoal |
+| Surface (Cards)  | `hsl(0, 0%, 98%)`    | `hsl(222, 15%, 12%)` | Cards slightly lighter than background    |
+| Border           | `hsl(220, 13%, 91%)` | `hsl(222, 15%, 18%)` | Subtle, never harsh white lines           |
+| Text Primary     | `hsl(222, 47%, 11%)` | `hsl(210, 40%, 96%)` | Never pure white — use off-white          |
+| Text Secondary   | `hsl(215, 16%, 47%)` | `hsl(215, 20%, 65%)` | Same muted tone in both modes             |
+| Elevated Surface | `white`              | `hsl(222, 15%, 15%)` | Tooltips, dropdowns, command palette      |
 
 ### CSS Custom Properties (`globals.css`)
 
@@ -840,20 +865,20 @@ Define the animation language for the entire app. Use `framer-motion` for comple
 
 ### Animation Reference
 
-| Trigger | Animation | Duration | Implementation |
-|---|---|---|---|
-| Page transition | Fade + slide up | 200ms | `framer-motion` `AnimatePresence` |
-| Card hover | Lift + shadow increase | 150ms | `hover:shadow-lg hover:-translate-y-0.5 transition-all` |
-| Node creation on canvas | Scale in from center | 300ms | `framer-motion` `initial={{ scale: 0, opacity: 0 }}` |
-| Node deletion | Fade + shrink out | 200ms | `framer-motion` `exit={{ scale: 0.8, opacity: 0 }}` |
-| Badge/achievement unlock | Confetti burst | 1500ms | `canvas-confetti` library |
-| Streak milestone | Pulsing glow + counter increment | 2s loop | Custom keyframes in Tailwind |
-| Toast notification | Slide up from bottom | 300ms | shadcn `Sonner` (built-in) |
-| Button press | Scale down briefly | 100ms | `active:scale-95 transition-transform` |
-| Tab switch | Underline slide | 200ms | `framer-motion` `layoutId` |
-| Loading spinner | Continuous rotate | Infinite | `animate-spin` (Tailwind built-in) |
-| Flashcard flip | 3D Y-axis rotation | 400ms | `framer-motion` `rotateY` with `perspective` |
-| Pull-to-refresh | Spinner appears, content shifts down | 300ms | Custom touch event handler |
+| Trigger                  | Animation                            | Duration | Implementation                                          |
+| ------------------------ | ------------------------------------ | -------- | ------------------------------------------------------- |
+| Page transition          | Fade + slide up                      | 200ms    | `framer-motion` `AnimatePresence`                       |
+| Card hover               | Lift + shadow increase               | 150ms    | `hover:shadow-lg hover:-translate-y-0.5 transition-all` |
+| Node creation on canvas  | Scale in from center                 | 300ms    | `framer-motion` `initial={{ scale: 0, opacity: 0 }}`    |
+| Node deletion            | Fade + shrink out                    | 200ms    | `framer-motion` `exit={{ scale: 0.8, opacity: 0 }}`     |
+| Badge/achievement unlock | Confetti burst                       | 1500ms   | `canvas-confetti` library                               |
+| Streak milestone         | Pulsing glow + counter increment     | 2s loop  | Custom keyframes in Tailwind                            |
+| Toast notification       | Slide up from bottom                 | 300ms    | shadcn `Sonner` (built-in)                              |
+| Button press             | Scale down briefly                   | 100ms    | `active:scale-95 transition-transform`                  |
+| Tab switch               | Underline slide                      | 200ms    | `framer-motion` `layoutId`                              |
+| Loading spinner          | Continuous rotate                    | Infinite | `animate-spin` (Tailwind built-in)                      |
+| Flashcard flip           | 3D Y-axis rotation                   | 400ms    | `framer-motion` `rotateY` with `perspective`            |
+| Pull-to-refresh          | Spinner appears, content shifts down | 300ms    | Custom touch event handler                              |
 
 ### Animation Rules
 
@@ -907,15 +932,15 @@ Every list, grid, and data view must have a thoughtful empty state when there's 
 
 ### Empty State Reference
 
-| View | Illustration | Headline | CTA |
-|---|---|---|---|
-| Palace list (no palaces) | 🏛️ Building illustration | "Build your first Memory Palace" | "Create Palace" button |
-| Room list (empty palace) | 🚪 Door illustration | "Add rooms to organize your memories" | "Add Room" button |
-| Node list (empty room) | 💭 Thought bubble | "Place your first memory node" | "Add Node" button (or "Open Canvas") |
-| Daily Review (no nodes yet) | 📝 Clipboard illustration | "Create some nodes first, then review them daily" | "Go to Palaces" link |
-| Search (no results) | 🔍 Magnifying glass | "No memories match '{query}'" | "Try a different search" suggestion |
-| Games (no nodes to play with) | 🎮 Controller illustration | "You need at least 10 nodes to play games" | "Create Nodes" link |
-| Activity history (new user) | 📊 Chart placeholder | "Your activity will appear here as you learn" | "Start Daily Review" |
+| View                          | Illustration               | Headline                                          | CTA                                  |
+| ----------------------------- | -------------------------- | ------------------------------------------------- | ------------------------------------ |
+| Palace list (no palaces)      | 🏛️ Building illustration   | "Build your first Memory Palace"                  | "Create Palace" button               |
+| Room list (empty palace)      | 🚪 Door illustration       | "Add rooms to organize your memories"             | "Add Room" button                    |
+| Node list (empty room)        | 💭 Thought bubble          | "Place your first memory node"                    | "Add Node" button (or "Open Canvas") |
+| Daily Review (no nodes yet)   | 📝 Clipboard illustration  | "Create some nodes first, then review them daily" | "Go to Palaces" link                 |
+| Search (no results)           | 🔍 Magnifying glass        | "No memories match '{query}'"                     | "Try a different search" suggestion  |
+| Games (no nodes to play with) | 🎮 Controller illustration | "You need at least 10 nodes to play games"        | "Create Nodes" link                  |
+| Activity history (new user)   | 📊 Chart placeholder       | "Your activity will appear here as you learn"     | "Start Daily Review"                 |
 
 ### Implementation Pattern
 
@@ -1021,8 +1046,12 @@ function MemoryNode({ data, selected }: NodeProps) {
 - Implementation: shadcn `ContextMenu` component (Radix UI)
 
 ```tsx
-import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger }
-  from '@/packages/ui/components/context-menu';
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from '@/packages/ui/components/context-menu';
 
 <ContextMenu>
   <ContextMenuTrigger asChild>
@@ -1031,9 +1060,11 @@ import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger }
   <ContextMenuContent>
     <ContextMenuItem onClick={onEdit}>Edit</ContextMenuItem>
     <ContextMenuItem onClick={onDuplicate}>Duplicate</ContextMenuItem>
-    <ContextMenuItem onClick={onDelete} className="text-destructive">Delete</ContextMenuItem>
+    <ContextMenuItem onClick={onDelete} className="text-destructive">
+      Delete
+    </ContextMenuItem>
   </ContextMenuContent>
-</ContextMenu>
+</ContextMenu>;
 ```
 
 ### Undo/Redo System
@@ -1056,13 +1087,13 @@ toast('Undone: Deleted node', {
 
 ### Fit-to-Content & Navigation
 
-| Shortcut | Action |
-|---|---|
-| `F` | Fit all nodes in viewport |
-| `Cmd + 0` | Reset zoom to 100% |
-| `Cmd + +` | Zoom in by 10% |
-| `Cmd + -` | Zoom out by 10% |
-| Double-click mini-map | Zoom to that area |
+| Shortcut              | Action                    |
+| --------------------- | ------------------------- |
+| `F`                   | Fit all nodes in viewport |
+| `Cmd + 0`             | Reset zoom to 100%        |
+| `Cmd + +`             | Zoom in by 10%            |
+| `Cmd + -`             | Zoom out by 10%           |
+| Double-click mini-map | Zoom to that area         |
 
 ```tsx
 import { useReactFlow } from 'reactflow';
