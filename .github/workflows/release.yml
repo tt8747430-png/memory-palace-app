@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,6 +25,7 @@ jobs:
           config: cliff.toml
           args: --latest --strip header
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OUTPUT: CHANGELOG.md
           GITHUB_REPO: ${{ github.repository }}
 
