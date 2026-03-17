@@ -96,20 +96,92 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
 
-  test-e2e:
-    name: Playwright E2E Tests
+  unit-tests:
+    name: Unit & Component Tests
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    needs: [lint, typecheck, migration-check]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          version: 9
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run unit & component tests with coverage
+        run: pnpm turbo test:unit -- --coverage
+        env:
+          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+          TURBO_TEAM: ${{ github.repository_owner }}
+
+  integration-tests:
+    name: Integration Tests (Server Actions + DB)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: memory_palace_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Apply migrations to test database
+        run: pnpm --filter @memory-palace/db drizzle-kit push
+        env:
+          TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/memory_palace_test
+
+      - name: Run integration tests
+        run: pnpm turbo test:integration
+        env:
+          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+          TURBO_TEAM: ${{ github.repository_owner }}
+          TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/memory_palace_test
+
+  e2e-tests:
+    name: Playwright E2E Tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    needs: [unit-tests, integration-tests]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -121,18 +193,18 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Install Playwright browsers
-        run: pnpm --filter playwright exec playwright install --with-deps chromium
+        run: pnpm exec playwright install --with-deps chromium
 
-      - name: Build
-        run: pnpm turbo build
+      - name: Build web app
+        run: pnpm turbo build --filter=web
         env:
           TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
           TURBO_TEAM: ${{ github.repository_owner }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 
-      - name: Run E2E tests
-        run: pnpm --filter playwright exec playwright test
+      - name: Run Playwright E2E tests
+        run: pnpm exec playwright test
         env:
           DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
@@ -143,5 +215,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
-          path: playwright/playwright-report/
+          path: playwright-report/
           retention-days: 7
