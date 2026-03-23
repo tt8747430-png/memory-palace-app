@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@plugin 'tailwindcss-animate';
 
 :root {
   --background: 0 0% 100%;
@@ -114,6 +115,31 @@
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Mobile-first font sizes (UI_STYLE_GUIDE §4/§5) */
+  /* Tailwind v4 maps --text-* → text-* utilities */
+  --text-mobile-h1: 1.75rem;
+  --text-mobile-h1--line-height: 2.25rem;
+  --text-mobile-h2: 1.25rem;
+  --text-mobile-h2--line-height: 1.75rem;
+  --text-mobile-body: 0.9375rem;
+  --text-mobile-body--line-height: 1.5rem;
+  --text-mobile-caption: 0.75rem;
+  --text-mobile-caption--line-height: 1.25rem;
+
+  /* Safe area inset spacing for iOS notch/home indicator */
+  --spacing-safe-bottom: env(safe-area-inset-bottom);
+  --spacing-safe-top: env(safe-area-inset-top);
+  --spacing-safe-left: env(safe-area-inset-left);
+  --spacing-safe-right: env(safe-area-inset-right);
+
+  /* Component-specific heights */
+  --height-bottom-nav: 4rem;
+  --height-top-bar: 3.5rem;
+
+  /* Minimum touch target sizes (48px per Apple HIG / Material Design) */
+  --min-width-touch: 48px;
+  --min-height-touch: 48px;
 }
 
 body {

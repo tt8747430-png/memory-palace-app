@@ -12,8 +12,17 @@
     "check:vercel-config": "node scripts/ci/validate-vercel-config.mjs",
     "check:prepush": "pnpm check:guardrails && pnpm check:vercel-config && pnpm turbo lint && pnpm format:check && pnpm turbo build --filter=@memory-palace/web",
     "hooks:install": "sh ./scripts/setup-git-hooks.sh",
+    "prepare": "sh ./scripts/setup-git-hooks.sh",
     "test:unit": "turbo test:unit",
     "test:integration": "turbo test:integration"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,mjs}": [
+      "prettier --write"
+    ],
+    "*.{json,md,mdx,css,yaml,yml}": [
+      "prettier --write"
+    ]
   },
   "packageManager": "pnpm@9.15.9",
   "engines": {
@@ -25,6 +34,7 @@
     "@types/node": "^22",
     "@vitest/coverage-v8": "^4.1.0",
     "git-cliff": "^2.12.0",
+    "lint-staged": "^16.4.0",
     "prettier": "^3.4.0",
     "turbo": "^2.3.0",
     "vitest": "^4.1.0"

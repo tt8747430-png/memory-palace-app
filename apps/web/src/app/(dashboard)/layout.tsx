@@ -1,5 +1,7 @@
 import { redirect } from 'next/navigation';
 import { auth } from '@/shared/lib/supabase-server';
+import { DashboardShell } from '@/features/dashboard';
+
 // Server-side auth guard for all routes inside (dashboard).
 // The middleware already redirects unauthenticated users, but this provides
 // a defense-in-depth check at the layout level.
@@ -10,5 +12,5 @@ export default async function DashboardLayout({ children }: { children: React.Re
   if (!user) {
     redirect('/login');
   }
-  return <>{children}</>;
+  return <DashboardShell>{children}</DashboardShell>;
 }
