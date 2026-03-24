@@ -31,10 +31,10 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isPublicPath =
-    pathname === '/' ||
     pathname.startsWith('/login') ||
     pathname.startsWith('/signup') ||
-    pathname.startsWith('/about');
+    pathname.startsWith('/about') ||
+    pathname.startsWith('/callback');
 
   // Redirect unauthenticated users away from protected routes
   if (!user && !isPublicPath) {
