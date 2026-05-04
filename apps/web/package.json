@@ -13,16 +13,17 @@
   "dependencies": {
     "@memory-palace/db": "workspace:*",
     "@memory-palace/ui": "workspace:*",
-    "@supabase/ssr": "^0.9.0",
-    "@supabase/supabase-js": "^2.99.2",
+    "@supabase/ssr": "^0.10.2",
+    "@supabase/supabase-js": "^2.105.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.0.1",
-    "next": "16.1.7",
+    "lucide-react": "1.14.0",
+    "next": "16.2.4",
     "next-intl": "^4.8.3",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
     "tailwind-merge": "^3.5.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^4.0.0"
   },
   "devDependencies": {
     "@memory-palace/eslint-config": "workspace:*",
@@ -37,7 +38,7 @@
     "@vitejs/plugin-react": "^6.0.1",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
-    "eslint-config-next": "16.1.7",
+    "eslint-config-next": "16.2.4",
     "jsdom": "^29.0.0",
     "tailwindcss": "^4",
     "typescript": "^5",
