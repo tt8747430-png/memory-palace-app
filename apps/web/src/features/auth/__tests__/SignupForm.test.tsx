@@ -2,20 +2,12 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { SignupForm } from '../components/SignupForm';
+import type { AuthFormState } from '../actions/types';
 
-const mockPush = vi.fn();
-const mockRefresh = vi.fn();
-vi.mock('next/navigation', () => ({
-  useRouter: () => ({ push: mockPush, refresh: mockRefresh }),
-}));
+const mockSignUp = vi.fn<(prev: AuthFormState, formData: FormData) => Promise<AuthFormState>>();
 
-const mockSignUp = vi.fn();
-vi.mock('@/shared/lib/supabase-browser', () => ({
-  createSupabaseBrowser: () => ({
-    auth: {
-      signUp: mockSignUp,
-    },
-  }),
+vi.mock('../actions/signUp', () => ({
+  signUp: (prev: AuthFormState, formData: FormData) => mockSignUp(prev, formData),
 }));
 
 vi.mock('@memory-palace/ui', () => ({
@@ -26,12 +18,12 @@ vi.mock('@memory-palace/ui', () => ({
 
 describe('SignupForm', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    mockSignUp.mockReset();
   });
 
   it('renders the signup form fields', () => {
+    mockSignUp.mockResolvedValue({ status: 'idle' });
     render(<SignupForm />);
-
     expect(screen.getByPlaceholderText('Email')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Password')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument();
@@ -39,82 +31,50 @@ describe('SignupForm', () => {
 
   it('renders a link to the login page', () => {
     render(<SignupForm />);
-
     expect(screen.getByRole('link', { name: /sign in/i })).toHaveAttribute('href', '/login');
   });
 
-  it('calls signUp with entered credentials and callback redirect', async () => {
+  it('forwards typed credentials to the signUp action via FormData', async () => {
+    mockSignUp.mockResolvedValue({ status: 'idle' });
     const user = userEvent.setup();
-    mockSignUp.mockResolvedValue({ data: { session: null }, error: null });
-
     render(<SignupForm />);
 
     await user.type(screen.getByPlaceholderText('Email'), 'new@example.com');
     await user.type(screen.getByPlaceholderText('Password'), 'password123');
     await user.click(screen.getByRole('button', { name: /create account/i }));
 
-    await waitFor(() => {
-      expect(mockSignUp).toHaveBeenCalledWith({
-        email: 'new@example.com',
-        password: 'password123',
-        options: {
-          emailRedirectTo: 'http://localhost:3000/callback?next=/',
-        },
-      });
-    });
+    await waitFor(() => expect(mockSignUp).toHaveBeenCalledTimes(1));
+    const [, formData] = mockSignUp.mock.calls[0]!;
+    expect(formData.get('email')).toBe('new@example.com');
+    expect(formData.get('password')).toBe('password123');
   });
 
-  it('shows a confirmation message when email verification is required', async () => {
-    const user = userEvent.setup();
-    mockSignUp.mockResolvedValue({ data: { session: null }, error: null });
-
-    render(<SignupForm />);
-
-    await user.type(screen.getByPlaceholderText('Email'), 'new@example.com');
-    await user.type(screen.getByPlaceholderText('Password'), 'password123');
-    await user.click(screen.getByRole('button', { name: /create account/i }));
-
-    await waitFor(() => {
-      expect(screen.getByRole('status')).toHaveTextContent(
-        'Check your email to confirm your account.',
-      );
-    });
-  });
-
-  it('redirects to / when Supabase returns an active session', async () => {
-    const user = userEvent.setup();
+  it('shows the check-email message when the action returns check-email', async () => {
     mockSignUp.mockResolvedValue({
-      data: { session: { access_token: 'token' } },
-      error: null,
+      status: 'check-email',
+      message: 'Check your email to confirm your account.',
     });
-
+    const user = userEvent.setup();
     render(<SignupForm />);
 
     await user.type(screen.getByPlaceholderText('Email'), 'new@example.com');
     await user.type(screen.getByPlaceholderText('Password'), 'password123');
     await user.click(screen.getByRole('button', { name: /create account/i }));
 
-    await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith('/');
-      expect(mockRefresh).toHaveBeenCalled();
-    });
+    expect(await screen.findByRole('status')).toHaveTextContent(
+      'Check your email to confirm your account.',
+    );
   });
 
-  it('displays an error message when sign up fails', async () => {
+  it('displays the error message returned by the action', async () => {
+    mockSignUp.mockResolvedValue({ status: 'error', message: 'User already registered' });
     const user = userEvent.setup();
-    mockSignUp.mockResolvedValue({
-      data: { session: null },
-      error: { message: 'User already registered' },
-    });
-
     render(<SignupForm />);
 
     await user.type(screen.getByPlaceholderText('Email'), 'new@example.com');
     await user.type(screen.getByPlaceholderText('Password'), 'password123');
     await user.click(screen.getByRole('button', { name: /create account/i }));
 
-    await waitFor(() => {
-      expect(screen.getByRole('alert')).toHaveTextContent('User already registered');
-    });
+    expect(await screen.findByRole('alert')).toHaveTextContent('User already registered');
   });
 });
