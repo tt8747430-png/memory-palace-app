@@ -1,8 +1,10 @@
 'use server';
+
 import { redirect } from 'next/navigation';
-import { createSupabaseServer } from '@/shared/lib/supabase-server';
+import { createSupabaseFromCookies } from '@/shared/lib/supabase';
+
 export async function signOut() {
-  const supabase = await createSupabaseServer();
+  const supabase = await createSupabaseFromCookies();
   await supabase.auth.signOut();
   redirect('/login');
 }
