@@ -1,5 +1,4 @@
 import type { NextConfig } from 'next';
-import createNextIntlPlugin from 'next-intl/plugin';
 
 // Headers that are correct and meaningful as static values. CSP is intentionally
 // omitted: a real CSP for App Router needs per-request nonces (added in the
@@ -21,4 +20,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default createNextIntlPlugin('./src/i18n/request.ts')(nextConfig);
+export default nextConfig;
