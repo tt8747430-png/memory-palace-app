@@ -3,7 +3,7 @@ import { cn } from '../lib/cn';
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;
 
-export function Button({ className, type = 'button', ...props }: ButtonProps) {
+export function Button({ className, type = 'button', children, ...props }: ButtonProps) {
   return (
     <button
       type={type}
@@ -16,6 +16,8 @@ export function Button({ className, type = 'button', ...props }: ButtonProps) {
         className,
       )}
       {...props}
-    />
+    >
+      {children}
+    </button>
   );
 }
