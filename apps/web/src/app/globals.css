@@ -1,6 +1,12 @@
 @import 'tailwindcss';
 @plugin 'tailwindcss-animate';
 
+/* Workspace UI package — Tailwind v4 doesn't scan node_modules-resolved
+   workspace packages by default, so any class used inside the Button,
+   Sheet, Input, Skeleton primitives would be dropped from the compiled
+   CSS. This @source directive forces Tailwind to scan the package. */
+@source "../../../../packages/ui/src/**/*.{ts,tsx}";
+
 :root {
   --background: 0 0% 100%;
   --foreground: 240 10% 10%;
