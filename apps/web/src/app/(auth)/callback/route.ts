@@ -22,24 +22,38 @@ function loginRedirect(origin: string, message: string) {
   return NextResponse.redirect(url);
 }
 
-export async function GET(request: NextRequest) {
-  const requestUrl = new URL(request.url);
-  const code = requestUrl.searchParams.get('code');
+const FRIENDLY_ERROR_MESSAGES: Record<string, string> = {
+  otp_expired: 'Your email link has expired. Request a new one and try again.',
+  access_denied: 'The email link could not be used. Request a new one and try again.',
+};
 
-  if (!code) {
-    return loginRedirect(requestUrl.origin, 'Missing authentication code. Please try again.');
+export async function GET(request: NextRequest) {
+  const params = new URL(request.url).searchParams;
+  const origin = new URL(request.url).origin;
+
+  // Supabase sends users here with ?error=...&error_code=...&error_description=...
+  // when the OAuth/OTP step itself fails (expired link, denied consent, etc.).
+  // Surface Supabase's own description rather than treating it as "missing code".
+  const supabaseError = params.get('error_code') ?? params.get('error');
+  if (supabaseError) {
+    const description = params.get('error_description');
+    const message =
+      FRIENDLY_ERROR_MESSAGES[supabaseError] ?? description ?? 'Authentication failed.';
+    return loginRedirect(origin, message);
   }
 
-  const next = resolveSafeNext(requestUrl.searchParams.get('next'), requestUrl.origin);
-  const response = NextResponse.redirect(new URL(next, requestUrl.origin));
+  const code = params.get('code');
+  if (!code) {
+    return loginRedirect(origin, 'Missing authentication code. Please try again.');
+  }
+
+  const next = resolveSafeNext(params.get('next'), origin);
+  const response = NextResponse.redirect(new URL(next, origin));
   const supabase = createSupabaseForResponse(request, response);
 
   const { error } = await supabase.auth.exchangeCodeForSession(code);
   if (error) {
-    return loginRedirect(
-      requestUrl.origin,
-      'We could not verify your email. Please try signing in again.',
-    );
+    return loginRedirect(origin, 'We could not verify your email. Please try signing in again.');
   }
 
   return response;
