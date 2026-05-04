@@ -16,11 +16,11 @@ Feature dirs in `apps/web/src/features/<domain>/` are created **only when work s
 
 ## Critical patterns
 
-- **Supabase clients** — only via `apps/web/src/shared/lib/supabase.ts` (`createSupabaseFromCookies`, `createSupabaseFromRequest`, `createSupabaseForResponse`, `auth`). Browser code uses `supabase-browser.ts`. Never re-implement the cookie `getAll`/`setAll` boilerplate.
+- **Supabase clients** — only via `apps/web/src/shared/lib/supabase.ts` (`createSupabaseFromCookies`, `createSupabaseForResponse`, `createSupabaseForProxy`, `auth`). No browser-side Supabase client today; auth is fully cookie-based via server actions. Never re-implement the cookie `getAll`/`setAll` boilerplate.
 - **Env vars** — only via `apps/web/src/shared/lib/env.ts`. Never `process.env.X!` at call sites.
 - **Auth enforcement** — proxy + RLS only. Don't add a per-navigation `auth()` round-trip in layouts.
-- **DB client** — `import { db } from '@memory-palace/db'`. The client is lazy; importing the package does not require `DATABASE_URL`.
-- **Server Actions** (Phase 3+) — when introduced: Zod validate input → rate-limit (TBD ADR) → Drizzle query. Return `ActionResponse<T> = { success, data } | { success, error: { code, message } }`. Place under `src/features/<domain>/actions/`. Verb-noun camelCase.
+- **DB client** — `import { getDb } from '@memory-palace/db'`. Call once at the top of an action; importing the package does not require `DATABASE_URL`.
+- **Server Actions** — Zod validate input → rate-limit (TBD ADR) → Drizzle query. Return either a discriminated union state for `useActionState` flows, or `ActionResponse<T> = { success, data } | { success, error: { code, message } }` for direct callers. Place under `src/features/<domain>/actions/`. Verb-noun camelCase. See `features/auth/actions/` for the React-19 form pattern.
 - **State separation** — canvas XY in Zustand (60fps drag, save on drop); server data in TanStack Query; UI toggles in `useState`. None of this is wired yet — choose the libraries via ADR before introducing them.
 - **Exports** — named only outside route files. No `export default` on components.
 - **CSS** — mobile-first base styles, progressive `md:`/`lg:` overrides. Never `max-*:` breakpoints.

@@ -6,7 +6,7 @@ Memory Palace App — a spatial learning platform where users create virtual "pa
 
 ## Tech stack (in use today)
 
-Next.js 16.2.4 (App Router) · React Compiler · Turborepo + pnpm · Supabase (Postgres + Auth) · Drizzle ORM (client wired, schema empty until Phase 3) · Tailwind v4 + shadcn primitives in `@memory-palace/ui` · next-intl (single locale `en`) · Zod (env validation) · Vitest + Testing Library · Playwright (wired, no specs yet).
+Next.js 16.2.4 (App Router) · React Compiler · Turborepo + pnpm · Supabase (Postgres + Auth) · Drizzle ORM (client wired, schema empty until Phase 3) · Tailwind v4 + shadcn primitives in `@memory-palace/ui` · Zod (env + server-action validation) · Vitest + Testing Library · Playwright (wired, no specs yet).
 
 Tools listed in archived docs (Yjs/CRDT, Upstash, Sentry, kbar, Recharts, framer-motion, R3F, next-themes) are **not chosen yet**. Each will land via an ADR in `docs/adr/`.
 

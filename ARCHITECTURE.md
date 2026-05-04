@@ -12,8 +12,8 @@
 | Database   | Supabase Postgres (Supavisor pooled, port 6543) — schema not yet defined |
 | ORM        | Drizzle (client wired, schema empty — Phase 3)                           |
 | Styling    | Tailwind v4 + shadcn primitives in `@memory-palace/ui`                   |
-| i18n       | next-intl (single locale `en`)                                           |
-| Validation | Zod (env validation today, server-action input later)                    |
+| i18n       | None (added when a second locale is required)                            |
+| Validation | Zod (env + server-action input)                                          |
 | Testing    | Vitest + Testing Library; Playwright wired but no E2E specs yet          |
 | Quality    | TypeScript strict, ESLint with `eslint-plugin-boundaries`, Prettier      |
 | CI         | GitHub Actions: lint, typecheck, format, build, guardrails               |
@@ -34,7 +34,7 @@ Workspace packages export TypeScript source directly (`main: ./src/index.ts`); t
 
 ## Routing & auth flow
 
-- `apps/web/src/proxy.ts` — Next.js 16 proxy (replacement for `middleware.ts`). Calls Supabase `getUser()` to refresh the session, redirects unauthenticated traffic away from protected paths, and authenticated traffic away from `/login` and `/signup`. Cookie replay on redirect is handled via a single `redirectWithCookies` helper.
+- `apps/web/src/proxy.ts` — Next.js 16 proxy (replacement for `middleware.ts`). Calls Supabase `getUser()` to refresh the session via `createSupabaseForProxy(request)`, which owns its own response so the proxy never holds a `let`. Public paths are matched on first-segment equality (`/login`, `/signup`, `/about`, `/callback`) rather than `startsWith`, so `/loginhacks` does not match.
 - `apps/web/src/app/(auth)/callback/route.ts` — exchanges the email-confirmation `code` for a session, then redirects to a path-validated `next` query param (defaults to `/`).
 - `apps/web/src/app/(dashboard)/layout.tsx` — renders the shell only. Auth enforcement is the proxy + RLS; the layout intentionally does **not** make a second Supabase call per navigation.
 
@@ -42,14 +42,14 @@ A CI guardrail (`scripts/ci/check-guardrails.mjs`) blocks reintroducing `middlew
 
 ## Supabase client factories
 
-All server-side Supabase usage goes through `apps/web/src/shared/lib/supabase.ts`:
+All Supabase usage goes through `apps/web/src/shared/lib/supabase.ts`:
 
 - `createSupabaseFromCookies()` — Server Components, Server Actions, Route Handlers reading `next/headers`.
-- `createSupabaseFromRequest(request, onCookiesWritten)` — proxy/edge style, where the response is allocated lazily.
 - `createSupabaseForResponse(request, response)` — handlers that have an existing `NextResponse`.
+- `createSupabaseForProxy(request)` — returns `{ supabase, getResponse }`; the factory owns the response that carries refreshed cookies.
 - `auth()` — convenience over `createSupabaseFromCookies`.
 
-Browser usage goes through `apps/web/src/shared/lib/supabase-browser.ts`.
+There is no browser-side Supabase client today. Auth is fully cookie-based via server actions; if a future feature needs Supabase Realtime in the browser, add `createSupabaseBrowser` then.
 
 ## Environment variables
 
@@ -73,4 +73,4 @@ CSS custom properties drive Tailwind v4 utilities (`--text-mobile-h1`, `--spacin
 - No DB schema — `packages/db/src/schema.ts` is empty until Phase 3.
 - No rate limiting — to be designed in an ADR before Phase 3 ships.
 - No CSP. App-Router-correct CSP needs per-request nonces; rather than ship a permissive header that lies about its protection, no CSP is sent until the Phase 8 hardening pass adds nonce middleware.
-- Vitest coverage thresholds are aspirational; will be re-tuned when more code exists.
+- No coverage gating. Vitest is configured for tests only — re-add `coverage` config and wire `--coverage` into CI when there is enough surface to gate against.
