@@ -4,21 +4,38 @@ A spatial, interactive learning platform where users create virtual "palaces" wi
 
 ## Documentation
 
-| Document                                 | Description                                                                                                        |
-| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| [ARCHITECTURE.md](./ARCHITECTURE.md)     | Master architecture blueprint — technology stack, data flow, schema, file structure, and guiding principles        |
-| [UI_STYLE_GUIDE.md](./UI_STYLE_GUIDE.md) | Mobile-first UI/UX style guide — responsive design, color system, component patterns, and navigation architecture  |
-| [FEATURES.md](./FEATURES.md)             | Feature specifications — dashboard, gamification, memory games, review system, and public pages                    |
-| [DEVELOPMENT.md](./DEVELOPMENT.md)       | Complete development & DevOps plan — branching strategy, CI/CD pipelines, secrets management, and daily workflow   |
-| [ROADMAP.md](./ROADMAP.md)               | Phased execution plan — phases from infrastructure skeleton to production-ready polish                             |
-| [TESTING.md](./TESTING.md)               | Complete testing strategy — unit, component, integration, E2E, visual regression, coverage thresholds, and CI jobs |
-| [SECURITY.md](./SECURITY.md)             | Security policies — threat model, input validation, RLS, rate limiting, and vulnerability reporting                |
-| [CONTRIBUTING.md](./CONTRIBUTING.md)     | Contribution guide — PR process, commit conventions, branch naming, and code review standards                      |
-| [PERFORMANCE.md](./PERFORMANCE.md)       | Performance targets — canvas rendering, database query budgets, bundle size limits, and profiling guides           |
+| Document                             | Description                                                            |
+| ------------------------------------ | ---------------------------------------------------------------------- |
+| [ARCHITECTURE.md](./ARCHITECTURE.md) | Current-state architecture: stack, monorepo layout, Supabase factories |
+| [ROADMAP.md](./ROADMAP.md)           | What is built and what is next                                         |
+| [CLAUDE.md](./CLAUDE.md)             | Conventions and patterns for working in this repo                      |
+| [DEVELOPMENT.md](./DEVELOPMENT.md)   | Branching, CI/CD, daily workflow                                       |
+| [TESTING.md](./TESTING.md)           | Testing strategy — Vitest, Testing Library, Playwright                 |
+| [SECURITY.md](./SECURITY.md)         | Threat model, RLS, vulnerability reporting                             |
+| [CONTRIBUTING.md](./CONTRIBUTING.md) | PR process, commit conventions                                         |
+| [docs/archive/](./docs/archive)      | Pre-build aspirational designs — reference only, not authoritative     |
+| [docs/adr/](./docs/adr)              | Per-phase architecture decision records — added when phases begin      |
 
-## Quick Start
+## Implementation status (2026-05-04)
 
-> **Note:** Application source code is not yet implemented. See [ROADMAP.md](./ROADMAP.md) for the phased delivery plan.
+| Phase                                                               | Status         |
+| ------------------------------------------------------------------- | -------------- |
+| 1 — Foundation & DevOps (monorepo, Supabase auth, CI/CD, git hooks) | ✅ Complete    |
+| 2A — Responsive shell (DashboardShell, Sidebar, BottomNav, drawer)  | ✅ Complete    |
+| Cleanup & consolidation pass                                        | ✅ Complete    |
+| 2B — Theme system (dark/light mode)                                 | ⬜ Not started |
+| 2C — Base components (Input, Form, Card, …)                         | 🔶 Partial     |
+| 3 — Data layer & security (Drizzle schema, RLS, server actions)     | ⬜ Not started |
+| 4+ — Subsequent phases                                              | ⬜ Not started |
+
+## Quick start
+
+```bash
+pnpm install
+pnpm turbo dev        # http://localhost:3000
+```
+
+Requires `apps/web/.env.local` with `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (the new RLS-gated browser-safe key — `sb_publishable_...`). See `.env.example`. The legacy `NEXT_PUBLIC_SUPABASE_ANON_KEY` is still accepted with a deprecation warning. Env vars are validated by `apps/web/src/shared/lib/env.ts` on boot — missing or malformed values fail fast with a clear message.
 
 ## License
 

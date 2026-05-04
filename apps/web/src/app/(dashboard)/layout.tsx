@@ -1,16 +1,8 @@
-import { redirect } from 'next/navigation';
-import { auth } from '@/shared/lib/supabase-server';
 import { DashboardShell } from '@/features/dashboard';
 
-// Server-side auth guard for all routes inside (dashboard).
-// The middleware already redirects unauthenticated users, but this provides
-// a defense-in-depth check at the layout level.
-export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const {
-    data: { user },
-  } = await auth();
-  if (!user) {
-    redirect('/login');
-  }
+// Auth is enforced by src/proxy.ts (which redirects unauthenticated requests
+// before this layout renders) and by RLS at the database layer. No second
+// network round-trip here.
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return <DashboardShell>{children}</DashboardShell>;
 }

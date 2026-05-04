@@ -1,8 +1,18 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 
-// ✅ CORRECT: pooled connection via Supavisor (port 6543)
-// See ARCHITECTURE.md §5.A — never use direct connection in serverless
-const sql = postgres(process.env.DATABASE_URL!);
+type DrizzleClient = ReturnType<typeof drizzle>;
 
-export const db = drizzle(sql);
+let client: DrizzleClient | null = null;
+
+export function getDb(): DrizzleClient {
+  if (client) return client;
+  const url = process.env.DATABASE_URL;
+  if (!url) {
+    throw new Error(
+      'DATABASE_URL is not set. Use the Supavisor pooled connection string (port 6543).',
+    );
+  }
+  client = drizzle(postgres(url));
+  return client;
+}

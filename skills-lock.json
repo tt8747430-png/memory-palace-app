@@ -51,10 +51,22 @@
       "sourceType": "github",
       "computedHash": "40d55b35fa5ec40d87b824c4ddab3037e178dbdbd70e4b485a417281ecd528cf"
     },
+    "supabase": {
+      "source": "supabase/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/supabase/SKILL.md",
+      "computedHash": "45a3cdccc364a4bbd6cdf700fc069e9f24ebc0428098746cbfbf8b18a5e160d2"
+    },
     "supabase-nextjs": {
       "source": "alinaqi/claude-bootstrap",
       "sourceType": "github",
       "computedHash": "b0aa1036e141e62b90e96606bb66385bd7cf086aecadf3ccf6fc8c16aaf039b4"
+    },
+    "supabase-postgres-best-practices": {
+      "source": "supabase/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/supabase-postgres-best-practices/SKILL.md",
+      "computedHash": "d606a1146be6d54fb9e73f718b5320b9acac5ff2ba2d7230a555df4b5a923b4a"
     },
     "tailwind-theme-builder": {
       "source": "jezweb/claude-skills",

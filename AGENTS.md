@@ -1,83 +1,48 @@
 # AGENTS.md
 
-## Project Overview
+## Project overview
 
-Memory Palace App — a spatial learning platform using virtual "palaces" with rooms containing draggable memory nodes on a 2D canvas. **Source code is not yet implemented**; the repo currently contains design docs and a phased roadmap. Implementation starts from Phase 1 of `ROADMAP.md`.
+Memory Palace App — a spatial learning platform where users create virtual "palaces" with rooms containing draggable memory nodes on a 2D canvas. **Phase 1 (Foundation & DevOps), Phase 2A (Layout components), and a cleanup/consolidation pass are complete.** See `ROADMAP.md` for what is next, `ARCHITECTURE.md` for current-state decisions, and `docs/archive/` for the older aspirational design documents — those are reference, not authoritative.
 
-## Tech Stack
+## Tech stack (in use today)
 
-Next.js (App Router) · Turborepo (pnpm) · Supabase (PostgreSQL + Auth + Realtime) · Drizzle ORM · React Flow (canvas) · Zustand (drag state) · TanStack Query (server state) · Yjs (CRDT sync) · Tailwind CSS + shadcn/ui · Playwright (E2E) · Vitest (unit/component)
+Next.js 16.2.4 (App Router) · React Compiler · Turborepo + pnpm · Supabase (Postgres + Auth) · Drizzle ORM (client wired, schema empty until Phase 3) · Tailwind v4 + shadcn primitives in `@memory-palace/ui` · Zod (env + server-action validation) · Vitest + Testing Library · Playwright (wired, no specs yet).
 
-## Architecture Essentials
+Tools listed in archived docs (Yjs/CRDT, Upstash, Sentry, kbar, Recharts, framer-motion, R3F, next-themes) are **not chosen yet**. Each will land via an ADR in `docs/adr/`.
 
-- **Monorepo layout**: `apps/web/` (Next.js), `packages/db/` (Drizzle schema + migrations), `packages/ui/` (shadcn components), `packages/eslint-config/`, `packages/typescript-config/`
-- **Feature-Sliced Design**: features live under `apps/web/src/features/{spatial-canvas,memory-nodes,search,auth,dashboard,3d-room}/`. `3d-room/` is a future React Three Fiber feature (post-v1.5.0). Cross-feature code goes in `apps/web/src/shared/`
-- **State separation is strict**: canvas coordinates → Zustand (never TanStack Query); server data → TanStack Query (never Zustand); UI state → React `useState`
-- **Data flow**: Drag@60fps via Zustand → batch save on drop via Server Action → Drizzle (pooled Supavisor) → Supabase Realtime → Yjs CRDT merge. Offline writes persist in y-indexeddb
+## Architecture essentials
 
-## Key Conventions
+- **Monorepo:** `apps/web/` (Next.js), `packages/db/` (Drizzle), `packages/ui/` (primitives + `cn`), `packages/eslint-config`, `packages/typescript-config`. Workspaces export TS source directly; nothing is pre-built.
+- **Routing middleware:** Next.js 16 uses `src/proxy.ts` — a CI guardrail fails the build if `middleware.ts` reappears.
+- **Auth enforcement:** the proxy redirects unauthenticated traffic before any layout renders; RLS is the database-side guard. Layouts must not add a per-navigation `auth()` round-trip.
+- **Supabase clients:** only via `apps/web/src/shared/lib/supabase.ts` (`createSupabaseFromCookies`, `createSupabaseFromRequest`, `createSupabaseForResponse`, `auth`). Browser-side via `supabase-browser.ts`. Never re-implement the cookie boilerplate.
+- **Env vars:** only via `apps/web/src/shared/lib/env.ts`. Never `process.env.X!` at call sites.
+- **DB client:** `import { db } from '@memory-palace/db'` — the client is lazy; importing the package does not require `DATABASE_URL`.
+- **Feature dirs:** `apps/web/src/features/<domain>/` directories are created **only when work starts**. Today: `auth/` and `dashboard/`. `eslint-plugin-boundaries` forbids cross-feature imports; cross-cutting code goes to `src/shared/`.
 
-- **Named exports only** — no `export default` on components
-- **Server Actions must follow**: (1) Zod validate → (2) `checkRateLimit()` → (3) Drizzle DB call. No exceptions. See `CONTRIBUTING.md §8`
-- **Server Action naming**: `[verb][Entity]` camelCase (e.g., `createPalace`, `batchUpdateNodes`), placed in `src/features/<domain>/actions/`
-- **Return type**: All Server Actions return `ActionResponse<T>` discriminated union (`{ success, data }` | `{ success, error: { code, message } }`)
-- **Feature isolation**: Never import between feature dirs. Use `src/shared/` for cross-feature code. Enforced by `eslint-plugin-boundaries`
-- **Mobile-first CSS**: Write base styles for mobile, add `md:`, `lg:` overrides. Never write desktop-first with `max-*:` breakpoints
-- **Conventional Commits**: `feat(canvas): ...`, `fix(auth): ...`, `chore(db): ...` — see `DEVELOPMENT.md §4`
+## Key conventions
+
+- Components export by name (no `export default` outside route files).
+- `cn` is imported from `@memory-palace/ui`.
+- Mobile-first CSS: base styles for mobile, `md:` / `lg:` for progressive override. Never `max-*:` breakpoints.
+- Server Actions (Phase 3+): Zod validate input → rate limit (TBD ADR) → Drizzle query. Return `ActionResponse<T> = { success, data } | { success, error: { code, message } }`. Place under `src/features/<domain>/actions/`. Verb-noun camelCase.
 
 ## Commands
 
 ```bash
-pnpm turbo dev              # Start all apps (http://localhost:3000)
-pnpm turbo build            # Build all apps + packages
-pnpm turbo lint             # ESLint across all packages
-pnpm turbo typecheck        # TypeScript strict check
-pnpm turbo format           # Prettier auto-fix
-pnpm turbo format:check     # Check Prettier formatting (no auto-fix)
-
-# Database (Drizzle)
-pnpm --filter @memory-palace/db drizzle-kit generate   # Generate migration from schema
-pnpm --filter @memory-palace/db drizzle-kit push       # Push schema to local DB
-pnpm --filter @memory-palace/db drizzle-kit studio     # Open Drizzle Studio GUI
-pnpm --filter @memory-palace/db seed                   # Seed dev data
-
-# Testing
-pnpm exec playwright test        # E2E headless
-pnpm exec playwright test --ui   # E2E interactive
-
-# Local Supabase (requires Docker)
-npx supabase start    # Starts local Supabase (API + DB + Studio at :54323)
-npx supabase stop
-npx supabase db reset  # Drops all local data
+pnpm turbo dev                # Dev server :3000
+pnpm turbo build              # Build all
+pnpm turbo lint               # ESLint
+pnpm turbo typecheck          # tsc --noEmit
+pnpm turbo test:unit          # Vitest
+pnpm format                   # Prettier write
+pnpm format:check             # Prettier check (CI)
+pnpm check:guardrails         # proxy.ts vs middleware.ts rule
+pnpm check:vercel-config      # vercel.json validation
+pnpm exec playwright test     # E2E
+npx supabase start            # Local Supabase (Docker)
 ```
 
-## Database Rules
+## Documentation hygiene
 
-- **Always use pooled connection** (Supavisor, port 6543) in serverless — never direct connection. See `ARCHITECTURE.md §5.A`
-- **RLS on all tables** — node access chains through `room → palace → user_id`
-- **Indexes from Day 1** on every FK + GIN index on `nodes` for full-text search
-- **Two-phase migrations** for destructive changes: Phase 1 adds new column + backfills; Phase 2 (next release) drops old column
-- **Soft deletes**: palaces/rooms/nodes use `deleted_at` column, never hard-delete
-- **Cursor-based pagination**: composite cursor (`created_at` + `id`), 20 items default, descending
-
-## Testing Approach
-
-- 4-layer pyramid: Unit (Vitest) → Component (Vitest + RTL) → Integration (Server Actions + real DB) → E2E (Playwright)
-- Canvas drag-and-drop **must** be tested in Playwright — JSDOM cannot simulate React Flow pointer events
-- CI quality gate (`ci.yml`): ESLint + Prettier + TypeScript strict + Drizzle migration check + Playwright E2E
-
-## Key Files & Docs
-
-| Path                 | Purpose                                                                       |
-| -------------------- | ----------------------------------------------------------------------------- |
-| `ARCHITECTURE.md`    | Single source of truth for all tech decisions, schema, file structure         |
-| `UI_STYLE_GUIDE.md`  | Mobile-first design system, color palette, component patterns                 |
-| `FEATURES.md`        | Feature specifications — dashboard, gamification, games, review, public pages |
-| `ROADMAP.md`         | Step-by-step implementation guide with exact commands per phase               |
-| `DEVELOPMENT.md`     | DevOps plan — branching, CI/CD pipelines, secrets, daily workflow             |
-| `CONTRIBUTING.md §5` | Full command reference table                                                  |
-| `CONTRIBUTING.md §8` | Code style rules with ✅/❌ examples                                          |
-| `TESTING.md`         | 4-layer testing strategy with examples                                        |
-| `SECURITY.md`        | CSP headers, RLS policies, rate limiting layers                               |
-| `PERFORMANCE.md`     | Canvas virtualization, debounce strategy, bundle budgets                      |
-| `cliff.toml`         | git-cliff config for changelog generation                                     |
+If a doc is bigger than the code it describes, trim it. Speculative future-phase decisions go in `docs/adr/<phase>-<topic>.md`, written when the phase begins. Do not expand `ARCHITECTURE.md` with tools the codebase doesn't import.

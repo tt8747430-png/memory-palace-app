@@ -1,19 +1,11 @@
 import type { NextConfig } from 'next';
-import createNextIntlPlugin from 'next-intl/plugin';
 
+// Headers that are correct and meaningful as static values. CSP is intentionally
+// omitted: a real CSP for App Router needs per-request nonces (added in the
+// Phase 8 hardening pass). Sending a permissive `'unsafe-inline' 'unsafe-eval'`
+// CSP would be security theatre — preferable to send no CSP than a misleading
+// one.
 const securityHeaders = [
-  {
-    key: 'Content-Security-Policy',
-    value: [
-      "default-src 'self'",
-      "script-src 'self' 'unsafe-eval'",
-      "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' blob: data: *.supabase.co",
-      "connect-src 'self' *.supabase.co *.upstash.io",
-      "font-src 'self'",
-      "frame-ancestors 'none'",
-    ].join('; '),
-  },
   { key: 'X-Frame-Options', value: 'DENY' },
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
@@ -21,19 +13,11 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  /* config options here */
   reactCompiler: true,
   transpilePackages: ['@memory-palace/db', '@memory-palace/ui'],
   async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: securityHeaders,
-      },
-    ];
+    return [{ source: '/(.*)', headers: securityHeaders }];
   },
 };
 
-const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
-
-export default withNextIntl(nextConfig);
+export default nextConfig;
