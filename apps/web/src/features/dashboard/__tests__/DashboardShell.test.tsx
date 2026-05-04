@@ -7,24 +7,32 @@ vi.mock('next/navigation', () => ({
   usePathname: vi.fn(() => '/'),
 }));
 
-// Mock @memory-palace/ui Sheet components (Radix Dialog needs a real DOM portal)
-vi.mock('@memory-palace/ui', () => ({
-  Sheet: ({ children }: { children: React.ReactNode }) => <div data-testid="sheet">{children}</div>,
-  SheetTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  SheetContent: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="sheet-content">{children}</div>
-  ),
-  SheetTitle: ({ children, className }: { children: React.ReactNode; className?: string }) => (
-    <div className={className}>{children}</div>
-  ),
-  SheetDescription: ({
-    children,
-    className,
-  }: {
-    children: React.ReactNode;
-    className?: string;
-  }) => <div className={className}>{children}</div>,
-}));
+// Mock @memory-palace/ui Sheet components (Radix Dialog needs a real DOM portal).
+// `cn` is re-exported as the real implementation so child components that style
+// themselves (Sidebar, BottomNav) keep producing real classNames for assertions.
+vi.mock('@memory-palace/ui', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@memory-palace/ui')>();
+  return {
+    ...actual,
+    Sheet: ({ children }: { children: React.ReactNode }) => (
+      <div data-testid="sheet">{children}</div>
+    ),
+    SheetTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+    SheetContent: ({ children }: { children: React.ReactNode }) => (
+      <div data-testid="sheet-content">{children}</div>
+    ),
+    SheetTitle: ({ children, className }: { children: React.ReactNode; className?: string }) => (
+      <div className={className}>{children}</div>
+    ),
+    SheetDescription: ({
+      children,
+      className,
+    }: {
+      children: React.ReactNode;
+      className?: string;
+    }) => <div className={className}>{children}</div>,
+  };
+});
 
 describe('DashboardShell', () => {
   it('renders children inside main content area', () => {

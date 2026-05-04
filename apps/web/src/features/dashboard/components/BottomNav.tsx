@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, Calendar, Gamepad2, Trophy, Map } from 'lucide-react';
-import { cn } from '@/shared/utils/cn';
+import { cn } from '@memory-palace/ui';
 
 const tabs = [
   { href: '/', icon: Home, label: 'Home' },

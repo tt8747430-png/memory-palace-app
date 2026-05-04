@@ -14,7 +14,7 @@ import {
   Settings,
   User,
 } from 'lucide-react';
-import { cn } from '@/shared/utils/cn';
+import { cn } from '@memory-palace/ui';
 
 const items = [
   { href: '/', icon: Home, label: 'Home' },
