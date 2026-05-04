@@ -56,7 +56,7 @@ There is no browser-side Supabase client today. Auth is fully cookie-based via s
 `apps/web/src/shared/lib/env.ts` parses required env vars with Zod at module load and throws a single readable error if anything is missing or malformed. **No file should reference `process.env.X!` directly** — import `env` instead. Keys validated today:
 
 - `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` — Supabase's modern RLS-gated browser-safe key (`sb_publishable_...`). The legacy `NEXT_PUBLIC_SUPABASE_ANON_KEY` is accepted as a fallback with a deprecation warning so existing local envs keep working until they are rotated.
 
 `DATABASE_URL` is read inside `packages/db/src/client.ts` lazily. Callers obtain the drizzle instance via `getDb()` from `@memory-palace/db`; the connection is created on the first call and cached. Importing the package never reads `DATABASE_URL`.
 

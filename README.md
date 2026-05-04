@@ -35,7 +35,7 @@ pnpm install
 pnpm turbo dev        # http://localhost:3000
 ```
 
-Requires `.env.local` with `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`. See `.env.example`. Env vars are validated by `apps/web/src/shared/lib/env.ts` on boot — missing or malformed values fail fast with a clear message.
+Requires `apps/web/.env.local` with `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (the new RLS-gated browser-safe key — `sb_publishable_...`). See `.env.example`. The legacy `NEXT_PUBLIC_SUPABASE_ANON_KEY` is still accepted with a deprecation warning. Env vars are validated by `apps/web/src/shared/lib/env.ts` on boot — missing or malformed values fail fast with a clear message.
 
 ## License
 
