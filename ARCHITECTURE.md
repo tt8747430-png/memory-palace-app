@@ -49,7 +49,7 @@ All server-side Supabase usage goes through `apps/web/src/shared/lib/supabase.ts
 - `createSupabaseForResponse(request, response)` — handlers that have an existing `NextResponse`.
 - `auth()` — convenience over `createSupabaseFromCookies`.
 
-Browser usage goes through `apps/web/src/shared/lib/supabase-browser.ts`. `supabase-server.ts` is a thin re-export kept for backwards compatibility of `createSupabaseServer` / `auth`.
+Browser usage goes through `apps/web/src/shared/lib/supabase-browser.ts`.
 
 ## Environment variables
 
@@ -58,7 +58,7 @@ Browser usage goes through `apps/web/src/shared/lib/supabase-browser.ts`. `supab
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
-`DATABASE_URL` is read inside `packages/db/src/client.ts` lazily, so importing the package never crashes when the var is unset. The drizzle instance is created on first use through a small `Proxy`.
+`DATABASE_URL` is read inside `packages/db/src/client.ts` lazily. Callers obtain the drizzle instance via `getDb()` from `@memory-palace/db`; the connection is created on the first call and cached. Importing the package never reads `DATABASE_URL`.
 
 ## Feature isolation
 
@@ -72,5 +72,5 @@ CSS custom properties drive Tailwind v4 utilities (`--text-mobile-h1`, `--spacin
 
 - No DB schema — `packages/db/src/schema.ts` is empty until Phase 3.
 - No rate limiting — to be designed in an ADR before Phase 3 ships.
-- CSP in `next.config.ts` allows `'unsafe-inline'`/`'unsafe-eval'` and is not yet using nonces. Treat the header as cosmetic until the Phase 8 hardening pass.
+- No CSP. App-Router-correct CSP needs per-request nonces; rather than ship a permissive header that lies about its protection, no CSP is sent until the Phase 8 hardening pass adds nonce middleware.
 - Vitest coverage thresholds are aspirational; will be re-tuned when more code exists.
