@@ -1,46 +1,51 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { createSupabaseFromRequest } from '@/shared/lib/supabase';
+import { createSupabaseForProxy } from '@/shared/lib/supabase';
 
-const PUBLIC_PREFIXES = ['/login', '/signup', '/about', '/callback'];
+// Public route segments — matched on segment boundaries, not as substrings.
+// `/login` matches `/login` and `/login/...` but NOT `/loginhacks`.
+const PUBLIC_SEGMENTS = new Set(['login', 'signup', 'about', 'callback']);
 
-function isPublicPath(pathname: string) {
-  return PUBLIC_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+function firstSegment(pathname: string): string {
+  const i = pathname.indexOf('/', 1);
+  return i === -1 ? pathname.slice(1) : pathname.slice(1, i);
 }
 
-function redirectWithCookies(request: NextRequest, source: NextResponse, path: string) {
+function isPublicPath(pathname: string): boolean {
+  return PUBLIC_SEGMENTS.has(firstSegment(pathname));
+}
+
+function copyCookies(from: NextResponse, to: NextResponse): NextResponse {
+  from.cookies.getAll().forEach((cookie) => to.cookies.set(cookie));
+  return to;
+}
+
+function redirectTo(request: NextRequest, source: NextResponse, path: string): NextResponse {
   const url = request.nextUrl.clone();
   url.pathname = path;
-  const redirect = NextResponse.redirect(url);
-  source.cookies.getAll().forEach((cookie) => redirect.cookies.set(cookie));
-  return redirect;
+  return copyCookies(source, NextResponse.redirect(url));
 }
 
 export async function proxy(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request });
+  const { supabase, getResponse } = createSupabaseForProxy(request);
 
-  const supabase = createSupabaseFromRequest(request, (cookiesToSet) => {
-    supabaseResponse = NextResponse.next({ request });
-    cookiesToSet.forEach(({ name, value, options }) =>
-      supabaseResponse.cookies.set(name, value, options),
-    );
-  });
-
-  // Refresh session — must not run any logic between createServerClient and getUser
+  // Refresh session — must run with no logic between createServerClient and getUser.
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const response = getResponse();
   const { pathname } = request.nextUrl;
 
   if (!user && !isPublicPath(pathname)) {
-    return redirectWithCookies(request, supabaseResponse, '/login');
+    return redirectTo(request, response, '/login');
   }
 
-  if (user && (pathname.startsWith('/login') || pathname.startsWith('/signup'))) {
-    return redirectWithCookies(request, supabaseResponse, '/');
+  const seg = firstSegment(pathname);
+  if (user && (seg === 'login' || seg === 'signup')) {
+    return redirectTo(request, response, '/');
   }
 
-  return supabaseResponse;
+  return response;
 }
 
 export const config = {
