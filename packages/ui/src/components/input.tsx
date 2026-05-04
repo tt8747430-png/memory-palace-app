@@ -8,8 +8,9 @@ export function Input({ className, type = 'text', ...props }: InputProps) {
     <input
       type={type}
       className={cn(
-        'flex w-full min-h-[48px] rounded-md border bg-background px-3 py-2 text-sm',
-        'focus:outline-none focus:ring-2 focus:ring-zinc-500',
+        'flex h-touch w-full rounded-md border border-input bg-background px-3 py-2 text-sm',
+        'placeholder:text-muted-foreground',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
         'disabled:cursor-not-allowed disabled:opacity-50',
         className,
       )}
