@@ -3,14 +3,14 @@
 import Link from 'next/link';
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { Button, Input } from '@memory-palace/ui';
+import { Alert, Button, Input } from '@memory-palace/ui';
 import { signUp } from '../actions/signUp';
 import { initialAuthFormState } from '../actions/types';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" className="w-full min-h-[48px]" disabled={pending}>
+    <Button type="submit" size="md" className="w-full" disabled={pending}>
       {pending ? 'Creating account…' : 'Create Account'}
     </Button>
   );
@@ -21,12 +21,9 @@ export function SignupForm() {
 
   if (state.status === 'check-email') {
     return (
-      <div
-        role="status"
-        className="rounded-md border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800 dark:border-green-800 dark:bg-green-950 dark:text-green-200"
-      >
+      <Alert variant="success" role="status">
         {state.message}
-      </div>
+      </Alert>
     );
   }
 
@@ -42,14 +39,14 @@ export function SignupForm() {
         minLength={6}
       />
       {state.status === 'error' ? (
-        <p role="alert" className="text-sm text-red-500">
+        <Alert variant="destructive" role="alert">
           {state.message}
-        </p>
+        </Alert>
       ) : null}
       <SubmitButton />
-      <p className="text-center text-sm text-zinc-500">
+      <p className="text-center text-sm text-muted-foreground">
         Already have an account?{' '}
-        <Link href="/login" className="underline hover:text-zinc-900 dark:hover:text-zinc-100">
+        <Link href="/login" className="text-primary underline-offset-4 hover:underline">
           Sign in
         </Link>
       </p>

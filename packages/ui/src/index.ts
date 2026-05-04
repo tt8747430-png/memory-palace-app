@@ -1,4 +1,5 @@
-export { Button } from './components/button';
+export { Alert, AlertTitle, AlertDescription, alertVariants } from './components/alert';
+export { Button, buttonVariants } from './components/button';
 export { Input } from './components/input';
 export { Skeleton } from './components/skeleton';
 export {

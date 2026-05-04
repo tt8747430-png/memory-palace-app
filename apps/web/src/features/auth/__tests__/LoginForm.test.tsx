@@ -11,9 +11,20 @@ vi.mock('../actions/signIn', () => ({
 }));
 
 vi.mock('@memory-palace/ui', () => ({
-  Button: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
-    <button {...props}>{children}</button>
+  Alert: ({ children, ...rest }: React.HTMLAttributes<HTMLDivElement>) => (
+    <div role="alert" {...rest}>
+      {children}
+    </div>
   ),
+  Button: ({
+    children,
+    ...props
+  }: React.ButtonHTMLAttributes<HTMLButtonElement> & Record<string, unknown>) => {
+    const { variant, size, ...rest } = props;
+    void variant;
+    void size;
+    return <button {...rest}>{children}</button>;
+  },
   Input: (props: React.InputHTMLAttributes<HTMLInputElement>) => <input {...props} />,
 }));
 

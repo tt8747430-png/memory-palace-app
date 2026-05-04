@@ -2,6 +2,7 @@
 
 import { type ReactNode } from 'react';
 import { Bell } from 'lucide-react';
+import { Button } from '@memory-palace/ui';
 import { Sidebar } from './Sidebar';
 import { BottomNav } from './BottomNav';
 import { MobileDrawer } from './MobileDrawer';
@@ -25,13 +26,9 @@ export function DashboardShell({ children }: DashboardShellProps) {
       <header className="flex items-center justify-between border-b px-4 py-3 md:hidden">
         <MobileDrawer />
         <h1 className="text-lg font-semibold">Memory Palace</h1>
-        <button
-          type="button"
-          className="min-h-touch min-w-touch rounded-full p-2"
-          aria-label="Notifications"
-        >
+        <Button variant="ghost" size="icon" className="rounded-full" aria-label="Notifications">
           <Bell className="h-5 w-5" />
-        </button>
+        </Button>
       </header>
 
       {/* Main content */}
