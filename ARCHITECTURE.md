@@ -4,21 +4,21 @@
 
 ## Stack (in use today)
 
-| Layer      | Tool                                                                     |
-| ---------- | ------------------------------------------------------------------------ |
-| Framework  | Next.js 16.2.4 (App Router) with React Compiler                          |
-| Hosting    | Vercel                                                                   |
-| Auth       | Supabase Auth via `@supabase/ssr`                                        |
-| Database   | Supabase Postgres (Supavisor pooled, port 6543) — schema not yet defined |
-| ORM        | Drizzle (client wired, schema empty — Phase 3)                           |
-| Styling    | Tailwind v4 + shadcn primitives in `@memory-palace/ui`                   |
-| i18n       | None (added when a second locale is required)                            |
-| Validation | Zod (env + server-action input)                                          |
-| Testing    | Vitest + Testing Library; Playwright wired but no E2E specs yet          |
-| Quality    | TypeScript strict, ESLint with `eslint-plugin-boundaries`, Prettier      |
-| CI         | GitHub Actions: lint, typecheck, format, build, guardrails               |
+| Layer      | Tool                                                                                |
+| ---------- | ----------------------------------------------------------------------------------- |
+| Framework  | Next.js 16.2.4 (App Router) with React Compiler                                     |
+| Hosting    | Vercel                                                                              |
+| Auth       | Supabase Auth via `@supabase/ssr`                                                   |
+| Database   | Supabase Postgres (Supavisor pooled, port 6543) — schema not yet defined            |
+| ORM        | Drizzle (client wired, schema empty — Phase 3)                                      |
+| Styling    | Tailwind v4 + shadcn primitives in `@memory-palace/ui`; dark mode via `next-themes` |
+| i18n       | None (added when a second locale is required)                                       |
+| Validation | Zod (env + server-action input)                                                     |
+| Testing    | Vitest + Testing Library; Playwright wired but no E2E specs yet                     |
+| Quality    | TypeScript strict, ESLint with `eslint-plugin-boundaries`, Prettier                 |
+| CI         | GitHub Actions: lint, typecheck, format, build, guardrails                          |
 
-Anything else mentioned in older docs (Yjs/CRDT, Upstash rate limiting, Sentry, kbar, Recharts, framer-motion, R3F, next-themes) is **not chosen yet** — when it lands, an ADR records the decision.
+Anything else mentioned in older docs (Yjs/CRDT, Upstash rate limiting, Sentry, kbar, Recharts, framer-motion, R3F) is **not chosen yet** — when it lands, an ADR records the decision.
 
 ## Monorepo
 
@@ -64,9 +64,13 @@ There is no browser-side Supabase client today. Auth is fully cookie-based via s
 
 `src/features/<domain>/` directories are created **only when work begins**. Empty-barrel placeholders are not committed. Cross-feature imports are forbidden by `eslint-plugin-boundaries`; cross-cutting code goes to `src/shared/`. Components are exported by name (no `export default` outside route files).
 
-## Styling tokens
+## Styling & theming
 
-CSS custom properties drive Tailwind v4 utilities (`--text-mobile-h1`, `--spacing-safe-bottom`, `--min-height-touch`, etc.) in `apps/web/src/app/globals.css`. Mobile-first: base styles for mobile, `md:` and `lg:` for progressive override. No `max-*:` breakpoints.
+CSS custom properties drive Tailwind v4 utilities in `apps/web/src/app/globals.css`. Mobile-first: base styles for mobile, `md:` and `lg:` for progressive override. No `max-*:` breakpoints.
+
+**Dark mode** is managed by `next-themes`. The root layout wraps all children in `<ThemeProvider attribute="class" defaultTheme="system" enableSystem>` (from `apps/web/src/shared/components/ThemeProvider.tsx`). When the user picks dark mode, `next-themes` toggles the `.dark` class on `<html>`. `globals.css` defines two token sets — `:root` (light) and `.dark` — and maps them into Tailwind v4 utilities via `@theme inline`. A `@custom-variant dark (&:is(.dark *))` declaration lets standard `dark:` utility classes resolve under the `.dark` class strategy.
+
+The `ModeToggle` component (in `src/features/dashboard/components/`) cycles through light → dark → system and is placed in both the sidebar footer and the top bar on mobile.
 
 ## Known gaps (do not infer they are decided)
 

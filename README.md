@@ -16,15 +16,15 @@ A spatial, interactive learning platform where users create virtual "palaces" wi
 | [docs/archive/](./docs/archive)      | Pre-build aspirational designs — reference only, not authoritative     |
 | [docs/adr/](./docs/adr)              | Per-phase architecture decision records — added when phases begin      |
 
-## Implementation status (2026-05-04)
+## Implementation status (2026-05-05)
 
 | Phase                                                               | Status         |
 | ------------------------------------------------------------------- | -------------- |
 | 1 — Foundation & DevOps (monorepo, Supabase auth, CI/CD, git hooks) | ✅ Complete    |
 | 2A — Responsive shell (DashboardShell, Sidebar, BottomNav, drawer)  | ✅ Complete    |
 | Cleanup & consolidation pass                                        | ✅ Complete    |
-| 2B — Theme system (dark/light mode)                                 | ⬜ Not started |
-| 2C — Base components (Input, Form, Card, …)                         | 🔶 Partial     |
+| 2B — Theme system (dark/light/system toggle, next-themes)           | ✅ Complete    |
+| 2C — Base components (Input, Alert, Skeleton, Sheet, EmptyState)    | ✅ Complete    |
 | 3 — Data layer & security (Drizzle schema, RLS, server actions)     | ⬜ Not started |
 | 4+ — Subsequent phases                                              | ⬜ Not started |
 

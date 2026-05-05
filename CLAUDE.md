@@ -4,7 +4,7 @@
 
 Spatial learning app: drag memory nodes on a 2D canvas. Read `ARCHITECTURE.md` for current-state decisions. `ROADMAP.md` lists what is built and what is next. Anything in `docs/archive/` is **aspirational, not authoritative** — do not infer that a tool listed there is installed.
 
-**Current status (2026-05-04):** Phase 1 + 2A complete; cleanup/refactor pass landed. Schema, RLS, server actions, canvas — all not started.
+**Current status (2026-05-05):** Phase 1 + Phase 2 complete (2A layout shell, 2B theme system, 2C base components). Schema, RLS, server actions, canvas — all not started.
 
 ## Monorepo
 

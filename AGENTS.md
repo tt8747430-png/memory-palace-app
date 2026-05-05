@@ -2,22 +2,22 @@
 
 ## Project overview
 
-Memory Palace App — a spatial learning platform where users create virtual "palaces" with rooms containing draggable memory nodes on a 2D canvas. **Phase 1 (Foundation & DevOps), Phase 2A (Layout components), and a cleanup/consolidation pass are complete.** See `ROADMAP.md` for what is next, `ARCHITECTURE.md` for current-state decisions, and `docs/archive/` for the older aspirational design documents — those are reference, not authoritative.
+Memory Palace App — a spatial learning platform where users create virtual "palaces" with rooms containing draggable memory nodes on a 2D canvas. **Phase 1 (Foundation & DevOps), Phase 2A (Layout components), Phase 2B (Theme system), Phase 2C (Base components), and a cleanup/consolidation pass are complete.** See `ROADMAP.md` for what is next, `ARCHITECTURE.md` for current-state decisions, and `docs/archive/` for the older aspirational design documents — those are reference, not authoritative.
 
 ## Tech stack (in use today)
 
-Next.js 16.2.4 (App Router) · React Compiler · Turborepo + pnpm · Supabase (Postgres + Auth) · Drizzle ORM (client wired, schema empty until Phase 3) · Tailwind v4 + shadcn primitives in `@memory-palace/ui` · Zod (env + server-action validation) · Vitest + Testing Library · Playwright (wired, no specs yet).
+Next.js 16.2.4 (App Router) · React Compiler · Turborepo + pnpm · Supabase (Postgres + Auth) · Drizzle ORM (client wired, schema empty until Phase 3) · Tailwind v4 + shadcn primitives in `@memory-palace/ui` · `next-themes` (dark/light/system toggle) · Zod (env + server-action validation) · Vitest + Testing Library · Playwright (wired, no specs yet).
 
-Tools listed in archived docs (Yjs/CRDT, Upstash, Sentry, kbar, Recharts, framer-motion, R3F, next-themes) are **not chosen yet**. Each will land via an ADR in `docs/adr/`.
+Tools listed in archived docs (Yjs/CRDT, Upstash, Sentry, kbar, Recharts, framer-motion, R3F) are **not chosen yet**. Each will land via an ADR in `docs/adr/`.
 
 ## Architecture essentials
 
 - **Monorepo:** `apps/web/` (Next.js), `packages/db/` (Drizzle), `packages/ui/` (primitives + `cn`), `packages/eslint-config`, `packages/typescript-config`. Workspaces export TS source directly; nothing is pre-built.
 - **Routing middleware:** Next.js 16 uses `src/proxy.ts` — a CI guardrail fails the build if `middleware.ts` reappears.
 - **Auth enforcement:** the proxy redirects unauthenticated traffic before any layout renders; RLS is the database-side guard. Layouts must not add a per-navigation `auth()` round-trip.
-- **Supabase clients:** only via `apps/web/src/shared/lib/supabase.ts` (`createSupabaseFromCookies`, `createSupabaseFromRequest`, `createSupabaseForResponse`, `auth`). Browser-side via `supabase-browser.ts`. Never re-implement the cookie boilerplate.
+- **Supabase clients:** only via `apps/web/src/shared/lib/supabase.ts` (`createSupabaseFromCookies`, `createSupabaseForResponse`, `createSupabaseForProxy`, `auth`). No browser-side Supabase client today; auth is fully cookie-based via server actions. Never re-implement the cookie boilerplate.
 - **Env vars:** only via `apps/web/src/shared/lib/env.ts`. Never `process.env.X!` at call sites.
-- **DB client:** `import { db } from '@memory-palace/db'` — the client is lazy; importing the package does not require `DATABASE_URL`.
+- **DB client:** `import { getDb } from '@memory-palace/db'` — the client is lazy; importing the package does not require `DATABASE_URL`.
 - **Feature dirs:** `apps/web/src/features/<domain>/` directories are created **only when work starts**. Today: `auth/` and `dashboard/`. `eslint-plugin-boundaries` forbids cross-feature imports; cross-cutting code goes to `src/shared/`.
 
 ## Key conventions
