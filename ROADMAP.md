@@ -17,9 +17,14 @@ The aspirational 11-phase plan lives at `docs/archive/ROADMAP-aspirational.md`. 
 
 - **Phase 4 — Dashboard & Core Pages.** Real dashboard home with `WelcomeBanner`, `StatsBar` (palace/room/node counts via `getDashboardStats`), and `RecentPalaces` (4 latest with links). Full palace CRUD pages (`/palaces`, `/palaces/[palaceId]`): `PalaceCard`, `CreatePalaceDialog`, `EditPalaceDialog`, `DeletePalaceButton`. New `rooms` feature: 5 server actions (createRoom, getRooms, getRoomById, updateRoom, deleteRoom — all with palace ownership verification via JOIN), `RoomCard`, `CreateRoomDialog`, `EditRoomDialog`, `DeleteRoomButton`, `/palaces/[palaceId]/rooms/[roomId]` stub page. Settings/profile page (`/settings`) with `ProfileForm` using `useActionState`. `Dialog` + `Textarea` added to `@memory-palace/ui`. Nav updated with `/palaces` and `/settings` links. 127 tests passing.
 
+- **Phase 4C.3 — Data Export/Import.** Versioned JSON export via `GET /api/export` (Route Handler, `Content-Disposition: attachment`, `Cache-Control: no-store`). `importPalaceData` server action with Zod validation, DB transaction, `ON CONFLICT DO NOTHING` for idempotent re-imports, `userId` always sourced from session. `ExportDataCard` + `ImportDataCard` client components in `/settings`. 10 MB guard on client and server. 20 schema tests added; 147 tests passing.
+
 ## Next (concrete, in order)
 
-1. **Phase 5 — Spatial Canvas.** Decide the canvas/CRDT/state story in an ADR before writing code. Aspirational doc names React Flow + Zustand (canvas XY) + TanStack Query (server data); validate before introducing.
+1. **Phase 5 — Spatial Canvas.** ADRs written for all three Phase 5A dependencies:
+   - [`docs/adr/5a-react-flow.md`](docs/adr/5a-react-flow.md) — `@xyflow/react` (React Flow v12) as the canvas library
+   - [`docs/adr/5a-zustand.md`](docs/adr/5a-zustand.md) — Zustand v5 for 60fps transient canvas state
+   - [`docs/adr/5a-tanstack-query.md`](docs/adr/5a-tanstack-query.md) — TanStack Query v5 for server state, caching, and optimistic updates
 
 ## Operating rules
 
