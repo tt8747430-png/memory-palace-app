@@ -9,8 +9,8 @@
 | Framework  | Next.js 16.2.4 (App Router) with React Compiler                                     |
 | Hosting    | Vercel                                                                              |
 | Auth       | Supabase Auth via `@supabase/ssr`                                                   |
-| Database   | Supabase Postgres (Supavisor pooled, port 6543) — schema not yet defined            |
-| ORM        | Drizzle (client wired, schema empty — Phase 3)                                      |
+| Database   | Supabase Postgres (Supavisor pooled, port 6543) · 7-table schema live · RLS enabled |
+| ORM        | Drizzle ORM — schema + relations + types in `packages/db/src/`                      |
 | Styling    | Tailwind v4 + shadcn primitives in `@memory-palace/ui`; dark mode via `next-themes` |
 | i18n       | None (added when a second locale is required)                                       |
 | Validation | Zod (env + server-action input)                                                     |
@@ -24,7 +24,7 @@ Anything else mentioned in older docs (Yjs/CRDT, Upstash rate limiting, Sentry, 
 
 ```
 apps/web              Next.js app
-packages/db           Drizzle client + schema (schema empty until Phase 3)
+packages/db           Drizzle client, 7-table schema, relations, inferred TS types
 packages/ui           shadcn-style primitives + cn() helper
 packages/eslint-config
 packages/typescript-config
@@ -72,9 +72,53 @@ CSS custom properties drive Tailwind v4 utilities in `apps/web/src/app/globals.c
 
 The `ModeToggle` component (in `src/features/dashboard/components/`) cycles through light → dark → system and is placed in both the sidebar footer and the top bar on mobile.
 
+## Database schema
+
+Seven tables: `users`, `palaces`, `rooms`, `nodes`, `edges`, `tags`, `node_tags`. Key design choices:
+
+- `node_type` is a `pgEnum` so the DB enforces the valid set.
+- `nodes.user_id` is denormalised (also stored on the node directly) to make the RLS policy an O(1) index lookup rather than a join chain (`node → room → palace → user`).
+- All FKs use `onDelete: 'cascade'`. Edges have no `deleted_at` — they're cheap to recreate; cascade handles orphan cleanup.
+- `palaces.deleted_at` enables soft delete. Server actions filter `IS NULL` on reads.
+- `$onUpdate(() => new Date())` keeps `updated_at` current at the Drizzle layer. Direct SQL edits bypass this; a Postgres trigger is the long-term fix.
+- Migration SQL is in `packages/db/migrations/`. A manual GIN FTS index on `nodes.content` was applied post-migration (see `packages/db/migrations/README.md`).
+
+## Row-level security
+
+RLS is enabled on all 7 tables. Key policy decisions:
+
+- `palaces`, `tags`: `auth.uid() = user_id` — direct, no join.
+- `nodes`: `auth.uid() = user_id` — uses the denormalised column, no join.
+- `rooms`: `EXISTS (SELECT 1 FROM palaces WHERE id = palace_id AND user_id = auth.uid())`.
+- `edges`: `EXISTS (SELECT 1 FROM nodes WHERE id = source_node_id AND user_id = auth.uid())` — one indexed lookup on the source node; the unique-edge constraint ensures source and target belong to the same user.
+- `node_tags`: `EXISTS (SELECT 1 FROM nodes WHERE id = node_id AND user_id = auth.uid())`.
+- `users`: SELECT + UPDATE only for own row; no INSERT (populated by the `handle_new_auth_user` trigger).
+
+An `AFTER INSERT ON auth.users` trigger (`handle_new_auth_user`, `SECURITY DEFINER`) syncs new sign-ups into `public.users`. Without it, palace inserts would FK-fail.
+
+## Server actions
+
+Palace CRUD lives in `src/features/palaces/actions/`. Pattern for all CRUD actions:
+
+```typescript
+'use server';
+// 1. Auth check
+const { data: { user } } = await auth();
+if (!user) return { success: false, error: { code: 'UNAUTHORIZED', … } };
+// 2. Zod parse
+const parsed = schema.safeParse(input);
+if (!parsed.success) return { success: false, error: { code: 'VALIDATION_FAILED', … } };
+// 3. Query
+const db = getDb();
+// … drizzle query …
+```
+
+All CRUD actions return `ActionResponse<T>` (defined in `src/shared/types.ts`) — a discriminated union with `{ success: true; data: T }` or `{ success: false; error: { code: ErrorCode; message: string } }`. Auth form actions keep their existing `AuthFormState` shape for `useActionState` flows.
+
+Rate limiting: decided (Upstash Redis sliding window), deferred to Phase 3C. See `docs/adr/3b-rate-limiting.md`.
+
 ## Known gaps (do not infer they are decided)
 
-- No DB schema — `packages/db/src/schema.ts` is empty until Phase 3.
-- No rate limiting — to be designed in an ADR before Phase 3 ships.
+- Rate limiting: ADR written (`docs/adr/3b-rate-limiting.md`), implementation deferred to Phase 3C.
 - No CSP. App-Router-correct CSP needs per-request nonces; rather than ship a permissive header that lies about its protection, no CSP is sent until the Phase 8 hardening pass adds nonce middleware.
 - No coverage gating. Vitest is configured for tests only — re-add `coverage` config and wire `--coverage` into CI when there is enough surface to gate against.

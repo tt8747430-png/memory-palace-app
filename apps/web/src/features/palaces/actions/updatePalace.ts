@@ -1,0 +1,53 @@
+'use server';
+
+import { getDb, palaces } from '@memory-palace/db';
+import type { SelectPalace } from '@memory-palace/db';
+import { and, eq, isNull } from 'drizzle-orm';
+import { auth } from '@/shared/lib/supabase';
+import type { ActionResponse } from '@/shared/types';
+import { updatePalaceSchema } from '../schemas/palace';
+
+// TODO(rate-limit): add per-user rate limit here — see docs/adr/3b-rate-limiting.md
+
+export async function updatePalace(input: unknown): Promise<ActionResponse<SelectPalace>> {
+  const {
+    data: { user },
+  } = await auth();
+  if (!user) {
+    return { success: false, error: { code: 'UNAUTHORIZED', message: 'Not authenticated.' } };
+  }
+
+  const parsed = updatePalaceSchema.safeParse(input);
+  if (!parsed.success) {
+    return {
+      success: false,
+      error: {
+        code: 'VALIDATION_FAILED',
+        message: parsed.error.issues[0]?.message ?? 'Invalid input.',
+      },
+    };
+  }
+
+  const { id, ...patch } = parsed.data;
+
+  try {
+    const db = getDb();
+    const [palace] = await db
+      .update(palaces)
+      .set(patch)
+      .where(and(eq(palaces.id, id), eq(palaces.userId, user.id), isNull(palaces.deletedAt)))
+      .returning();
+
+    if (!palace) {
+      return { success: false, error: { code: 'NOT_FOUND', message: 'Palace not found.' } };
+    }
+
+    return { success: true, data: palace };
+  } catch (err) {
+    console.error('[updatePalace]', err);
+    return {
+      success: false,
+      error: { code: 'INTERNAL_ERROR', message: 'Failed to update palace.' },
+    };
+  }
+}

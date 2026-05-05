@@ -11,11 +11,12 @@ The aspirational 11-phase plan lives at `docs/archive/ROADMAP-aspirational.md`. 
 - **Phase 2C — Base components.** `Input`, `Alert`, `Skeleton`, `Sheet`, `Label`, `Card` (+ `CardHeader`, `CardContent`, `CardFooter`, `CardTitle`, `CardDescription`) added to `@memory-palace/ui`. `LoginForm` and `SignupForm` refactored to use them with proper accessible `<label>` associations. `EmptyState` and `CardSkeleton` added to `src/shared/components/`.
 - **Phase 3A — DB schema.** Drizzle schema: 7 tables (`users`, `palaces`, `rooms`, `nodes`, `edges`, `tags`, `node_tags`), `pgEnum` for node type, explicit indexes on every FK, `$onUpdate` for `updatedAt`, cascade deletes, Drizzle `relations()` for the relational query API, inferred TypeScript types exported, `drizzle.config.ts` wired for `DIRECT_DATABASE_URL`, seed script with dev fixtures, migration notes for manual GIN FTS index.
 
+- **Phase 3B — RLS + Server Actions.** Per-table RLS policies on all 7 tables. `auth.users → public.users` sync trigger (`handle_new_auth_user`, SECURITY DEFINER) with backfill of pre-existing users. `ActionResponse<T>` + `ErrorCode` shared types in `src/shared/types.ts`. Palace CRUD server actions (`createPalace`, `getPalaces`, `getPalaceById`, `updatePalace`, `deletePalace`) with Zod-validated input, soft delete on palaces, auth guard on every action. Rate-limit ADR written (`docs/adr/3b-rate-limiting.md`) — Upstash Redis, deferred to Phase 3C.
+
 ## Next (concrete, in order)
 
-1. **Phase 3B — RLS + Server Actions.** Per-table RLS policies. `ActionResponse<T>` shape. Zod-validated input. Rate-limit ADR before this lands.
-2. **Phase 3C — Search.** Apply the GIN `tsvector` index (see `packages/db/migrations/README.md`); cursor pagination on node queries.
-3. **Phase 4+ — Dashboard pages, spatial canvas, etc.** Decide the canvas/CRDT story in an ADR before writing code; the aspirational doc names Yjs+y-supabase but that has not been validated.
+1. **Phase 3C — Search.** Apply the GIN `tsvector` index (see `packages/db/migrations/README.md`); cursor pagination on node queries. Wire Upstash rate limiting (see `docs/adr/3b-rate-limiting.md`).
+2. **Phase 4+ — Dashboard pages, spatial canvas, etc.** Decide the canvas/CRDT story in an ADR before writing code; the aspirational doc names Yjs+y-supabase but that has not been validated.
 
 ## Operating rules
 
