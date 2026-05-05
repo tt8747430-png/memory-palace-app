@@ -5,48 +5,16 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@memory-palace/ui';
 import { navItems, isNavItemActive } from '../nav';
 import { ModeToggle } from './ModeToggle';
+import { ProfileMenu } from './ProfileMenu';
 
 interface UserProfile {
   displayName: string;
   avatarUrl: string | null;
+  email?: string | null;
 }
 
 interface SidebarProps {
   userProfile?: UserProfile | null;
-}
-
-function UserChip({ displayName, avatarUrl }: UserProfile) {
-  const initials = displayName
-    .trim()
-    .split(/\s+/)
-    .map((w) => w[0]?.toUpperCase() ?? '')
-    .slice(0, 2)
-    .join('');
-
-  return (
-    <div className="flex min-w-0 items-center gap-2.5">
-      {avatarUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={avatarUrl}
-          alt=""
-          aria-hidden="true"
-          className="h-7 w-7 shrink-0 rounded-full object-cover ring-1 ring-border"
-          onError={(e) => {
-            (e.currentTarget as HTMLImageElement).style.display = 'none';
-          }}
-        />
-      ) : (
-        <div
-          aria-hidden="true"
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-[0.625rem] font-semibold text-muted-foreground ring-1 ring-border"
-        >
-          {initials || '?'}
-        </div>
-      )}
-      <span className="min-w-0 truncate text-sm font-medium leading-none">{displayName}</span>
-    </div>
-  );
 }
 
 export function Sidebar({ userProfile }: SidebarProps) {
@@ -80,10 +48,16 @@ export function Sidebar({ userProfile }: SidebarProps) {
         })}
       </nav>
 
-      {/* Footer: user chip + theme toggle on the same row */}
+      {/* Footer: profile menu + theme toggle */}
       <div className="border-t px-3 py-3">
-        <div className="flex items-center justify-between gap-2 rounded-lg px-2 py-1.5">
-          {userProfile ? <UserChip {...userProfile} /> : null}
+        <div className="flex items-center gap-1">
+          {userProfile ? (
+            <ProfileMenu
+              displayName={userProfile.displayName}
+              avatarUrl={userProfile.avatarUrl}
+              email={userProfile.email}
+            />
+          ) : null}
           <ModeToggle />
         </div>
       </div>

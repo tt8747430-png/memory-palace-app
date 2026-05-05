@@ -7,7 +7,11 @@ import { getUserProfile } from '@/shared/lib/userProfile';
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const result = await getUserProfile();
   const userProfile = result.success
-    ? { displayName: result.data.displayName, avatarUrl: result.data.avatarUrl ?? null }
+    ? {
+        displayName: result.data.displayName,
+        avatarUrl: result.data.avatarUrl ?? null,
+        email: result.data.email,
+      }
     : null;
 
   return <DashboardShell userProfile={userProfile}>{children}</DashboardShell>;

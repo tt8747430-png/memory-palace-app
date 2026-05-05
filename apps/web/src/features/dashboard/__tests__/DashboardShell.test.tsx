@@ -13,6 +13,12 @@ vi.mock('next-themes', () => ({
   useTheme: () => ({ theme: 'system', setTheme: vi.fn() }),
 }));
 
+// signOut calls createSupabaseFromCookies which validates env vars at import
+// time — stub the whole module so JSDOM tests don't need real Supabase creds.
+vi.mock('@/shared/lib/signOut', () => ({
+  signOut: vi.fn(),
+}));
+
 // Mock @memory-palace/ui Sheet components (Radix Dialog needs a real DOM portal).
 // `cn` is re-exported as the real implementation so child components that style
 // themselves (Sidebar, BottomNav) keep producing real classNames for assertions.

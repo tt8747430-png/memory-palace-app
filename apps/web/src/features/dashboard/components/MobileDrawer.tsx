@@ -14,6 +14,7 @@ import { Sidebar } from './Sidebar';
 interface UserProfile {
   displayName: string;
   avatarUrl: string | null;
+  email?: string | null;
 }
 
 interface MobileDrawerProps {
