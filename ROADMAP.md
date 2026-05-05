@@ -8,14 +8,14 @@ The aspirational 11-phase plan lives at `docs/archive/ROADMAP-aspirational.md`. 
 - **Phase 2A — Layout components.** `DashboardShell`, `Sidebar`, `BottomNav`, `MobileDrawer`.
 - **Cleanup pass.** Removed empty feature dirs and duplicate `cn`. Consolidated three Supabase SSR factories into one module. Extracted `redirectWithCookies` in the proxy. Added Zod-validated `env` module. Dropped redundant per-navigation auth round-trip in dashboard layout. Made `db` client lazy. Fixed `turbo` `typecheck` dependency. Pinned `lucide-react`. Trimmed docs.
 - **Phase 2B — Theme system.** `next-themes` + `ThemeProvider` in root layout. 3-way `ModeToggle` (light → dark → system) in sidebar footer and top bar. Dark-mode CSS token set (`.dark {}`) in `globals.css`; `@custom-variant dark` wired for Tailwind v4.
-- **Phase 2C — Base components.** `Input`, `Alert`, `Skeleton`, `Sheet`, `Label`, `Card` (+ `CardHeader`, `CardContent`, `CardFooter`, `CardTitle`, `CardDescription`) added to `@memory-palace/ui`. `LoginForm` and `SignupForm` refactored to use them with proper accessible `<label>` associations. `EmptyState` added to `src/shared/components/`.
+- **Phase 2C — Base components.** `Input`, `Alert`, `Skeleton`, `Sheet`, `Label`, `Card` (+ `CardHeader`, `CardContent`, `CardFooter`, `CardTitle`, `CardDescription`) added to `@memory-palace/ui`. `LoginForm` and `SignupForm` refactored to use them with proper accessible `<label>` associations. `EmptyState` and `CardSkeleton` added to `src/shared/components/`.
+- **Phase 3A — DB schema.** Drizzle schema: 7 tables (`users`, `palaces`, `rooms`, `nodes`, `edges`, `tags`, `node_tags`), `pgEnum` for node type, explicit indexes on every FK, `$onUpdate` for `updatedAt`, cascade deletes, Drizzle `relations()` for the relational query API, inferred TypeScript types exported, `drizzle.config.ts` wired for `DIRECT_DATABASE_URL`, seed script with dev fixtures, migration notes for manual GIN FTS index.
 
 ## Next (concrete, in order)
 
-1. **Phase 3A — DB schema.** Define `users`, `palaces`, `rooms`, `nodes`, `edges`, `tags`, `node_tags` in Drizzle. Two-phase migrations for destructive changes.
-2. **Phase 3B — RLS + Server Actions.** Per-table RLS policies. `ActionResponse<T>` shape. Zod-validated input. Rate-limit ADR before this lands.
-3. **Phase 3C — Search.** `tsvector` column + GIN index on nodes; cursor pagination.
-4. **Phase 4+ — Dashboard pages, spatial canvas, etc.** Decide the canvas/CRDT story in an ADR before writing code; the aspirational doc names Yjs+y-supabase but that has not been validated.
+1. **Phase 3B — RLS + Server Actions.** Per-table RLS policies. `ActionResponse<T>` shape. Zod-validated input. Rate-limit ADR before this lands.
+2. **Phase 3C — Search.** Apply the GIN `tsvector` index (see `packages/db/migrations/README.md`); cursor pagination on node queries.
+3. **Phase 4+ — Dashboard pages, spatial canvas, etc.** Decide the canvas/CRDT story in an ADR before writing code; the aspirational doc names Yjs+y-supabase but that has not been validated.
 
 ## Operating rules
 
