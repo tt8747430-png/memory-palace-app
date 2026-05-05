@@ -1,7 +1,10 @@
+'use client';
+
 import type { NodeType } from '@memory-palace/db';
 import { Handle, Position, type Node, type NodeProps } from '@xyflow/react';
-import { FileText, Image as ImageIcon, Link } from 'lucide-react';
+import { FileText, Image as ImageIcon, Link, Pencil } from 'lucide-react';
 import { cn } from '@memory-palace/ui';
+import { useCanvasStore } from '../../store/CanvasStoreContext';
 
 export interface MemoryNodeData extends Record<string, unknown> {
   title: string;
@@ -21,8 +24,11 @@ const TYPE_ICONS: Record<NodeType, React.ReactNode> = {
 };
 
 /** Custom React Flow node. Renders as a compact card with type icon and title.
- * Handles are present but invisible — edge connections land in Phase 5D. */
-export function MemoryNode({ data, selected }: NodeProps<MemoryNodeType>) {
+ * Edit button opens the node in the editor sheet. Handles are present but
+ * invisible — edge connections land in Phase 5D. */
+export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
+  const setEditingNodeId = useCanvasStore((s) => s.setEditingNodeId);
+
   return (
     <div
       style={data.color ? { borderColor: data.color } : undefined}
@@ -43,9 +49,21 @@ export function MemoryNode({ data, selected }: NodeProps<MemoryNodeType>) {
 
       <div className="flex items-start gap-1.5">
         <span className="mt-0.5 text-muted-foreground">{TYPE_ICONS[data.nodeType]}</span>
-        <p className="line-clamp-3 text-sm font-medium leading-snug text-foreground">
+        <p className="flex-1 line-clamp-3 text-sm font-medium leading-snug text-foreground">
           {data.title}
         </p>
+        <button
+          type="button"
+          aria-label="Edit node"
+          onClick={() => setEditingNodeId(id)}
+          className={cn(
+            'shrink-0 rounded p-0.5 transition-colors',
+            'opacity-0 group-hover:opacity-100',
+            'hover:bg-accent/50 text-muted-foreground hover:text-foreground',
+          )}
+        >
+          <Pencil className="h-3.5 w-3.5" aria-hidden />
+        </button>
       </div>
 
       {data.content && (

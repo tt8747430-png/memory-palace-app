@@ -64,6 +64,20 @@ export const deleteNodeSchema = z.object({
   roomId: z.string().uuid('Invalid room ID'),
 });
 
+export const batchUpdateNodePositionsSchema = z.object({
+  roomId: z.string().uuid('Invalid room ID'),
+  updates: z
+    .array(
+      z.object({
+        id: z.string().uuid('Invalid node ID'),
+        positionX: z.number().finite('positionX must be finite'),
+        positionY: z.number().finite('positionY must be finite'),
+      }),
+    )
+    .min(1, 'Must provide at least one update')
+    .max(100, 'Cannot batch-update more than 100 nodes at once'),
+});
+
 export type GetNodesByRoomInput = z.infer<typeof getNodesByRoomSchema>;
 export type SearchNodesInput = z.infer<typeof searchNodesSchema>;
 export type GetRoomNodesInput = z.infer<typeof getRoomNodesSchema>;
@@ -71,3 +85,4 @@ export type CreateNodeInput = z.infer<typeof createNodeSchema>;
 export type UpdateNodeInput = z.infer<typeof updateNodeSchema>;
 export type UpdateNodePositionInput = z.infer<typeof updateNodePositionSchema>;
 export type DeleteNodeInput = z.infer<typeof deleteNodeSchema>;
+export type BatchUpdateNodePositionsInput = z.infer<typeof batchUpdateNodePositionsSchema>;

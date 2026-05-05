@@ -1,7 +1,6 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
-import { getDb, nodes, rooms, and, eq, isNull } from '@memory-palace/db';
+import { getDb, nodes, and, eq, isNull } from '@memory-palace/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
 import { updateNodeSchema } from '../schemas/node';
 
@@ -24,17 +23,18 @@ export const updateNode = defineAction({
           isNull(nodes.deletedAt),
         ),
       )
-      .returning();
+      .returning({
+        id: nodes.id,
+        title: nodes.title,
+        nodeType: nodes.nodeType,
+        color: nodes.color,
+        updatedAt: nodes.updatedAt,
+      });
     if (!updated) throw new ActionError('NOT_FOUND', 'Node not found.');
 
-    // Derive palace for path revalidation via rooms join.
-    const [room] = await getDb()
-      .select({ palaceId: rooms.palaceId })
-      .from(rooms)
-      .where(eq(rooms.id, roomId))
-      .limit(1);
-    if (room) revalidatePath(`/palaces/${room.palaceId}/rooms/${roomId}`);
-
+    // No revalidatePath — the canvas owns its state through TanStack Query's
+    // optimistic cache + invalidateQueries. An RSC re-render would race against
+    // the already-confirmed optimistic value and serve stale initialNodes.
     return updated;
   },
 });

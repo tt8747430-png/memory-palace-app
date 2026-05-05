@@ -59,8 +59,10 @@ export default async function RoomPage({ params }: RoomPageProps) {
         </p>
       </div>
 
-      {/* Spatial canvas — error boundary ensures sidebar survives a crash */}
-      <div className="min-h-[500px] flex-1 md:min-h-[600px]">
+      {/* Spatial canvas — error boundary ensures sidebar survives a crash.
+       * Needs an explicit height (not min-height) so React Flow's `h-full`
+       * child resolves; the parent layout chain doesn't propagate height. */}
+      <div className="h-[500px] md:h-[700px]">
         <CanvasErrorBoundary>
           <RoomCanvas roomId={roomId} initialNodes={initialNodes} />
         </CanvasErrorBoundary>

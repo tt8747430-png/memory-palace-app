@@ -19,12 +19,13 @@ The aspirational 11-phase plan lives at `docs/archive/ROADMAP-aspirational.md`. 
 
 - **Phase 4C.3 — Data Export/Import.** Versioned JSON export via `GET /api/export` (Route Handler, `Content-Disposition: attachment`, `Cache-Control: no-store`). `importPalaceData` server action with Zod validation, DB transaction, `ON CONFLICT DO NOTHING` for idempotent re-imports, `userId` always sourced from session. `ExportDataCard` + `ImportDataCard` client components in `/settings`. 10 MB guard on client and server. 20 schema tests added; 147 tests passing.
 
+- **Phase 5A — React Flow Setup.** ADRs for the three canvas dependencies: [`docs/adr/5a-react-flow.md`](docs/adr/5a-react-flow.md) (`@xyflow/react` v12), [`docs/adr/5a-zustand.md`](docs/adr/5a-zustand.md) (Zustand v5, factory + Context to avoid module-level state), [`docs/adr/5a-tanstack-query.md`](docs/adr/5a-tanstack-query.md) (TanStack Query v5). Per-mount `CanvasStoreProvider`, `MemoryNode` custom node, `CanvasErrorBoundary`, `CanvasToolbar`, `CanvasLoadingSkeleton`, `useNodesQuery` with server-side `initialData` hydration.
+
+- **Phase 5B — Drag & Persistence.** Single seam for canvas writes via `useRoomNodeMutations(roomId)` — three mutations (`savePosition`, `saveBatchPositions`, `patchNode`) sharing one optimistic-cache-update + rollback contract. Single-node drag persists via `onNodeDragStop`; multi-select drag persists atomically via `onSelectionDragStop` → `batchUpdateNodePositions` (single Postgres transaction with per-row ownership predicate). `NodeEditorSheet` uses one coalesced `useDebouncedCallback(500ms)` patch instead of one mutation per field; `flush()` on close so unmount can never drop edits. Form state derived during render via React 19's "adjust state during render" pattern (no effect-driven cascading-render warning). 196 tests passing (5 new for the mutations hook).
+
 ## Next (concrete, in order)
 
-1. **Phase 5 — Spatial Canvas.** ADRs written for all three Phase 5A dependencies:
-   - [`docs/adr/5a-react-flow.md`](docs/adr/5a-react-flow.md) — `@xyflow/react` (React Flow v12) as the canvas library
-   - [`docs/adr/5a-zustand.md`](docs/adr/5a-zustand.md) — Zustand v5 for 60fps transient canvas state
-   - [`docs/adr/5a-tanstack-query.md`](docs/adr/5a-tanstack-query.md) — TanStack Query v5 for server state, caching, and optimistic updates
+1. **Phase 5C — Realtime Sync & Offline.** ADR required before introducing Yjs/y-indexeddb/y-supabase.
 
 ## Operating rules
 

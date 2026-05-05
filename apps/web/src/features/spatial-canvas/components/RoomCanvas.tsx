@@ -16,14 +16,14 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import type { SelectNode } from '@memory-palace/db';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { nodeTypes } from './nodes/nodeTypes';
 import type { MemoryNodeType } from './nodes/MemoryNode';
 import { CanvasToolbar } from './CanvasToolbar';
 import { CanvasLoadingSkeleton } from './CanvasLoadingSkeleton';
+import { NodeEditorSheet } from './NodeEditorSheet';
 import { CanvasStoreProvider, useCanvasStore } from '../store/CanvasStoreContext';
-import { useNodesQuery, roomNodesQueryKey } from '../hooks/useNodesQuery';
-import { updateNodePosition } from '@/features/nodes';
+import { useNodesQuery } from '../hooks/useNodesQuery';
+import { useRoomNodeMutations, type PositionUpdate } from '../hooks/useRoomNodeMutations';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -49,10 +49,7 @@ interface InnerCanvasProps {
 }
 
 function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
-  const queryClient = useQueryClient();
   const activeTool = useCanvasStore((s) => s.activeTool);
-  const hydratePositions = useCanvasStore((s) => s.hydratePositions);
-  const setPosition = useCanvasStore((s) => s.setPosition);
   const setSelectedNodeIds = useCanvasStore((s) => s.setSelectedNodeIds);
 
   const { data: serverNodes, isLoading } = useNodesQuery(roomId, {
@@ -64,48 +61,46 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<MemoryNodeType>(flowNodes);
   const [edges, , onEdgesChange] = useEdgesState<Edge>([]);
 
-  // Sync local React Flow state when TanStack Query cache changes.
+  // Reconcile React Flow's local state with TanStack Query's cache. This is
+  // the only path by which server-confirmed positions land in the canvas.
   useEffect(() => {
     setNodes(flowNodes);
-    hydratePositions(flowNodes.map((n) => ({ id: n.id, x: n.position.x, y: n.position.y })));
-  }, [flowNodes, setNodes, hydratePositions]);
+  }, [flowNodes, setNodes]);
 
-  // ── Drag persistence (optimistic) ────────────────────────────────────────
-  const positionMutation = useMutation({
-    mutationFn: async (vars: { id: string; x: number; y: number }) => {
-      const result = await updateNodePosition({
-        id: vars.id,
-        roomId,
-        positionX: vars.x,
-        positionY: vars.y,
-      });
-      if (!result.success) throw new Error(result.error.message);
-      return result.data;
-    },
-    onMutate: async (vars) => {
-      await queryClient.cancelQueries({ queryKey: roomNodesQueryKey(roomId) });
-      const snapshot = queryClient.getQueryData<SelectNode[]>(roomNodesQueryKey(roomId));
-      queryClient.setQueryData<SelectNode[]>(roomNodesQueryKey(roomId), (old) =>
-        old?.map((n) => (n.id === vars.id ? { ...n, positionX: vars.x, positionY: vars.y } : n)),
-      );
-      return { snapshot };
-    },
-    onError: (_err, _vars, ctx) => {
-      if (ctx?.snapshot) {
-        queryClient.setQueryData(roomNodesQueryKey(roomId), ctx.snapshot);
-      }
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: roomNodesQueryKey(roomId) });
-    },
-  });
+  const { savePosition, saveBatchPositions } = useRoomNodeMutations(roomId);
 
+  // Single-node drag — fires only when the dragged node is NOT part of a
+  // multi-selection (React Flow v12 routes selection drags to onSelectionDragStop).
   const onNodeDragStop: OnNodeDrag<MemoryNodeType> = useCallback(
     (_event, node) => {
-      setPosition(node.id, node.position.x, node.position.y);
-      positionMutation.mutate({ id: node.id, x: node.position.x, y: node.position.y });
+      savePosition.mutate({
+        id: node.id,
+        positionX: node.position.x,
+        positionY: node.position.y,
+      });
     },
-    [setPosition, positionMutation],
+    [savePosition],
+  );
+
+  // Multi-select drag — atomic batch save. React Flow passes the moved nodes
+  // (not just the active one); every node in the active selection gets the
+  // delta applied in-engine before we read positions here.
+  const onSelectionDragStop = useCallback(
+    (_event: React.MouseEvent, dragged: MemoryNodeType[]) => {
+      if (dragged.length === 0) return;
+      const updates: PositionUpdate[] = dragged.map((n) => ({
+        id: n.id,
+        positionX: n.position.x,
+        positionY: n.position.y,
+      }));
+      // Single-node "selection" is still cheaper as one row update.
+      if (updates.length === 1) {
+        savePosition.mutate(updates[0]);
+      } else {
+        saveBatchPositions.mutate(updates);
+      }
+    },
+    [savePosition, saveBatchPositions],
   );
 
   const onSelectionChange: OnSelectionChangeFunc = useCallback(
@@ -119,6 +114,11 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
 
   const isPanMode = activeTool === 'pan';
 
+  // Capture fitView intent once at mount from the server-side initial data.
+  // A live expression (nodes.length > 0) would re-trigger on every
+  // reconciliation cycle, snapping the viewport during optimistic updates.
+  const fitView = initialNodes.length > 0;
+
   return (
     <div className="relative h-full w-full" data-testid="canvas-container">
       <ReactFlow<MemoryNodeType>
@@ -128,9 +128,12 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onNodeDragStop={onNodeDragStop}
+        onSelectionDragStop={onSelectionDragStop}
         onSelectionChange={onSelectionChange}
         nodesDraggable={!isPanMode}
         panOnDrag={isPanMode ? true : [1, 2]}
+        selectionOnDrag={!isPanMode}
+        multiSelectionKeyCode={['Meta', 'Shift']}
         zoomOnPinch
         zoomOnScroll={false}
         preventScrolling
@@ -140,7 +143,7 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
           [-5000, -5000],
           [5000, 5000],
         ]}
-        fitView={nodes.length > 0}
+        fitView={fitView}
         fitViewOptions={{ padding: 0.2, maxZoom: 1.5 }}
         className="rounded-xl"
         proOptions={{ hideAttribution: false }}
@@ -157,6 +160,7 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
       </ReactFlow>
 
       <CanvasToolbar />
+      <NodeEditorSheet roomId={roomId} />
     </div>
   );
 }
