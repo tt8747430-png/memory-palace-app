@@ -1,9 +1,10 @@
-import { getCurrentUser } from '@/shared/lib/supabase';
+import { getProfile } from '@/features/settings';
 
-/** Greets the logged-in user by their email handle or full email as a fallback. */
+/** Greets the logged-in user by their display name. */
 export async function WelcomeBanner() {
-  const user = await getCurrentUser();
-  const greeting = user?.email?.split('@')[0] ?? 'there';
+  const result = await getProfile();
+  const name =
+    result.success && result.data.displayName.trim() ? result.data.displayName.trim() : 'there';
 
   const hour = new Date().getHours();
   const timeOfDay = hour < 12 ? 'morning' : hour < 17 ? 'afternoon' : 'evening';
@@ -11,7 +12,7 @@ export async function WelcomeBanner() {
   return (
     <div>
       <h1 className="text-2xl font-bold md:text-3xl">
-        Good {timeOfDay}, {greeting} 👋
+        Good {timeOfDay}, {name} 👋
       </h1>
       <p className="mt-1 text-sm text-muted-foreground">Welcome back to your Memory Palace.</p>
     </div>
