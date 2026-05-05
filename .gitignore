@@ -111,3 +111,4 @@ lerna-debug.log*
 *.tgz
 *.patch
 
+package-lock.json

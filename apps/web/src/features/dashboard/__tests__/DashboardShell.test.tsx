@@ -75,11 +75,9 @@ describe('DashboardShell', () => {
     expect(screen.getByRole('button', { name: /open navigation menu/i })).toBeInTheDocument();
   });
 
-  it('renders the notifications button', () => {
+  it('does not render a dead notifications button (dead UI removed)', () => {
     render(<DashboardShell>Content</DashboardShell>);
-    const notifButton = screen.getByRole('button', { name: /notifications/i });
-    expect(notifButton).toBeInTheDocument();
-    expect(notifButton).toHaveAttribute('type', 'button');
+    expect(screen.queryByRole('button', { name: /notifications/i })).not.toBeInTheDocument();
   });
 
   it('sidebar aside has hidden class for mobile-first (shown via md: breakpoint)', () => {

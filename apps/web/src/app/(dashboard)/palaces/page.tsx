@@ -1,6 +1,12 @@
 import { Suspense } from 'react';
 import { Building2 } from 'lucide-react';
-import { getPalaces, PalaceCard, CreatePalaceDialog } from '@/features/palaces';
+import {
+  getPalaces,
+  PalaceCard,
+  CreatePalaceDialog,
+  ExportButton,
+  ImportDialog,
+} from '@/features/palaces';
 import { EmptyState } from '@/shared/components/EmptyState';
 import { CardSkeleton } from '@/shared/components/CardSkeleton';
 
@@ -23,26 +29,33 @@ async function PalaceGrid() {
   }
 
   return (
-    <>
-      <div className="flex justify-end">
-        <CreatePalaceDialog />
-      </div>
-      <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((palace) => (
-          <PalaceCard key={palace.id} palace={palace} />
-        ))}
-      </div>
-    </>
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {items.map((palace) => (
+        <PalaceCard key={palace.id} palace={palace} />
+      ))}
+    </div>
   );
 }
 
 export default function PalacesPage() {
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Palaces</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Your top-level memory spaces.</p>
+      {/* ── Page header ─────────────────────────────────────────────────── */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">Palaces</h1>
+          <p className="mt-1 text-sm text-muted-foreground">Your top-level memory spaces.</p>
+        </div>
+
+        {/* Actions — stacked on mobile, inline on sm+ */}
+        <div className="flex flex-wrap items-center gap-2">
+          <ImportDialog />
+          <ExportButton />
+          <CreatePalaceDialog />
+        </div>
       </div>
+
+      {/* ── Palace grid ─────────────────────────────────────────────────── */}
       <Suspense fallback={<CardSkeleton count={3} />}>
         <PalaceGrid />
       </Suspense>

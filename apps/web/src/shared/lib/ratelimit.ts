@@ -14,9 +14,13 @@ const BUCKETS: Record<Bucket, { limit: number; window: Duration }> = {
   search: { limit: 60, window: '10 s' },
 };
 
+// One Redis connection shared across all buckets — creating a new client per
+// bucket wastes TCP connections and Upstash request quota on each cold start.
+let redisInstance: Redis | null = null;
 const limiters = new Map<Bucket, Ratelimit>();
 
 function getRedis(): Redis | null {
+  if (redisInstance) return redisInstance;
   if (!env.UPSTASH_REDIS_REST_URL || !env.UPSTASH_REDIS_REST_TOKEN) {
     if (env.NODE_ENV === 'production') {
       throw new Error(
@@ -26,7 +30,11 @@ function getRedis(): Redis | null {
     }
     return null;
   }
-  return new Redis({ url: env.UPSTASH_REDIS_REST_URL, token: env.UPSTASH_REDIS_REST_TOKEN });
+  redisInstance = new Redis({
+    url: env.UPSTASH_REDIS_REST_URL,
+    token: env.UPSTASH_REDIS_REST_TOKEN,
+  });
+  return redisInstance;
 }
 
 function getLimiter(bucket: Bucket): Ratelimit | null {

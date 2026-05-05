@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogTrigger,
   Input,
   Label,
   Textarea,
@@ -46,10 +47,12 @@ export function CreatePalaceDialog() {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <Button onClick={() => setOpen(true)} size="md" className="gap-2">
-        <Plus className="h-4 w-4" />
-        New Palace
-      </Button>
+      <DialogTrigger asChild>
+        <Button size="md" className="gap-2">
+          <Plus className="h-4 w-4" />
+          New Palace
+        </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create a Palace</DialogTitle>

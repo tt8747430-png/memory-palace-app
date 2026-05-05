@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@memory-palace/ui';
 import { getProfile } from '@/features/settings';
-import { ProfileForm, ExportDataCard, ImportDataCard } from '@/features/settings';
+import { ProfileForm } from '@/features/settings';
 
 export const metadata = { title: 'Settings — Memory Palace' };
 
@@ -33,18 +33,6 @@ export default async function SettingsPage() {
             />
           </CardContent>
         </Card>
-      </section>
-
-      {/* ── Data ── */}
-      <section className="space-y-4">
-        <div>
-          <h2 className="text-base font-semibold">Data</h2>
-          <p className="mt-0.5 text-sm text-muted-foreground">
-            Export or restore your palace data.
-          </p>
-        </div>
-        <ExportDataCard />
-        <ImportDataCard />
       </section>
     </div>
   );

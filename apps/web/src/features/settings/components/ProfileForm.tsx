@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { useActionState } from 'react';
+import { useState, useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { Alert, Button, Input, Label } from '@memory-palace/ui';
 import { updateProfile } from '../actions/updateProfile';
@@ -43,6 +42,8 @@ function SubmitButton() {
 }
 
 function AvatarPreview({ src, displayName }: { src: string; displayName: string }) {
+  const [imgError, setImgError] = useState(false);
+
   const initials = displayName
     .trim()
     .split(/\s+/)
@@ -50,18 +51,14 @@ function AvatarPreview({ src, displayName }: { src: string; displayName: string 
     .slice(0, 2)
     .join('');
 
-  if (src) {
+  if (src && !imgError) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={src}
         alt={`${displayName} avatar`}
         className="h-16 w-16 rounded-full object-cover ring-2 ring-border"
-        onError={(e) => {
-          (e.currentTarget as HTMLImageElement).style.display = 'none';
-          const fallback = e.currentTarget.nextElementSibling as HTMLElement | null;
-          if (fallback) fallback.style.display = 'flex';
-        }}
+        onError={() => setImgError(true)}
       />
     );
   }
@@ -78,6 +75,7 @@ function AvatarPreview({ src, displayName }: { src: string; displayName: string 
 
 export function ProfileForm({ displayName, avatarUrl, email }: ProfileFormProps) {
   const [state, formAction] = useActionState(profileFormAction, initialState);
+  const [displayNameValue, setDisplayNameValue] = useState(displayName);
   const [previewUrl, setPreviewUrl] = useState(avatarUrl ?? '');
 
   return (
@@ -96,7 +94,8 @@ export function ProfileForm({ displayName, avatarUrl, email }: ProfileFormProps)
         <Input
           id="displayName"
           name="displayName"
-          defaultValue={displayName}
+          value={displayNameValue}
+          onChange={(e) => setDisplayNameValue(e.target.value)}
           placeholder="Your name"
           required
           maxLength={60}

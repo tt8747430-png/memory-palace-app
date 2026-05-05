@@ -6,15 +6,16 @@ export async function WelcomeBanner() {
   const name =
     result.success && result.data.displayName.trim() ? result.data.displayName.trim() : 'there';
 
-  const hour = new Date().getHours();
-  const timeOfDay = hour < 12 ? 'morning' : hour < 17 ? 'afternoon' : 'evening';
-
   return (
     <div>
-      <h1 className="text-2xl font-bold md:text-3xl">
-        Good {timeOfDay}, {name} 👋
-      </h1>
-      <p className="mt-1 text-sm text-muted-foreground">Welcome back to your Memory Palace.</p>
+      {/*
+       * Time-of-day greeting is intentionally omitted here: computing it
+       * server-side would use the server's UTC clock, not the user's local
+       * timezone. When the canvas/client layer is introduced, a client
+       * component can derive this from Date().getHours() in the browser.
+       */}
+      <h1 className="text-2xl font-bold md:text-3xl">Welcome back, {name} 👋</h1>
+      <p className="mt-1 text-sm text-muted-foreground">Your Memory Palace awaits.</p>
     </div>
   );
 }

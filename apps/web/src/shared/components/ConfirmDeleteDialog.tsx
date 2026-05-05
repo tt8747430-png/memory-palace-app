@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import {
+  Alert,
   Button,
   Dialog,
   DialogContent,
@@ -31,24 +32,42 @@ export function ConfirmDeleteDialog({
 }: ConfirmDeleteDialogProps) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+
+  function handleOpenChange(next: boolean) {
+    if (!isPending) {
+      setOpen(next);
+      if (!next) setError(null);
+    }
+  }
 
   function handleConfirm() {
+    setError(null);
     startTransition(async () => {
-      await onConfirm();
-      setOpen(false);
+      try {
+        await onConfirm();
+        setOpen(false);
+      } catch {
+        setError('Something went wrong. Please try again.');
+      }
     });
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="max-w-sm">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
+        {error ? (
+          <Alert variant="destructive" role="alert">
+            {error}
+          </Alert>
+        ) : null}
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)} disabled={isPending}>
+          <Button variant="outline" onClick={() => handleOpenChange(false)} disabled={isPending}>
             Cancel
           </Button>
           <Button

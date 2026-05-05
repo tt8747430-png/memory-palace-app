@@ -11,6 +11,7 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogTrigger,
   Input,
   Label,
   Textarea,
@@ -51,16 +52,12 @@ export function EditPalaceDialog({ palace }: EditPalaceDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => setOpen(true)}
-        aria-label={`Edit ${palace.title}`}
-        className="gap-1.5"
-      >
-        <Pencil className="h-3.5 w-3.5" />
-        Edit
-      </Button>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm" aria-label={`Edit ${palace.title}`} className="gap-1.5">
+          <Pencil className="h-3.5 w-3.5" />
+          Edit
+        </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Edit Palace</DialogTitle>

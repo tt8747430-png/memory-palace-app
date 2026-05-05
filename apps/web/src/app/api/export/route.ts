@@ -5,7 +5,7 @@ import type {
   ExportDataV1,
   ExportPalace,
   ExportRoom,
-} from '@/features/settings/schemas/dataTransfer';
+} from '@/features/palaces/schemas/dataTransfer';
 
 export async function GET() {
   // ── Auth ──────────────────────────────────────────────────────────────────

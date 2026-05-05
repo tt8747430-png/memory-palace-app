@@ -1,22 +1,12 @@
 import Link from 'next/link';
 import { ArrowRight, Building2 } from 'lucide-react';
 import { cn } from '@memory-palace/ui';
-import { getDb, palaces, eq, isNull, and, desc } from '@memory-palace/db';
-import { getCurrentUser } from '@/shared/lib/supabase';
+import { getRecentPalaces } from '@/features/dashboard/actions/getRecentPalaces';
 import { EmptyState } from '@/shared/components/EmptyState';
 
-async function fetchRecentPalaces(userId: string) {
-  return getDb()
-    .select({ id: palaces.id, title: palaces.title, description: palaces.description })
-    .from(palaces)
-    .where(and(eq(palaces.userId, userId), isNull(palaces.deletedAt)))
-    .orderBy(desc(palaces.createdAt))
-    .limit(4);
-}
-
 export async function RecentPalaces() {
-  const user = await getCurrentUser();
-  const items = user ? await fetchRecentPalaces(user.id) : [];
+  const result = await getRecentPalaces();
+  const items = result.success ? result.data.slice(0, 4) : [];
 
   if (items.length === 0) {
     return (

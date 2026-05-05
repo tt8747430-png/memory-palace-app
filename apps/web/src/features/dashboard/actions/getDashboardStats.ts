@@ -1,6 +1,6 @@
 'use server';
 
-import { getDb, palaces, rooms, nodes, count, eq, isNull, and } from '@memory-palace/db';
+import { getDb, palaces, rooms, nodes, sql } from '@memory-palace/db';
 import { defineAction } from '@/shared/lib/action';
 
 export type DashboardStats = {
@@ -14,29 +14,40 @@ export const getDashboardStats = defineAction({
   handler: async ({ user }): Promise<DashboardStats> => {
     const db = getDb();
 
-    const [palaceRow, roomRow, nodeRow] = await Promise.all([
-      db
-        .select({ value: count() })
-        .from(palaces)
-        .where(and(eq(palaces.userId, user.id), isNull(palaces.deletedAt)))
-        .then((r) => r[0]),
-      db
-        .select({ value: count() })
-        .from(rooms)
-        .innerJoin(palaces, eq(rooms.palaceId, palaces.id))
-        .where(and(eq(palaces.userId, user.id), isNull(rooms.deletedAt), isNull(palaces.deletedAt)))
-        .then((r) => r[0]),
-      db
-        .select({ value: count() })
-        .from(nodes)
-        .where(and(eq(nodes.userId, user.id), isNull(nodes.deletedAt)))
-        .then((r) => r[0]),
-    ]);
+    // Single query with three independent sub-counts joined as a lateral.
+    // Avoids three separate round-trips while remaining readable.
+    const [row] = await db.execute<{
+      palace_count: string;
+      room_count: string;
+      node_count: string;
+    }>(sql`
+      SELECT
+        (
+          SELECT COUNT(*)::text
+          FROM ${palaces}
+          WHERE ${palaces.userId} = ${user.id}
+            AND ${palaces.deletedAt} IS NULL
+        ) AS palace_count,
+        (
+          SELECT COUNT(*)::text
+          FROM ${rooms}
+          INNER JOIN ${palaces} ON ${rooms.palaceId} = ${palaces.id}
+          WHERE ${palaces.userId} = ${user.id}
+            AND ${rooms.deletedAt} IS NULL
+            AND ${palaces.deletedAt} IS NULL
+        ) AS room_count,
+        (
+          SELECT COUNT(*)::text
+          FROM ${nodes}
+          WHERE ${nodes.userId} = ${user.id}
+            AND ${nodes.deletedAt} IS NULL
+        ) AS node_count
+    `);
 
     return {
-      palaceCount: palaceRow?.value ?? 0,
-      roomCount: roomRow?.value ?? 0,
-      nodeCount: nodeRow?.value ?? 0,
+      palaceCount: Number(row?.palace_count ?? 0),
+      roomCount: Number(row?.room_count ?? 0),
+      nodeCount: Number(row?.node_count ?? 0),
     };
   },
 });

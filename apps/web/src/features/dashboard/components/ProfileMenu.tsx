@@ -1,6 +1,6 @@
 'use client';
 
-import { useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { Settings, LogOut, ChevronsUpDown } from 'lucide-react';
 import { Popover, PopoverTrigger, PopoverContent, Separator, cn } from '@memory-palace/ui';
@@ -21,6 +21,8 @@ function Avatar({
   avatarUrl: string | null;
   size?: 'sm' | 'md';
 }) {
+  const [imgError, setImgError] = useState(false);
+
   const initials = displayName
     .trim()
     .split(/\s+/)
@@ -30,7 +32,7 @@ function Avatar({
 
   const sizeClass = size === 'sm' ? 'h-7 w-7 text-[0.625rem]' : 'h-9 w-9 text-xs';
 
-  if (avatarUrl) {
+  if (avatarUrl && !imgError) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
@@ -38,9 +40,7 @@ function Avatar({
         alt=""
         aria-hidden="true"
         className={cn('shrink-0 rounded-full object-cover ring-1 ring-border', sizeClass)}
-        onError={(e) => {
-          (e.currentTarget as HTMLImageElement).style.display = 'none';
-        }}
+        onError={() => setImgError(true)}
       />
     );
   }
