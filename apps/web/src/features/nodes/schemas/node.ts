@@ -1,18 +1,11 @@
 import { z } from 'zod';
 
 const DEFAULT_PAGE_SIZE = 20;
-const MAX_PAGE_SIZE = 100;
 const TITLE_MAX = 200;
 const CONTENT_MAX = 10_000;
 const COLOR_MAX = 20;
 
 const NODE_TYPES = ['text', 'image', 'link'] as const;
-
-export const getNodesByRoomSchema = z.object({
-  roomId: z.string().uuid('Invalid room ID'),
-  cursor: z.string().optional(),
-  limit: z.number().int().min(1).max(MAX_PAGE_SIZE).optional().default(DEFAULT_PAGE_SIZE),
-});
 
 export const searchNodesSchema = z.object({
   query: z
@@ -78,7 +71,6 @@ export const batchUpdateNodePositionsSchema = z.object({
     .max(100, 'Cannot batch-update more than 100 nodes at once'),
 });
 
-export type GetNodesByRoomInput = z.infer<typeof getNodesByRoomSchema>;
 export type SearchNodesInput = z.infer<typeof searchNodesSchema>;
 export type GetRoomNodesInput = z.infer<typeof getRoomNodesSchema>;
 export type CreateNodeInput = z.infer<typeof createNodeSchema>;

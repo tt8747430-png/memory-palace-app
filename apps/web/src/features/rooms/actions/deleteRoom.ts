@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { getDb, rooms, palaces, and, eq, isNull } from '@memory-palace/db';
+import { getDb, rooms, and, eq, isNull, sql } from '@memory-palace/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
 import { roomIdSchema } from '../schemas/room';
 
@@ -12,24 +12,25 @@ export const deleteRoom = defineAction({
   handler: async ({ user, input }) => {
     const { id, palaceId } = input;
 
-    // Ownership check via palace join.
-    const [existing] = await getDb()
-      .select({ id: rooms.id })
-      .from(rooms)
-      .innerJoin(
-        palaces,
-        and(eq(rooms.palaceId, palaces.id), eq(palaces.userId, user.id), isNull(palaces.deletedAt)),
-      )
-      .where(and(eq(rooms.id, id), eq(rooms.palaceId, palaceId), isNull(rooms.deletedAt)))
-      .limit(1);
-    if (!existing) throw new ActionError('NOT_FOUND', 'Room not found.');
-
+    // Single-statement ownership check + soft-delete — no TOCTOU gap.
     const [deleted] = await getDb()
       .update(rooms)
       .set({ deletedAt: new Date() })
-      .where(eq(rooms.id, id))
+      .where(
+        and(
+          eq(rooms.id, id),
+          eq(rooms.palaceId, palaceId),
+          isNull(rooms.deletedAt),
+          sql`EXISTS (
+            SELECT 1 FROM palaces
+            WHERE palaces.id = ${rooms.palaceId}
+              AND palaces.user_id = ${user.id}
+              AND palaces.deleted_at IS NULL
+          )`,
+        ),
+      )
       .returning({ id: rooms.id });
-    if (!deleted) throw new ActionError('INTERNAL_ERROR', 'Soft delete returned no row.');
+    if (!deleted) throw new ActionError('NOT_FOUND', 'Room not found.');
     revalidatePath(`/palaces/${palaceId}`);
     return { id: deleted.id };
   },

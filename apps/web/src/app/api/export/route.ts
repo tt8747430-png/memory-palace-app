@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/shared/lib/supabase';
+import { checkRateLimit } from '@/shared/lib/ratelimit';
 import { getDb, palaces, rooms, nodes, eq, isNull, and, asc } from '@memory-palace/db';
 import type {
   ExportDataV1,
@@ -13,6 +14,11 @@ export async function GET() {
 
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const { success: withinLimit } = await checkRateLimit(user.id, 'search');
+  if (!withinLimit) {
+    return NextResponse.json({ error: 'Too many requests. Please slow down.' }, { status: 429 });
   }
 
   // ── Fetch all non-deleted data for this user ───────────────────────────────

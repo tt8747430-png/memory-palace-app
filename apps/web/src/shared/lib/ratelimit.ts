@@ -14,13 +14,16 @@ const BUCKETS: Record<Bucket, { limit: number; window: Duration }> = {
   search: { limit: 60, window: '10 s' },
 };
 
-// One Redis connection shared across all buckets — creating a new client per
-// bucket wastes TCP connections and Upstash request quota on each cold start.
-let redisInstance: Redis | null = null;
-const limiters = new Map<Bucket, Ratelimit>();
+// Persist Redis and Ratelimit instances across Next.js HMR reloads in
+// development. Without this, each hot-reload re-executes the module and
+// creates new connections while old ones leak.
+const globalForRatelimit = globalThis as unknown as {
+  __mpRedis?: Redis;
+  __mpLimiters?: Map<Bucket, Ratelimit>;
+};
 
 function getRedis(): Redis | null {
-  if (redisInstance) return redisInstance;
+  if (globalForRatelimit.__mpRedis) return globalForRatelimit.__mpRedis;
   if (!env.UPSTASH_REDIS_REST_URL || !env.UPSTASH_REDIS_REST_TOKEN) {
     if (env.NODE_ENV === 'production') {
       throw new Error(
@@ -30,14 +33,15 @@ function getRedis(): Redis | null {
     }
     return null;
   }
-  redisInstance = new Redis({
+  globalForRatelimit.__mpRedis = new Redis({
     url: env.UPSTASH_REDIS_REST_URL,
     token: env.UPSTASH_REDIS_REST_TOKEN,
   });
-  return redisInstance;
+  return globalForRatelimit.__mpRedis;
 }
 
 function getLimiter(bucket: Bucket): Ratelimit | null {
+  const limiters = (globalForRatelimit.__mpLimiters ??= new Map());
   const existing = limiters.get(bucket);
   if (existing) return existing;
 

@@ -2,19 +2,10 @@
 
 import Link from 'next/link';
 import { useActionState } from 'react';
-import { useFormStatus } from 'react-dom';
-import { Alert, Button, Input, Label } from '@memory-palace/ui';
+import { Alert, Input, Label } from '@memory-palace/ui';
 import { requestPasswordReset } from '../actions/requestPasswordReset';
 import { initialAuthFormState } from '../actions/types';
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button type="submit" size="md" className="w-full" disabled={pending}>
-      {pending ? 'Sending…' : 'Send reset link'}
-    </Button>
-  );
-}
+import { AuthSubmitButton } from './AuthSubmitButton';
 
 export function ForgotPasswordForm() {
   const [state, formAction] = useActionState(requestPasswordReset, initialAuthFormState);
@@ -45,7 +36,7 @@ export function ForgotPasswordForm() {
           {state.message}
         </Alert>
       ) : null}
-      <SubmitButton />
+      <AuthSubmitButton idleLabel="Send reset link" pendingLabel="Sending…" />
       <p className="text-center text-sm text-muted-foreground">
         Remembered it?{' '}
         <Link href="/login" className="text-primary underline-offset-4 hover:underline">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
   ReactFlow,
   Background,
@@ -61,54 +61,49 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<MemoryNodeType>(flowNodes);
   const [edges, , onEdgesChange] = useEdgesState<Edge>([]);
 
-  // Reconcile React Flow's local state with TanStack Query's cache. This is
-  // the only path by which server-confirmed positions land in the canvas.
-  useEffect(() => {
+  // Reconcile React Flow's local state when TanStack Query's cache identity
+  // changes (i.e. after invalidateQueries resolves with server-confirmed data).
+  // Uses React 19's "adjust state during render" pattern — no useEffect, no
+  // extra render cycle, and no viewport-snapping during active drags.
+  const [prevServerNodes, setPrevServerNodes] = useState(serverNodes);
+  if (prevServerNodes !== serverNodes) {
+    setPrevServerNodes(serverNodes);
     setNodes(flowNodes);
-  }, [flowNodes, setNodes]);
+  }
 
   const { savePosition, saveBatchPositions } = useRoomNodeMutations(roomId);
 
   // Single-node drag — fires only when the dragged node is NOT part of a
   // multi-selection (React Flow v12 routes selection drags to onSelectionDragStop).
-  const onNodeDragStop: OnNodeDrag<MemoryNodeType> = useCallback(
-    (_event, node) => {
-      savePosition.mutate({
-        id: node.id,
-        positionX: node.position.x,
-        positionY: node.position.y,
-      });
-    },
-    [savePosition],
-  );
+  const onNodeDragStop: OnNodeDrag<MemoryNodeType> = (_event, node) => {
+    savePosition.mutate({
+      id: node.id,
+      positionX: node.position.x,
+      positionY: node.position.y,
+    });
+  };
 
   // Multi-select drag — atomic batch save. React Flow passes the moved nodes
   // (not just the active one); every node in the active selection gets the
   // delta applied in-engine before we read positions here.
-  const onSelectionDragStop = useCallback(
-    (_event: React.MouseEvent, dragged: MemoryNodeType[]) => {
-      if (dragged.length === 0) return;
-      const updates: PositionUpdate[] = dragged.map((n) => ({
-        id: n.id,
-        positionX: n.position.x,
-        positionY: n.position.y,
-      }));
-      // Single-node "selection" is still cheaper as one row update.
-      if (updates.length === 1) {
-        savePosition.mutate(updates[0]);
-      } else {
-        saveBatchPositions.mutate(updates);
-      }
-    },
-    [savePosition, saveBatchPositions],
-  );
+  const onSelectionDragStop = (_event: React.MouseEvent, dragged: MemoryNodeType[]) => {
+    if (dragged.length === 0) return;
+    const updates: PositionUpdate[] = dragged.map((n) => ({
+      id: n.id,
+      positionX: n.position.x,
+      positionY: n.position.y,
+    }));
+    // Single-node "selection" is still cheaper as one row update.
+    if (updates.length === 1) {
+      savePosition.mutate(updates[0]);
+    } else {
+      saveBatchPositions.mutate(updates);
+    }
+  };
 
-  const onSelectionChange: OnSelectionChangeFunc = useCallback(
-    ({ nodes: selected }) => {
-      setSelectedNodeIds(new Set(selected.map((n) => n.id)));
-    },
-    [setSelectedNodeIds],
-  );
+  const onSelectionChange: OnSelectionChangeFunc = ({ nodes: selected }) => {
+    setSelectedNodeIds(new Set(selected.map((n) => n.id)));
+  };
 
   if (isLoading) return <CanvasLoadingSkeleton />;
 

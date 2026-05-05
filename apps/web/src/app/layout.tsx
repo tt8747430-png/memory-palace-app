@@ -6,7 +6,7 @@ import './globals.css';
 
 const siteUrl =
   env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+  (env.VERCEL_URL ? `https://${env.VERCEL_URL}` : 'http://localhost:3000');
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

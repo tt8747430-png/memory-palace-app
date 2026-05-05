@@ -17,6 +17,10 @@ export function getDb(): DbClient {
       'DATABASE_URL is not set. Use the Supavisor pooled connection string (port 6543).',
     );
   }
-  client = drizzle(postgres(url, { prepare: false, ssl: 'require' }), { schema: fullSchema });
+  // Local Supabase (npx supabase start) runs without SSL on localhost.
+  const isLocal = url.includes('localhost') || url.includes('127.0.0.1');
+  client = drizzle(postgres(url, { prepare: false, ssl: isLocal ? false : 'require' }), {
+    schema: fullSchema,
+  });
   return client;
 }

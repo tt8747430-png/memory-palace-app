@@ -27,7 +27,8 @@ export function DeletePalaceButton({ id, title }: DeletePalaceButtonProps) {
       title={`Delete "${title}"?`}
       description="This palace and all its rooms will be permanently deleted. This action cannot be undone."
       onConfirm={async () => {
-        await deletePalace({ id });
+        const result = await deletePalace({ id });
+        if (!result.success) throw new Error(result.error.message);
       }}
     />
   );

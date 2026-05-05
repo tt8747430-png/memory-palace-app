@@ -12,25 +12,34 @@ export const createRoom = defineAction({
   handler: async ({ user, input }) => {
     const db = getDb();
 
-    // Verify the palace belongs to the user before inserting.
-    const [palace] = await db
-      .select({ id: palaces.id })
-      .from(palaces)
-      .where(
-        and(eq(palaces.id, input.palaceId), eq(palaces.userId, user.id), isNull(palaces.deletedAt)),
-      )
-      .limit(1);
-    if (!palace) throw new ActionError('NOT_FOUND', 'Palace not found.');
+    // Transaction ensures atomicity — no TOCTOU gap between the palace
+    // ownership check and the room insert.
+    const room = await db.transaction(async (tx) => {
+      const [palace] = await tx
+        .select({ id: palaces.id })
+        .from(palaces)
+        .where(
+          and(
+            eq(palaces.id, input.palaceId),
+            eq(palaces.userId, user.id),
+            isNull(palaces.deletedAt),
+          ),
+        )
+        .limit(1);
+      if (!palace) throw new ActionError('NOT_FOUND', 'Palace not found.');
 
-    const [room] = await db
-      .insert(rooms)
-      .values({
-        palaceId: input.palaceId,
-        title: input.title,
-        position: input.position,
-      })
-      .returning();
-    if (!room) throw new ActionError('INTERNAL_ERROR', 'Insert returned no row.');
+      const [created] = await tx
+        .insert(rooms)
+        .values({
+          palaceId: input.palaceId,
+          title: input.title,
+          position: input.position,
+        })
+        .returning();
+      if (!created) throw new ActionError('INTERNAL_ERROR', 'Insert returned no row.');
+      return created;
+    });
+
     revalidatePath(`/palaces/${input.palaceId}`);
     return room;
   },

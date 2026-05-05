@@ -63,12 +63,9 @@ async function RoomGrid({ palaceId }: { palaceId: string }) {
 
       {/* Rooms */}
       <section>
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-            Rooms ({rooms.length})
-          </h2>
-          <CreateRoomDialog palaceId={palaceId} nextPosition={nextPosition} />
-        </div>
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+          Rooms ({rooms.length})
+        </h2>
 
         {rooms.length === 0 ? (
           <EmptyState

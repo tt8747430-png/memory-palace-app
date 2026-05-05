@@ -1,4 +1,5 @@
-'use server';
+// Server-only module — imported from the dashboard layout (a Server Component).
+// No 'use server' needed; this is not a client-callable action.
 
 import { getDb, users, eq } from '@memory-palace/db';
 import { ActionError, defineAction } from '@/shared/lib/action';

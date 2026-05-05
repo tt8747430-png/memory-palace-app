@@ -1,6 +1,5 @@
 'use client';
 
-import { useCallback, useMemo } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { SelectNode } from '@memory-palace/db';
 import {
@@ -31,28 +30,22 @@ export type NodePatch = Partial<Pick<UpdateNodeInput, 'title' | 'content' | 'nod
  */
 export function useRoomNodeMutations(roomId: string) {
   const queryClient = useQueryClient();
-  const queryKey = useMemo(() => roomNodesQueryKey(roomId), [roomId]);
+  const queryKey = roomNodesQueryKey(roomId);
 
-  const applyOptimistic = useCallback(
-    (updater: (nodes: SelectNode[]) => SelectNode[]) => {
-      const snapshot = queryClient.getQueryData<SelectNode[]>(queryKey);
-      queryClient.setQueryData<SelectNode[]>(queryKey, (curr) => (curr ? updater(curr) : curr));
-      return snapshot;
-    },
-    [queryClient, queryKey],
-  );
+  // React Compiler auto-memoizes these closures — no useCallback needed.
+  function applyOptimistic(updater: (nodes: SelectNode[]) => SelectNode[]) {
+    const snapshot = queryClient.getQueryData<SelectNode[]>(queryKey);
+    queryClient.setQueryData<SelectNode[]>(queryKey, (curr) => (curr ? updater(curr) : curr));
+    return snapshot;
+  }
 
-  const rollback = useCallback(
-    (snapshot: SelectNode[] | undefined) => {
-      if (snapshot) queryClient.setQueryData(queryKey, snapshot);
-    },
-    [queryClient, queryKey],
-  );
+  function rollback(snapshot: SelectNode[] | undefined) {
+    if (snapshot) queryClient.setQueryData(queryKey, snapshot);
+  }
 
-  const invalidate = useCallback(
-    () => queryClient.invalidateQueries({ queryKey }),
-    [queryClient, queryKey],
-  );
+  function invalidate() {
+    return queryClient.invalidateQueries({ queryKey });
+  }
 
   // ── Single-node drag persistence ─────────────────────────────────────────
   const savePosition = useMutation({

@@ -13,7 +13,13 @@ export const createPalace = defineAction({
     const [palace] = await getDb()
       .insert(palaces)
       .values({ userId: user.id, title: input.title, description: input.description })
-      .returning();
+      .returning({
+        id: palaces.id,
+        title: palaces.title,
+        description: palaces.description,
+        createdAt: palaces.createdAt,
+        updatedAt: palaces.updatedAt,
+      });
     if (!palace) throw new ActionError('INTERNAL_ERROR', 'Insert returned no row.');
     revalidatePath('/palaces');
     revalidatePath('/');

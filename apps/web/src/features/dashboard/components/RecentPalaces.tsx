@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight, Building2 } from 'lucide-react';
 import { buttonVariants, cn } from '@memory-palace/ui';
-import { getRecentPalaces } from '@/features/dashboard/actions/getRecentPalaces';
+import { getRecentPalaces } from '../actions/getRecentPalaces';
 import { EmptyState } from '@/shared/components/EmptyState';
 
 export async function RecentPalaces() {

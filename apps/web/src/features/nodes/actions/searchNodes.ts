@@ -41,15 +41,10 @@ export const searchNodes = defineAction({
     if (palaceId) {
       // Inner-joining rooms (and filtering deleted ones) prevents soft-deleted
       // rooms from leaking their nodes into search results.
-      const joinCondition = and(
-        eq(rooms.id, nodes.roomId),
-        eq(rooms.palaceId, palaceId),
-        isNull(rooms.deletedAt),
+      q = q.innerJoin(
+        rooms,
+        and(eq(rooms.id, nodes.roomId), eq(rooms.palaceId, palaceId), isNull(rooms.deletedAt))!,
       );
-      // and() with three arguments always produces a non-undefined SQL expression.
-      if (joinCondition) {
-        q = q.innerJoin(rooms, joinCondition);
-      }
     }
 
     return q

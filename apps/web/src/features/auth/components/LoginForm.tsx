@@ -2,19 +2,10 @@
 
 import Link from 'next/link';
 import { useActionState } from 'react';
-import { useFormStatus } from 'react-dom';
-import { Alert, Button, Input, Label } from '@memory-palace/ui';
+import { Alert, Input, Label } from '@memory-palace/ui';
 import { signIn } from '../actions/signIn';
 import { initialAuthFormState } from '../actions/types';
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button type="submit" size="md" className="w-full" disabled={pending}>
-      {pending ? 'Signing in…' : 'Sign In'}
-    </Button>
-  );
-}
+import { AuthSubmitButton } from './AuthSubmitButton';
 
 export function LoginForm() {
   const [state, formAction] = useActionState(signIn, initialAuthFormState);
@@ -56,7 +47,7 @@ export function LoginForm() {
           {state.message}
         </Alert>
       ) : null}
-      <SubmitButton />
+      <AuthSubmitButton idleLabel="Sign In" pendingLabel="Signing in…" />
       <p className="text-center text-sm text-muted-foreground">
         No account?{' '}
         <Link href="/signup" className="text-primary underline-offset-4 hover:underline">
