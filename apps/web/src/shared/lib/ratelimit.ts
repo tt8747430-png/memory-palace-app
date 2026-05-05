@@ -1,5 +1,6 @@
 import { type Duration, Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
+import { env } from './env';
 
 type Bucket = 'write' | 'search';
 
@@ -15,17 +16,29 @@ const BUCKETS: Record<Bucket, { limit: number; window: Duration }> = {
 
 const limiters = new Map<Bucket, Ratelimit>();
 
-function isConfigured(): boolean {
-  return !!(process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN);
+function getRedis(): Redis | null {
+  if (!env.UPSTASH_REDIS_REST_URL || !env.UPSTASH_REDIS_REST_TOKEN) {
+    if (env.NODE_ENV === 'production') {
+      throw new Error(
+        'Rate limiting is unconfigured in production. ' +
+          'Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN.',
+      );
+    }
+    return null;
+  }
+  return new Redis({ url: env.UPSTASH_REDIS_REST_URL, token: env.UPSTASH_REDIS_REST_TOKEN });
 }
 
-function getLimiter(bucket: Bucket): Ratelimit {
+function getLimiter(bucket: Bucket): Ratelimit | null {
   const existing = limiters.get(bucket);
   if (existing) return existing;
 
+  const redis = getRedis();
+  if (!redis) return null;
+
   const { limit, window } = BUCKETS[bucket];
   const limiter = new Ratelimit({
-    redis: Redis.fromEnv(),
+    redis,
     limiter: Ratelimit.slidingWindow(limit, window),
     prefix: `@memory-palace/${bucket}`,
   });
@@ -35,15 +48,16 @@ function getLimiter(bucket: Bucket): Ratelimit {
 
 /**
  * Check rate limit for a user + bucket.
- * Returns `{ success: true }` as a no-op when Upstash is not configured
- * (safe for local dev — set the env vars in production).
+ * Returns `{ success: true }` as a no-op when Upstash is not configured —
+ * this branch is unreachable in production (see getRedis).
  */
 export async function checkRateLimit(
   userId: string,
   bucket: Bucket,
 ): Promise<{ success: boolean }> {
-  if (!isConfigured()) return { success: true };
+  const limiter = getLimiter(bucket);
+  if (!limiter) return { success: true };
 
-  const { success } = await getLimiter(bucket).limit(`${bucket}:${userId}`);
+  const { success } = await limiter.limit(`${bucket}:${userId}`);
   return { success };
 }

@@ -3,21 +3,21 @@ import { z } from 'zod';
 const schema = z.object({
   NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string().min(1),
-  // Optional — when absent, rate limiting is a no-op (safe for local dev without Upstash).
+  // Public site URL for absolute redirects (e.g. Supabase email confirmations).
+  // When unset, server actions fall back to the request's forwarded host.
+  NEXT_PUBLIC_SITE_URL: z.string().url().optional(),
+  // When absent, rate limiting is a no-op locally; production presence is
+  // enforced at first use, see shared/lib/ratelimit.ts.
   UPSTASH_REDIS_REST_URL: z.string().url().optional(),
   UPSTASH_REDIS_REST_TOKEN: z.string().min(1).optional(),
+  NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
 });
 
-const parsed = schema.safeParse({
+export const env = schema.parse({
   NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+  NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
   UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
   UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
+  NODE_ENV: process.env.NODE_ENV,
 });
-
-if (!parsed.success) {
-  const issues = parsed.error.issues.map((i) => `  ${i.path.join('.')}: ${i.message}`).join('\n');
-  throw new Error(`Invalid environment variables:\n${issues}`);
-}
-
-export const env = parsed.data;
