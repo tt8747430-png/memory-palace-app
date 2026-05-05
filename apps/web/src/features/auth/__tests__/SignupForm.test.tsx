@@ -26,6 +26,9 @@ vi.mock('@memory-palace/ui', () => ({
     return <button {...rest}>{children}</button>;
   },
   Input: (props: React.InputHTMLAttributes<HTMLInputElement>) => <input {...props} />,
+  Label: ({ children, ...props }: React.LabelHTMLAttributes<HTMLLabelElement>) => (
+    <label {...props}>{children}</label>
+  ),
 }));
 
 describe('SignupForm', () => {
@@ -33,11 +36,11 @@ describe('SignupForm', () => {
     mockSignUp.mockReset();
   });
 
-  it('renders the signup form fields', () => {
+  it('renders labeled email and password fields', () => {
     mockSignUp.mockResolvedValue({ status: 'idle' });
     render(<SignupForm />);
-    expect(screen.getByPlaceholderText('Email')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Password')).toBeInTheDocument();
+    expect(screen.getByLabelText('Email')).toBeInTheDocument();
+    expect(screen.getByLabelText('Password')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument();
   });
 
@@ -51,8 +54,8 @@ describe('SignupForm', () => {
     const user = userEvent.setup();
     render(<SignupForm />);
 
-    await user.type(screen.getByPlaceholderText('Email'), 'new@example.com');
-    await user.type(screen.getByPlaceholderText('Password'), 'password123');
+    await user.type(screen.getByLabelText('Email'), 'new@example.com');
+    await user.type(screen.getByLabelText('Password'), 'password123');
     await user.click(screen.getByRole('button', { name: /create account/i }));
 
     await waitFor(() => expect(mockSignUp).toHaveBeenCalledTimes(1));
@@ -69,8 +72,8 @@ describe('SignupForm', () => {
     const user = userEvent.setup();
     render(<SignupForm />);
 
-    await user.type(screen.getByPlaceholderText('Email'), 'new@example.com');
-    await user.type(screen.getByPlaceholderText('Password'), 'password123');
+    await user.type(screen.getByLabelText('Email'), 'new@example.com');
+    await user.type(screen.getByLabelText('Password'), 'password123');
     await user.click(screen.getByRole('button', { name: /create account/i }));
 
     expect(await screen.findByRole('status')).toHaveTextContent(
@@ -83,8 +86,8 @@ describe('SignupForm', () => {
     const user = userEvent.setup();
     render(<SignupForm />);
 
-    await user.type(screen.getByPlaceholderText('Email'), 'new@example.com');
-    await user.type(screen.getByPlaceholderText('Password'), 'password123');
+    await user.type(screen.getByLabelText('Email'), 'new@example.com');
+    await user.type(screen.getByLabelText('Password'), 'password123');
     await user.click(screen.getByRole('button', { name: /create account/i }));
 
     expect(await screen.findByRole('alert')).toHaveTextContent('User already registered');

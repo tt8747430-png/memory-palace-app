@@ -14,4 +14,13 @@ export {
   SheetTitle,
   SheetDescription,
 } from './components/sheet';
+export {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from './components/card';
+export { Label } from './components/label';
 export { cn } from './lib/cn';

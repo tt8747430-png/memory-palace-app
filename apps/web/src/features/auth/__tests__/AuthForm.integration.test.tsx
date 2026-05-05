@@ -2,7 +2,7 @@
  * Integration test for the auth forms — uses the REAL `@memory-palace/ui`
  * primitives. The other AuthForm tests mock `@memory-palace/ui` to avoid
  * Radix portal complexity, which means they don't notice when the real
- * Button or Input drops children. This file fills that gap.
+ * Button, Input, or Label drops children/attributes. This file fills that gap.
  */
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -27,6 +27,20 @@ describe('Auth forms (real UI primitives)', () => {
     mockSignUp.mockReset();
   });
 
+  it('LoginForm fields are accessible via label text', () => {
+    mockSignIn.mockResolvedValue({ status: 'idle' });
+    render(<LoginForm />);
+    expect(screen.getByLabelText('Email')).toBeInTheDocument();
+    expect(screen.getByLabelText('Password')).toBeInTheDocument();
+  });
+
+  it('SignupForm fields are accessible via label text', () => {
+    mockSignUp.mockResolvedValue({ status: 'idle' });
+    render(<SignupForm />);
+    expect(screen.getByLabelText('Email')).toBeInTheDocument();
+    expect(screen.getByLabelText('Password')).toBeInTheDocument();
+  });
+
   it('LoginForm submit button renders the "Sign In" label', () => {
     mockSignIn.mockResolvedValue({ status: 'idle' });
     render(<LoginForm />);
@@ -43,19 +57,13 @@ describe('Auth forms (real UI primitives)', () => {
     expect(button.textContent).toBe('Create Account');
   });
 
-  it('LoginForm Input components render with placeholder visible', () => {
-    render(<LoginForm />);
-    expect(screen.getByPlaceholderText('Email')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Password')).toBeInTheDocument();
-  });
-
   it('LoginForm submit button reaches the action when clicked', async () => {
     mockSignIn.mockResolvedValue({ status: 'idle' });
     const user = userEvent.setup();
     render(<LoginForm />);
 
-    await user.type(screen.getByPlaceholderText('Email'), 'test@example.com');
-    await user.type(screen.getByPlaceholderText('Password'), 'password123');
+    await user.type(screen.getByLabelText('Email'), 'test@example.com');
+    await user.type(screen.getByLabelText('Password'), 'password123');
     await user.click(screen.getByRole('button', { name: 'Sign In' }));
 
     expect(mockSignIn).toHaveBeenCalledTimes(1);

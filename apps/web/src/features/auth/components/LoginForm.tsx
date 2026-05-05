@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { Alert, Button, Input } from '@memory-palace/ui';
+import { Alert, Button, Input, Label } from '@memory-palace/ui';
 import { signIn } from '../actions/signIn';
 import { initialAuthFormState } from '../actions/types';
 
@@ -21,14 +21,28 @@ export function LoginForm() {
 
   return (
     <form action={formAction} className="space-y-4">
-      <Input name="email" type="email" placeholder="Email" required autoComplete="email" />
-      <Input
-        name="password"
-        type="password"
-        placeholder="Password"
-        required
-        autoComplete="current-password"
-      />
+      <div className="space-y-1.5">
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          placeholder="you@example.com"
+          required
+          autoComplete="email"
+        />
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="password">Password</Label>
+        <Input
+          id="password"
+          name="password"
+          type="password"
+          placeholder="••••••••"
+          required
+          autoComplete="current-password"
+        />
+      </div>
       {state.status === 'error' ? (
         <Alert variant="destructive" role="alert">
           {state.message}

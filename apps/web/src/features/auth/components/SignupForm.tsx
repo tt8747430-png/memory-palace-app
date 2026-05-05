@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { Alert, Button, Input } from '@memory-palace/ui';
+import { Alert, Button, Input, Label } from '@memory-palace/ui';
 import { signUp } from '../actions/signUp';
 import { initialAuthFormState } from '../actions/types';
 
@@ -29,15 +29,29 @@ export function SignupForm() {
 
   return (
     <form action={formAction} className="space-y-4">
-      <Input name="email" type="email" placeholder="Email" required autoComplete="email" />
-      <Input
-        name="password"
-        type="password"
-        placeholder="Password"
-        required
-        autoComplete="new-password"
-        minLength={6}
-      />
+      <div className="space-y-1.5">
+        <Label htmlFor="signup-email">Email</Label>
+        <Input
+          id="signup-email"
+          name="email"
+          type="email"
+          placeholder="you@example.com"
+          required
+          autoComplete="email"
+        />
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor="signup-password">Password</Label>
+        <Input
+          id="signup-password"
+          name="password"
+          type="password"
+          placeholder="••••••••"
+          required
+          autoComplete="new-password"
+          minLength={6}
+        />
+      </div>
       {state.status === 'error' ? (
         <Alert variant="destructive" role="alert">
           {state.message}

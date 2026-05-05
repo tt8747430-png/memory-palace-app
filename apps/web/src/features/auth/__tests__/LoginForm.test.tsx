@@ -26,6 +26,9 @@ vi.mock('@memory-palace/ui', () => ({
     return <button {...rest}>{children}</button>;
   },
   Input: (props: React.InputHTMLAttributes<HTMLInputElement>) => <input {...props} />,
+  Label: ({ children, ...props }: React.LabelHTMLAttributes<HTMLLabelElement>) => (
+    <label {...props}>{children}</label>
+  ),
 }));
 
 describe('LoginForm', () => {
@@ -33,11 +36,16 @@ describe('LoginForm', () => {
     mockSignIn.mockReset();
   });
 
-  it('renders email and password inputs and the submit button', () => {
+  it('renders labeled email and password fields', () => {
     mockSignIn.mockResolvedValue({ status: 'idle' });
     render(<LoginForm />);
-    expect(screen.getByPlaceholderText('Email')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Password')).toBeInTheDocument();
+    expect(screen.getByLabelText('Email')).toBeInTheDocument();
+    expect(screen.getByLabelText('Password')).toBeInTheDocument();
+  });
+
+  it('renders the submit button', () => {
+    mockSignIn.mockResolvedValue({ status: 'idle' });
+    render(<LoginForm />);
     expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument();
   });
 
@@ -51,8 +59,8 @@ describe('LoginForm', () => {
     const user = userEvent.setup();
     render(<LoginForm />);
 
-    await user.type(screen.getByPlaceholderText('Email'), 'test@example.com');
-    await user.type(screen.getByPlaceholderText('Password'), 'password123');
+    await user.type(screen.getByLabelText('Email'), 'test@example.com');
+    await user.type(screen.getByLabelText('Password'), 'password123');
     await user.click(screen.getByRole('button', { name: /sign in/i }));
 
     await waitFor(() => expect(mockSignIn).toHaveBeenCalledTimes(1));
@@ -66,8 +74,8 @@ describe('LoginForm', () => {
     const user = userEvent.setup();
     render(<LoginForm />);
 
-    await user.type(screen.getByPlaceholderText('Email'), 'wrong@example.com');
-    await user.type(screen.getByPlaceholderText('Password'), 'wrongpass');
+    await user.type(screen.getByLabelText('Email'), 'wrong@example.com');
+    await user.type(screen.getByLabelText('Password'), 'wrongpass');
     await user.click(screen.getByRole('button', { name: /sign in/i }));
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Invalid login credentials');
@@ -81,8 +89,8 @@ describe('LoginForm', () => {
     const user = userEvent.setup();
     render(<LoginForm />);
 
-    await user.type(screen.getByPlaceholderText('Email'), 'test@example.com');
-    await user.type(screen.getByPlaceholderText('Password'), 'password123');
+    await user.type(screen.getByLabelText('Email'), 'test@example.com');
+    await user.type(screen.getByLabelText('Password'), 'password123');
     await user.click(screen.getByRole('button', { name: /sign in/i }));
 
     expect(await screen.findByRole('button', { name: /signing in/i })).toBeDisabled();

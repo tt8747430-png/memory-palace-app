@@ -8,7 +8,7 @@ The aspirational 11-phase plan lives at `docs/archive/ROADMAP-aspirational.md`. 
 - **Phase 2A — Layout components.** `DashboardShell`, `Sidebar`, `BottomNav`, `MobileDrawer`.
 - **Cleanup pass.** Removed empty feature dirs and duplicate `cn`. Consolidated three Supabase SSR factories into one module. Extracted `redirectWithCookies` in the proxy. Added Zod-validated `env` module. Dropped redundant per-navigation auth round-trip in dashboard layout. Made `db` client lazy. Fixed `turbo` `typecheck` dependency. Pinned `lucide-react`. Trimmed docs.
 - **Phase 2B — Theme system.** `next-themes` + `ThemeProvider` in root layout. 3-way `ModeToggle` (light → dark → system) in sidebar footer and top bar. Dark-mode CSS token set (`.dark {}`) in `globals.css`; `@custom-variant dark` wired for Tailwind v4.
-- **Phase 2C — Base components.** `Input`, `Alert`, `Skeleton`, `Sheet` added to `@memory-palace/ui`. `LoginForm` and `SignupForm` refactored to use them. `EmptyState` added to `src/shared/components/`.
+- **Phase 2C — Base components.** `Input`, `Alert`, `Skeleton`, `Sheet`, `Label`, `Card` (+ `CardHeader`, `CardContent`, `CardFooter`, `CardTitle`, `CardDescription`) added to `@memory-palace/ui`. `LoginForm` and `SignupForm` refactored to use them with proper accessible `<label>` associations. `EmptyState` added to `src/shared/components/`.
 
 ## Next (concrete, in order)
 
