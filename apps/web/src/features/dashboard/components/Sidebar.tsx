@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@memory-palace/ui';
 import { navItems, isNavItemActive } from '../nav';
+import { ModeToggle } from './ModeToggle';
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -30,6 +31,9 @@ export function Sidebar() {
           </Link>
         );
       })}
+      <div className="mt-auto flex items-center justify-end pt-4">
+        <ModeToggle />
+      </div>
     </nav>
   );
 }

@@ -7,6 +7,12 @@ vi.mock('next/navigation', () => ({
   usePathname: vi.fn(() => '/'),
 }));
 
+// next-themes hydrates async and triggers a mount-state update inside
+// ModeToggle. Stub it so the shell renders deterministically in JSDOM.
+vi.mock('next-themes', () => ({
+  useTheme: () => ({ theme: 'system', setTheme: vi.fn() }),
+}));
+
 // Mock @memory-palace/ui Sheet components (Radix Dialog needs a real DOM portal).
 // `cn` is re-exported as the real implementation so child components that style
 // themselves (Sidebar, BottomNav) keep producing real classNames for assertions.

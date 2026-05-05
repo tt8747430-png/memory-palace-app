@@ -6,6 +6,7 @@ import { Button } from '@memory-palace/ui';
 import { Sidebar } from './Sidebar';
 import { BottomNav } from './BottomNav';
 import { MobileDrawer } from './MobileDrawer';
+import { ModeToggle } from './ModeToggle';
 
 interface DashboardShellProps {
   children: ReactNode;
@@ -26,9 +27,12 @@ export function DashboardShell({ children }: DashboardShellProps) {
       <header className="flex items-center justify-between border-b px-4 py-3 md:hidden">
         <MobileDrawer />
         <h1 className="text-lg font-semibold">Memory Palace</h1>
-        <Button variant="ghost" size="icon" className="rounded-full" aria-label="Notifications">
-          <Bell className="h-5 w-5" />
-        </Button>
+        <div className="flex items-center gap-1">
+          <ModeToggle />
+          <Button variant="ghost" size="icon" className="rounded-full" aria-label="Notifications">
+            <Bell className="h-5 w-5" />
+          </Button>
+        </div>
       </header>
 
       {/* Main content */}
