@@ -1,6 +1,8 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
+import { cache } from 'react';
+import type { User } from '@supabase/supabase-js';
 import { env } from './env';
 
 export async function createSupabaseFromCookies() {
@@ -71,7 +73,15 @@ export function createSupabaseForProxy(request: NextRequest) {
   };
 }
 
-export async function auth() {
+/**
+ * Resolve the current user once per request. Wrapped in React's `cache()` so
+ * multiple server actions (or RSCs) firing in the same request share one
+ * `getUser()` round-trip instead of N.
+ */
+export const getCurrentUser = cache(async (): Promise<User | null> => {
   const supabase = await createSupabaseFromCookies();
-  return supabase.auth.getUser();
-}
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  return user;
+});

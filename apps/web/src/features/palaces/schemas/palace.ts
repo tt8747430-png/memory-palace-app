@@ -20,5 +20,8 @@ export const updatePalaceSchema = z.object({
   description: z.string().max(DESC_MAX).nullable().optional(),
 });
 
+export const palaceIdSchema = z.object({ id: z.string().uuid('Invalid palace ID') });
+
 export type CreatePalaceInput = z.infer<typeof createPalaceSchema>;
 export type UpdatePalaceInput = z.infer<typeof updatePalaceSchema>;
+export type PalaceIdInput = z.infer<typeof palaceIdSchema>;
