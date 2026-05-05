@@ -7,6 +7,7 @@ export * from './types';
 export {
   and,
   asc,
+  count,
   desc,
   eq,
   gt,

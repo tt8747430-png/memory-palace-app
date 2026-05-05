@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { getDb, palaces } from '@memory-palace/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
 import { createPalaceSchema } from '../schemas/palace';
@@ -14,6 +15,8 @@ export const createPalace = defineAction({
       .values({ userId: user.id, title: input.title, description: input.description })
       .returning();
     if (!palace) throw new ActionError('INTERNAL_ERROR', 'Insert returned no row.');
+    revalidatePath('/palaces');
+    revalidatePath('/');
     return palace;
   },
 });

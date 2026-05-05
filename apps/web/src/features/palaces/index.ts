@@ -5,3 +5,7 @@ export { updatePalace } from './actions/updatePalace';
 export { deletePalace } from './actions/deletePalace';
 export { createPalaceSchema, updatePalaceSchema } from './schemas/palace';
 export type { CreatePalaceInput, UpdatePalaceInput } from './schemas/palace';
+export { PalaceCard } from './components/PalaceCard';
+export { CreatePalaceDialog } from './components/CreatePalaceDialog';
+export { EditPalaceDialog } from './components/EditPalaceDialog';
+export { DeletePalaceButton } from './components/DeletePalaceButton';

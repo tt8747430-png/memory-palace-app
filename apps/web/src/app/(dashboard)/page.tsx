@@ -1,8 +1,21 @@
+import { Suspense } from 'react';
+import { CardSkeleton } from '@/shared/components/CardSkeleton';
+import { WelcomeBanner, StatsBar, RecentPalaces } from '@/features/dashboard';
+
 export default function DashboardHomePage() {
   return (
-    <div>
-      <h1 className="text-2xl font-bold md:text-4xl lg:text-5xl">Dashboard</h1>
-      <p className="mt-2 text-sm text-muted-foreground">Welcome to your Memory Palace.</p>
+    <div className="space-y-8">
+      <Suspense fallback={<div className="h-14 animate-pulse rounded-md bg-muted" />}>
+        <WelcomeBanner />
+      </Suspense>
+
+      <Suspense fallback={<CardSkeleton count={3} />}>
+        <StatsBar />
+      </Suspense>
+
+      <Suspense fallback={<CardSkeleton count={2} />}>
+        <RecentPalaces />
+      </Suspense>
     </div>
   );
 }

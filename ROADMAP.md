@@ -15,9 +15,11 @@ The aspirational 11-phase plan lives at `docs/archive/ROADMAP-aspirational.md`. 
 
 - **Phase 3C — Rate limiting, FTS search, cursor pagination.** Upstash Redis rate limiting wired into all mutating server actions (palace CRUD + FTS search). `nodes` feature created with two server actions: `getNodesByRoom` (cursor-paginated keyset query using Postgres row comparisons) and `searchNodes` (full-text search via `websearch_to_tsquery` + `ts_rank` ordering). GIN `tsvector` index on `nodes` leveraged for FTS. `CursorPage<T>` type added to shared types. Opaque base64url cursor codec in `shared/lib/cursor.ts`. Rate limiter in `shared/lib/ratelimit.ts` — no-ops gracefully when Upstash env vars are absent (safe for local dev). Drizzle query helpers re-exported from `@memory-palace/db` to prevent dual virtual-store resolution with `@upstash/redis` peer dependency.
 
+- **Phase 4 — Dashboard & Core Pages.** Real dashboard home with `WelcomeBanner`, `StatsBar` (palace/room/node counts via `getDashboardStats`), and `RecentPalaces` (4 latest with links). Full palace CRUD pages (`/palaces`, `/palaces/[palaceId]`): `PalaceCard`, `CreatePalaceDialog`, `EditPalaceDialog`, `DeletePalaceButton`. New `rooms` feature: 5 server actions (createRoom, getRooms, getRoomById, updateRoom, deleteRoom — all with palace ownership verification via JOIN), `RoomCard`, `CreateRoomDialog`, `EditRoomDialog`, `DeleteRoomButton`, `/palaces/[palaceId]/rooms/[roomId]` stub page. Settings/profile page (`/settings`) with `ProfileForm` using `useActionState`. `Dialog` + `Textarea` added to `@memory-palace/ui`. Nav updated with `/palaces` and `/settings` links. 127 tests passing.
+
 ## Next (concrete, in order)
 
-1. **Phase 4+ — Dashboard pages, spatial canvas, etc.** Decide the canvas/CRDT story in an ADR before writing code; the aspirational doc names Yjs+y-supabase but that has not been validated.
+1. **Phase 5 — Spatial Canvas.** Decide the canvas/CRDT/state story in an ADR before writing code. Aspirational doc names React Flow + Zustand (canvas XY) + TanStack Query (server data); validate before introducing.
 
 ## Operating rules
 

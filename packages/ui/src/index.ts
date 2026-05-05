@@ -23,4 +23,17 @@ export {
   CardFooter,
 } from './components/card';
 export { Label } from './components/label';
+export {
+  Dialog,
+  DialogTrigger,
+  DialogClose,
+  DialogPortal,
+  DialogOverlay,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+} from './components/dialog';
+export { Textarea } from './components/textarea';
 export { cn } from './lib/cn';
