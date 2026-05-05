@@ -1,8 +1,8 @@
-import { getProfile } from '@/features/settings';
+import { getUserProfile } from '@/shared/lib/userProfile';
 
 /** Greets the logged-in user by their display name. */
 export async function WelcomeBanner() {
-  const result = await getProfile();
+  const result = await getUserProfile();
   const name =
     result.success && result.data.displayName.trim() ? result.data.displayName.trim() : 'there';
 

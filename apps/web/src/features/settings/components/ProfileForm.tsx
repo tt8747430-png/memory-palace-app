@@ -81,21 +81,15 @@ export function ProfileForm({ displayName, avatarUrl, email }: ProfileFormProps)
   const [previewUrl, setPreviewUrl] = useState(avatarUrl ?? '');
 
   return (
-    <form action={formAction} className="space-y-5">
-      {/* Avatar preview */}
-      <div className="flex items-center gap-4">
+    <form action={formAction} className="space-y-6">
+      {/* Avatar + email read-only row */}
+      <div className="flex items-center gap-4 rounded-lg border bg-muted/30 p-4">
         <AvatarPreview src={previewUrl} displayName={displayName} />
-        <div className="text-sm text-muted-foreground">
-          {previewUrl ? 'Your current avatar' : 'No avatar set'}
+        <div className="min-w-0 space-y-0.5">
+          <p className="truncate text-sm font-medium leading-none">{displayName || '—'}</p>
+          {email ? <p className="truncate text-xs text-muted-foreground">{email}</p> : null}
         </div>
       </div>
-
-      {email ? (
-        <div className="space-y-1.5">
-          <Label>Email</Label>
-          <p className="text-sm text-muted-foreground">{email}</p>
-        </div>
-      ) : null}
 
       <div className="space-y-1.5">
         <Label htmlFor="displayName">Display Name</Label>
@@ -110,7 +104,9 @@ export function ProfileForm({ displayName, avatarUrl, email }: ProfileFormProps)
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="avatarUrl">Avatar URL (optional)</Label>
+        <Label htmlFor="avatarUrl">
+          Avatar URL <span className="text-muted-foreground">(optional)</span>
+        </Label>
         <Input
           id="avatarUrl"
           name="avatarUrl"
@@ -119,6 +115,9 @@ export function ProfileForm({ displayName, avatarUrl, email }: ProfileFormProps)
           onChange={(e) => setPreviewUrl(e.target.value)}
           placeholder="https://example.com/avatar.png"
         />
+        <p className="text-xs text-muted-foreground">
+          Paste a public image URL — the preview above updates as you type.
+        </p>
       </div>
 
       {state.status === 'error' ? (
