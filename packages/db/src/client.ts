@@ -17,6 +17,6 @@ export function getDb(): DbClient {
       'DATABASE_URL is not set. Use the Supavisor pooled connection string (port 6543).',
     );
   }
-  client = drizzle(postgres(url), { schema: fullSchema });
+  client = drizzle(postgres(url, { prepare: false }), { schema: fullSchema });
   return client;
 }
