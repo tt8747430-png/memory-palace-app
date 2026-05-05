@@ -13,10 +13,11 @@ The aspirational 11-phase plan lives at `docs/archive/ROADMAP-aspirational.md`. 
 
 - **Phase 3B — RLS + Server Actions.** Per-table RLS policies on all 7 tables. `auth.users → public.users` sync trigger (`handle_new_auth_user`, SECURITY DEFINER) with backfill of pre-existing users. `ActionResponse<T>` + `ErrorCode` shared types in `src/shared/types.ts`. Palace CRUD server actions (`createPalace`, `getPalaces`, `getPalaceById`, `updatePalace`, `deletePalace`) with Zod-validated input, soft delete on palaces, auth guard on every action. Rate-limit ADR written (`docs/adr/3b-rate-limiting.md`) — Upstash Redis, deferred to Phase 3C.
 
+- **Phase 3C — Rate limiting, FTS search, cursor pagination.** Upstash Redis rate limiting wired into all mutating server actions (palace CRUD + FTS search). `nodes` feature created with two server actions: `getNodesByRoom` (cursor-paginated keyset query using Postgres row comparisons) and `searchNodes` (full-text search via `websearch_to_tsquery` + `ts_rank` ordering). GIN `tsvector` index on `nodes` leveraged for FTS. `CursorPage<T>` type added to shared types. Opaque base64url cursor codec in `shared/lib/cursor.ts`. Rate limiter in `shared/lib/ratelimit.ts` — no-ops gracefully when Upstash env vars are absent (safe for local dev). Drizzle query helpers re-exported from `@memory-palace/db` to prevent dual virtual-store resolution with `@upstash/redis` peer dependency.
+
 ## Next (concrete, in order)
 
-1. **Phase 3C — Search.** Apply the GIN `tsvector` index (see `packages/db/migrations/README.md`); cursor pagination on node queries. Wire Upstash rate limiting (see `docs/adr/3b-rate-limiting.md`).
-2. **Phase 4+ — Dashboard pages, spatial canvas, etc.** Decide the canvas/CRDT story in an ADR before writing code; the aspirational doc names Yjs+y-supabase but that has not been validated.
+1. **Phase 4+ — Dashboard pages, spatial canvas, etc.** Decide the canvas/CRDT story in an ADR before writing code; the aspirational doc names Yjs+y-supabase but that has not been validated.
 
 ## Operating rules
 

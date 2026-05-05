@@ -1,11 +1,9 @@
 'use server';
 
-import { getDb, palaces } from '@memory-palace/db';
-import { and, eq, isNull } from 'drizzle-orm';
+import { getDb, palaces, and, eq, isNull } from '@memory-palace/db';
 import { auth } from '@/shared/lib/supabase';
+import { checkRateLimit } from '@/shared/lib/ratelimit';
 import type { ActionResponse } from '@/shared/types';
-
-// TODO(rate-limit): add per-user rate limit here — see docs/adr/3b-rate-limiting.md
 
 export async function deletePalace(id: string): Promise<ActionResponse<{ id: string }>> {
   const {
@@ -15,9 +13,16 @@ export async function deletePalace(id: string): Promise<ActionResponse<{ id: str
     return { success: false, error: { code: 'UNAUTHORIZED', message: 'Not authenticated.' } };
   }
 
+  const { success: rateLimitOk } = await checkRateLimit(user.id, 'write');
+  if (!rateLimitOk) {
+    return {
+      success: false,
+      error: { code: 'TOO_MANY_REQUESTS', message: 'Too many requests. Please slow down.' },
+    };
+  }
+
   try {
     const db = getDb();
-    // Soft delete: set deleted_at; cascade hard-deletes rooms/nodes/edges handled by DB if needed.
     const [deleted] = await db
       .update(palaces)
       .set({ deletedAt: new Date() })

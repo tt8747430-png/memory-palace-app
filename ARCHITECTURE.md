@@ -12,13 +12,14 @@
 | Database   | Supabase Postgres (Supavisor pooled, port 6543) · 7-table schema live · RLS enabled |
 | ORM        | Drizzle ORM — schema + relations + types in `packages/db/src/`                      |
 | Styling    | Tailwind v4 + shadcn primitives in `@memory-palace/ui`; dark mode via `next-themes` |
+| Rate limit | Upstash Redis (`@upstash/ratelimit`) — sliding window; no-op when env vars absent   |
 | i18n       | None (added when a second locale is required)                                       |
 | Validation | Zod (env + server-action input)                                                     |
 | Testing    | Vitest + Testing Library; Playwright wired but no E2E specs yet                     |
 | Quality    | TypeScript strict, ESLint with `eslint-plugin-boundaries`, Prettier                 |
 | CI         | GitHub Actions: lint, typecheck, format, build, guardrails                          |
 
-Anything else mentioned in older docs (Yjs/CRDT, Upstash rate limiting, Sentry, kbar, Recharts, framer-motion, R3F) is **not chosen yet** — when it lands, an ADR records the decision.
+Anything else mentioned in older docs (Yjs/CRDT, Sentry, kbar, Recharts, framer-motion, R3F) is **not chosen yet** — when it lands, an ADR records the decision.
 
 ## Monorepo
 
@@ -98,27 +99,35 @@ An `AFTER INSERT ON auth.users` trigger (`handle_new_auth_user`, `SECURITY DEFIN
 
 ## Server actions
 
-Palace CRUD lives in `src/features/palaces/actions/`. Pattern for all CRUD actions:
+Palace CRUD lives in `src/features/palaces/actions/`. Node queries live in `src/features/nodes/actions/`. Pattern for all CRUD/query actions:
 
 ```typescript
 'use server';
 // 1. Auth check
 const { data: { user } } = await auth();
 if (!user) return { success: false, error: { code: 'UNAUTHORIZED', … } };
-// 2. Zod parse
+// 2. (mutating actions only) Rate limit
+const { success: ok } = await checkRateLimit(user.id, 'write');
+if (!ok) return { success: false, error: { code: 'TOO_MANY_REQUESTS', … } };
+// 3. Zod parse
 const parsed = schema.safeParse(input);
 if (!parsed.success) return { success: false, error: { code: 'VALIDATION_FAILED', … } };
-// 3. Query
+// 4. Query
 const db = getDb();
 // … drizzle query …
 ```
 
-All CRUD actions return `ActionResponse<T>` (defined in `src/shared/types.ts`) — a discriminated union with `{ success: true; data: T }` or `{ success: false; error: { code: ErrorCode; message: string } }`. Auth form actions keep their existing `AuthFormState` shape for `useActionState` flows.
+All actions return `ActionResponse<T>` (defined in `src/shared/types.ts`) — a discriminated union with `{ success: true; data: T }` or `{ success: false; error: { code: ErrorCode; message: string } }`. Auth form actions keep their existing `AuthFormState` shape for `useActionState` flows.
 
-Rate limiting: decided (Upstash Redis sliding window), deferred to Phase 3C. See `docs/adr/3b-rate-limiting.md`.
+**Rate limiting** uses Upstash Redis sliding windows via `src/shared/lib/ratelimit.ts`. Two buckets: `write` (30 req/10 s) and `search` (60 req/10 s). When `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` are absent the limiter returns `{ success: true }` — safe for local dev. Set both vars in Vercel for production enforcement.
+
+**Cursor pagination** (`getNodesByRoom`) uses an opaque base64url cursor encoding `{ createdAt, id }`. The query uses a Postgres row comparison — `(created_at, id) < (cursor_ts, cursor_id)` — which is cleaner and more planner-friendly than an OR expansion. The fetch-limit+1 trick avoids a separate `COUNT` query.
+
+**Full-text search** (`searchNodes`) uses `websearch_to_tsquery` (supports `-negation`, `OR`, natural AND; Postgres 11+) against the GIN `tsvector` index on `nodes`. Results are ordered by `ts_rank` descending, then by `created_at` descending.
+
+**`@memory-palace/db` re-exports drizzle helpers** (`eq`, `and`, `sql`, `desc`, etc.) so all workspace packages share one virtual-store resolution. Importing Drizzle helpers directly from `'drizzle-orm'` in `apps/web` would create a second peer-resolved instance (due to `@upstash/redis`'s optional `drizzle-orm` peer), causing structural type mismatches. All action files import helpers from `'@memory-palace/db'`.
 
 ## Known gaps (do not infer they are decided)
 
-- Rate limiting: ADR written (`docs/adr/3b-rate-limiting.md`), implementation deferred to Phase 3C.
 - No CSP. App-Router-correct CSP needs per-request nonces; rather than ship a permissive header that lies about its protection, no CSP is sent until the Phase 8 hardening pass adds nonce middleware.
 - No coverage gating. Vitest is configured for tests only — re-add `coverage` config and wire `--coverage` into CI when there is enough surface to gate against.

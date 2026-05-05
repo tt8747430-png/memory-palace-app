@@ -3,10 +3,9 @@
 import { getDb, palaces } from '@memory-palace/db';
 import type { SelectPalace } from '@memory-palace/db';
 import { auth } from '@/shared/lib/supabase';
+import { checkRateLimit } from '@/shared/lib/ratelimit';
 import type { ActionResponse } from '@/shared/types';
 import { createPalaceSchema } from '../schemas/palace';
-
-// TODO(rate-limit): add per-user rate limit here — see docs/adr/3b-rate-limiting.md
 
 export async function createPalace(input: unknown): Promise<ActionResponse<SelectPalace>> {
   const {
@@ -14,6 +13,14 @@ export async function createPalace(input: unknown): Promise<ActionResponse<Selec
   } = await auth();
   if (!user) {
     return { success: false, error: { code: 'UNAUTHORIZED', message: 'Not authenticated.' } };
+  }
+
+  const { success: rateLimitOk } = await checkRateLimit(user.id, 'write');
+  if (!rateLimitOk) {
+    return {
+      success: false,
+      error: { code: 'TOO_MANY_REQUESTS', message: 'Too many requests. Please slow down.' },
+    };
   }
 
   const parsed = createPalaceSchema.safeParse(input);

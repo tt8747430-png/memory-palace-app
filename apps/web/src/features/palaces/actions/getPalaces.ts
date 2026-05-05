@@ -1,8 +1,7 @@
 'use server';
 
-import { getDb, palaces } from '@memory-palace/db';
+import { getDb, palaces, and, eq, isNull, desc } from '@memory-palace/db';
 import type { SelectPalace } from '@memory-palace/db';
-import { and, eq, isNull, desc } from 'drizzle-orm';
 import { auth } from '@/shared/lib/supabase';
 import type { ActionResponse } from '@/shared/types';
 
