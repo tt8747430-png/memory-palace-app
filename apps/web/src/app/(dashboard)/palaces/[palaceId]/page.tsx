@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
@@ -7,13 +8,17 @@ import { getRooms, RoomCard, CreateRoomDialog } from '@/features/rooms';
 import { EmptyState } from '@/shared/components/EmptyState';
 import { CardSkeleton } from '@/shared/components/CardSkeleton';
 
+// cache() deduplicates calls with the same palaceId within a single request,
+// so generateMetadata and RoomGrid share one DB round-trip, not two.
+const getCachedPalace = cache((palaceId: string) => getPalaceById({ id: palaceId }));
+
 interface PalacePageProps {
   params: Promise<{ palaceId: string }>;
 }
 
 export async function generateMetadata({ params }: PalacePageProps) {
   const { palaceId } = await params;
-  const result = await getPalaceById({ id: palaceId });
+  const result = await getCachedPalace(palaceId);
   return {
     title: result.success ? `${result.data.title} — Memory Palace` : 'Palace — Memory Palace',
   };
@@ -21,7 +26,7 @@ export async function generateMetadata({ params }: PalacePageProps) {
 
 async function RoomGrid({ palaceId }: { palaceId: string }) {
   const [palaceResult, roomsResult] = await Promise.all([
-    getPalaceById({ id: palaceId }),
+    getCachedPalace(palaceId),
     getRooms({ palaceId }),
   ]);
 

@@ -35,57 +35,77 @@ export const importPalaceData = defineAction({
     }
 
     const exportData = result.data;
-    const stats: ImportStats = { palaces: 0, rooms: 0, nodes: 0 };
+    // Flatten entities up-front so we can bulk-insert in three statements
+    // (one per table) instead of one INSERT per entity — O(1) round-trips.
+    const palaceValues = exportData.palaces.map((p) => ({
+      id: p.id,
+      userId: user.id,
+      title: p.title,
+      description: p.description ?? null,
+    }));
 
-    // ── Insert everything in a single transaction ─────────────────────────
-    // ON CONFLICT DO NOTHING makes re-imports idempotent — importing the same
-    // file twice is harmless because all IDs are preserved from the export.
-    // user_id is always set from the authenticated session, never from the file.
-    await getDb().transaction(async (tx) => {
-      for (const palace of exportData.palaces) {
-        await tx
-          .insert(palaces)
-          .values({
-            id: palace.id,
-            userId: user.id,
-            title: palace.title,
-            description: palace.description ?? null,
-          })
-          .onConflictDoNothing();
-        stats.palaces++;
+    const roomValues = exportData.palaces.flatMap((p) =>
+      p.rooms.map((r) => ({
+        id: r.id,
+        palaceId: p.id,
+        title: r.title,
+        position: r.position,
+      })),
+    );
 
-        for (const room of palace.rooms) {
-          await tx
-            .insert(rooms)
-            .values({
-              id: room.id,
-              palaceId: palace.id,
-              title: room.title,
-              position: room.position,
-            })
-            .onConflictDoNothing();
-          stats.rooms++;
+    const nodeValues = exportData.palaces.flatMap((p) =>
+      p.rooms.flatMap((r) =>
+        r.nodes.map((n) => ({
+          id: n.id,
+          roomId: r.id,
+          userId: user.id,
+          title: n.title,
+          content: n.content ?? null,
+          nodeType: n.nodeType,
+          positionX: n.positionX,
+          positionY: n.positionY,
+          color: n.color ?? null,
+        })),
+      ),
+    );
 
-          for (const node of room.nodes) {
-            await tx
+    // Insert in FK dependency order: palaces → rooms → nodes.
+    // RETURNING gives us only the rows actually written — ON CONFLICT DO NOTHING
+    // rows are silently skipped and absent from RETURNING, so re-imports
+    // correctly report 0 rather than the total count of the file.
+    const stats = await getDb().transaction(async (tx) => {
+      const insertedPalaces =
+        palaceValues.length > 0
+          ? await tx
+              .insert(palaces)
+              .values(palaceValues)
+              .onConflictDoNothing()
+              .returning({ id: palaces.id })
+          : [];
+
+      const insertedRooms =
+        roomValues.length > 0
+          ? await tx
+              .insert(rooms)
+              .values(roomValues)
+              .onConflictDoNothing()
+              .returning({ id: rooms.id })
+          : [];
+
+      const insertedNodes =
+        nodeValues.length > 0
+          ? await tx
               .insert(nodes)
-              .values({
-                id: node.id,
-                roomId: room.id,
-                // user_id is always sourced from the session — never from the file
-                userId: user.id,
-                title: node.title,
-                content: node.content ?? null,
-                nodeType: node.nodeType,
-                positionX: node.positionX,
-                positionY: node.positionY,
-                color: node.color ?? null,
-              })
-              .onConflictDoNothing();
-            stats.nodes++;
-          }
-        }
-      }
+              .values(nodeValues)
+              .onConflictDoNothing()
+              .returning({ id: nodes.id })
+          : [];
+
+      return {
+        palaces: insertedPalaces.length,
+        rooms: insertedRooms.length,
+        nodes: insertedNodes.length,
+      };
     });
 
     revalidatePath('/');

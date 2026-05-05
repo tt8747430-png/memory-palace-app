@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogTrigger,
   Input,
   Label,
   Alert,
@@ -49,10 +50,12 @@ export function CreateRoomDialog({ palaceId, nextPosition = 0 }: CreateRoomDialo
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <Button onClick={() => setOpen(true)} size="md" className="gap-2">
-        <Plus className="h-4 w-4" />
-        New Room
-      </Button>
+      <DialogTrigger asChild>
+        <Button size="md" className="gap-2">
+          <Plus className="h-4 w-4" />
+          New Room
+        </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add a Room</DialogTitle>

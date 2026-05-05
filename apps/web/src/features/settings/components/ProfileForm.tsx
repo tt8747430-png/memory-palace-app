@@ -75,7 +75,6 @@ function AvatarPreview({ src, displayName }: { src: string; displayName: string 
 
 export function ProfileForm({ displayName, avatarUrl, email }: ProfileFormProps) {
   const [state, formAction] = useActionState(profileFormAction, initialState);
-  const [displayNameValue, setDisplayNameValue] = useState(displayName);
   const [previewUrl, setPreviewUrl] = useState(avatarUrl ?? '');
 
   return (
@@ -94,8 +93,7 @@ export function ProfileForm({ displayName, avatarUrl, email }: ProfileFormProps)
         <Input
           id="displayName"
           name="displayName"
-          value={displayNameValue}
-          onChange={(e) => setDisplayNameValue(e.target.value)}
+          defaultValue={displayName}
           placeholder="Your name"
           required
           maxLength={60}

@@ -1,12 +1,12 @@
 import Link from 'next/link';
 import { ArrowRight, Building2 } from 'lucide-react';
-import { cn } from '@memory-palace/ui';
+import { buttonVariants, cn } from '@memory-palace/ui';
 import { getRecentPalaces } from '@/features/dashboard/actions/getRecentPalaces';
 import { EmptyState } from '@/shared/components/EmptyState';
 
 export async function RecentPalaces() {
   const result = await getRecentPalaces();
-  const items = result.success ? result.data.slice(0, 4) : [];
+  const items = result.success ? result.data : [];
 
   if (items.length === 0) {
     return (
@@ -16,13 +16,7 @@ export async function RecentPalaces() {
         description="Create your first Memory Palace to start organizing your knowledge spatially."
         headingLevel={3}
         action={
-          <Link
-            href="/palaces"
-            className={cn(
-              'inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium',
-              'bg-primary text-primary-foreground transition-opacity hover:opacity-90',
-            )}
-          >
+          <Link href="/palaces" className={buttonVariants({ variant: 'primary', size: 'md' })}>
             Create a palace
           </Link>
         }

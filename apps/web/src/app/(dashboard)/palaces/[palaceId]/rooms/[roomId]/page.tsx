@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
@@ -6,13 +7,18 @@ import { getRoomById } from '@/features/rooms';
 import { getRoomNodes } from '@/features/nodes';
 import { RoomCanvas, CanvasErrorBoundary } from '@/features/spatial-canvas';
 
+const getCachedPalace = cache((palaceId: string) => getPalaceById({ id: palaceId }));
+const getCachedRoom = cache((roomId: string, palaceId: string) =>
+  getRoomById({ id: roomId, palaceId }),
+);
+
 interface RoomPageProps {
   params: Promise<{ palaceId: string; roomId: string }>;
 }
 
 export async function generateMetadata({ params }: RoomPageProps) {
   const { palaceId, roomId } = await params;
-  const result = await getRoomById({ id: roomId, palaceId });
+  const result = await getCachedRoom(roomId, palaceId);
   return {
     title: result.success ? `${result.data.title} — Memory Palace` : 'Room — Memory Palace',
   };
@@ -22,8 +28,8 @@ export default async function RoomPage({ params }: RoomPageProps) {
   const { palaceId, roomId } = await params;
 
   const [palaceResult, roomResult, nodesResult] = await Promise.all([
-    getPalaceById({ id: palaceId }),
-    getRoomById({ id: roomId, palaceId }),
+    getCachedPalace(palaceId),
+    getCachedRoom(roomId, palaceId),
     getRoomNodes({ roomId }),
   ]);
 

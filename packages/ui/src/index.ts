@@ -37,5 +37,6 @@ export {
 } from './components/dialog';
 export { Textarea } from './components/textarea';
 export { Popover, PopoverTrigger, PopoverAnchor, PopoverContent } from './components/popover';
+export { Select } from './components/select';
 export { Separator } from './components/separator';
 export { cn } from './lib/cn';

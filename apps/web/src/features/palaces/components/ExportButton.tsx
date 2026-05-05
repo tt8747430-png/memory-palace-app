@@ -1,25 +1,24 @@
-'use client';
-
 import { Download } from 'lucide-react';
-import { Button } from '@memory-palace/ui';
+import { buttonVariants, cn } from '@memory-palace/ui';
 
 /**
- * Triggers a palace data export by navigating to GET /api/export.
- * The route handler streams a JSON file attachment — no client-side JSON
- * manipulation required.
+ * Triggers a palace data export via GET /api/export.
+ *
+ * Using <a download> rather than window.location.href:
+ *   - Semantically correct for file downloads (no JS required).
+ *   - The browser surfaces 4xx/5xx as a network error instead of silently
+ *     navigating into an error page.
+ *   - Works without JavaScript.
  */
 export function ExportButton() {
   return (
-    <Button
-      variant="outline"
-      size="sm"
-      className="gap-2"
-      onClick={() => {
-        window.location.href = '/api/export';
-      }}
+    <a
+      href="/api/export"
+      download
+      className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'gap-2')}
     >
-      <Download className="h-4 w-4" />
+      <Download className="h-4 w-4" aria-hidden />
       Export
-    </Button>
+    </a>
   );
 }
