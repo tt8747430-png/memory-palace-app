@@ -136,10 +136,10 @@
   --height-bottom-nav: 4rem;
   --height-top-bar: 3.5rem;
 
-  /* Touch target sizes (48px per Apple HIG / Material Design) */
-  --height-touch: 48px;
-  --min-width-touch: 48px;
-  --min-height-touch: 48px;
+  /* Touch target size (48px per Apple HIG / Material Design).
+     Defined under --spacing-* so Tailwind v4 derives h-touch / w-touch /
+     min-h-touch / min-w-touch from a single source. */
+  --spacing-touch: 48px;
 }
 
 @layer base {

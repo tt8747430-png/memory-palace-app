@@ -92,7 +92,9 @@ describe('DashboardShell', () => {
   it('main content has safe-area bottom padding on mobile', () => {
     render(<DashboardShell>Content</DashboardShell>);
     const main = screen.getByRole('main');
-    expect(main.className).toMatch(/pb-\[calc\(4rem\+env\(safe-area-inset-bottom\)\)\]/);
+    expect(main.className).toMatch(
+      /pb-\[calc\(var\(--height-bottom-nav\)\+env\(safe-area-inset-bottom\)\)\]/,
+    );
     expect(main.className).toMatch(/md:pb-0/);
   });
 });
