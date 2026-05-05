@@ -49,7 +49,7 @@ export function SignupForm() {
           placeholder="••••••••"
           required
           autoComplete="new-password"
-          minLength={6}
+          minLength={8}
         />
       </div>
       {state.status === 'error' ? (
