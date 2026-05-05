@@ -8,82 +8,48 @@ import {
   desc,
   eq,
   getTableColumns,
-  inArray,
   isNull,
   sql,
   type SQL,
 } from '@memory-palace/db';
-import type { SelectNode } from '@memory-palace/db';
-import { auth } from '@/shared/lib/supabase';
-import { checkRateLimit } from '@/shared/lib/ratelimit';
-import type { ActionResponse } from '@/shared/types';
+import { defineAction } from '@/shared/lib/action';
 import { searchNodesSchema } from '../schemas/node';
 
-export async function searchNodes(input: unknown): Promise<ActionResponse<SelectNode[]>> {
-  const {
-    data: { user },
-  } = await auth();
-  if (!user) {
-    return { success: false, error: { code: 'UNAUTHORIZED', message: 'Not authenticated.' } };
-  }
+// websearch_to_tsquery accepts AND/OR/-negation syntax and is forgiving of
+// user input — safer than to_tsquery, more expressive than plainto_tsquery.
+// The expression must match the GIN index `idx_nodes_fts` exactly to remain
+// index-eligible.
+const FTS_VECTOR = sql`to_tsvector('english', coalesce(${nodes.title}, '') || ' ' || coalesce(${nodes.content}, ''))`;
 
-  const { success: rateLimitOk } = await checkRateLimit(user.id, 'search');
-  if (!rateLimitOk) {
-    return {
-      success: false,
-      error: { code: 'TOO_MANY_REQUESTS', message: 'Too many requests. Please slow down.' },
-    };
-  }
+export const searchNodes = defineAction({
+  name: 'searchNodes',
+  schema: searchNodesSchema,
+  rateLimit: 'search',
+  handler: async ({ user, input }) => {
+    const { query, palaceId, limit } = input;
+    const ftsQuery = sql`websearch_to_tsquery('english', ${query})`;
 
-  const parsed = searchNodesSchema.safeParse(input);
-  if (!parsed.success) {
-    return {
-      success: false,
-      error: {
-        code: 'VALIDATION_FAILED',
-        message: parsed.error.issues[0]?.message ?? 'Invalid input.',
-      },
-    };
-  }
-
-  const { query, palaceId, limit } = parsed.data;
-
-  // websearch_to_tsquery supports AND/OR/-negation syntax naturally (Postgres 11+).
-  // Safer than to_tsquery which requires exact syntax, more expressive than plainto_tsquery.
-  const ftsVector = sql`to_tsvector('english', coalesce(${nodes.title}, '') || ' ' || coalesce(${nodes.content}, ''))`;
-  const ftsQuery = sql`websearch_to_tsquery('english', ${query})`;
-
-  try {
-    const db = getDb();
-
-    // When palaceId is provided, restrict to rooms that belong to that palace.
-    // Use a subquery rather than a JOIN to avoid column selection complexity.
     const conditions: SQL[] = [
       eq(nodes.userId, user.id),
       isNull(nodes.deletedAt),
-      sql`${ftsVector} @@ ${ftsQuery}`,
+      sql`${FTS_VECTOR} @@ ${ftsQuery}`,
     ];
 
+    const db = getDb();
+    let q = db.select(getTableColumns(nodes)).from(nodes).$dynamic();
+
     if (palaceId) {
-      conditions.push(
-        inArray(
-          nodes.roomId,
-          db.select({ id: rooms.id }).from(rooms).where(eq(rooms.palaceId, palaceId)),
-        ),
+      // Inner-joining rooms (and filtering deleted ones) prevents soft-deleted
+      // rooms from leaking their nodes into search results.
+      q = q.innerJoin(
+        rooms,
+        and(eq(rooms.id, nodes.roomId), eq(rooms.palaceId, palaceId), isNull(rooms.deletedAt))!,
       );
     }
 
-    const results = await db
-      .select(getTableColumns(nodes))
-      .from(nodes)
+    return q
       .where(and(...conditions))
-      // ts_rank orders by relevance; ties broken by newest first
-      .orderBy(sql`ts_rank(${ftsVector}, ${ftsQuery}) DESC`, desc(nodes.createdAt))
+      .orderBy(sql`ts_rank(${FTS_VECTOR}, ${ftsQuery}) DESC`, desc(nodes.createdAt))
       .limit(limit);
-
-    return { success: true, data: results };
-  } catch (err) {
-    console.error('[searchNodes]', err);
-    return { success: false, error: { code: 'INTERNAL_ERROR', message: 'Search failed.' } };
-  }
-}
+  },
+});
