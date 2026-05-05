@@ -1,7 +1,12 @@
 import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/shared/components/ThemeProvider';
+import { env } from '@/shared/lib/env';
 import './globals.css';
+
+const siteUrl =
+  env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -19,6 +24,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: 'Memory Palace',
   description: 'A spatial learning platform using virtual palaces with draggable memory nodes',
 };

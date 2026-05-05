@@ -28,10 +28,14 @@ function redirectTo(request: NextRequest, source: NextResponse, path: string): N
 export async function proxy(request: NextRequest) {
   const { supabase, getResponse } = createSupabaseForProxy(request);
 
-  // Refresh session — must run with no logic between createServerClient and getUser.
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Refresh session — must run with no logic between createServerClient and the
+  // auth call. `getClaims()` validates the JWT locally against the project's
+  // signing key (no Auth API round-trip on every request), and still triggers
+  // the SDK's silent refresh path via the cookie `setAll` callback when the
+  // access token is near expiry. Server actions still use `getUser()` where
+  // freshest user data matters; the proxy only needs presence + identity.
+  const { data } = await supabase.auth.getClaims();
+  const user = data?.claims ?? null;
 
   const response = getResponse();
   const { pathname } = request.nextUrl;
