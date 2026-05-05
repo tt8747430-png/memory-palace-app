@@ -1,11 +1,15 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
+import * as relationsSchema from './relations';
+import * as tableSchema from './schema';
 
-type DrizzleClient = ReturnType<typeof drizzle>;
+const fullSchema = { ...tableSchema, ...relationsSchema };
 
-let client: DrizzleClient | null = null;
+type DbClient = ReturnType<typeof drizzle<typeof fullSchema>>;
 
-export function getDb(): DrizzleClient {
+let client: DbClient | null = null;
+
+export function getDb(): DbClient {
   if (client) return client;
   const url = process.env.DATABASE_URL;
   if (!url) {
@@ -13,6 +17,6 @@ export function getDb(): DrizzleClient {
       'DATABASE_URL is not set. Use the Supavisor pooled connection string (port 6543).',
     );
   }
-  client = drizzle(postgres(url));
+  client = drizzle(postgres(url), { schema: fullSchema });
   return client;
 }
