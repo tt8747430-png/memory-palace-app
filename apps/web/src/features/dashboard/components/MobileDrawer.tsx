@@ -11,7 +11,16 @@ import {
 import { Menu } from 'lucide-react';
 import { Sidebar } from './Sidebar';
 
-export function MobileDrawer() {
+interface UserProfile {
+  displayName: string;
+  avatarUrl: string | null;
+}
+
+interface MobileDrawerProps {
+  userProfile?: UserProfile | null;
+}
+
+export function MobileDrawer({ userProfile }: MobileDrawerProps) {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -29,7 +38,7 @@ export function MobileDrawer() {
         <SheetDescription className="sr-only">
           Main navigation links for Memory Palace
         </SheetDescription>
-        <Sidebar />
+        <Sidebar userProfile={userProfile} />
       </SheetContent>
     </Sheet>
   );

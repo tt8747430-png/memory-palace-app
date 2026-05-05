@@ -8,11 +8,17 @@ import { BottomNav } from './BottomNav';
 import { MobileDrawer } from './MobileDrawer';
 import { ModeToggle } from './ModeToggle';
 
-interface DashboardShellProps {
-  children: ReactNode;
+interface UserProfile {
+  displayName: string;
+  avatarUrl: string | null;
 }
 
-export function DashboardShell({ children }: DashboardShellProps) {
+interface DashboardShellProps {
+  children: ReactNode;
+  userProfile?: UserProfile | null;
+}
+
+export function DashboardShell({ children, userProfile }: DashboardShellProps) {
   return (
     <div className="flex h-dvh flex-col md:flex-row">
       {/* Desktop sidebar */}
@@ -20,12 +26,12 @@ export function DashboardShell({ children }: DashboardShellProps) {
         className="hidden md:flex md:w-64 md:flex-col md:border-r"
         aria-label="Main navigation"
       >
-        <Sidebar />
+        <Sidebar userProfile={userProfile} />
       </aside>
 
       {/* Mobile top bar */}
       <header className="flex items-center justify-between border-b px-4 py-3 md:hidden">
-        <MobileDrawer />
+        <MobileDrawer userProfile={userProfile} />
         <h1 className="text-lg font-semibold">Memory Palace</h1>
         <div className="flex items-center gap-1">
           <ModeToggle />

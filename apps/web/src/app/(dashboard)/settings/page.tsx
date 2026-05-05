@@ -26,6 +26,7 @@ export default async function SettingsPage() {
           </CardHeader>
           <CardContent>
             <ProfileForm
+              key={`${profile.displayName}-${profile.avatarUrl ?? ''}`}
               displayName={profile.displayName}
               avatarUrl={profile.avatarUrl ?? null}
               email={profile.email}

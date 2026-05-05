@@ -1,8 +1,8 @@
 'use client';
 
-import { useTransition } from 'react';
 import { Trash2 } from 'lucide-react';
 import { Button } from '@memory-palace/ui';
+import { ConfirmDeleteDialog } from '@/shared/components/ConfirmDeleteDialog';
 import { deleteRoom } from '../actions/deleteRoom';
 
 interface DeleteRoomButtonProps {
@@ -12,26 +12,24 @@ interface DeleteRoomButtonProps {
 }
 
 export function DeleteRoomButton({ id, palaceId, title }: DeleteRoomButtonProps) {
-  const [isPending, startTransition] = useTransition();
-
-  function handleDelete() {
-    if (!confirm(`Delete room "${title}"? All nodes inside will be permanently removed.`)) return;
-    startTransition(async () => {
-      await deleteRoom({ id, palaceId });
-    });
-  }
-
   return (
-    <Button
-      variant="ghost"
-      size="sm"
-      onClick={handleDelete}
-      disabled={isPending}
-      aria-label={`Delete ${title}`}
-      className="gap-1.5 text-destructive hover:bg-destructive/10 hover:text-destructive"
-    >
-      <Trash2 className="h-3.5 w-3.5" />
-      {isPending ? 'Deleting…' : 'Delete'}
-    </Button>
+    <ConfirmDeleteDialog
+      trigger={
+        <Button
+          variant="ghost"
+          size="sm"
+          aria-label={`Delete ${title}`}
+          className="gap-1.5 text-destructive hover:bg-destructive/10 hover:text-destructive"
+        >
+          <Trash2 className="h-3.5 w-3.5" />
+          Delete
+        </Button>
+      }
+      title={`Delete "${title}"?`}
+      description="All nodes inside this room will be permanently removed. This action cannot be undone."
+      onConfirm={async () => {
+        await deleteRoom({ id, palaceId });
+      }}
+    />
   );
 }

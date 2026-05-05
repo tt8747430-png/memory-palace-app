@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { Alert, Button, Input, Label } from '@memory-palace/ui';
@@ -41,11 +42,54 @@ function SubmitButton() {
   );
 }
 
+function AvatarPreview({ src, displayName }: { src: string; displayName: string }) {
+  const initials = displayName
+    .trim()
+    .split(/\s+/)
+    .map((w) => w[0]?.toUpperCase() ?? '')
+    .slice(0, 2)
+    .join('');
+
+  if (src) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={src}
+        alt={`${displayName} avatar`}
+        className="h-16 w-16 rounded-full object-cover ring-2 ring-border"
+        onError={(e) => {
+          (e.currentTarget as HTMLImageElement).style.display = 'none';
+          const fallback = e.currentTarget.nextElementSibling as HTMLElement | null;
+          if (fallback) fallback.style.display = 'flex';
+        }}
+      />
+    );
+  }
+
+  return (
+    <div
+      aria-hidden="true"
+      className="flex h-16 w-16 items-center justify-center rounded-full bg-muted text-lg font-semibold text-muted-foreground ring-2 ring-border"
+    >
+      {initials || '?'}
+    </div>
+  );
+}
+
 export function ProfileForm({ displayName, avatarUrl, email }: ProfileFormProps) {
   const [state, formAction] = useActionState(profileFormAction, initialState);
+  const [previewUrl, setPreviewUrl] = useState(avatarUrl ?? '');
 
   return (
     <form action={formAction} className="space-y-5">
+      {/* Avatar preview */}
+      <div className="flex items-center gap-4">
+        <AvatarPreview src={previewUrl} displayName={displayName} />
+        <div className="text-sm text-muted-foreground">
+          {previewUrl ? 'Your current avatar' : 'No avatar set'}
+        </div>
+      </div>
+
       {email ? (
         <div className="space-y-1.5">
           <Label>Email</Label>
@@ -71,7 +115,8 @@ export function ProfileForm({ displayName, avatarUrl, email }: ProfileFormProps)
           id="avatarUrl"
           name="avatarUrl"
           type="url"
-          defaultValue={avatarUrl ?? ''}
+          value={previewUrl}
+          onChange={(e) => setPreviewUrl(e.target.value)}
           placeholder="https://example.com/avatar.png"
         />
       </div>
