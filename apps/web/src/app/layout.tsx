@@ -3,8 +3,20 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/shared/components/ThemeProvider';
 import './globals.css';
 
-const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
-const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
+const geistSans = Geist({
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
+  display: 'swap',
+});
+// Mono is exposed for future <code>/<pre> usage; it is never rendered on the
+// initial paint, so disabling preload silences the "preloaded but not used"
+// console warning and saves the round-trip on the critical path.
+const geistMono = Geist_Mono({
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
+  display: 'swap',
+  preload: false,
+});
 
 export const metadata: Metadata = {
   title: 'Memory Palace',
