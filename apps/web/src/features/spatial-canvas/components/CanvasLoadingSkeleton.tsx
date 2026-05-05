@@ -12,11 +12,11 @@ export function CanvasLoadingSkeleton() {
       />
 
       {/* Ghost node cards at plausible canvas positions */}
-      <Skeleton className="absolute left-16 top-12 h-14 w-40 rounded-lg" />
-      <Skeleton className="absolute left-64 top-32 h-16 w-52 rounded-lg" />
-      <Skeleton className="absolute left-48 top-56 h-12 w-36 rounded-lg" />
-      <Skeleton className="absolute left-[420px] top-16 h-14 w-44 rounded-lg" />
-      <Skeleton className="absolute left-[500px] top-52 h-16 w-40 rounded-lg" />
+      <Skeleton className="absolute left-[8%] top-[8%] h-14 w-40 rounded-lg" />
+      <Skeleton className="absolute left-[30%] top-[20%] h-16 w-52 rounded-lg" />
+      <Skeleton className="absolute left-[15%] top-[45%] h-12 w-36 rounded-lg" />
+      <Skeleton className="absolute left-[55%] top-[10%] hidden h-14 w-44 rounded-lg sm:block" />
+      <Skeleton className="absolute left-[60%] top-[40%] hidden h-16 w-40 rounded-lg sm:block" />
     </div>
   );
 }

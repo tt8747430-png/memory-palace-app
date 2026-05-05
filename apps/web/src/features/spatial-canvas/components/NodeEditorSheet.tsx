@@ -111,14 +111,17 @@ function NodeForm({ node, roomId, onClose }: NodeFormProps) {
     if (Object.keys(patch).length > 0) patchNode.mutate({ id: node.id, ...patch });
   }, DEBOUNCE_MS);
 
+  // Map from form key → server patch key, with a transform for null semantics.
+  const FIELD_TO_PATCH: Record<keyof EditorState, (v: string) => Partial<NodePatch>> = {
+    title: (v) => ({ title: v }),
+    content: (v) => ({ content: v === '' ? null : v }),
+    nodeType: (v) => ({ nodeType: v as NodeType }),
+    color: (v) => ({ color: v === '' ? null : v }),
+  };
+
   const onChange = <K extends keyof EditorState>(key: K, value: EditorState[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
-
-    // Translate form fields → server patch (empty strings become null).
-    if (key === 'title') pendingPatch.current.title = String(value);
-    if (key === 'content') pendingPatch.current.content = value === '' ? null : String(value);
-    if (key === 'nodeType') pendingPatch.current.nodeType = value as NodeType;
-    if (key === 'color') pendingPatch.current.color = value === '' ? null : String(value);
+    Object.assign(pendingPatch.current, FIELD_TO_PATCH[key](String(value)));
     flush();
   };
 

@@ -47,11 +47,10 @@ export function ImportDialog() {
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const jsonContent = event.target?.result as string;
-      startTransition(async () => {
-        setState({ status: 'idle' });
+    startTransition(async () => {
+      setState({ status: 'idle' });
+      try {
+        const jsonContent = await file.text();
         const result = await importPalaceData({ jsonContent });
         if (!result.success) {
           setState({ status: 'error', message: result.error.message });
@@ -59,12 +58,10 @@ export function ImportDialog() {
           setState({ status: 'success', stats: result.data });
           if (fileInputRef.current) fileInputRef.current.value = '';
         }
-      });
-    };
-    reader.onerror = () => {
-      setState({ status: 'error', message: 'Failed to read the file.' });
-    };
-    reader.readAsText(file);
+      } catch {
+        setState({ status: 'error', message: 'Failed to read the file.' });
+      }
+    });
   }
 
   return (

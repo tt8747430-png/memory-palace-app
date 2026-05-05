@@ -1,61 +1,16 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useTransition } from 'react';
 import Link from 'next/link';
 import { Settings, LogOut, ChevronsUpDown } from 'lucide-react';
 import { Popover, PopoverTrigger, PopoverContent, Separator, cn } from '@memory-palace/ui';
 import { signOut } from '@/shared/lib/signOut';
+import { Avatar } from '@/shared/components/Avatar';
 
 interface ProfileMenuProps {
   displayName: string;
   email?: string | null;
   avatarUrl: string | null;
-}
-
-function Avatar({
-  displayName,
-  avatarUrl,
-  size = 'md',
-}: {
-  displayName: string;
-  avatarUrl: string | null;
-  size?: 'sm' | 'md';
-}) {
-  const [imgError, setImgError] = useState(false);
-
-  const initials = displayName
-    .trim()
-    .split(/\s+/)
-    .map((w) => w[0]?.toUpperCase() ?? '')
-    .slice(0, 2)
-    .join('');
-
-  const sizeClass = size === 'sm' ? 'h-7 w-7 text-[0.625rem]' : 'h-9 w-9 text-xs';
-
-  if (avatarUrl && !imgError) {
-    return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={avatarUrl}
-        alt=""
-        aria-hidden="true"
-        className={cn('shrink-0 rounded-full object-cover ring-1 ring-border', sizeClass)}
-        onError={() => setImgError(true)}
-      />
-    );
-  }
-
-  return (
-    <div
-      aria-hidden="true"
-      className={cn(
-        'flex shrink-0 items-center justify-center rounded-full bg-muted font-semibold text-muted-foreground ring-1 ring-border',
-        sizeClass,
-      )}
-    >
-      {initials || '?'}
-    </div>
-  );
 }
 
 function MenuRow({

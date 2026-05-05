@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronRight, DoorOpen } from 'lucide-react';
-import { getPalaceById, CreatePalaceDialog } from '@/features/palaces';
+import { getPalaceById } from '@/features/palaces';
 import { getRooms, RoomCard, CreateRoomDialog } from '@/features/rooms';
 import { EmptyState } from '@/shared/components/EmptyState';
 import { CardSkeleton } from '@/shared/components/CardSkeleton';
@@ -58,7 +58,7 @@ async function RoomGrid({ palaceId }: { palaceId: string }) {
             <p className="mt-1 text-sm text-muted-foreground">{palace.description}</p>
           ) : null}
         </div>
-        <CreatePalaceDialog />
+        <CreateRoomDialog palaceId={palaceId} nextPosition={nextPosition} />
       </div>
 
       {/* Rooms */}

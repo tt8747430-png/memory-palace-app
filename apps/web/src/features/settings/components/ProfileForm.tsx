@@ -3,6 +3,7 @@
 import { useState, useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { Alert, Button, Input, Label } from '@memory-palace/ui';
+import { Avatar } from '@/shared/components/Avatar';
 import { updateProfile } from '../actions/updateProfile';
 
 interface ProfileFormProps {
@@ -41,38 +42,6 @@ function SubmitButton() {
   );
 }
 
-function AvatarPreview({ src, displayName }: { src: string; displayName: string }) {
-  const [imgError, setImgError] = useState(false);
-
-  const initials = displayName
-    .trim()
-    .split(/\s+/)
-    .map((w) => w[0]?.toUpperCase() ?? '')
-    .slice(0, 2)
-    .join('');
-
-  if (src && !imgError) {
-    return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={src}
-        alt={`${displayName} avatar`}
-        className="h-16 w-16 rounded-full object-cover ring-2 ring-border"
-        onError={() => setImgError(true)}
-      />
-    );
-  }
-
-  return (
-    <div
-      aria-hidden="true"
-      className="flex h-16 w-16 items-center justify-center rounded-full bg-muted text-lg font-semibold text-muted-foreground ring-2 ring-border"
-    >
-      {initials || '?'}
-    </div>
-  );
-}
-
 export function ProfileForm({ displayName, avatarUrl, email }: ProfileFormProps) {
   const [state, formAction] = useActionState(profileFormAction, initialState);
   const [previewUrl, setPreviewUrl] = useState(avatarUrl ?? '');
@@ -81,7 +50,12 @@ export function ProfileForm({ displayName, avatarUrl, email }: ProfileFormProps)
     <form action={formAction} className="space-y-6">
       {/* Avatar + email read-only row */}
       <div className="flex items-center gap-4 rounded-lg border bg-muted/30 p-4">
-        <AvatarPreview src={previewUrl} displayName={displayName} />
+        <Avatar
+          displayName={displayName}
+          avatarUrl={previewUrl || null}
+          size="lg"
+          className="ring-2 ring-border"
+        />
         <div className="min-w-0 space-y-0.5">
           <p className="truncate text-sm font-medium leading-none">{displayName || '—'}</p>
           {email ? <p className="truncate text-xs text-muted-foreground">{email}</p> : null}

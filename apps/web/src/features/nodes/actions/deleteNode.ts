@@ -1,7 +1,6 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
-import { getDb, nodes, rooms, and, eq, isNull } from '@memory-palace/db';
+import { getDb, nodes, and, eq, isNull } from '@memory-palace/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
 import { deleteNodeSchema } from '../schemas/node';
 
@@ -26,14 +25,9 @@ export const deleteNode = defineAction({
       .returning({ id: nodes.id });
     if (!deleted) throw new ActionError('NOT_FOUND', 'Node not found.');
 
-    const [room] = await getDb()
-      .select({ palaceId: rooms.palaceId })
-      .from(rooms)
-      .where(eq(rooms.id, roomId))
-      .limit(1);
-    if (room) revalidatePath(`/palaces/${room.palaceId}/rooms/${roomId}`);
-    revalidatePath('/');
-
+    // No revalidatePath — the canvas owns its state through TanStack Query's
+    // optimistic cache + invalidateQueries, consistent with updateNode and
+    // updateNodePosition.
     return { id: deleted.id };
   },
 });

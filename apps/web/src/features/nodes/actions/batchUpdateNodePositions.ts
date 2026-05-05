@@ -24,31 +24,37 @@ export const batchUpdateNodePositions = defineAction({
         sql`(${id}::uuid, ${positionX}::float8, ${positionY}::float8)`,
     );
 
-    const updated = await getDb()
-      .update(nodes)
-      .set({
-        positionX: sql`v.px`,
-        positionY: sql`v.py`,
-      })
-      .from(sql`(VALUES ${sql.join(rows, sql`, `)}) AS v(id, px, py)`)
-      .where(
-        and(
-          eq(nodes.id, sql`v.id`),
-          eq(nodes.roomId, roomId),
-          eq(nodes.userId, user.id),
-          isNull(nodes.deletedAt),
-        ),
-      )
-      .returning({ id: nodes.id });
+    const db = getDb();
 
-    // Roll back if any node was not found or did not belong to the caller.
-    if (updated.length !== updates.length) {
-      throw new ActionError(
-        'NOT_FOUND',
-        `Expected to update ${updates.length} nodes but matched ${updated.length}.`,
-      );
-    }
+    const { updatedCount } = await db.transaction(async (tx) => {
+      const updated = await tx
+        .update(nodes)
+        .set({
+          positionX: sql`v.px`,
+          positionY: sql`v.py`,
+        })
+        .from(sql`(VALUES ${sql.join(rows, sql`, `)}) AS v(id, px, py)`)
+        .where(
+          and(
+            eq(nodes.id, sql`v.id`),
+            eq(nodes.roomId, roomId),
+            eq(nodes.userId, user.id),
+            isNull(nodes.deletedAt),
+          ),
+        )
+        .returning({ id: nodes.id });
 
-    return { updatedCount: updated.length };
+      // If any node was not found or not owned, roll back the entire batch.
+      if (updated.length !== updates.length) {
+        throw new ActionError(
+          'NOT_FOUND',
+          `Expected to update ${updates.length} nodes but matched ${updated.length}.`,
+        );
+      }
+
+      return { updatedCount: updated.length };
+    });
+
+    return { updatedCount };
   },
 });

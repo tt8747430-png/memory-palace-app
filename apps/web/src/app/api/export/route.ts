@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createSupabaseFromCookies } from '@/shared/lib/supabase';
+import { getCurrentUser } from '@/shared/lib/supabase';
 import { getDb, palaces, rooms, nodes, eq, isNull, and, asc } from '@memory-palace/db';
 import type {
   ExportDataV1,
@@ -9,10 +9,7 @@ import type {
 
 export async function GET() {
   // ── Auth ──────────────────────────────────────────────────────────────────
-  const supabase = await createSupabaseFromCookies();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
 
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
