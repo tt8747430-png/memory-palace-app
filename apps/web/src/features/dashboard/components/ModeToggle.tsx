@@ -18,13 +18,12 @@ type ThemeKey = keyof typeof NEXT_THEME;
 export function ModeToggle() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    // Defer to a post-render tick so the React Compiler's
-    // set-state-in-effect rule sees an async transition rather than
-    // a synchronous one. next-themes resolves the active theme on
-    // the client only, so we must gate the icon on this flag.
-    queueMicrotask(() => setMounted(true));
-  }, []);
+  // Canonical hydration gate from next-themes: theme is only known on the
+  // client, so the first render must match SSR exactly. The set-state-in-effect
+  // lint rule does not apply here — there is no external system to subscribe
+  // to, and the state flips exactly once after hydration completes.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => setMounted(true), []);
 
   if (!mounted) {
     return (
