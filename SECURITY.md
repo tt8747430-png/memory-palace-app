@@ -238,7 +238,7 @@ In addition to server-side validation, configure the Supabase Storage bucket wit
 
 ### ⚠️ Critical Security Rule
 
-The `SUPABASE_SERVICE_ROLE_KEY` bypasses **ALL** Row Level Security (RLS) policies. Any query made with this key can read, write, or delete any row in any table, regardless of the RLS policies in place.
+The `SUPABASE_SECRET_KEY` bypasses **ALL** Row Level Security (RLS) policies. Any query made with this key can read, write, or delete any row in any table, regardless of the RLS policies in place.
 
 ### Where It MUST NOT Be Used
 
@@ -257,16 +257,16 @@ The `SUPABASE_SERVICE_ROLE_KEY` bypasses **ALL** Row Level Security (RLS) polici
 
 | Location                            | Key to Use                               | Reason                                                  |
 | ----------------------------------- | ---------------------------------------- | ------------------------------------------------------- |
-| Client-side Supabase init           | `NEXT_PUBLIC_SUPABASE_ANON_KEY`          | Public key, RLS enforced                                |
-| Server-side Supabase (SSR, cookies) | `NEXT_PUBLIC_SUPABASE_ANON_KEY`          | RLS enforced, user context preserved                    |
+| Client-side Supabase init           | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`   | Public key, RLS enforced                                |
+| Server-side Supabase (SSR, cookies) | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`   | RLS enforced, user context preserved                    |
 | Server Actions (via Drizzle)        | `DATABASE_URL` (pooled, no Supabase key) | Drizzle + RLS, no service role needed                   |
-| `migrate.yml` workflow              | `SUPABASE_SERVICE_ROLE_KEY`              | Migration runner needs unrestricted access              |
-| Seed scripts (local dev only)       | `SUPABASE_SERVICE_ROLE_KEY`              | Only on local database, never production                |
-| Admin maintenance scripts           | `SUPABASE_SERVICE_ROLE_KEY`              | Restricted to GitHub Actions secrets, never in app code |
+| `migrate.yml` workflow              | `SUPABASE_SECRET_KEY`                    | Migration runner needs unrestricted access              |
+| Seed scripts (local dev only)       | `SUPABASE_SECRET_KEY`                    | Only on local database, never production                |
+| Admin maintenance scripts           | `SUPABASE_SECRET_KEY`                    | Restricted to GitHub Actions secrets, never in app code |
 
 ### Environment Variable Security
 
-Store `SUPABASE_SERVICE_ROLE_KEY` **only** in:
+Store `SUPABASE_SECRET_KEY` **only** in:
 
 - GitHub Actions Secrets (for `migrate.yml` and seed workflows)
 - Local `.env.local` (never committed)
@@ -321,33 +321,27 @@ pnpm audit --audit-level=high  # fail only on high/critical
 
 ## 7. Rate Limiting Layers
 
-The application uses a **defense-in-depth** rate limiting strategy with three independent layers. An attacker must defeat all three to abuse the system.
+The application uses a **defense-in-depth** rate limiting strategy. Currently Layer 2 is implemented; Layers 1 and 3 are configured by the infrastructure but have no custom application logic yet.
 
-### Layer 1: Vercel Edge Middleware
+### Layer 1: Vercel Edge — auth redirect only (rate limiting planned)
 
-**Purpose:** Block obvious bots and abusive patterns before they reach any serverless function. This prevents unnecessary cold starts and database connections.
+**Current state:** `src/proxy.ts` runs at the Vercel Edge and redirects unauthenticated requests to the login page. Per-IP request rate limiting at the edge (Upstash from middleware) is **not yet implemented**.
 
-**Implementation:** Next.js `middleware.ts` runs at the Vercel Edge Network — before any Server Action or page is invoked.
+### Layer 2: Upstash Redis in Server Actions ✅ Implemented
 
-- Block requests that lack expected headers (e.g., no `User-Agent`)
-- Enforce per-IP request rate limits using Upstash Redis from the edge
-- Redirect unauthenticated requests to the login page before they can call Server Actions
+**Purpose:** Per-user rate limiting inside every Server Action before any database operation.
 
-### Layer 2: Upstash Redis in Server Actions
+**Implementation:** `apps/web/src/shared/lib/ratelimit.ts` — `checkRateLimit(userId, 'write' | 'search')` — uses Upstash sliding window.
 
-**Purpose:** Per-user rate limiting inside every Server Action. Even if a request passes Edge Middleware, it hits a per-user limit before any database operation.
-
-**Implementation:** The `checkRateLimit()` function (see `ARCHITECTURE.md` §5.F) enforces a sliding window of 10 requests per 5 seconds per user ID.
-
+- `write` tier: 10 requests / 5 seconds per user
+- `search` tier: 20 requests / 10 seconds per user
 - Keyed by authenticated user ID (not IP — accounts for shared IPs like corporate NAT)
-- Checked **before** Zod validation and **before** any Drizzle query
-- Returns a `429 Too Many Requests` response with a `Retry-After` header
+- No-op without `UPSTASH_REDIS_REST_URL`/`TOKEN` env vars (safe for local dev)
+- Returns `{ success: false, error: { code: 'RATE_LIMITED', message, retryAfter } }` when exceeded
 
 ### Layer 3: Supabase Connection Pooling Limits
 
-**Purpose:** Database-level protection. Even if the upper layers are bypassed, Supabase Supavisor limits the total number of concurrent database connections.
-
-**Implementation:** Supavisor (Supabase's connection pooler) enforces connection pool size limits at the database tier.
+**Purpose:** Database-level protection. Supabase Supavisor limits total concurrent database connections regardless of application logic.
 
 - Configure pool size in Supabase project settings
 - Monitor pool utilization in the Supabase dashboard
@@ -355,8 +349,8 @@ The application uses a **defense-in-depth** rate limiting strategy with three in
 
 ### Summary
 
-| Layer   | Tool                             | Protection Type                       | Scope                  |
-| ------- | -------------------------------- | ------------------------------------- | ---------------------- |
-| Layer 1 | Vercel Edge Middleware + Upstash | Bot blocking, IP-level throttling     | Per IP / per route     |
-| Layer 2 | Upstash Redis sliding window     | Application-level throttling          | Per authenticated user |
-| Layer 3 | Supabase Supavisor               | Connection pool exhaustion prevention | Global database tier   |
+| Layer   | Tool                           | Status            | Scope                  |
+| ------- | ------------------------------ | ----------------- | ---------------------- |
+| Layer 1 | Vercel Edge / Upstash          | ⬜ Planned        | Per IP / per route     |
+| Layer 2 | Upstash Redis sliding window   | ✅ Implemented    | Per authenticated user |
+| Layer 3 | Supabase Supavisor pool limits | ✅ Infrastructure | Global database tier   |

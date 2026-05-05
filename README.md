@@ -16,7 +16,7 @@ A spatial, interactive learning platform where users create virtual "palaces" wi
 | [docs/archive/](./docs/archive)      | Pre-build aspirational designs — reference only, not authoritative     |
 | [docs/adr/](./docs/adr)              | Per-phase architecture decision records — added when phases begin      |
 
-## Implementation status (2026-05-05)
+## Implementation status
 
 | Phase                                                                         | Status         |
 | ----------------------------------------------------------------------------- | -------------- |
@@ -25,8 +25,10 @@ A spatial, interactive learning platform where users create virtual "palaces" wi
 | Cleanup & consolidation pass                                                  | ✅ Complete    |
 | 2B — Theme system (dark/light/system toggle, next-themes)                     | ✅ Complete    |
 | 2C — Base components (Input, Alert, Skeleton, Sheet, Label, Card, EmptyState) | ✅ Complete    |
-| 3 — Data layer & security (Drizzle schema, RLS, server actions)               | ⬜ Not started |
-| 4+ — Subsequent phases                                                        | ⬜ Not started |
+| 3A — DB schema (7-table Drizzle schema, migrations, GIN FTS index)            | ✅ Complete    |
+| 3B — RLS + server actions (palace CRUD, per-table RLS, auth trigger)          | ✅ Complete    |
+| 3C — Rate limiting, FTS search, cursor pagination (Upstash, nodes feature)    | ✅ Complete    |
+| 4+ — Subsequent phases (canvas, CRDT, etc.)                                   | ⬜ Not started |
 
 ## Quick start
 
@@ -35,7 +37,7 @@ pnpm install
 pnpm turbo dev        # http://localhost:3000
 ```
 
-Requires `apps/web/.env.local` with `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (the new RLS-gated browser-safe key — `sb_publishable_...`). See `.env.example`. The legacy `NEXT_PUBLIC_SUPABASE_ANON_KEY` is still accepted with a deprecation warning. Env vars are validated by `apps/web/src/shared/lib/env.ts` on boot — missing or malformed values fail fast with a clear message.
+Requires `apps/web/.env.local` with `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (the RLS-gated browser-safe key — `sb_publishable_...`). `DATABASE_URL` (pooled Supavisor, port 6543) is required for server actions. `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` are optional — rate limiting is a no-op without them (safe for local dev). See `.env.example`. Env vars are validated by `apps/web/src/shared/lib/env.ts` on boot — missing or malformed values fail fast with a clear message.
 
 ## License
 

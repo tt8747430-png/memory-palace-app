@@ -259,20 +259,19 @@ git push origin v0.1.0
 
 ### Secret Table
 
-| Secret                          | Description                                              | Used In                     | Stored In                               |
-| ------------------------------- | -------------------------------------------------------- | --------------------------- | --------------------------------------- |
-| `DATABASE_URL`                  | Pooled Supabase connection string (Supavisor, port 6543) | Server Actions, Drizzle     | GitHub Secrets (production), Vercel Env |
-| `TEST_DATABASE_URL`             | Isolated test database                                   | `ci.yml` E2E tests          | GitHub Secrets                          |
-| `NEXT_PUBLIC_SUPABASE_URL`      | Supabase project URL (public)                            | Client-side Supabase init   | GitHub Secrets, Vercel Env              |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon/public key                                 | Client-side Supabase init   | GitHub Secrets, Vercel Env              |
-| `SUPABASE_SERVICE_ROLE_KEY`     | Supabase admin key (server only)                         | Migration scripts           | GitHub Secrets (production only)        |
-| `UPSTASH_REDIS_REST_URL`        | Upstash Redis endpoint                                   | Rate limiting               | GitHub Secrets, Vercel Env              |
-| `UPSTASH_REDIS_REST_TOKEN`      | Upstash Redis auth token                                 | Rate limiting               | GitHub Secrets, Vercel Env              |
-| `VERCEL_TOKEN`                  | Vercel API token for deployments                         | `deploy.yml`                | GitHub Secrets                          |
-| `VERCEL_ORG_ID`                 | Vercel team/account identifier for CLI project linking   | `deploy.yml`                | GitHub Secrets                          |
-| `VERCEL_PROJECT_ID`             | Vercel project identifier for CLI project linking        | `deploy.yml`                | GitHub Secrets                          |
-| `SENTRY_DSN`                    | Sentry error reporting endpoint                          | Client + Server Sentry init | GitHub Secrets, Vercel Env              |
-| `TURBO_TOKEN`                   | Turborepo remote caching token                           | `ci.yml` build cache        | GitHub Secrets                          |
+| Secret                                 | Description                                              | Used In                   | Stored In                               |
+| -------------------------------------- | -------------------------------------------------------- | ------------------------- | --------------------------------------- |
+| `DATABASE_URL`                         | Pooled Supabase connection string (Supavisor, port 6543) | Server Actions, Drizzle   | GitHub Secrets (production), Vercel Env |
+| `TEST_DATABASE_URL`                    | Isolated test database                                   | `ci.yml` E2E tests        | GitHub Secrets                          |
+| `NEXT_PUBLIC_SUPABASE_URL`             | Supabase project URL (public)                            | Client-side Supabase init | GitHub Secrets, Vercel Env              |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase public key (RLS enforced, browser-safe)         | Client-side Supabase init | GitHub Secrets, Vercel Env              |
+| `SUPABASE_SECRET_KEY`                  | Supabase admin key (server only)                         | Migration scripts         | GitHub Secrets (production only)        |
+| `UPSTASH_REDIS_REST_URL`               | Upstash Redis endpoint                                   | Rate limiting             | GitHub Secrets, Vercel Env              |
+| `UPSTASH_REDIS_REST_TOKEN`             | Upstash Redis auth token                                 | Rate limiting             | GitHub Secrets, Vercel Env              |
+| `VERCEL_TOKEN`                         | Vercel API token for deployments                         | `deploy.yml`              | GitHub Secrets                          |
+| `VERCEL_ORG_ID`                        | Vercel team/account identifier for CLI project linking   | `deploy.yml`              | GitHub Secrets                          |
+| `VERCEL_PROJECT_ID`                    | Vercel project identifier for CLI project linking        | `deploy.yml`              | GitHub Secrets                          |
+| `TURBO_TOKEN`                          | Turborepo remote caching token                           | `ci.yml` build cache      | GitHub Secrets                          |
 
 ### Environment Tiers
 

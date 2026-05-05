@@ -24,7 +24,7 @@ Ensure the following tools are installed before starting:
 
 | Tool                  | Version | Purpose                                             |
 | --------------------- | ------- | --------------------------------------------------- |
-| Node.js               | 20+     | JavaScript runtime                                  |
+| Node.js               | 22+     | JavaScript runtime                                  |
 | pnpm                  | 9+      | Package manager (required for Turborepo workspaces) |
 | Docker                | Latest  | Local Supabase instance                             |
 | Git                   | Latest  | Version control                                     |
@@ -118,18 +118,15 @@ The `.env.example` file documents all required variables. Copy it to `.env.local
 ```env
 # Supabase (use local values from `supabase start` output)
 NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-local-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-local-service-role-key
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-local-publishable-key
+SUPABASE_SECRET_KEY=your-local-service-role-key
 
 # Database (use the POOLED connection for production, direct for local)
 DATABASE_URL=postgresql://postgres:postgres@localhost:54322/postgres
 
-# Upstash Redis (use local mock or Upstash free tier)
-UPSTASH_REDIS_REST_URL=your-upstash-url
-UPSTASH_REDIS_REST_TOKEN=your-upstash-token
-
-# Sentry (optional for local development)
-SENTRY_DSN=
+# Upstash Redis (optional — rate limiting is a no-op without these)
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
 
 # Vercel (only needed for deployment)
 VERCEL_TOKEN=
@@ -137,18 +134,17 @@ VERCEL_TOKEN=
 
 ### Variable Reference
 
-| Variable                        | Required Locally    | Description                                   |
-| ------------------------------- | ------------------- | --------------------------------------------- |
-| `NEXT_PUBLIC_SUPABASE_URL`      | ✅ Yes              | Supabase project URL (exposed to browser)     |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ Yes              | Supabase public anon key (exposed to browser) |
-| `SUPABASE_SERVICE_ROLE_KEY`     | ✅ Yes (local only) | Bypasses RLS — only for migrations and seeds  |
-| `DATABASE_URL`                  | ✅ Yes              | Pooled PostgreSQL connection string           |
-| `UPSTASH_REDIS_REST_URL`        | ✅ Yes              | Upstash Redis endpoint for rate limiting      |
-| `UPSTASH_REDIS_REST_TOKEN`      | ✅ Yes              | Upstash Redis auth token                      |
-| `SENTRY_DSN`                    | ⬜ Optional         | Sentry error reporting (skip for local dev)   |
-| `VERCEL_TOKEN`                  | ⬜ Optional         | Only needed for deployment workflows          |
+| Variable                               | Required Locally    | Description                                      |
+| -------------------------------------- | ------------------- | ------------------------------------------------ |
+| `NEXT_PUBLIC_SUPABASE_URL`             | ✅ Yes              | Supabase project URL (exposed to browser)        |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | ✅ Yes              | Supabase public key (RLS enforced, browser-safe) |
+| `SUPABASE_SECRET_KEY`                  | ✅ Yes (local only) | Bypasses RLS — only for migrations and seeds     |
+| `DATABASE_URL`                         | ✅ Yes              | Pooled PostgreSQL connection string (port 6543)  |
+| `UPSTASH_REDIS_REST_URL`               | ⬜ Optional         | Upstash endpoint — rate limiting no-ops without  |
+| `UPSTASH_REDIS_REST_TOKEN`             | ⬜ Optional         | Upstash auth token                               |
+| `VERCEL_TOKEN`                         | ⬜ Optional         | Only needed for deployment workflows             |
 
-> **Security Note:** Never commit `.env.local`. It is already in `.gitignore`. See `SECURITY.md` §5 for the full `SUPABASE_SERVICE_ROLE_KEY` usage policy.
+> **Security Note:** Never commit `.env.local`. It is already in `.gitignore`. See `SECURITY.md` §5 for the full `SUPABASE_SECRET_KEY` usage policy.
 
 ---
 
@@ -170,12 +166,12 @@ VERCEL_TOKEN=
 
 ### Database
 
-| Command                                                | Description                                     |
-| ------------------------------------------------------ | ----------------------------------------------- |
-| `pnpm --filter @memory-palace/db drizzle-kit generate` | Generate a new migration from schema changes    |
-| `pnpm --filter @memory-palace/db drizzle-kit push`     | Push schema to database (skips migration files) |
-| `pnpm --filter @memory-palace/db drizzle-kit studio`   | Open Drizzle Studio (database GUI)              |
-| `pnpm --filter @memory-palace/db seed`                 | Seed development data                           |
+| Command                                    | Description                                     |
+| ------------------------------------------ | ----------------------------------------------- |
+| `pnpm --filter @memory-palace/db generate` | Generate a new migration from schema changes    |
+| `pnpm --filter @memory-palace/db push`     | Push schema to database (skips migration files) |
+| `pnpm --filter @memory-palace/db studio`   | Open Drizzle Studio (database GUI)              |
+| `pnpm --filter @memory-palace/db seed`     | Seed development data                           |
 
 ### Testing
 
@@ -228,13 +224,13 @@ git push -u origin feat/your-feature-name
 
 Features must be placed in the correct directory under `src/features/`:
 
-| Feature                    | Directory                      |
-| -------------------------- | ------------------------------ |
-| Canvas drag, Zustand store | `src/features/spatial-canvas/` |
-| Node CRUD, Zod schemas     | `src/features/memory-nodes/`   |
-| Full-text search           | `src/features/search/`         |
-| Auth flows                 | `src/features/auth/`           |
-| Shared utilities           | `src/shared/`                  |
+| Feature                     | Directory                 |
+| --------------------------- | ------------------------- |
+| Palace CRUD, server actions | `src/features/palaces/`   |
+| Node CRUD, FTS search       | `src/features/nodes/`     |
+| Auth flows                  | `src/features/auth/`      |
+| Dashboard UI                | `src/features/dashboard/` |
+| Shared utilities            | `src/shared/`             |
 
 See `ARCHITECTURE.md` §4 for the complete directory structure.
 
@@ -312,15 +308,20 @@ Every Server Action must follow this pattern — no exceptions:
 'use server';
 
 import { z } from 'zod';
-import { db } from '@memory-palace/db';
-import { checkRateLimit } from '@/shared/lib/rate-limit';
+import { getDb } from '@memory-palace/db';
+import { checkRateLimit } from '@/shared/lib/ratelimit';
+import { auth } from '@/shared/lib/supabase';
 
 const Schema = z.object({ /* ... */ });
 
 export async function myServerAction(input: unknown) {
-  const parsed = Schema.parse(input);  // 1. Validate
-  await checkRateLimit();              // 2. Rate limit
-  return db./* query */;              // 3. Database
+  const { userId } = await auth();
+  if (!userId) return { success: false, error: { code: 'UNAUTHORIZED', message: 'Not authenticated' } };
+
+  await checkRateLimit(userId, 'write'); // 2. Rate limit
+  const parsed = Schema.parse(input);   // 1. Validate
+  const db = getDb();
+  return db./* query */;                // 3. Database
 }
 ```
 

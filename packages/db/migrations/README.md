@@ -6,21 +6,18 @@ Drizzle-kit generates SQL migration files here when you run:
 pnpm --filter @memory-palace/db generate
 ```
 
-## Manual SQL — apply after initial migration
+## Manual SQL — GIN FTS index
 
-Drizzle cannot express a GIN index on a computed `tsvector` expression. Apply this SQL
-manually after the generated migration runs (e.g., via Supabase SQL editor or a custom
-migration script):
+Drizzle cannot express a GIN index on a computed `tsvector` expression. The index below was applied manually to the Supabase production database and is **already live** — do not re-run it unless you drop and recreate the `nodes` table.
 
 ```sql
--- Full-text search index on nodes
+-- Full-text search index on nodes (already applied — reference only)
 CREATE INDEX CONCURRENTLY idx_nodes_fts
 ON nodes
 USING GIN (to_tsvector('english', coalesce(title, '') || ' ' || coalesce(content, '')));
 ```
 
-`CONCURRENTLY` avoids locking the table during index creation. Safe for both initial
-builds and future re-indexes.
+If you need to apply it to a fresh local database after `supabase db reset`, run the SQL above via the Supabase SQL editor or `supabase db execute`.
 
 ## Connection strings
 
