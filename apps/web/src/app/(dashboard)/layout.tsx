@@ -1,5 +1,6 @@
 import { DashboardShell } from '@/features/dashboard';
 import { getUserProfile } from '@/shared/lib/userProfile';
+import { QueryProvider } from '@/shared/components/QueryProvider';
 
 // Auth is enforced by src/proxy.ts (which redirects unauthenticated requests
 // before this layout renders) and by RLS at the database layer. No second
@@ -14,5 +15,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
       }
     : null;
 
-  return <DashboardShell userProfile={userProfile}>{children}</DashboardShell>;
+  return (
+    <QueryProvider>
+      <DashboardShell userProfile={userProfile}>{children}</DashboardShell>
+    </QueryProvider>
+  );
 }

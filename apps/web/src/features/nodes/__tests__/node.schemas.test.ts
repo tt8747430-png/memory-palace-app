@@ -1,5 +1,13 @@
 import { describe, it, expect } from 'vitest';
-import { getNodesByRoomSchema, searchNodesSchema } from '../schemas/node';
+import {
+  getNodesByRoomSchema,
+  searchNodesSchema,
+  createNodeSchema,
+  updateNodeSchema,
+  updateNodePositionSchema,
+  deleteNodeSchema,
+  getRoomNodesSchema,
+} from '../schemas/node';
 
 const validUuid = '123e4567-e89b-12d3-a456-426614174000';
 
@@ -107,5 +115,141 @@ describe('searchNodesSchema', () => {
   it('rejects missing query', () => {
     const result = searchNodesSchema.safeParse({});
     expect(result.success).toBe(false);
+  });
+});
+
+describe('getRoomNodesSchema', () => {
+  it('accepts a valid roomId', () => {
+    expect(getRoomNodesSchema.safeParse({ roomId: validUuid }).success).toBe(true);
+  });
+  it('rejects non-uuid roomId', () => {
+    const r = getRoomNodesSchema.safeParse({ roomId: 'bad' });
+    expect(r.success).toBe(false);
+  });
+  it('rejects missing roomId', () => {
+    expect(getRoomNodesSchema.safeParse({}).success).toBe(false);
+  });
+});
+
+describe('createNodeSchema', () => {
+  const base = { roomId: validUuid, title: 'Test node' };
+
+  it('accepts minimal input', () => {
+    const r = createNodeSchema.safeParse(base);
+    expect(r.success).toBe(true);
+  });
+
+  it('defaults nodeType to text', () => {
+    const r = createNodeSchema.safeParse(base);
+    expect(r.success && r.data.nodeType).toBe('text');
+  });
+
+  it('defaults positionX/Y to 0', () => {
+    const r = createNodeSchema.safeParse(base);
+    expect(r.success && r.data.positionX).toBe(0);
+    expect(r.success && r.data.positionY).toBe(0);
+  });
+
+  it('accepts all node types', () => {
+    for (const nodeType of ['text', 'image', 'link'] as const) {
+      expect(createNodeSchema.safeParse({ ...base, nodeType }).success).toBe(true);
+    }
+  });
+
+  it('rejects unknown node type', () => {
+    expect(createNodeSchema.safeParse({ ...base, nodeType: 'video' }).success).toBe(false);
+  });
+
+  it('rejects empty title', () => {
+    expect(createNodeSchema.safeParse({ ...base, title: '' }).success).toBe(false);
+  });
+
+  it('rejects title longer than 200 chars', () => {
+    expect(createNodeSchema.safeParse({ ...base, title: 'x'.repeat(201) }).success).toBe(false);
+  });
+
+  it('rejects non-finite positionX', () => {
+    expect(createNodeSchema.safeParse({ ...base, positionX: Infinity }).success).toBe(false);
+  });
+
+  it('rejects non-finite positionY', () => {
+    expect(createNodeSchema.safeParse({ ...base, positionY: NaN }).success).toBe(false);
+  });
+
+  it('rejects non-uuid roomId', () => {
+    expect(createNodeSchema.safeParse({ ...base, roomId: 'not-uuid' }).success).toBe(false);
+  });
+});
+
+describe('updateNodeSchema', () => {
+  const base = { id: validUuid, roomId: validUuid };
+
+  it('accepts base ids with no patch fields', () => {
+    expect(updateNodeSchema.safeParse(base).success).toBe(true);
+  });
+
+  it('accepts title update', () => {
+    expect(updateNodeSchema.safeParse({ ...base, title: 'New' }).success).toBe(true);
+  });
+
+  it('accepts null content (clear)', () => {
+    expect(updateNodeSchema.safeParse({ ...base, content: null }).success).toBe(true);
+  });
+
+  it('rejects empty title', () => {
+    expect(updateNodeSchema.safeParse({ ...base, title: '' }).success).toBe(false);
+  });
+
+  it('rejects non-uuid id', () => {
+    expect(updateNodeSchema.safeParse({ id: 'bad', roomId: validUuid }).success).toBe(false);
+  });
+});
+
+describe('updateNodePositionSchema', () => {
+  const base = { id: validUuid, roomId: validUuid, positionX: 10, positionY: 20 };
+
+  it('accepts valid coordinates', () => {
+    expect(updateNodePositionSchema.safeParse(base).success).toBe(true);
+  });
+
+  it('accepts negative coordinates', () => {
+    expect(
+      updateNodePositionSchema.safeParse({ ...base, positionX: -50, positionY: -100 }).success,
+    ).toBe(true);
+  });
+
+  it('rejects Infinity for positionX', () => {
+    expect(updateNodePositionSchema.safeParse({ ...base, positionX: Infinity }).success).toBe(
+      false,
+    );
+  });
+
+  it('rejects NaN for positionY', () => {
+    expect(updateNodePositionSchema.safeParse({ ...base, positionY: NaN }).success).toBe(false);
+  });
+
+  it('rejects missing positionX', () => {
+    expect(
+      updateNodePositionSchema.safeParse({ id: validUuid, roomId: validUuid, positionY: 20 })
+        .success,
+    ).toBe(false);
+  });
+});
+
+describe('deleteNodeSchema', () => {
+  it('accepts valid id + roomId', () => {
+    expect(deleteNodeSchema.safeParse({ id: validUuid, roomId: validUuid }).success).toBe(true);
+  });
+
+  it('rejects non-uuid id', () => {
+    expect(deleteNodeSchema.safeParse({ id: 'bad', roomId: validUuid }).success).toBe(false);
+  });
+
+  it('rejects non-uuid roomId', () => {
+    expect(deleteNodeSchema.safeParse({ id: validUuid, roomId: 'bad' }).success).toBe(false);
+  });
+
+  it('rejects missing fields', () => {
+    expect(deleteNodeSchema.safeParse({}).success).toBe(false);
   });
 });

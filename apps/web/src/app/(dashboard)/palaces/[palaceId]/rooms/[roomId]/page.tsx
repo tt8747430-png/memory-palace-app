@@ -1,8 +1,10 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ChevronRight, BrainCircuit } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { getPalaceById } from '@/features/palaces';
 import { getRoomById } from '@/features/rooms';
+import { getRoomNodes } from '@/features/nodes';
+import { RoomCanvas, CanvasErrorBoundary } from '@/features/spatial-canvas';
 
 interface RoomPageProps {
   params: Promise<{ palaceId: string; roomId: string }>;
@@ -19,18 +21,20 @@ export async function generateMetadata({ params }: RoomPageProps) {
 export default async function RoomPage({ params }: RoomPageProps) {
   const { palaceId, roomId } = await params;
 
-  const [palaceResult, roomResult] = await Promise.all([
+  const [palaceResult, roomResult, nodesResult] = await Promise.all([
     getPalaceById({ id: palaceId }),
     getRoomById({ id: roomId, palaceId }),
+    getRoomNodes({ roomId }),
   ]);
 
   if (!palaceResult.success || !roomResult.success) notFound();
 
   const palace = palaceResult.data;
   const room = roomResult.data;
+  const initialNodes = nodesResult.success ? nodesResult.data : [];
 
   return (
-    <div className="space-y-6">
+    <div className="flex h-full flex-col gap-4">
       {/* Breadcrumb */}
       <nav
         className="flex items-center gap-1 text-sm text-muted-foreground"
@@ -55,11 +59,11 @@ export default async function RoomPage({ params }: RoomPageProps) {
         </p>
       </div>
 
-      {/* Canvas placeholder — Phase 5 will replace this */}
-      <div className="flex min-h-96 flex-col items-center justify-center rounded-xl border-2 border-dashed border-muted-foreground/25 bg-muted/10">
-        <BrainCircuit className="mb-4 h-12 w-12 text-muted-foreground/40" />
-        <p className="text-sm font-medium text-muted-foreground">Spatial Canvas</p>
-        <p className="mt-1 text-xs text-muted-foreground/60">Coming in Phase 5</p>
+      {/* Spatial canvas — error boundary ensures sidebar survives a crash */}
+      <div className="min-h-[500px] flex-1 md:min-h-[600px]">
+        <CanvasErrorBoundary>
+          <RoomCanvas roomId={roomId} initialNodes={initialNodes} />
+        </CanvasErrorBoundary>
       </div>
     </div>
   );
