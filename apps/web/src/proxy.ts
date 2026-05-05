@@ -3,7 +3,7 @@ import { createSupabaseForProxy } from '@/shared/lib/supabase';
 
 // Public route segments — matched on segment boundaries, not as substrings.
 // `/login` matches `/login` and `/login/...` but NOT `/loginhacks`.
-const PUBLIC_SEGMENTS = new Set(['login', 'signup', 'about', 'callback']);
+const PUBLIC_SEGMENTS = new Set(['login', 'signup', 'about', 'callback', 'forgot-password']);
 
 function firstSegment(pathname: string): string {
   const i = pathname.indexOf('/', 1);

@@ -4,51 +4,40 @@ import Link from 'next/link';
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { Alert, Button, Input, Label } from '@memory-palace/ui';
-import { signIn } from '../actions/signIn';
+import { requestPasswordReset } from '../actions/requestPasswordReset';
 import { initialAuthFormState } from '../actions/types';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
     <Button type="submit" size="md" className="w-full" disabled={pending}>
-      {pending ? 'Signing in…' : 'Sign In'}
+      {pending ? 'Sending…' : 'Send reset link'}
     </Button>
   );
 }
 
-export function LoginForm() {
-  const [state, formAction] = useActionState(signIn, initialAuthFormState);
+export function ForgotPasswordForm() {
+  const [state, formAction] = useActionState(requestPasswordReset, initialAuthFormState);
+
+  if (state.status === 'check-email') {
+    return (
+      <Alert variant="success" role="status">
+        {state.message}
+      </Alert>
+    );
+  }
 
   return (
     <form action={formAction} className="space-y-4">
       <div className="space-y-1.5">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="forgot-email">Email</Label>
         <Input
-          id="email"
+          id="forgot-email"
           name="email"
           type="email"
           placeholder="you@example.com"
           required
           autoComplete="email"
-        />
-      </div>
-      <div className="space-y-1.5">
-        <div className="flex items-center justify-between">
-          <Label htmlFor="password">Password</Label>
-          <Link
-            href="/forgot-password"
-            className="text-sm text-muted-foreground underline-offset-4 hover:underline"
-          >
-            Forgot?
-          </Link>
-        </div>
-        <Input
-          id="password"
-          name="password"
-          type="password"
-          placeholder="••••••••"
-          required
-          autoComplete="current-password"
         />
       </div>
       {state.status === 'error' ? (
@@ -58,9 +47,9 @@ export function LoginForm() {
       ) : null}
       <SubmitButton />
       <p className="text-center text-sm text-muted-foreground">
-        No account?{' '}
-        <Link href="/signup" className="text-primary underline-offset-4 hover:underline">
-          Sign up
+        Remembered it?{' '}
+        <Link href="/login" className="text-primary underline-offset-4 hover:underline">
+          Sign in
         </Link>
       </p>
     </form>
