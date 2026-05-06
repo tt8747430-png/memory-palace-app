@@ -1,6 +1,6 @@
 'use client';
 
-import { Plus, MousePointer2, Hand } from 'lucide-react';
+import { Plus, MousePointer2, Hand, Grid2x2, Maximize } from 'lucide-react';
 import { useReactFlow } from '@xyflow/react';
 import { cn } from '@memory-palace/ui';
 import { useCanvasStore } from '../store/CanvasStoreContext';
@@ -8,34 +8,32 @@ import type { CanvasTool } from '../store/canvasStore';
 import { useRoomNodeMutations } from '../hooks/useRoomNodeMutations';
 
 const TOOLS: { id: CanvasTool; label: string; Icon: React.ElementType }[] = [
-  { id: 'pointer', label: 'Select', Icon: MousePointer2 },
-  { id: 'pan', label: 'Pan', Icon: Hand },
+  { id: 'pointer', label: 'Select (V)', Icon: MousePointer2 },
+  { id: 'pan', label: 'Pan (H)', Icon: Hand },
 ];
 
 interface CanvasToolbarProps {
   roomId: string;
 }
 
-/** Floating toolbar anchored at the bottom-centre of the canvas viewport.
- * Lets the user toggle between pointer (select/drag nodes) and pan mode,
- * and create new nodes at the viewport centre. */
+/**
+ * Floating toolbar anchored at the bottom-centre of the canvas viewport.
+ * Desktop-only (`hidden md:flex`) — replaced by `CanvasFab` on mobile.
+ */
 export function CanvasToolbar({ roomId }: CanvasToolbarProps) {
   const activeTool = useCanvasStore((s) => s.activeTool);
   const setActiveTool = useCanvasStore((s) => s.setActiveTool);
+  const snapEnabled = useCanvasStore((s) => s.snapEnabled);
+  const toggleSnap = useCanvasStore((s) => s.toggleSnap);
   const { addNode } = useRoomNodeMutations(roomId);
-  const { screenToFlowPosition } = useReactFlow();
+  const { screenToFlowPosition, fitView } = useReactFlow();
 
   const handleAddNode = () => {
-    // Place the new node at the centre of the current viewport.
-    // screenToFlowPosition converts pixel-space (screen) coordinates to
-    // the React Flow canvas coordinate system, accounting for zoom & pan.
     const container = document.querySelector('[data-testid="canvas-container"]');
     const rect = container?.getBoundingClientRect();
     const cx = rect ? rect.width / 2 : 400;
     const cy = rect ? rect.height / 2 : 300;
-
     const position = screenToFlowPosition({ x: cx + (rect?.left ?? 0), y: cy + (rect?.top ?? 0) });
-
     addNode.mutate({
       roomId,
       title: 'New Node',
@@ -49,7 +47,8 @@ export function CanvasToolbar({ roomId }: CanvasToolbarProps) {
     <div
       role="toolbar"
       aria-label="Canvas tools"
-      className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 items-center gap-1 rounded-lg border bg-card/90 p-1 shadow-md backdrop-blur-sm"
+      // Hidden on mobile — CanvasFab handles small screens
+      className="absolute bottom-4 left-1/2 z-10 hidden -translate-x-1/2 items-center gap-1 rounded-lg border bg-card/90 p-1 shadow-md backdrop-blur-sm md:flex"
     >
       {TOOLS.map(({ id, label, Icon }) => (
         <button
@@ -68,6 +67,35 @@ export function CanvasToolbar({ roomId }: CanvasToolbarProps) {
           <Icon className="h-4 w-4" aria-hidden />
         </button>
       ))}
+
+      {/* Divider */}
+      <div className="mx-0.5 h-5 w-px bg-border" />
+
+      {/* Snap-to-grid toggle — `G` key shortcut wired in RoomCanvas */}
+      <button
+        type="button"
+        aria-label={snapEnabled ? 'Snap to grid: on (G)' : 'Snap to grid: off (G)'}
+        aria-pressed={snapEnabled}
+        onClick={toggleSnap}
+        className={cn(
+          'flex h-8 w-8 items-center justify-center rounded-md transition-colors',
+          snapEnabled
+            ? 'bg-accent text-accent-foreground'
+            : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
+        )}
+      >
+        <Grid2x2 className="h-4 w-4" aria-hidden />
+      </button>
+
+      {/* Fit view */}
+      <button
+        type="button"
+        aria-label="Fit view"
+        onClick={() => fitView({ padding: 0.2, duration: 300 })}
+        className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+      >
+        <Maximize className="h-4 w-4" aria-hidden />
+      </button>
 
       {/* Divider */}
       <div className="mx-0.5 h-5 w-px bg-border" />

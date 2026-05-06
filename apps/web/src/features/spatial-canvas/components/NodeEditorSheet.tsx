@@ -19,6 +19,7 @@ import {
 import { useCanvasStore } from '../store/CanvasStoreContext';
 import { useNodesQuery } from '../hooks/useNodesQuery';
 import { useRoomNodeMutations, type NodePatch } from '../hooks/useRoomNodeMutations';
+import { useIsMobile } from '@/shared/hooks/useIsMobile';
 
 const NODE_TYPES: ReadonlyArray<{ value: NodeType; label: string }> = [
   { value: 'text', label: 'Text' },
@@ -54,6 +55,7 @@ interface EditorState {
 export function NodeEditorSheet({ roomId }: NodeEditorSheetProps) {
   const editingNodeId = useCanvasStore((s) => s.editingNodeId);
   const setEditingNodeId = useCanvasStore((s) => s.setEditingNodeId);
+  const isMobile = useIsMobile();
 
   const { data: allNodes = [] } = useNodesQuery(roomId);
   const editingNode = useMemo(
@@ -63,9 +65,15 @@ export function NodeEditorSheet({ roomId }: NodeEditorSheetProps) {
 
   const close = () => setEditingNodeId(null);
 
+  // On mobile, the sheet slides up from the bottom (h-[80dvh], rounded top
+  // corners). On desktop it slides in from the right (w-80).
+  const sheetContentClass = isMobile
+    ? 'flex h-[80dvh] flex-col rounded-t-2xl overflow-y-auto'
+    : 'flex w-full max-w-sm flex-col';
+
   return (
     <Sheet open={Boolean(editingNode)} onOpenChange={(open) => !open && close()}>
-      <SheetContent side="right" className="flex w-full max-w-sm flex-col">
+      <SheetContent side={isMobile ? 'bottom' : 'right'} className={sheetContentClass}>
         <SheetHeader>
           <SheetTitle>Edit Node</SheetTitle>
           <SheetDescription>

@@ -39,4 +39,21 @@ export { Textarea } from './components/textarea';
 export { Popover, PopoverTrigger, PopoverAnchor, PopoverContent } from './components/popover';
 export { Select } from './components/select';
 export { Separator } from './components/separator';
+export {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuCheckboxItem,
+  ContextMenuRadioItem,
+  ContextMenuLabel,
+  ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuGroup,
+  ContextMenuPortal,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+  ContextMenuRadioGroup,
+} from './components/context-menu';
 export { cn } from './lib/cn';

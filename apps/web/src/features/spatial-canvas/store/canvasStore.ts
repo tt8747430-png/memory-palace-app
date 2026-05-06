@@ -9,6 +9,11 @@ export interface CanvasState {
   setSelectedNodeIds: (ids: ReadonlySet<string>) => void;
   setActiveTool: (tool: CanvasTool) => void;
 
+  // ── Snap-to-grid ──────────────────────────────────────────────────────────
+  /** Whether snap-to-grid is enabled. Toggled by the `G` key or toolbar button. */
+  snapEnabled: boolean;
+  toggleSnap: () => void;
+
   // ── Node editing ──────────────────────────────────────────────────────────
   /** ID of the node currently open in the editor sheet, or null if none. */
   editingNodeId: string | null;
@@ -26,6 +31,9 @@ export function createCanvasStore() {
 
     setSelectedNodeIds: (ids) => set({ selectedNodeIds: ids }),
     setActiveTool: (tool) => set({ activeTool: tool }),
+
+    snapEnabled: false,
+    toggleSnap: () => set((s) => ({ snapEnabled: !s.snapEnabled })),
 
     editingNodeId: null,
     setEditingNodeId: (id) => set({ editingNodeId: id }),

@@ -76,4 +76,28 @@ describe('canvasStore', () => {
     store.getState().setEditingNodeId(null);
     expect(store.getState().editingNodeId).toBeNull();
   });
+
+  // ── snapEnabled ───────────────────────────────────────────────────────────
+
+  it('starts with snap disabled', () => {
+    expect(store.getState().snapEnabled).toBe(false);
+  });
+
+  it('toggleSnap enables snap when currently disabled', () => {
+    store.getState().toggleSnap();
+    expect(store.getState().snapEnabled).toBe(true);
+  });
+
+  it('toggleSnap disables snap when currently enabled', () => {
+    store.getState().toggleSnap();
+    store.getState().toggleSnap();
+    expect(store.getState().snapEnabled).toBe(false);
+  });
+
+  it('toggleSnap on independent stores does not cross-contaminate', () => {
+    const storeA = createCanvasStore();
+    const storeB = createCanvasStore();
+    storeA.getState().toggleSnap();
+    expect(storeB.getState().snapEnabled).toBe(false);
+  });
 });
