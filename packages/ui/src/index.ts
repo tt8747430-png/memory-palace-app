@@ -56,4 +56,14 @@ export {
   ContextMenuSubTrigger,
   ContextMenuRadioGroup,
 } from './components/context-menu';
+export {
+  Command,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandSeparator,
+  CommandShortcut,
+} from './components/command';
 export { cn } from './lib/cn';

@@ -25,9 +25,12 @@ The aspirational 11-phase plan lives at `docs/archive/ROADMAP-aspirational.md`. 
 
 - **Phase 5D — Advanced Canvas UX.** ADR: [`docs/adr/5d-advanced-canvas-ux.md`](docs/adr/5d-advanced-canvas-ux.md). Mobile-first canvas: `CanvasFab` (expandable FAB, `md:hidden`) mirrors `CanvasToolbar` (`hidden md:flex`) for small screens; `NodeEditorSheet` switches `side="bottom"` on mobile via `useIsMobile`. Desktop-first interactions: per-node `NodeToolbar` (edit/delete on select), Radix `ContextMenu` on right-click, `PaneContextMenu` on canvas right-click (add node at position), `SelectionToolbar` for multi-select batch delete. `snapToGrid` toggle via `G` key + toolbar/FAB buttons; `snapEnabled` persisted in Zustand `canvasStore`. `CanvasNodeActionsContext` injects `onEditNode`/`onDeleteNode` callbacks into custom nodes without polluting `MemoryNodeData`. `SelectionMode.Partial` for Figma-style lasso. 193 tests passing (4 new snap store tests).
 
+- **Phase 6 — Command Palette & Shortcuts.** ADR: [`docs/adr/6-command-palette.md`](docs/adr/6-command-palette.md). Universal `Cmd/Ctrl+K` command palette built on `cmdk` (chosen over unmaintained `kbar`). `Command` primitive added to `@memory-palace/ui`. `AppCommandProvider` composes `CommandPaletteProvider` + `ShortcutsOverlayProvider` into a single client wrapper used by `DashboardShell`. `useGlobalShortcuts` — prefix-key state machine handling 10+ shortcuts: `g→h/p/s` (navigate), `c→p` (create palace), `t→d` (toggle theme), `?` (shortcuts overlay), `Cmd+K` (palette). `ShortcutsOverlay` modal (desktop-only, `?` key) shows all categorized shortcuts. Mobile: `CommandPaletteTrigger` search icon in mobile header. Desktop: `CommandPaletteDesktopTrigger` pill in sidebar footer with `⌘K` hint. 18 new tests; 211 tests passing.
+
 ## Next (concrete, in order)
 
 1. **Phase 5C — Realtime Sync & Offline.** ADR required before introducing Yjs/y-indexeddb/y-supabase.
+2. **Phase 7 — Animations & Polish.** ADR required before introducing framer-motion / canvas-confetti.
 
 ## Operating rules
 

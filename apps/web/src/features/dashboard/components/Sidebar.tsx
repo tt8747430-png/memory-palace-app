@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@memory-palace/ui';
 import { SearchDialog } from '@/shared/components/SearchDialog';
+import { CommandPaletteDesktopTrigger } from '@/shared/components/CommandPaletteTrigger';
 import { navItems, isNavItemActive } from '../nav';
 import { ModeToggle } from './ModeToggle';
 import { ProfileMenu } from './ProfileMenu';
@@ -53,8 +54,9 @@ export function Sidebar({ userProfile, onSearch }: SidebarProps) {
         })}
       </nav>
 
-      {/* Footer: search + profile menu + theme toggle */}
-      <div className="border-t px-3 py-3">
+      {/* Footer: ⌘K trigger + search + profile menu + theme toggle */}
+      <div className="border-t px-3 py-3 space-y-2">
+        <CommandPaletteDesktopTrigger />
         <div className="flex items-center gap-1">
           {onSearch && <SearchDialog onSearch={onSearch} />}
           {userProfile ? (

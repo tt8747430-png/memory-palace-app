@@ -2,9 +2,10 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { DashboardShell } from '../components/DashboardShell';
 
-// Mock next/navigation (used by Sidebar, BottomNav)
+// Mock next/navigation (used by Sidebar, BottomNav, and useGlobalShortcuts via AppCommandProvider)
 vi.mock('next/navigation', () => ({
   usePathname: vi.fn(() => '/'),
+  useRouter: vi.fn(() => ({ push: vi.fn() })),
 }));
 
 // next-themes hydrates async and triggers a mount-state update inside
