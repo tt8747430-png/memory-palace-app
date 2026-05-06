@@ -69,7 +69,7 @@ export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
       <Handle
         type="target"
         position={Position.Top}
-        className="!h-2 !w-2 !border-border !bg-muted opacity-0 group-hover:opacity-100"
+        className="h-2! w-2! border-border! bg-muted! opacity-0 group-hover:opacity-100"
       />
 
       {/* Node card wrapped with ContextMenu. stopPropagation prevents the
@@ -94,18 +94,6 @@ export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
               <p className="flex-1 line-clamp-3 text-sm font-medium leading-snug text-foreground">
                 {data.title}
               </p>
-              <button
-                type="button"
-                aria-label="Edit node"
-                onClick={() => onEditNode(id)}
-                className={cn(
-                  'shrink-0 rounded p-0.5 transition-colors',
-                  'opacity-0 group-hover:opacity-100',
-                  'hover:bg-accent/50 text-muted-foreground hover:text-foreground',
-                )}
-              >
-                <Pencil className="h-3.5 w-3.5" aria-hidden />
-              </button>
             </div>
 
             {data.content && (
@@ -136,7 +124,7 @@ export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
       <Handle
         type="source"
         position={Position.Bottom}
-        className="!h-2 !w-2 !border-border !bg-muted opacity-0 group-hover:opacity-100"
+        className="h-2! w-2! border-border! bg-muted! opacity-0 group-hover:opacity-100"
       />
     </>
   );

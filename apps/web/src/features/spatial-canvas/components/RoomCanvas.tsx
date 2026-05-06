@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { type CSSProperties, useEffect, useRef, useState } from 'react';
 import {
   ReactFlow,
   Background,
@@ -53,9 +54,9 @@ function dbNodeToFlowNode(node: SelectNode): MemoryNodeType {
 // ─── Pane context menu ────────────────────────────────────────────────────────
 
 interface PaneMenu {
-  /** Screen-space coordinates for the menu's top-left anchor. */
-  screenX: number;
-  screenY: number;
+  /** Window-space coordinates — used as `position: fixed` anchor. */
+  clientX: number;
+  clientY: number;
   /** Canvas-space coordinates used to place a new node. */
   flowX: number;
   flowY: number;
@@ -63,18 +64,29 @@ interface PaneMenu {
 
 interface PaneContextMenuProps {
   menu: PaneMenu;
-  roomId: string;
+  snapEnabled: boolean;
+  onAddNode: () => void;
+  onFitView: () => void;
+  onToggleSnap: () => void;
   onClose: () => void;
 }
 
-function PaneContextMenu({ menu, roomId, onClose }: PaneContextMenuProps) {
-  const { addNode } = useRoomNodeMutations(roomId);
-  const { fitView } = useReactFlow();
-  const toggleSnap = useCanvasStore((s) => s.toggleSnap);
-  const snapEnabled = useCanvasStore((s) => s.snapEnabled);
+/**
+ * Pane-level context menu rendered via a portal so it is never clipped by
+ * `overflow: hidden` on the canvas container.
+ *
+ * Dismisses on Escape or any pointer-down outside the menu element.
+ */
+function PaneContextMenu({
+  menu,
+  snapEnabled,
+  onAddNode,
+  onFitView,
+  onToggleSnap,
+  onClose,
+}: PaneContextMenuProps) {
   const ref = useRef<HTMLDivElement>(null);
 
-  // Close on outside click or Escape.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     const onPointer = (e: PointerEvent) => {
@@ -88,58 +100,40 @@ function PaneContextMenu({ menu, roomId, onClose }: PaneContextMenuProps) {
     };
   }, [onClose]);
 
-  const handleAddHere = () => {
-    addNode.mutate({
-      roomId,
-      title: 'New Node',
-      nodeType: 'text',
-      positionX: Math.round(menu.flowX),
-      positionY: Math.round(menu.flowY),
-    });
-    onClose();
-  };
+  const itemClass =
+    'flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-left outline-none hover:bg-accent hover:text-accent-foreground';
 
-  return (
+  return createPortal(
     <div
       ref={ref}
       role="menu"
       aria-label="Canvas actions"
-      style={{ top: menu.screenY, left: menu.screenX }}
-      className="absolute z-50 min-w-[160px] overflow-hidden rounded-md border bg-popover p-1 text-sm text-popover-foreground shadow-md"
+      style={
+        {
+          '--pane-menu-x': `${menu.clientX}px`,
+          '--pane-menu-y': `${menu.clientY}px`,
+        } as CSSProperties
+      }
+      className="fixed top-(--pane-menu-y) left-(--pane-menu-x) z-50 min-w-40 overflow-hidden rounded-md border bg-popover p-1 text-sm text-popover-foreground shadow-md"
     >
-      <button
-        role="menuitem"
-        type="button"
-        onClick={handleAddHere}
-        className="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-left outline-none hover:bg-accent hover:text-accent-foreground"
-      >
+      <button role="menuitem" type="button" onClick={onAddNode} className={itemClass}>
         Add node here
       </button>
       <div className="-mx-1 my-1 h-px bg-border" />
-      <button
-        role="menuitem"
-        type="button"
-        onClick={() => {
-          fitView({ padding: 0.2, duration: 300 });
-          onClose();
-        }}
-        className="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-left outline-none hover:bg-accent hover:text-accent-foreground"
-      >
+      <button role="menuitem" type="button" onClick={onFitView} className={itemClass}>
         Fit view
       </button>
       <button
         role="menuitem"
         type="button"
-        onClick={() => {
-          toggleSnap();
-          onClose();
-        }}
+        onClick={onToggleSnap}
         className="flex w-full items-center justify-between rounded-sm px-2 py-1.5 text-left outline-none hover:bg-accent hover:text-accent-foreground"
       >
         Snap to grid
         <span className="text-xs text-muted-foreground">{snapEnabled ? 'on' : 'off'}</span>
       </button>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
@@ -151,8 +145,6 @@ interface InnerCanvasProps {
 }
 
 function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-
   const activeTool = useCanvasStore((s) => s.activeTool);
   const setSelectedNodeIds = useCanvasStore((s) => s.setSelectedNodeIds);
   const setEditingNodeId = useCanvasStore((s) => s.setEditingNodeId);
@@ -178,8 +170,8 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
     setNodes(flowNodes);
   }
 
-  const { savePosition, saveBatchPositions, removeNode } = useRoomNodeMutations(roomId);
-  const { screenToFlowPosition } = useReactFlow();
+  const { savePosition, saveBatchPositions, addNode, removeNode } = useRoomNodeMutations(roomId);
+  const { screenToFlowPosition, fitView } = useReactFlow();
 
   // Layer 2: Subscribe to Supabase Realtime for cross-device sync.
   useRealtimeNodes(roomId);
@@ -187,7 +179,6 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
   // ── Keyboard shortcut: G = toggle snap ─────────────────────────────────
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      // Skip when the user is typing in an input field.
       const tag = (e.target as HTMLElement).tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
       if (e.key === 'g' || e.key === 'G') toggleSnap();
@@ -206,7 +197,9 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
     });
   };
 
-  // Multi-select drag — atomic batch save.
+  // Selected-node drag — fires when dragging one or more selected nodes.
+  // For a single selected node, delegates to savePosition; for multiple, uses
+  // the atomic batch mutation to persist all positions in one transaction.
   const onSelectionDragStop = (_event: React.MouseEvent, dragged: MemoryNodeType[]) => {
     if (dragged.length === 0) return;
     const updates: PositionUpdate[] = dragged.map((n) => ({
@@ -230,13 +223,25 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
 
   const onPaneContextMenu = (event: MouseEvent | React.MouseEvent) => {
     event.preventDefault();
-    const rect = containerRef.current?.getBoundingClientRect();
-    const clientX = event.clientX;
-    const clientY = event.clientY;
-    const offsetX = rect ? clientX - rect.left : clientX;
-    const offsetY = rect ? clientY - rect.top : clientY;
-    const flowPos = screenToFlowPosition({ x: clientX, y: clientY });
-    setPaneMenu({ screenX: offsetX, screenY: offsetY, flowX: flowPos.x, flowY: flowPos.y });
+    const flowPos = screenToFlowPosition({ x: event.clientX, y: event.clientY });
+    setPaneMenu({
+      clientX: event.clientX,
+      clientY: event.clientY,
+      flowX: flowPos.x,
+      flowY: flowPos.y,
+    });
+  };
+
+  const handlePaneAddNode = () => {
+    if (!paneMenu) return;
+    addNode.mutate({
+      roomId,
+      title: 'New Node',
+      nodeType: 'text',
+      positionX: Math.round(paneMenu.flowX),
+      positionY: Math.round(paneMenu.flowY),
+    });
+    setPaneMenu(null);
   };
 
   // ── Node actions (injected into MemoryNode via context) ───────────────────
@@ -252,12 +257,7 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
 
   return (
     <CanvasNodeActionsProvider value={nodeActions}>
-      <div
-        ref={containerRef}
-        className="relative h-full w-full"
-        data-testid="canvas-container"
-        onPointerDown={() => paneMenu && setPaneMenu(null)}
-      >
+      <div className="relative h-full w-full" data-testid="canvas-container">
         <ReactFlow<MemoryNodeType>
           nodes={nodes}
           edges={edges}
@@ -307,7 +307,20 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
         <OfflineBanner />
 
         {paneMenu && (
-          <PaneContextMenu menu={paneMenu} roomId={roomId} onClose={() => setPaneMenu(null)} />
+          <PaneContextMenu
+            menu={paneMenu}
+            snapEnabled={snapEnabled}
+            onAddNode={handlePaneAddNode}
+            onFitView={() => {
+              fitView({ padding: 0.2, duration: 300 });
+              setPaneMenu(null);
+            }}
+            onToggleSnap={() => {
+              toggleSnap();
+              setPaneMenu(null);
+            }}
+            onClose={() => setPaneMenu(null)}
+          />
         )}
       </div>
     </CanvasNodeActionsProvider>

@@ -37,7 +37,7 @@ export function SelectionToolbar({ roomId }: SelectionToolbarProps) {
     <div
       role="toolbar"
       aria-label="Selection actions"
-      className="absolute left-1/2 top-3 z-10 flex -translate-x-1/2 items-center gap-2 rounded-lg border bg-card/90 px-3 py-1.5 shadow-md backdrop-blur-sm"
+      className="absolute left-1/2 top-14 z-10 flex -translate-x-1/2 items-center gap-2 rounded-lg border bg-card/90 px-3 py-1.5 shadow-md backdrop-blur-sm"
     >
       <span className="text-xs font-medium text-muted-foreground">
         {selectedNodeIds.size} selected

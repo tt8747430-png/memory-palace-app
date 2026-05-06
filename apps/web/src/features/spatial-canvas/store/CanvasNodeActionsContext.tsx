@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext } from 'react';
+import { createContext, useContext, type ReactNode } from 'react';
 
 export interface CanvasNodeActions {
   /** Open the node editor sheet for the given node ID. */
@@ -11,7 +11,16 @@ export interface CanvasNodeActions {
 
 const CanvasNodeActionsContext = createContext<CanvasNodeActions | null>(null);
 
-export const CanvasNodeActionsProvider = CanvasNodeActionsContext.Provider;
+interface CanvasNodeActionsProviderProps {
+  value: CanvasNodeActions;
+  children: ReactNode;
+}
+
+export function CanvasNodeActionsProvider({ value, children }: CanvasNodeActionsProviderProps) {
+  return (
+    <CanvasNodeActionsContext.Provider value={value}>{children}</CanvasNodeActionsContext.Provider>
+  );
+}
 
 /** Consume the canvas node actions injected by InnerCanvas.
  * Must be called inside <CanvasNodeActionsProvider>. */

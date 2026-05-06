@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { type CSSProperties, useState } from 'react';
 import { Plus, X, MousePointer2, Hand, Grid2x2, Maximize } from 'lucide-react';
 import { useReactFlow } from '@xyflow/react';
 import { cn } from '@memory-palace/ui';
@@ -61,7 +61,7 @@ export function CanvasFab({ roomId }: CanvasFabProps) {
         setActiveTool(activeTool === 'pointer' ? 'pan' : 'pointer');
         setOpen(false);
       },
-      active: false,
+      active: activeTool === 'pan',
     },
     {
       label: snapEnabled ? 'Snap: on' : 'Snap: off',
@@ -83,8 +83,12 @@ export function CanvasFab({ roomId }: CanvasFabProps) {
   ];
 
   return (
-    // md:hidden — CanvasToolbar handles larger screens
-    <div className="absolute bottom-4 right-4 z-20 flex flex-col items-end gap-2 md:hidden">
+    // md:hidden — CanvasToolbar handles larger screens.
+    // --fab-bottom uses env(safe-area-inset-bottom) so the FAB clears iOS/Android system chrome.
+    <div
+      className="absolute right-4 z-20 flex flex-col items-end gap-2 bottom-(--fab-bottom) md:hidden"
+      style={{ '--fab-bottom': 'calc(env(safe-area-inset-bottom, 0px) + 1rem)' } as CSSProperties}
+    >
       {/* Expanded action items */}
       {open && (
         <div role="menu" aria-label="Canvas actions" className="flex flex-col items-end gap-2">
@@ -113,7 +117,8 @@ export function CanvasFab({ roomId }: CanvasFabProps) {
       <button
         type="button"
         aria-label={open ? 'Close canvas actions' : 'Open canvas actions'}
-        aria-expanded={open}
+        aria-haspopup="menu"
+        aria-expanded={open ? 'true' : 'false'}
         onClick={() => setOpen((prev) => !prev)}
         className={cn(
           'flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-all duration-200',
