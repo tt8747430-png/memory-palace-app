@@ -1,4 +1,5 @@
 import { DashboardShell } from '@/features/dashboard';
+import { searchNodes } from '@/features/nodes';
 import { getUserProfile } from '@/shared/lib/userProfile';
 import { QueryProvider } from '@/shared/components/QueryProvider';
 
@@ -17,7 +18,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <QueryProvider>
-      <DashboardShell userProfile={userProfile}>{children}</DashboardShell>
+      <DashboardShell userProfile={userProfile} onSearch={searchNodes}>
+        {children}
+      </DashboardShell>
     </QueryProvider>
   );
 }

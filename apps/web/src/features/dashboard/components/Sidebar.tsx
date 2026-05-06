@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@memory-palace/ui';
+import { SearchDialog } from '@/shared/components/SearchDialog';
 import { navItems, isNavItemActive } from '../nav';
 import { ModeToggle } from './ModeToggle';
 import { ProfileMenu } from './ProfileMenu';
@@ -15,9 +16,13 @@ interface UserProfile {
 
 interface SidebarProps {
   userProfile?: UserProfile | null;
+  /** Injected search action — passed from the app layer to avoid boundary violations. */
+  onSearch?: SearchDialogProps['onSearch'];
 }
 
-export function Sidebar({ userProfile }: SidebarProps) {
+type SearchDialogProps = React.ComponentProps<typeof SearchDialog>;
+
+export function Sidebar({ userProfile, onSearch }: SidebarProps) {
   const pathname = usePathname();
 
   return (
@@ -48,9 +53,10 @@ export function Sidebar({ userProfile }: SidebarProps) {
         })}
       </nav>
 
-      {/* Footer: profile menu + theme toggle */}
+      {/* Footer: search + profile menu + theme toggle */}
       <div className="border-t px-3 py-3">
         <div className="flex items-center gap-1">
+          {onSearch && <SearchDialog onSearch={onSearch} />}
           {userProfile ? (
             <ProfileMenu
               displayName={userProfile.displayName}

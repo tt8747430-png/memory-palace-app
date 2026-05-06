@@ -6,7 +6,10 @@ import {
   updateNodePosition,
   batchUpdateNodePositions,
   updateNode,
+  createNode,
+  deleteNode,
   type UpdateNodeInput,
+  type CreateNodeInput,
 } from '@/features/nodes';
 import { roomNodesQueryKey } from './useNodesQuery';
 
@@ -109,5 +112,54 @@ export function useRoomNodeMutations(roomId: string) {
     onSettled: invalidate,
   });
 
-  return { savePosition, saveBatchPositions, patchNode } as const;
+  // ── Create node ──────────────────────────────────────────────────────────
+  const addNode = useMutation({
+    mutationFn: async (vars: CreateNodeInput) => {
+      const result = await createNode(vars);
+      if (!result.success) throw new Error(result.error.message);
+      return result.data;
+    },
+    onMutate: async (vars) => {
+      await queryClient.cancelQueries({ queryKey });
+      // Optimistic placeholder — uses a temporary id that gets replaced
+      // when onSettled fires invalidateQueries with the server response.
+      const now = new Date();
+      const placeholder: SelectNode = {
+        id: `optimistic-${Date.now()}`,
+        roomId: vars.roomId,
+        userId: '',
+        title: vars.title,
+        content: vars.content ?? null,
+        nodeType: vars.nodeType ?? 'text',
+        positionX: vars.positionX ?? 0,
+        positionY: vars.positionY ?? 0,
+        color: vars.color ?? null,
+        createdAt: now,
+        updatedAt: now,
+        deletedAt: null,
+      };
+      const snapshot = applyOptimistic((nodes) => [...nodes, placeholder]);
+      return { snapshot };
+    },
+    onError: (_err, _vars, ctx) => rollback(ctx?.snapshot),
+    onSettled: invalidate,
+  });
+
+  // ── Delete node ──────────────────────────────────────────────────────────
+  const removeNode = useMutation({
+    mutationFn: async (vars: { id: string }) => {
+      const result = await deleteNode({ id: vars.id, roomId });
+      if (!result.success) throw new Error(result.error.message);
+      return result.data;
+    },
+    onMutate: async (vars) => {
+      await queryClient.cancelQueries({ queryKey });
+      const snapshot = applyOptimistic((nodes) => nodes.filter((n) => n.id !== vars.id));
+      return { snapshot };
+    },
+    onError: (_err, _vars, ctx) => rollback(ctx?.snapshot),
+    onSettled: invalidate,
+  });
+
+  return { savePosition, saveBatchPositions, patchNode, addNode, removeNode } as const;
 }

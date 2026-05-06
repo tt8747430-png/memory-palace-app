@@ -19,9 +19,10 @@ interface UserProfile {
 
 interface MobileDrawerProps {
   userProfile?: UserProfile | null;
+  onSearch?: React.ComponentProps<typeof Sidebar>['onSearch'];
 }
 
-export function MobileDrawer({ userProfile }: MobileDrawerProps) {
+export function MobileDrawer({ userProfile, onSearch }: MobileDrawerProps) {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -39,7 +40,7 @@ export function MobileDrawer({ userProfile }: MobileDrawerProps) {
         <SheetDescription className="sr-only">
           Main navigation links for Memory Palace
         </SheetDescription>
-        <Sidebar userProfile={userProfile} />
+        <Sidebar userProfile={userProfile} onSearch={onSearch} />
       </SheetContent>
     </Sheet>
   );

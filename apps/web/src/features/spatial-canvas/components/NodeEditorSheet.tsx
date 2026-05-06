@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useRef, useState, type ChangeEvent } from 'react';
+import { Trash2 } from 'lucide-react';
 import { useDebouncedCallback } from 'use-debounce';
 import type { NodeType, SelectNode } from '@memory-palace/db';
 import {
@@ -97,7 +98,8 @@ interface NodeFormProps {
 }
 
 function NodeForm({ node, roomId, onClose }: NodeFormProps) {
-  const { patchNode } = useRoomNodeMutations(roomId);
+  const { patchNode, removeNode } = useRoomNodeMutations(roomId);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const [form, setForm] = useState<EditorState>({
     title: node.title,
@@ -126,6 +128,17 @@ function NodeForm({ node, roomId, onClose }: NodeFormProps) {
 
   const close = () => {
     flush.flush();
+    onClose();
+  };
+
+  const handleDelete = () => {
+    if (!confirmDelete) {
+      setConfirmDelete(true);
+      return;
+    }
+    // Flush any pending edits before deleting, then close.
+    flush.cancel();
+    removeNode.mutate({ id: node.id });
     onClose();
   };
 
@@ -204,6 +217,16 @@ function NodeForm({ node, roomId, onClose }: NodeFormProps) {
       </div>
 
       <div className="flex gap-2 border-t pt-4">
+        <Button
+          variant="destructive"
+          onClick={handleDelete}
+          disabled={removeNode.isPending}
+          onBlur={() => setConfirmDelete(false)}
+          className="gap-1.5"
+        >
+          <Trash2 className="h-3.5 w-3.5" />
+          {confirmDelete ? 'Confirm?' : 'Delete'}
+        </Button>
         <Button variant="outline" onClick={close} className="flex-1">
           Done
         </Button>

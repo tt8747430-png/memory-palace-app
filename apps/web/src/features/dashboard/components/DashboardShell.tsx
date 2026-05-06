@@ -13,9 +13,11 @@ interface UserProfile {
 interface DashboardShellProps {
   children: ReactNode;
   userProfile?: UserProfile | null;
+  /** Injected search action — passed from the app layer to avoid boundary violations. */
+  onSearch?: React.ComponentProps<typeof Sidebar>['onSearch'];
 }
 
-export function DashboardShell({ children, userProfile }: DashboardShellProps) {
+export function DashboardShell({ children, userProfile, onSearch }: DashboardShellProps) {
   return (
     <div className="flex h-dvh flex-col md:flex-row">
       {/* Desktop sidebar */}
@@ -23,11 +25,11 @@ export function DashboardShell({ children, userProfile }: DashboardShellProps) {
         className="hidden md:flex md:w-64 md:flex-col md:border-r"
         aria-label="Main navigation"
       >
-        <Sidebar userProfile={userProfile} />
+        <Sidebar userProfile={userProfile} onSearch={onSearch} />
       </aside>
 
       <header className="flex items-center justify-between border-b px-4 py-3 md:hidden">
-        <MobileDrawer userProfile={userProfile} />
+        <MobileDrawer userProfile={userProfile} onSearch={onSearch} />
         <h1 className="text-lg font-semibold">Memory Palace</h1>
         <ModeToggle />
       </header>

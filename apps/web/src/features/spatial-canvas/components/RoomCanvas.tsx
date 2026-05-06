@@ -154,7 +154,7 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
         />
       </ReactFlow>
 
-      <CanvasToolbar />
+      <CanvasToolbar roomId={roomId} />
       <NodeEditorSheet roomId={roomId} />
     </div>
   );
