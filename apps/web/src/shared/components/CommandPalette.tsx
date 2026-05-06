@@ -15,6 +15,10 @@ import {
   Maximize2,
   Grid3X3,
   LogOut,
+  Redo2,
+  Undo2,
+  Copy,
+  Trash2,
   type LucideIcon,
 } from 'lucide-react';
 import {
@@ -153,6 +157,46 @@ function useActions(closePalette: () => void): { group: string; actions: Palette
                 onSelect: () => {
                   closePalette();
                   window.dispatchEvent(new CustomEvent('canvas:toggle-snap'));
+                },
+              } satisfies PaletteAction,
+              {
+                id: 'canvas-undo',
+                label: 'Undo',
+                icon: Undo2,
+                shortcut: '⌘Z',
+                onSelect: () => {
+                  closePalette();
+                  window.dispatchEvent(new CustomEvent('canvas:undo'));
+                },
+              } satisfies PaletteAction,
+              {
+                id: 'canvas-redo',
+                label: 'Redo',
+                icon: Redo2,
+                shortcut: '⌘⇧Z',
+                onSelect: () => {
+                  closePalette();
+                  window.dispatchEvent(new CustomEvent('canvas:redo'));
+                },
+              } satisfies PaletteAction,
+              {
+                id: 'canvas-duplicate-node',
+                label: 'Duplicate Selected Node(s)',
+                icon: Copy,
+                shortcut: '⌘D',
+                onSelect: () => {
+                  closePalette();
+                  window.dispatchEvent(new CustomEvent('canvas:duplicate-node'));
+                },
+              } satisfies PaletteAction,
+              {
+                id: 'canvas-delete-node',
+                label: 'Delete Selected Node(s)',
+                icon: Trash2,
+                shortcut: '⌫',
+                onSelect: () => {
+                  closePalette();
+                  window.dispatchEvent(new CustomEvent('canvas:delete-node'));
                 },
               } satisfies PaletteAction,
             ],

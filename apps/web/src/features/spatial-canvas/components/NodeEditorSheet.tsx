@@ -1,8 +1,16 @@
 'use client';
 
-import { useMemo, useRef, useState, type ChangeEvent } from 'react';
-import { Trash2 } from 'lucide-react';
+import {
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+  type ChangeEvent,
+  type KeyboardEvent,
+} from 'react';
+import { Loader2, Plus, Trash2, X } from 'lucide-react';
 import { useDebouncedCallback } from 'use-debounce';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { NodeType, SelectNode } from '@memory-palace/db';
 import {
   Sheet,
@@ -16,16 +24,39 @@ import {
   Textarea,
   Label,
 } from '@memory-palace/ui';
+import { cn } from '@memory-palace/ui';
 import { useCanvasStore } from '../store/CanvasStoreContext';
 import { useNodesQuery } from '../hooks/useNodesQuery';
 import { useRoomNodeMutations, type NodePatch } from '../hooks/useRoomNodeMutations';
 import { useIsMobile } from '@/shared/hooks/useIsMobile';
+import { getNodeTags, addNodeTag, removeNodeTag } from '@/features/nodes';
 
 const NODE_TYPES: ReadonlyArray<{ value: NodeType; label: string }> = [
   { value: 'text', label: 'Text' },
   { value: 'image', label: 'Image' },
   { value: 'link', label: 'Link' },
 ];
+
+const CONTENT_LABEL: Record<NodeType, string> = {
+  text: 'Content',
+  image: 'Image URL',
+  link: 'URL',
+};
+
+const CONTENT_PLACEHOLDER: Record<NodeType, string> = {
+  text: 'Optional content or notes',
+  image: 'https://example.com/image.png',
+  link: 'https://example.com',
+};
+
+function isHttpUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
 
 const DEBOUNCE_MS = 500;
 const TITLE_MAX = 200;
@@ -168,15 +199,42 @@ function NodeForm({ node, roomId, onClose }: NodeFormProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="node-content">Content</Label>
-          <Textarea
-            id="node-content"
-            value={form.content}
-            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => onChange('content', e.target.value)}
-            placeholder="Optional content, images, or links"
-            rows={6}
-            maxLength={CONTENT_MAX}
-          />
+          <Label htmlFor="node-content">{CONTENT_LABEL[form.nodeType]}</Label>
+          {form.nodeType === 'text' ? (
+            <Textarea
+              id="node-content"
+              value={form.content}
+              onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                onChange('content', e.target.value)
+              }
+              placeholder={CONTENT_PLACEHOLDER[form.nodeType]}
+              rows={6}
+              maxLength={CONTENT_MAX}
+            />
+          ) : (
+            <Input
+              id="node-content"
+              type="url"
+              value={form.content}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => onChange('content', e.target.value)}
+              placeholder={CONTENT_PLACEHOLDER[form.nodeType]}
+              maxLength={CONTENT_MAX}
+            />
+          )}
+          {form.nodeType === 'image' && form.content && isHttpUrl(form.content) && (
+            <div className="mt-2 overflow-hidden rounded-md border">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={form.content}
+                alt="Preview"
+                className="h-32 w-full object-cover"
+                loading="lazy"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).style.display = 'none';
+                }}
+              />
+            </div>
+          )}
           <p className="text-xs text-muted-foreground">
             {form.content.length}/{CONTENT_MAX.toLocaleString()}
           </p>
@@ -198,6 +256,8 @@ function NodeForm({ node, roomId, onClose }: NodeFormProps) {
             ))}
           </Select>
         </div>
+
+        <TagsField nodeId={node.id} />
 
         <div className="space-y-2">
           <Label htmlFor="node-color">Border color (optional)</Label>
@@ -240,5 +300,112 @@ function NodeForm({ node, roomId, onClose }: NodeFormProps) {
         </Button>
       </div>
     </>
+  );
+}
+
+// ─── Tags field ───────────────────────────────────────────────────────────────
+
+const nodeTagsQueryKey = (nodeId: string) => ['nodes', nodeId, 'tags'] as const;
+
+function TagsField({ nodeId }: { nodeId: string }) {
+  const queryClient = useQueryClient();
+  const [input, setInput] = useState('');
+  const [isPending, startTransition] = useTransition();
+
+  const { data: tags = [], isLoading } = useQuery({
+    queryKey: nodeTagsQueryKey(nodeId),
+    queryFn: async () => {
+      const res = await getNodeTags({ nodeId });
+      if (!res.success) return [];
+      return res.data;
+    },
+    staleTime: 30_000,
+  });
+
+  const invalidate = () =>
+    void queryClient.invalidateQueries({ queryKey: nodeTagsQueryKey(nodeId) });
+
+  const handleAdd = () => {
+    const name = input.trim();
+    if (!name) return;
+    setInput('');
+    startTransition(async () => {
+      await addNodeTag({ nodeId, tagName: name });
+      invalidate();
+    });
+  };
+
+  const handleRemove = (tagId: string) => {
+    startTransition(async () => {
+      await removeNodeTag({ nodeId, tagId });
+      invalidate();
+    });
+  };
+
+  const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAdd();
+    }
+  };
+
+  return (
+    <div className="space-y-2">
+      <Label>Tags</Label>
+
+      {/* Existing tags */}
+      <div className="flex flex-wrap gap-1.5">
+        {isLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
+        {tags.map((tag) => (
+          <span
+            key={tag.id}
+            className="flex items-center gap-1 rounded-full bg-accent px-2.5 py-0.5 text-xs font-medium"
+          >
+            {tag.name}
+            <button
+              type="button"
+              aria-label={`Remove tag ${tag.name}`}
+              disabled={isPending}
+              onClick={() => handleRemove(tag.id)}
+              className={cn(
+                'ml-0.5 rounded-full text-muted-foreground hover:text-foreground',
+                isPending && 'pointer-events-none opacity-50',
+              )}
+            >
+              <X className="h-3 w-3" aria-hidden />
+            </button>
+          </span>
+        ))}
+      </div>
+
+      {/* Add tag input */}
+      <div className="flex items-center gap-2">
+        <Input
+          type="text"
+          value={input}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setInput(e.target.value)}
+          onKeyDown={onKeyDown}
+          placeholder="Add tag…"
+          maxLength={50}
+          className="h-8 flex-1 text-sm"
+          disabled={isPending}
+        />
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          aria-label="Add tag"
+          onClick={handleAdd}
+          disabled={isPending || !input.trim()}
+          className="h-8 w-8 p-0"
+        >
+          {isPending ? (
+            <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
+          ) : (
+            <Plus className="h-3.5 w-3.5" aria-hidden />
+          )}
+        </Button>
+      </div>
+    </div>
   );
 }

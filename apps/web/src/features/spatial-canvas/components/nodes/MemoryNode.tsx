@@ -2,7 +2,15 @@
 
 import type { NodeType } from '@memory-palace/db';
 import { Handle, NodeToolbar, Position, type Node, type NodeProps } from '@xyflow/react';
-import { FileText, Image as ImageIcon, Link, Pencil, Trash2 } from 'lucide-react';
+import {
+  Copy,
+  ExternalLink,
+  FileText,
+  Image as ImageIcon,
+  Link,
+  Pencil,
+  Trash2,
+} from 'lucide-react';
 import { cn } from '@memory-palace/ui';
 import {
   ContextMenu,
@@ -30,15 +38,30 @@ const TYPE_ICONS: Record<NodeType, React.ReactNode> = {
   link: <Link className="h-3 w-3 shrink-0" aria-hidden />,
 };
 
+/** Returns true if `url` looks like an absolute http(s) URL. */
+function isHttpUrl(url: string | null | undefined): url is string {
+  if (!url) return false;
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Custom React Flow node rendered as a compact card.
  *
- * - **NodeToolbar**: edit/delete actions appear above the node when selected.
+ * - **NodeToolbar**: edit/duplicate/delete actions appear above the node when selected.
  * - **ContextMenu**: right-click opens an action menu.
  * - **Touch targets**: minimum 60×60px on mobile per the UI style guide.
+ * - **Type-specific rendering**: image nodes show a thumbnail; link nodes show
+ *   a clickable URL.
  */
 export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
-  const { onEditNode, onDeleteNode } = useCanvasNodeActions();
+  const { onEditNode, onDeleteNode, onDuplicateNode } = useCanvasNodeActions();
+  const hasImagePreview = data.nodeType === 'image' && isHttpUrl(data.content);
+  const hasLinkContent = data.nodeType === 'link' && isHttpUrl(data.content);
 
   return (
     <>
@@ -53,6 +76,14 @@ export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
             className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
           >
             <Pencil className="h-3.5 w-3.5" aria-hidden />
+          </button>
+          <button
+            type="button"
+            aria-label="Duplicate node"
+            onClick={() => onDuplicateNode(id)}
+            className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+          >
+            <Copy className="h-3.5 w-3.5" aria-hidden />
           </button>
           <button
             type="button"
@@ -96,7 +127,38 @@ export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
               </p>
             </div>
 
-            {data.content && (
+            {/* Image preview — shown when content is a valid http(s) URL */}
+            {hasImagePreview && (
+              <div className="mt-2 overflow-hidden rounded-md">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={data.content!}
+                  alt={data.title}
+                  className="h-28 w-full object-cover"
+                  loading="lazy"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).style.display = 'none';
+                  }}
+                />
+              </div>
+            )}
+
+            {/* Link — shown when content is a valid http(s) URL */}
+            {hasLinkContent && (
+              <a
+                href={data.content!}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-1 flex items-center gap-1 text-xs text-primary hover:underline"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <ExternalLink className="h-3 w-3 shrink-0" aria-hidden />
+                <span className="truncate">{data.content}</span>
+              </a>
+            )}
+
+            {/* Text content — only shown for text type with content */}
+            {data.nodeType === 'text' && data.content && (
               <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
                 {data.content}
               </p>
@@ -108,6 +170,10 @@ export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
           <ContextMenuItem onClick={() => onEditNode(id)}>
             <Pencil className="h-4 w-4" aria-hidden />
             Edit node
+          </ContextMenuItem>
+          <ContextMenuItem onClick={() => onDuplicateNode(id)}>
+            <Copy className="h-4 w-4" aria-hidden />
+            Duplicate node
           </ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem

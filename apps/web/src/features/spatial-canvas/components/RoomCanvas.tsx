@@ -14,11 +14,13 @@ import {
   useEdgesState,
   useReactFlow,
   type Edge,
+  type EdgeChange,
+  type OnConnect,
   type OnNodeDrag,
   type OnSelectionChangeFunc,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import type { SelectNode } from '@memory-palace/db';
+import type { SelectEdge, SelectNode } from '@memory-palace/db';
 import { nodeTypes } from './nodes/nodeTypes';
 import type { MemoryNodeType } from './nodes/MemoryNode';
 import { CanvasToolbar } from './CanvasToolbar';
@@ -26,6 +28,7 @@ import { CanvasFab } from './CanvasFab';
 import { CanvasLoadingSkeleton } from './CanvasLoadingSkeleton';
 import { NodeEditorSheet } from './NodeEditorSheet';
 import { SelectionToolbar } from './SelectionToolbar';
+import { CanvasSearch } from './CanvasSearch';
 import {
   CanvasStoreProvider,
   useCanvasStore,
@@ -33,8 +36,10 @@ import {
 } from '../store/CanvasStoreContext';
 import { CanvasNodeActionsProvider } from '../store/CanvasNodeActionsContext';
 import { useNodesQuery } from '../hooks/useNodesQuery';
+import { useEdgesQuery } from '../hooks/useEdgesQuery';
 import { useRealtimeNodes } from '../hooks/useRealtimeNodes';
 import { useRoomNodeMutations, type PositionUpdate } from '../hooks/useRoomNodeMutations';
+import { useRoomEdgeMutations } from '../hooks/useRoomEdgeMutations';
 import { getCanvasCenterFlowPos } from '../lib/canvasUtils';
 import { OfflineBanner } from '@/shared/components/OfflineBanner';
 
@@ -155,6 +160,11 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
   const setEditingNodeId = useCanvasStore((s) => s.setEditingNodeId);
   const snapEnabled = useCanvasStore((s) => s.snapEnabled);
   const toggleSnap = useCanvasStore((s) => s.toggleSnap);
+  const pushPositionHistory = useCanvasStore((s) => s.pushPositionHistory);
+  const undoPositions = useCanvasStore((s) => s.undoPositions);
+  const redoPositions = useCanvasStore((s) => s.redoPositions);
+  const clearFuture = useCanvasStore((s) => s.clearFuture);
+  const canvasSearchQuery = useCanvasStore((s) => s.canvasSearchQuery);
   // Non-reactive store access for event handlers — avoids re-rendering
   // InnerCanvas on every selection change (which would create new array props
   // like panOnDrag=[1,2] on every render and trigger a React Flow render loop).
@@ -167,7 +177,7 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
   const flowNodes = (serverNodes ?? []).map(dbNodeToFlowNode);
 
   const [nodes, setNodes, onNodesChange] = useNodesState<MemoryNodeType>(flowNodes);
-  const [edges, , onEdgesChange] = useEdgesState<Edge>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
   // Reconcile React Flow's local state when TanStack Query's cache identity
   // changes (i.e. after invalidateQueries resolves with server-confirmed data).
@@ -179,17 +189,36 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
     setNodes(flowNodes);
   }
 
-  const { savePosition, saveBatchPositions, addNode, removeNode } = useRoomNodeMutations(roomId);
-  const { screenToFlowPosition, fitView } = useReactFlow();
+  const { data: serverEdges = [] } = useEdgesQuery(roomId);
+  const { addEdge: addEdgeMutation, removeEdge: removeEdgeMutation } = useRoomEdgeMutations(roomId);
+
+  const serverEdgeToFlow = (e: SelectEdge): Edge => ({
+    id: e.id,
+    source: e.sourceNodeId,
+    target: e.targetNodeId,
+    ...(e.label ? { label: e.label } : {}),
+  });
+
+  const [prevServerEdges, setPrevServerEdges] = useState(serverEdges);
+  if (prevServerEdges !== serverEdges) {
+    setPrevServerEdges(serverEdges);
+    setEdges(serverEdges.map(serverEdgeToFlow));
+  }
+
+  const { savePosition, saveBatchPositions, addNode, removeNode, duplicateNodes } =
+    useRoomNodeMutations(roomId);
+  const { screenToFlowPosition, fitView, getNodes } = useReactFlow();
 
   // Refs to avoid stale closures in effects that cannot list frequently-
   // changing values as deps (removeNode.mutate changes each render from TQ;
   // activeTool changes on every tool switch).
   const activeToolRef = useRef(activeTool);
   const removeNodeMutateRef = useRef(removeNode.mutate);
+  const duplicateNodesMutateRef = useRef(duplicateNodes.mutate);
   useLayoutEffect(() => {
     activeToolRef.current = activeTool;
     removeNodeMutateRef.current = removeNode.mutate;
+    duplicateNodesMutateRef.current = duplicateNodes.mutate;
   });
 
   // Layer 2: Subscribe to Supabase Realtime for cross-device sync.
@@ -223,11 +252,117 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
     };
   }, [fitView, toggleSnap]);
 
-  // ── Keyboard shortcuts: G = snap, F = fit view, Del/Backspace = delete ──
+  // ── canvas:duplicate-node / canvas:delete-node / canvas:undo / canvas:redo ──
   useEffect(() => {
+    const applyPositionSnapshot = (snapshot: { id: string; x: number; y: number }[]) => {
+      const posMap = new Map(snapshot.map((p) => [p.id, p]));
+      setNodes((prev) =>
+        prev.map((n) => {
+          const snap = posMap.get(n.id);
+          return snap ? { ...n, position: { x: snap.x, y: snap.y } } : n;
+        }),
+      );
+      const updates = snapshot.map((p) => ({ id: p.id, positionX: p.x, positionY: p.y }));
+      if (updates.length > 1) saveBatchPositions.mutate(updates);
+      else if (updates.length === 1) savePosition.mutate(updates[0]);
+    };
+
+    const onDuplicate = () => {
+      const { selectedNodeIds } = canvasStoreApi.getState();
+      if (selectedNodeIds.size === 0) return;
+      const currentNodes = getNodes() as MemoryNodeType[];
+      const selected = currentNodes.filter((n) => selectedNodeIds.has(n.id));
+      if (selected.length === 0) return;
+      duplicateNodesMutateRef.current(
+        selected.map((n) => ({
+          id: n.id,
+          title: n.data.title,
+          content: n.data.content,
+          nodeType: n.data.nodeType,
+          positionX: n.position.x,
+          positionY: n.position.y,
+          color: n.data.color,
+        })),
+      );
+      clearFuture();
+    };
+    const onDeleteSelected = () => {
+      const { selectedNodeIds, setSelectedNodeIds } = canvasStoreApi.getState();
+      if (selectedNodeIds.size === 0) return;
+      for (const id of selectedNodeIds) {
+        removeNodeMutateRef.current({ id });
+      }
+      setSelectedNodeIds(new Set());
+      clearFuture();
+    };
+    const onUndo = () => {
+      const current = (getNodes() as MemoryNodeType[]).map((n) => ({
+        id: n.id,
+        x: n.position.x,
+        y: n.position.y,
+      }));
+      const snapshot = undoPositions(current);
+      if (snapshot) applyPositionSnapshot(snapshot);
+    };
+    const onRedo = () => {
+      const current = (getNodes() as MemoryNodeType[]).map((n) => ({
+        id: n.id,
+        x: n.position.x,
+        y: n.position.y,
+      }));
+      const snapshot = redoPositions(current);
+      if (snapshot) applyPositionSnapshot(snapshot);
+    };
+    window.addEventListener('canvas:duplicate-node', onDuplicate);
+    window.addEventListener('canvas:delete-node', onDeleteSelected);
+    window.addEventListener('canvas:undo', onUndo);
+    window.addEventListener('canvas:redo', onRedo);
+    return () => {
+      window.removeEventListener('canvas:duplicate-node', onDuplicate);
+      window.removeEventListener('canvas:delete-node', onDeleteSelected);
+      window.removeEventListener('canvas:undo', onUndo);
+      window.removeEventListener('canvas:redo', onRedo);
+    };
+  }, [
+    canvasStoreApi,
+    getNodes,
+    clearFuture,
+    setNodes,
+    undoPositions,
+    redoPositions,
+    savePosition,
+    saveBatchPositions,
+  ]);
+
+  // ── Keyboard shortcuts: G = snap, F = fit view, Del/Backspace = delete,
+  //    Cmd+A = select all, Cmd+D = duplicate, Cmd+Z/Shift+Z = undo/redo,
+  //    E = open editor for single selected node ─────────────────────────────
+  useEffect(() => {
+    const applyPositionSnapshot = (snapshot: { id: string; x: number; y: number }[]) => {
+      const posMap = new Map(snapshot.map((p) => [p.id, p]));
+      setNodes((prev) =>
+        prev.map((n) => {
+          const snap = posMap.get(n.id);
+          return snap ? { ...n, position: { x: snap.x, y: snap.y } } : n;
+        }),
+      );
+      const updates = snapshot.map((p) => ({
+        id: p.id,
+        positionX: p.x,
+        positionY: p.y,
+      }));
+      if (updates.length > 1) {
+        saveBatchPositions.mutate(updates);
+      } else if (updates.length === 1) {
+        savePosition.mutate(updates[0]);
+      }
+    };
+
     const onKeyDown = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement).tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      const mod = e.metaKey || e.ctrlKey;
+
       if (e.key === 'g' || e.key === 'G') {
         // Consume the event in capture phase so the global bubble-phase
         // shortcut handler does not arm its 'g → h/p/s' prefix window.
@@ -235,7 +370,7 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
         toggleSnap();
       } else if (e.key === 'f' || e.key === 'F') {
         fitView({ padding: 0.2, duration: 300 });
-      } else if (e.key === 'Delete' || e.key === 'Backspace') {
+      } else if ((e.key === 'Delete' || e.key === 'Backspace') && !mod) {
         const { selectedNodeIds, setSelectedNodeIds } = canvasStoreApi.getState();
         if (selectedNodeIds.size === 0) return;
         e.preventDefault();
@@ -243,13 +378,79 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
           removeNodeMutateRef.current({ id });
         }
         setSelectedNodeIds(new Set());
+        clearFuture();
+      } else if (mod && (e.key === 'a' || e.key === 'A')) {
+        // ── Cmd/Ctrl+A — select all nodes ──────────────────────────────────
+        e.preventDefault();
+        const currentNodes = getNodes() as MemoryNodeType[];
+        const allIds = new Set(currentNodes.map((n) => n.id));
+        canvasStoreApi.getState().setSelectedNodeIds(allIds);
+        setNodes((prev) => prev.map((n) => ({ ...n, selected: true })));
+      } else if (mod && !e.shiftKey && (e.key === 'z' || e.key === 'Z')) {
+        // ── Cmd/Ctrl+Z — undo position change ──────────────────────────────
+        e.preventDefault();
+        const current = (getNodes() as MemoryNodeType[]).map((n) => ({
+          id: n.id,
+          x: n.position.x,
+          y: n.position.y,
+        }));
+        const snapshot = undoPositions(current);
+        if (snapshot) applyPositionSnapshot(snapshot);
+      } else if (mod && e.shiftKey && (e.key === 'z' || e.key === 'Z')) {
+        // ── Cmd/Ctrl+Shift+Z — redo position change ─────────────────────────
+        e.preventDefault();
+        const current = (getNodes() as MemoryNodeType[]).map((n) => ({
+          id: n.id,
+          x: n.position.x,
+          y: n.position.y,
+        }));
+        const snapshot = redoPositions(current);
+        if (snapshot) applyPositionSnapshot(snapshot);
+      } else if (mod && (e.key === 'd' || e.key === 'D')) {
+        // ── Cmd/Ctrl+D — duplicate selected nodes ──────────────────────────
+        e.preventDefault();
+        const { selectedNodeIds } = canvasStoreApi.getState();
+        if (selectedNodeIds.size === 0) return;
+        const currentNodes = getNodes() as MemoryNodeType[];
+        const selected = currentNodes.filter((n) => selectedNodeIds.has(n.id));
+        if (selected.length === 0) return;
+        duplicateNodesMutateRef.current(
+          selected.map((n) => ({
+            id: n.id,
+            title: n.data.title,
+            content: n.data.content,
+            nodeType: n.data.nodeType,
+            positionX: n.position.x,
+            positionY: n.position.y,
+            color: n.data.color,
+          })),
+        );
+        clearFuture();
+      } else if ((e.key === 'e' || e.key === 'E') && !mod) {
+        // ── E — open editor for the single selected node ────────────────────
+        const { selectedNodeIds, setEditingNodeId: storeSetEditingNodeId } =
+          canvasStoreApi.getState();
+        if (selectedNodeIds.size !== 1) return;
+        const [nodeId] = selectedNodeIds;
+        storeSetEditingNodeId(nodeId);
       }
     };
     // Capture phase runs before the global document bubble-phase listener,
     // which makes stopPropagation() effective for preventing prefix arming.
     document.addEventListener('keydown', onKeyDown, { capture: true });
     return () => document.removeEventListener('keydown', onKeyDown, { capture: true });
-  }, [toggleSnap, fitView, canvasStoreApi]);
+  }, [
+    toggleSnap,
+    fitView,
+    canvasStoreApi,
+    getNodes,
+    setNodes,
+    undoPositions,
+    redoPositions,
+    clearFuture,
+    savePosition,
+    saveBatchPositions,
+  ]);
 
   // ── Space hold — temporarily switch to pan mode ───────────────────────────
   useEffect(() => {
@@ -273,6 +474,16 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
       document.removeEventListener('keyup', onKeyUp);
     };
   }, [setActiveTool]);
+
+  // Capture positions BEFORE a drag so we have a valid undo snapshot.
+  const onNodeDragStart: OnNodeDrag<MemoryNodeType> = () => {
+    const snap = (getNodes() as MemoryNodeType[]).map((n) => ({
+      id: n.id,
+      x: n.position.x,
+      y: n.position.y,
+    }));
+    pushPositionHistory(snap);
+  };
 
   // Single-node drag — fires only when the dragged node is NOT part of a
   // multi-selection (React Flow v12 routes selection drags to onSelectionDragStop).
@@ -305,6 +516,25 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
     canvasStoreApi.getState().setSelectedNodeIds(new Set(selected.map((n) => n.id)));
   };
 
+  // ── Edge creation — fired when the user drags from one handle to another ──
+  const onConnect: OnConnect = (connection) => {
+    if (!connection.source || !connection.target) return;
+    addEdgeMutation.mutate({
+      sourceNodeId: connection.source,
+      targetNodeId: connection.target,
+    });
+  };
+
+  // Handle edge deletions (selected edge + Delete key).
+  const handleEdgesChange = (changes: EdgeChange[]) => {
+    onEdgesChange(changes);
+    for (const change of changes) {
+      if (change.type === 'remove') {
+        removeEdgeMutation.mutate({ id: change.id });
+      }
+    }
+  };
+
   // ── Pane context menu ─────────────────────────────────────────────────────
   const [paneMenu, setPaneMenu] = useState<PaneMenu | null>(null);
 
@@ -334,7 +564,26 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
   // ── Node actions (injected into MemoryNode via context) ───────────────────
   const nodeActions = {
     onEditNode: (nodeId: string) => setEditingNodeId(nodeId),
-    onDeleteNode: (nodeId: string) => removeNode.mutate({ id: nodeId }),
+    onDeleteNode: (nodeId: string) => {
+      removeNode.mutate({ id: nodeId });
+      clearFuture();
+    },
+    onDuplicateNode: (nodeId: string) => {
+      const node = (getNodes() as MemoryNodeType[]).find((n) => n.id === nodeId);
+      if (!node) return;
+      duplicateNodes.mutate([
+        {
+          id: node.id,
+          title: node.data.title,
+          content: node.data.content,
+          nodeType: node.data.nodeType,
+          positionX: node.position.x,
+          positionY: node.position.y,
+          color: node.data.color,
+        },
+      ]);
+      clearFuture();
+    },
   };
 
   if (isLoading) return <CanvasLoadingSkeleton />;
@@ -342,19 +591,35 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
   const isPanMode = activeTool === 'pan';
   const shouldFitView = initialNodes.length > 0;
 
+  // Dim nodes that don't match the live search query (opacity only, no unmount).
+  const displayNodes =
+    canvasSearchQuery.trim().length > 0
+      ? nodes.map((n) => {
+          const q = canvasSearchQuery.toLowerCase();
+          const matches =
+            n.data.title.toLowerCase().includes(q) ||
+            (n.data.content?.toLowerCase().includes(q) ?? false);
+          return matches
+            ? n
+            : { ...n, style: { ...n.style, opacity: 0.2, transition: 'opacity 150ms' } };
+        })
+      : nodes;
+
   return (
     <CanvasNodeActionsProvider value={nodeActions}>
       <div className="relative h-full w-full" data-testid="canvas-container">
         <ReactFlow<MemoryNodeType>
-          nodes={nodes}
+          nodes={displayNodes}
           edges={edges}
           nodeTypes={nodeTypes}
           onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
+          onEdgesChange={handleEdgesChange}
+          onNodeDragStart={onNodeDragStart}
           onNodeDragStop={onNodeDragStop}
           onSelectionDragStop={onSelectionDragStop}
           onSelectionChange={onSelectionChange}
           onPaneContextMenu={onPaneContextMenu}
+          onConnect={onConnect}
           nodesDraggable={!isPanMode}
           panOnDrag={isPanMode ? true : [1, 2]}
           selectionOnDrag={!isPanMode}
@@ -392,6 +657,7 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
         <CanvasToolbar roomId={roomId} />
         <CanvasFab roomId={roomId} />
         <NodeEditorSheet roomId={roomId} />
+        <CanvasSearch />
         <OfflineBanner />
 
         {paneMenu && (

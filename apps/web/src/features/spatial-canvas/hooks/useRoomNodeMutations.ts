@@ -164,5 +164,47 @@ export function useRoomNodeMutations(roomId: string) {
     onSettled: invalidate,
   });
 
-  return { savePosition, saveBatchPositions, patchNode, addNode, removeNode } as const;
+  // ── Duplicate nodes (one mutation per node, offset +40/+40) ──────────────
+  const duplicateNodes = useMutation({
+    mutationFn: async (
+      sourceNodes: {
+        id: string;
+        title: string;
+        content: string | null;
+        nodeType: SelectNode['nodeType'];
+        positionX: number;
+        positionY: number;
+        color: string | null;
+      }[],
+    ) => {
+      const results = await Promise.all(
+        sourceNodes.map((n) =>
+          createNode({
+            roomId,
+            title: n.title,
+            content: n.content ?? undefined,
+            nodeType: n.nodeType,
+            positionX: n.positionX + 40,
+            positionY: n.positionY + 40,
+            color: n.color ?? undefined,
+          }),
+        ),
+      );
+      const failed = results.find((r) => !r.success);
+      if (failed && !failed.success) throw new Error(failed.error.message);
+      return results
+        .filter((r) => r.success)
+        .map((r) => (r as { success: true; data: SelectNode }).data);
+    },
+    onSettled: invalidate,
+  });
+
+  return {
+    savePosition,
+    saveBatchPositions,
+    patchNode,
+    addNode,
+    removeNode,
+    duplicateNodes,
+  } as const;
 }

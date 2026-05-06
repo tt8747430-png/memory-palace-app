@@ -43,6 +43,7 @@ const SECTIONS: ShortcutSection[] = [
       { keys: ['C', 'P'], description: 'Create new palace' },
       { keys: ['C', 'R'], description: 'Create new room (on palace page)' },
       { keys: ['C', 'N'], description: 'Create new node (on canvas)' },
+      { keys: ['⌘', 'D'], description: 'Duplicate selected node(s) (on canvas)' },
     ],
   },
   {
@@ -52,6 +53,11 @@ const SECTIONS: ShortcutSection[] = [
       { keys: ['F'], description: 'Fit all nodes in view' },
       { keys: ['Del'], description: 'Delete selected node(s)' },
       { keys: ['Space'], description: 'Switch to pan tool (hold)' },
+      { keys: ['⌘', 'A'], description: 'Select all nodes' },
+      { keys: ['⌘', 'Z'], description: 'Undo position change' },
+      { keys: ['⌘', '⇧', 'Z'], description: 'Redo position change' },
+      { keys: ['E'], description: 'Edit selected node' },
+      { keys: ['/'], description: 'Search / filter canvas nodes' },
     ],
   },
 ];

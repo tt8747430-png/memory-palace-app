@@ -1,6 +1,6 @@
 'use client';
 
-import { Trash2 } from 'lucide-react';
+import { Copy, Trash2 } from 'lucide-react';
 import { cn } from '@memory-palace/ui';
 import { useCanvasStore } from '../store/CanvasStoreContext';
 import { useRoomNodeMutations } from '../hooks/useRoomNodeMutations';
@@ -33,6 +33,10 @@ export function SelectionToolbar({ roomId }: SelectionToolbarProps) {
     setSelectedNodeIds(new Set());
   };
 
+  const handleDuplicateSelected = () => {
+    window.dispatchEvent(new CustomEvent('canvas:duplicate-node'));
+  };
+
   return (
     <div
       role="toolbar"
@@ -42,6 +46,21 @@ export function SelectionToolbar({ roomId }: SelectionToolbarProps) {
       <span className="text-xs font-medium text-muted-foreground">
         {selectedNodeIds.size} selected
       </span>
+
+      <div className="h-3.5 w-px bg-border" />
+
+      <button
+        type="button"
+        aria-label={`Duplicate ${selectedNodeIds.size} selected nodes`}
+        onClick={handleDuplicateSelected}
+        className={cn(
+          'flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium transition-colors',
+          'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
+        )}
+      >
+        <Copy className="h-3.5 w-3.5" aria-hidden />
+        Duplicate
+      </button>
 
       <div className="h-3.5 w-px bg-border" />
 

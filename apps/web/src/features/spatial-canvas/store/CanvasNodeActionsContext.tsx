@@ -7,6 +7,8 @@ export interface CanvasNodeActions {
   onEditNode: (nodeId: string) => void;
   /** Delete the given node (optimistic, with rollback). */
   onDeleteNode: (nodeId: string) => void;
+  /** Duplicate the given node at a +40/+40 offset. */
+  onDuplicateNode: (nodeId: string) => void;
 }
 
 const CanvasNodeActionsContext = createContext<CanvasNodeActions | null>(null);
