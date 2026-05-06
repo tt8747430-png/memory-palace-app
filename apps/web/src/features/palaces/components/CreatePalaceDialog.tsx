@@ -26,19 +26,17 @@ interface CreatePalaceDialogProps {
 
 export function CreatePalaceDialog({ autoOpen = false }: CreatePalaceDialogProps) {
   const router = useRouter();
-  const [open, setOpen] = useState(autoOpen);
+  // Derive open from autoOpen (prop-driven) or userOpen (button/close).
+  // autoOpen handles both the initial-mount and already-mounted cases without
+  // needing a synchronous setState inside an effect.
+  const [userOpen, setUserOpen] = useState(false);
+  const open = autoOpen || userOpen;
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  // Respond to autoOpen prop changes — handles two cases:
-  //   1. Initial mount with autoOpen=true (navigating from another page).
-  //   2. autoOpen flips to true after mount (already on /palaces when the
-  //      command palette fires router.push('/palaces?action=create')).
-  // In both cases: open the dialog and strip the search param so a refresh
-  // doesn't reopen it.
+  // Strip the search param so a refresh doesn't reopen the dialog.
   useEffect(() => {
     if (autoOpen) {
-      setOpen(true);
       router.replace('/palaces');
     }
   }, [autoOpen, router]);
@@ -53,14 +51,14 @@ export function CreatePalaceDialog({ autoOpen = false }: CreatePalaceDialogProps
       if (!result.success) {
         setError(result.error.message);
       } else {
-        setOpen(false);
+        setUserOpen(false);
       }
     });
   }
 
   function handleOpenChange(next: boolean) {
     if (!isPending) {
-      setOpen(next);
+      setUserOpen(next);
       setError(null);
     }
   }

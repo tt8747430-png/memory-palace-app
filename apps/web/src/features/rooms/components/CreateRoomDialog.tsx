@@ -31,15 +31,15 @@ export function CreateRoomDialog({
   autoOpen = false,
 }: CreateRoomDialogProps) {
   const router = useRouter();
-  const [open, setOpen] = useState(autoOpen);
+  // Derive open from autoOpen (prop-driven) or userOpen (button/close).
+  const [userOpen, setUserOpen] = useState(false);
+  const open = autoOpen || userOpen;
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  // Respond to autoOpen prop changes — handles both initial mount and the
-  // already-mounted case (user is on the palace page when the shortcut fires).
+  // Strip the search param so a refresh doesn't reopen the dialog.
   useEffect(() => {
     if (autoOpen) {
-      setOpen(true);
       router.replace(`/palaces/${palaceId}`);
     }
   }, [autoOpen, palaceId, router]);
@@ -53,14 +53,14 @@ export function CreateRoomDialog({
       if (!result.success) {
         setError(result.error.message);
       } else {
-        setOpen(false);
+        setUserOpen(false);
       }
     });
   }
 
   function handleOpenChange(next: boolean) {
     if (!isPending) {
-      setOpen(next);
+      setUserOpen(next);
       setError(null);
     }
   }

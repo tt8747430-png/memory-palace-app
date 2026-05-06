@@ -1,7 +1,7 @@
 'use client';
 
 import { createPortal } from 'react-dom';
-import { type CSSProperties, useEffect, useRef, useState } from 'react';
+import { type CSSProperties, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   ReactFlow,
   Background,
@@ -186,9 +186,11 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
   // changing values as deps (removeNode.mutate changes each render from TQ;
   // activeTool changes on every tool switch).
   const activeToolRef = useRef(activeTool);
-  activeToolRef.current = activeTool;
   const removeNodeMutateRef = useRef(removeNode.mutate);
-  removeNodeMutateRef.current = removeNode.mutate;
+  useLayoutEffect(() => {
+    activeToolRef.current = activeTool;
+    removeNodeMutateRef.current = removeNode.mutate;
+  });
 
   // Layer 2: Subscribe to Supabase Realtime for cross-device sync.
   useRealtimeNodes(roomId);
