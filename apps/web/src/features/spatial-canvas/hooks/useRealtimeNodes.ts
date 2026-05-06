@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import type { RealtimeChannel } from '@supabase/supabase-js';
 import { createSupabaseBrowser } from '@/shared/lib/supabase-browser';
 import { roomNodesQueryKey } from './useNodesQuery';
 
@@ -22,17 +21,13 @@ import { roomNodesQueryKey } from './useNodesQuery';
  */
 export function useRealtimeNodes(roomId: string): void {
   const queryClient = useQueryClient();
-  const channelRef = useRef<RealtimeChannel | null>(null);
 
   useEffect(() => {
     const supabase = createSupabaseBrowser();
     const queryKey = roomNodesQueryKey(roomId);
 
-    // Create a unique channel name per room to avoid collisions.
-    const channelName = `room-nodes:${roomId}`;
-
     const channel = supabase
-      .channel(channelName)
+      .channel(`room-nodes:${roomId}`)
       .on(
         'postgres_changes',
         {
@@ -53,11 +48,8 @@ export function useRealtimeNodes(roomId: string): void {
       )
       .subscribe();
 
-    channelRef.current = channel;
-
     return () => {
       supabase.removeChannel(channel);
-      channelRef.current = null;
     };
   }, [roomId, queryClient]);
 }

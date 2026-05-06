@@ -1,6 +1,5 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
 import { getDb, nodes, rooms, palaces, and, eq, isNull } from '@memory-palace/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
 import { createNodeSchema } from '../schemas/node';
@@ -16,7 +15,7 @@ export const createNode = defineAction({
     // ownership check and the node insert.
     const node = await db.transaction(async (tx) => {
       const [room] = await tx
-        .select({ id: rooms.id, palaceId: rooms.palaceId })
+        .select({ id: rooms.id })
         .from(rooms)
         .innerJoin(
           palaces,
@@ -55,11 +54,9 @@ export const createNode = defineAction({
           updatedAt: nodes.updatedAt,
         });
       if (!created) throw new ActionError('INTERNAL_ERROR', 'Insert returned no row.');
-      return { ...created, palaceId: room.palaceId };
+      return created;
     });
 
-    revalidatePath(`/palaces/${node.palaceId}/rooms/${input.roomId}`);
-    revalidatePath('/');
     return node;
   },
 });

@@ -6,6 +6,7 @@ import { cn } from '@memory-palace/ui';
 import { useCanvasStore } from '../store/CanvasStoreContext';
 import type { CanvasTool } from '../store/canvasStore';
 import { useRoomNodeMutations } from '../hooks/useRoomNodeMutations';
+import { getCanvasCenterFlowPos } from '../lib/canvasUtils';
 
 const TOOLS: { id: CanvasTool; label: string; Icon: React.ElementType }[] = [
   { id: 'pointer', label: 'Select (V)', Icon: MousePointer2 },
@@ -29,11 +30,7 @@ export function CanvasToolbar({ roomId }: CanvasToolbarProps) {
   const { screenToFlowPosition, fitView } = useReactFlow();
 
   const handleAddNode = () => {
-    const container = document.querySelector('[data-testid="canvas-container"]');
-    const rect = container?.getBoundingClientRect();
-    const cx = rect ? rect.width / 2 : 400;
-    const cy = rect ? rect.height / 2 : 300;
-    const position = screenToFlowPosition({ x: cx + (rect?.left ?? 0), y: cy + (rect?.top ?? 0) });
+    const position = getCanvasCenterFlowPos(screenToFlowPosition);
     addNode.mutate({
       roomId,
       title: 'New Node',

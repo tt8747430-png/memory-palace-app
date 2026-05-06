@@ -8,6 +8,11 @@
  * This is Layer 1 of Phase 5C's sync strategy — zero-latency, no network,
  * handles the "two tabs open" use case instantly.
  *
+ * The channel is stored on `globalThis` so Next.js HMR module re-execution
+ * reuses the existing instance instead of creating a duplicate channel and
+ * leaking the old message listener. Production has no HMR, so the guard
+ * is effectively free there.
+ *
  * @see docs/adr/5c-realtime-sync.md
  */
 
@@ -20,14 +25,14 @@ interface InvalidateMessage {
 
 type SyncMessage = InvalidateMessage;
 
-let channel: BroadcastChannel | null = null;
+const globalForChannel = globalThis as unknown as {
+  __mpBroadcastChannel?: BroadcastChannel;
+};
 
 function getChannel(): BroadcastChannel | null {
   if (typeof globalThis.BroadcastChannel === 'undefined') return null;
-  if (!channel) {
-    channel = new BroadcastChannel(CHANNEL_NAME);
-  }
-  return channel;
+  globalForChannel.__mpBroadcastChannel ??= new BroadcastChannel(CHANNEL_NAME);
+  return globalForChannel.__mpBroadcastChannel;
 }
 
 /** Broadcast a cache invalidation to all other tabs on this origin. */

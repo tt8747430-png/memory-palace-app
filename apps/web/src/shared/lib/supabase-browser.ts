@@ -9,25 +9,29 @@ import { env } from './env';
  *
  * This is the first browser-side Supabase client in the codebase, introduced
  * in Phase 5C for cross-device realtime sync. See docs/adr/5c-realtime-sync.md.
+ *
+ * Stored on `globalThis` so Next.js HMR module re-execution in development
+ * reuses the existing instance instead of creating a new one and leaking the
+ * old WebSocket connection. Production has no HMR, so the guard is free.
  */
-let browserClient: SupabaseClient | null = null;
+const globalForBrowser = globalThis as unknown as {
+  __mpSupabaseBrowser?: SupabaseClient;
+};
 
 export function createSupabaseBrowser(): SupabaseClient {
-  if (browserClient) return browserClient;
+  if (globalForBrowser.__mpSupabaseBrowser) return globalForBrowser.__mpSupabaseBrowser;
 
-  browserClient = createClient(
+  globalForBrowser.__mpSupabaseBrowser = createClient(
     env.NEXT_PUBLIC_SUPABASE_URL,
     env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     {
       realtime: {
         params: {
-          // Prevent the realtime client from trying to use the eventsPerSecond
-          // throttle, which is a server-side concept.
           eventsPerSecond: 10,
         },
       },
     },
   );
 
-  return browserClient;
+  return globalForBrowser.__mpSupabaseBrowser;
 }

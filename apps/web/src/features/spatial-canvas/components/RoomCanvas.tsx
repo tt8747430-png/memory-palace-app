@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ReactFlow,
   Background,
@@ -151,6 +151,8 @@ interface InnerCanvasProps {
 }
 
 function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const activeTool = useCanvasStore((s) => s.activeTool);
   const setSelectedNodeIds = useCanvasStore((s) => s.setSelectedNodeIds);
   const setEditingNodeId = useCanvasStore((s) => s.setEditingNodeId);
@@ -161,7 +163,7 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
     initialData: initialNodes,
   });
 
-  const flowNodes = useMemo(() => (serverNodes ?? []).map(dbNodeToFlowNode), [serverNodes]);
+  const flowNodes = (serverNodes ?? []).map(dbNodeToFlowNode);
 
   const [nodes, setNodes, onNodesChange] = useNodesState<MemoryNodeType>(flowNodes);
   const [edges, , onEdgesChange] = useEdgesState<Edge>([]);
@@ -226,41 +228,34 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
   // ── Pane context menu ─────────────────────────────────────────────────────
   const [paneMenu, setPaneMenu] = useState<PaneMenu | null>(null);
 
-  const onPaneContextMenu = useCallback(
-    (event: MouseEvent | React.MouseEvent) => {
-      event.preventDefault();
-      const container = document.querySelector('[data-testid="canvas-container"]');
-      const containerRect = container?.getBoundingClientRect();
-      const clientX = event.clientX;
-      const clientY = event.clientY;
-      const offsetX = containerRect ? clientX - containerRect.left : clientX;
-      const offsetY = containerRect ? clientY - containerRect.top : clientY;
-      const flowPos = screenToFlowPosition({ x: clientX, y: clientY });
-      setPaneMenu({ screenX: offsetX, screenY: offsetY, flowX: flowPos.x, flowY: flowPos.y });
-    },
-    [screenToFlowPosition],
-  );
+  const onPaneContextMenu = (event: MouseEvent | React.MouseEvent) => {
+    event.preventDefault();
+    const rect = containerRef.current?.getBoundingClientRect();
+    const clientX = event.clientX;
+    const clientY = event.clientY;
+    const offsetX = rect ? clientX - rect.left : clientX;
+    const offsetY = rect ? clientY - rect.top : clientY;
+    const flowPos = screenToFlowPosition({ x: clientX, y: clientY });
+    setPaneMenu({ screenX: offsetX, screenY: offsetY, flowX: flowPos.x, flowY: flowPos.y });
+  };
 
   // ── Node actions (injected into MemoryNode via context) ───────────────────
-  const nodeActions = useMemo(
-    () => ({
-      onEditNode: (nodeId: string) => setEditingNodeId(nodeId),
-      onDeleteNode: (nodeId: string) => removeNode.mutate({ id: nodeId }),
-    }),
-    [setEditingNodeId, removeNode],
-  );
+  const nodeActions = {
+    onEditNode: (nodeId: string) => setEditingNodeId(nodeId),
+    onDeleteNode: (nodeId: string) => removeNode.mutate({ id: nodeId }),
+  };
 
   if (isLoading) return <CanvasLoadingSkeleton />;
 
   const isPanMode = activeTool === 'pan';
-  const fitView = initialNodes.length > 0;
+  const shouldFitView = initialNodes.length > 0;
 
   return (
     <CanvasNodeActionsProvider value={nodeActions}>
       <div
+        ref={containerRef}
         className="relative h-full w-full"
         data-testid="canvas-container"
-        // Close pane menu on any pointer down inside the canvas container
         onPointerDown={() => paneMenu && setPaneMenu(null)}
       >
         <ReactFlow<MemoryNodeType>
@@ -289,7 +284,7 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
             [-5000, -5000],
             [5000, 5000],
           ]}
-          fitView={fitView}
+          fitView={shouldFitView}
           fitViewOptions={{ padding: 0.2, maxZoom: 1.5 }}
           className="rounded-xl"
           proOptions={{ hideAttribution: false }}

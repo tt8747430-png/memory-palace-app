@@ -6,6 +6,7 @@ import { useReactFlow } from '@xyflow/react';
 import { cn } from '@memory-palace/ui';
 import { useCanvasStore } from '../store/CanvasStoreContext';
 import { useRoomNodeMutations } from '../hooks/useRoomNodeMutations';
+import { getCanvasCenterFlowPos } from '../lib/canvasUtils';
 
 interface CanvasFabProps {
   roomId: string;
@@ -36,11 +37,7 @@ export function CanvasFab({ roomId }: CanvasFabProps) {
   const { screenToFlowPosition, fitView } = useReactFlow();
 
   const handleAddNode = () => {
-    const container = document.querySelector('[data-testid="canvas-container"]');
-    const rect = container?.getBoundingClientRect();
-    const cx = rect ? rect.width / 2 : 200;
-    const cy = rect ? rect.height / 2 : 300;
-    const position = screenToFlowPosition({ x: cx + (rect?.left ?? 0), y: cy + (rect?.top ?? 0) });
+    const position = getCanvasCenterFlowPos(screenToFlowPosition);
     addNode.mutate({
       roomId,
       title: 'New Node',
