@@ -34,6 +34,8 @@ describe('cross-tab-sync', () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+    // Clear the globalThis singleton so the next test starts fresh.
+    delete (globalThis as Record<string, unknown>).__mpBroadcastChannel;
   });
 
   it('broadcastInvalidate sends the correct message structure', async () => {
