@@ -71,6 +71,48 @@ export const batchUpdateNodePositionsSchema = z.object({
     .max(100, 'Cannot batch-update more than 100 nodes at once'),
 });
 
+// ─── Edge schemas ─────────────────────────────────────────────────────────────
+
+export const getRoomEdgesSchema = z.object({
+  roomId: z.string().uuid('Invalid room ID'),
+});
+
+export const createEdgeSchema = z.object({
+  roomId: z.string().uuid('Invalid room ID'),
+  sourceNodeId: z.string().uuid('Invalid source node ID'),
+  targetNodeId: z.string().uuid('Invalid target node ID'),
+  label: z.string().max(200).optional(),
+});
+
+export const deleteEdgeSchema = z.object({
+  id: z.string().uuid('Invalid edge ID'),
+  roomId: z.string().uuid('Invalid room ID'),
+});
+
+// ─── Tag schemas ──────────────────────────────────────────────────────────────
+
+export const getNodeTagsSchema = z.object({
+  nodeId: z.string().uuid('Invalid node ID'),
+});
+
+export const getUserTagsSchema = z.object({
+  search: z.string().max(100).optional(),
+});
+
+export const addNodeTagSchema = z.object({
+  nodeId: z.string().uuid('Invalid node ID'),
+  roomId: z.string().uuid('Invalid room ID'),
+  tagName: z
+    .string()
+    .min(1, 'Tag name is required')
+    .max(50, 'Tag name must be 50 characters or less'),
+});
+
+export const removeNodeTagSchema = z.object({
+  nodeId: z.string().uuid('Invalid node ID'),
+  tagId: z.string().uuid('Invalid tag ID'),
+});
+
 export type SearchNodesInput = z.infer<typeof searchNodesSchema>;
 export type GetRoomNodesInput = z.infer<typeof getRoomNodesSchema>;
 export type CreateNodeInput = z.infer<typeof createNodeSchema>;
@@ -78,3 +120,10 @@ export type UpdateNodeInput = z.infer<typeof updateNodeSchema>;
 export type UpdateNodePositionInput = z.infer<typeof updateNodePositionSchema>;
 export type DeleteNodeInput = z.infer<typeof deleteNodeSchema>;
 export type BatchUpdateNodePositionsInput = z.infer<typeof batchUpdateNodePositionsSchema>;
+export type GetRoomEdgesInput = z.infer<typeof getRoomEdgesSchema>;
+export type CreateEdgeInput = z.infer<typeof createEdgeSchema>;
+export type DeleteEdgeInput = z.infer<typeof deleteEdgeSchema>;
+export type GetNodeTagsInput = z.infer<typeof getNodeTagsSchema>;
+export type GetUserTagsInput = z.infer<typeof getUserTagsSchema>;
+export type AddNodeTagInput = z.infer<typeof addNodeTagSchema>;
+export type RemoveNodeTagInput = z.infer<typeof removeNodeTagSchema>;

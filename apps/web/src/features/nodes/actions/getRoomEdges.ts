@@ -1,0 +1,31 @@
+'use server';
+
+import { getDb, edges, nodes, eq, and } from '@memory-palace/db';
+import { defineAction } from '@/shared/lib/action';
+import { getRoomEdgesSchema } from '../schemas/node';
+
+export const getRoomEdges = defineAction({
+  name: 'getRoomEdges',
+  schema: getRoomEdgesSchema,
+  handler: async ({ user, input }) => {
+    // Fetch all edges where both endpoints belong to nodes in this room
+    // that are owned by the authenticated user (via the denormalised userId).
+    return getDb()
+      .select({
+        id: edges.id,
+        sourceNodeId: edges.sourceNodeId,
+        targetNodeId: edges.targetNodeId,
+        label: edges.label,
+        createdAt: edges.createdAt,
+      })
+      .from(edges)
+      .innerJoin(
+        nodes,
+        and(
+          eq(edges.sourceNodeId, nodes.id),
+          eq(nodes.roomId, input.roomId),
+          eq(nodes.userId, user.id),
+        ),
+      );
+  },
+});
