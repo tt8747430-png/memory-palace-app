@@ -23,7 +23,9 @@ import { CanvasLoadingSkeleton } from './CanvasLoadingSkeleton';
 import { NodeEditorSheet } from './NodeEditorSheet';
 import { CanvasStoreProvider, useCanvasStore } from '../store/CanvasStoreContext';
 import { useNodesQuery } from '../hooks/useNodesQuery';
+import { useRealtimeNodes } from '../hooks/useRealtimeNodes';
 import { useRoomNodeMutations, type PositionUpdate } from '../hooks/useRoomNodeMutations';
+import { OfflineBanner } from '@/shared/components/OfflineBanner';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -72,6 +74,9 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
   }
 
   const { savePosition, saveBatchPositions } = useRoomNodeMutations(roomId);
+
+  // Layer 2: Subscribe to Supabase Realtime for cross-device sync.
+  useRealtimeNodes(roomId);
 
   // Single-node drag — fires only when the dragged node is NOT part of a
   // multi-selection (React Flow v12 routes selection drags to onSelectionDragStop).
@@ -156,6 +161,7 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
 
       <CanvasToolbar roomId={roomId} />
       <NodeEditorSheet roomId={roomId} />
+      <OfflineBanner />
     </div>
   );
 }

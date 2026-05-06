@@ -11,6 +11,7 @@ import {
   type UpdateNodeInput,
   type CreateNodeInput,
 } from '@/features/nodes';
+import { broadcastInvalidate } from '@/shared/lib/cross-tab-sync';
 import { roomNodesQueryKey } from './useNodesQuery';
 
 export interface PositionUpdate {
@@ -47,6 +48,8 @@ export function useRoomNodeMutations(roomId: string) {
   }
 
   function invalidate() {
+    // Notify other tabs on this device to refetch (Layer 1: BroadcastChannel).
+    broadcastInvalidate(queryKey);
     return queryClient.invalidateQueries({ queryKey });
   }
 
