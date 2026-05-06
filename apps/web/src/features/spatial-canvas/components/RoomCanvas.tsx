@@ -26,11 +26,16 @@ import { CanvasFab } from './CanvasFab';
 import { CanvasLoadingSkeleton } from './CanvasLoadingSkeleton';
 import { NodeEditorSheet } from './NodeEditorSheet';
 import { SelectionToolbar } from './SelectionToolbar';
-import { CanvasStoreProvider, useCanvasStore } from '../store/CanvasStoreContext';
+import {
+  CanvasStoreProvider,
+  useCanvasStore,
+  useCanvasStoreApi,
+} from '../store/CanvasStoreContext';
 import { CanvasNodeActionsProvider } from '../store/CanvasNodeActionsContext';
 import { useNodesQuery } from '../hooks/useNodesQuery';
 import { useRealtimeNodes } from '../hooks/useRealtimeNodes';
 import { useRoomNodeMutations, type PositionUpdate } from '../hooks/useRoomNodeMutations';
+import { getCanvasCenterFlowPos } from '../lib/canvasUtils';
 import { OfflineBanner } from '@/shared/components/OfflineBanner';
 
 const SNAP_GRID: [number, number] = [20, 20];
@@ -146,10 +151,14 @@ interface InnerCanvasProps {
 
 function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
   const activeTool = useCanvasStore((s) => s.activeTool);
-  const setSelectedNodeIds = useCanvasStore((s) => s.setSelectedNodeIds);
+  const setActiveTool = useCanvasStore((s) => s.setActiveTool);
   const setEditingNodeId = useCanvasStore((s) => s.setEditingNodeId);
   const snapEnabled = useCanvasStore((s) => s.snapEnabled);
   const toggleSnap = useCanvasStore((s) => s.toggleSnap);
+  // Non-reactive store access for event handlers — avoids re-rendering
+  // InnerCanvas on every selection change (which would create new array props
+  // like panOnDrag=[1,2] on every render and trigger a React Flow render loop).
+  const canvasStoreApi = useCanvasStoreApi();
 
   const { data: serverNodes, isLoading } = useNodesQuery(roomId, {
     initialData: initialNodes,
@@ -173,19 +182,95 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
   const { savePosition, saveBatchPositions, addNode, removeNode } = useRoomNodeMutations(roomId);
   const { screenToFlowPosition, fitView } = useReactFlow();
 
+  // Refs to avoid stale closures in effects that cannot list frequently-
+  // changing values as deps (removeNode.mutate changes each render from TQ;
+  // activeTool changes on every tool switch).
+  const activeToolRef = useRef(activeTool);
+  activeToolRef.current = activeTool;
+  const removeNodeMutateRef = useRef(removeNode.mutate);
+  removeNodeMutateRef.current = removeNode.mutate;
+
   // Layer 2: Subscribe to Supabase Realtime for cross-device sync.
   useRealtimeNodes(roomId);
 
-  // ── Keyboard shortcut: G = toggle snap ─────────────────────────────────
+  // ── canvas:create-node event (fired by the command palette / C→N shortcut) ──
+  useEffect(() => {
+    const onCreate = () => {
+      const position = getCanvasCenterFlowPos(screenToFlowPosition);
+      addNode.mutate({
+        roomId,
+        title: 'New Node',
+        nodeType: 'text',
+        positionX: Math.round(position.x),
+        positionY: Math.round(position.y),
+      });
+    };
+    window.addEventListener('canvas:create-node', onCreate);
+    return () => window.removeEventListener('canvas:create-node', onCreate);
+  }, [addNode, roomId, screenToFlowPosition]);
+
+  // ── canvas:fit-view / canvas:toggle-snap (fired by the command palette) ──
+  useEffect(() => {
+    const onFitView = () => fitView({ padding: 0.2, duration: 300 });
+    const onToggleSnap = () => toggleSnap();
+    window.addEventListener('canvas:fit-view', onFitView);
+    window.addEventListener('canvas:toggle-snap', onToggleSnap);
+    return () => {
+      window.removeEventListener('canvas:fit-view', onFitView);
+      window.removeEventListener('canvas:toggle-snap', onToggleSnap);
+    };
+  }, [fitView, toggleSnap]);
+
+  // ── Keyboard shortcuts: G = snap, F = fit view, Del/Backspace = delete ──
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement).tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
-      if (e.key === 'g' || e.key === 'G') toggleSnap();
+      if (e.key === 'g' || e.key === 'G') {
+        // Consume the event in capture phase so the global bubble-phase
+        // shortcut handler does not arm its 'g → h/p/s' prefix window.
+        e.stopPropagation();
+        toggleSnap();
+      } else if (e.key === 'f' || e.key === 'F') {
+        fitView({ padding: 0.2, duration: 300 });
+      } else if (e.key === 'Delete' || e.key === 'Backspace') {
+        const { selectedNodeIds, setSelectedNodeIds } = canvasStoreApi.getState();
+        if (selectedNodeIds.size === 0) return;
+        e.preventDefault();
+        for (const id of selectedNodeIds) {
+          removeNodeMutateRef.current({ id });
+        }
+        setSelectedNodeIds(new Set());
+      }
     };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [toggleSnap]);
+    // Capture phase runs before the global document bubble-phase listener,
+    // which makes stopPropagation() effective for preventing prefix arming.
+    document.addEventListener('keydown', onKeyDown, { capture: true });
+    return () => document.removeEventListener('keydown', onKeyDown, { capture: true });
+  }, [toggleSnap, fitView, canvasStoreApi]);
+
+  // ── Space hold — temporarily switch to pan mode ───────────────────────────
+  useEffect(() => {
+    const prevToolRef = { current: activeToolRef.current };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.code !== 'Space' || e.repeat) return;
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      e.preventDefault();
+      prevToolRef.current = activeToolRef.current;
+      setActiveTool('pan');
+    };
+    const onKeyUp = (e: KeyboardEvent) => {
+      if (e.code !== 'Space') return;
+      setActiveTool(prevToolRef.current);
+    };
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('keyup', onKeyUp);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('keyup', onKeyUp);
+    };
+  }, [setActiveTool]);
 
   // Single-node drag — fires only when the dragged node is NOT part of a
   // multi-selection (React Flow v12 routes selection drags to onSelectionDragStop).
@@ -215,7 +300,7 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
   };
 
   const onSelectionChange: OnSelectionChangeFunc = ({ nodes: selected }) => {
-    setSelectedNodeIds(new Set(selected.map((n) => n.id)));
+    canvasStoreApi.getState().setSelectedNodeIds(new Set(selected.map((n) => n.id)));
   };
 
   // ── Pane context menu ─────────────────────────────────────────────────────
@@ -287,6 +372,7 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
           fitView={shouldFitView}
           fitViewOptions={{ padding: 0.2, maxZoom: 1.5 }}
           className="rounded-xl"
+          deleteKeyCode={null}
           proOptions={{ hideAttribution: false }}
         >
           <Background variant={BackgroundVariant.Dots} gap={20} size={1} className="opacity-40" />

@@ -1,10 +1,16 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { useCommandPalette } from '../components/CommandPaletteContext';
 import { useShortcutsOverlay } from '../components/ShortcutsOverlayContext';
+
+/**
+ * Duration of the prefix-key window in ms.  1 second is long enough for
+ * intentional two-key chords while short enough to avoid stale prefix arms.
+ */
+const PREFIX_TIMEOUT_MS = 1_000;
 
 /**
  * Registers all application-wide keyboard shortcuts.
@@ -18,8 +24,14 @@ import { useShortcutsOverlay } from '../components/ShortcutsOverlayContext';
  * This hook must be rendered inside both CommandPaletteProvider and
  * ShortcutsOverlayProvider.
  */
+/** Matches /palaces/[palaceId] — the palace detail page only (not rooms sub-pages). */
+const PALACE_PAGE_RE = /^\/palaces\/([^/]+)$/;
+/** Matches /palaces/[palaceId]/rooms/[roomId] */
+const ROOM_ROUTE_RE = /^\/palaces\/[^/]+\/rooms\/[^/]+/;
+
 export function useGlobalShortcuts() {
   const router = useRouter();
+  const pathname = usePathname();
   const { setTheme, resolvedTheme } = useTheme();
   const { openPalette } = useCommandPalette();
   const { openOverlay } = useShortcutsOverlay();
@@ -41,7 +53,7 @@ export function useGlobalShortcuts() {
     function armPrefix(key: string) {
       clearPrefix();
       prefixKey = key;
-      prefixTimerRef.current = setTimeout(clearPrefix, 1000);
+      prefixTimerRef.current = setTimeout(clearPrefix, PREFIX_TIMEOUT_MS);
     }
 
     function isInputFocused(): boolean {
@@ -88,6 +100,18 @@ export function useGlobalShortcuts() {
           case 'cp':
             router.push('/palaces?action=create');
             break;
+          case 'cn':
+            if (ROOM_ROUTE_RE.test(pathname)) {
+              window.dispatchEvent(new CustomEvent('canvas:create-node'));
+            }
+            break;
+          case 'cr': {
+            const palaceMatch = PALACE_PAGE_RE.exec(pathname);
+            if (palaceMatch) {
+              router.push(`/palaces/${palaceMatch[1]}?action=create-room`);
+            }
+            break;
+          }
           case 'td':
             setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
             break;
@@ -115,5 +139,5 @@ export function useGlobalShortcuts() {
       document.removeEventListener('keydown', handleKeyDown);
       clearPrefix();
     };
-  }, [router, setTheme, resolvedTheme, openPalette, openOverlay]);
+  }, [router, pathname, setTheme, resolvedTheme, openPalette, openOverlay]);
 }

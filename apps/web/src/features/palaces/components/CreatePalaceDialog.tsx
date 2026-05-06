@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import { Plus } from 'lucide-react';
 import {
   Button,
@@ -18,10 +19,29 @@ import {
 } from '@memory-palace/ui';
 import { createPalace } from '../actions/createPalace';
 
-export function CreatePalaceDialog() {
-  const [open, setOpen] = useState(false);
+interface CreatePalaceDialogProps {
+  /** When true the dialog opens immediately (e.g. deep-linked via ?action=create). */
+  autoOpen?: boolean;
+}
+
+export function CreatePalaceDialog({ autoOpen = false }: CreatePalaceDialogProps) {
+  const router = useRouter();
+  const [open, setOpen] = useState(autoOpen);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+
+  // Respond to autoOpen prop changes — handles two cases:
+  //   1. Initial mount with autoOpen=true (navigating from another page).
+  //   2. autoOpen flips to true after mount (already on /palaces when the
+  //      command palette fires router.push('/palaces?action=create')).
+  // In both cases: open the dialog and strip the search param so a refresh
+  // doesn't reopen it.
+  useEffect(() => {
+    if (autoOpen) {
+      setOpen(true);
+      router.replace('/palaces');
+    }
+  }, [autoOpen, router]);
 
   function handleSubmit(formData: FormData) {
     setError(null);

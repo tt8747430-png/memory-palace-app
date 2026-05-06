@@ -23,3 +23,15 @@ export function useCanvasStore<T>(selector: (state: CanvasState) => T): T {
   }
   return useStore(store, selector);
 }
+
+/** Returns the raw Zustand store for imperative reads (`getState()`) and
+ * writes (`setState()`) without creating a reactive subscription. Use this
+ * when you need to read state inside an event handler without causing the
+ * component to re-render on every state change. */
+export function useCanvasStoreApi(): CanvasStore {
+  const store = useContext(CanvasStoreContext);
+  if (!store) {
+    throw new Error('useCanvasStoreApi must be called inside <CanvasStoreProvider>.');
+  }
+  return store;
+}

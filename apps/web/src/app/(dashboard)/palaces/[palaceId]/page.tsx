@@ -14,6 +14,7 @@ const getCachedPalace = cache((palaceId: string) => getPalaceById({ id: palaceId
 
 interface PalacePageProps {
   params: Promise<{ palaceId: string }>;
+  searchParams: Promise<{ action?: string }>;
 }
 
 export async function generateMetadata({ params }: PalacePageProps) {
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: PalacePageProps) {
   };
 }
 
-async function RoomGrid({ palaceId }: { palaceId: string }) {
+async function RoomGrid({ palaceId, autoOpen }: { palaceId: string; autoOpen: boolean }) {
   const [palaceResult, roomsResult] = await Promise.all([
     getCachedPalace(palaceId),
     getRooms({ palaceId }),
@@ -58,7 +59,7 @@ async function RoomGrid({ palaceId }: { palaceId: string }) {
             <p className="mt-1 text-sm text-muted-foreground">{palace.description}</p>
           ) : null}
         </div>
-        <CreateRoomDialog palaceId={palaceId} nextPosition={nextPosition} />
+        <CreateRoomDialog palaceId={palaceId} nextPosition={nextPosition} autoOpen={autoOpen} />
       </div>
 
       {/* Rooms */}
@@ -73,7 +74,7 @@ async function RoomGrid({ palaceId }: { palaceId: string }) {
             title="No rooms yet"
             description="Add rooms to this palace to organise your memory nodes."
             headingLevel={3}
-            action={<CreateRoomDialog palaceId={palaceId} nextPosition={0} />}
+            action={<CreateRoomDialog palaceId={palaceId} nextPosition={0} autoOpen={autoOpen} />}
           />
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -87,12 +88,13 @@ async function RoomGrid({ palaceId }: { palaceId: string }) {
   );
 }
 
-export default async function PalaceDetailPage({ params }: PalacePageProps) {
-  const { palaceId } = await params;
+export default async function PalaceDetailPage({ params, searchParams }: PalacePageProps) {
+  const [{ palaceId }, { action }] = await Promise.all([params, searchParams]);
+  const autoOpen = action === 'create-room';
   return (
     <div className="space-y-6">
       <Suspense fallback={<CardSkeleton count={3} />}>
-        <RoomGrid palaceId={palaceId} />
+        <RoomGrid palaceId={palaceId} autoOpen={autoOpen} />
       </Suspense>
     </div>
   );

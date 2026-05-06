@@ -12,7 +12,7 @@ import { CardSkeleton } from '@/shared/components/CardSkeleton';
 
 export const metadata = { title: 'Palaces — Memory Palace' };
 
-async function PalaceGrid() {
+async function PalaceGrid({ autoOpen }: { autoOpen: boolean }) {
   const result = await getPalaces();
   const items = result.success ? result.data : [];
 
@@ -23,7 +23,7 @@ async function PalaceGrid() {
         title="No palaces yet"
         description="A Memory Palace is your top-level space. Create one to start adding rooms and nodes."
         headingLevel={2}
-        action={<CreatePalaceDialog />}
+        action={<CreatePalaceDialog autoOpen={autoOpen} />}
       />
     );
   }
@@ -37,7 +37,14 @@ async function PalaceGrid() {
   );
 }
 
-export default function PalacesPage() {
+export default async function PalacesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ action?: string }>;
+}) {
+  const { action } = await searchParams;
+  const autoOpen = action === 'create';
+
   return (
     <div className="space-y-6">
       {/* ── Page header ─────────────────────────────────────────────────── */}
@@ -51,13 +58,13 @@ export default function PalacesPage() {
         <div className="flex flex-wrap items-center gap-2">
           <ImportDialog />
           <ExportButton />
-          <CreatePalaceDialog />
+          <CreatePalaceDialog autoOpen={autoOpen} />
         </div>
       </div>
 
       {/* ── Palace grid ─────────────────────────────────────────────────── */}
       <Suspense fallback={<CardSkeleton count={3} />}>
-        <PalaceGrid />
+        <PalaceGrid autoOpen={autoOpen} />
       </Suspense>
     </div>
   );

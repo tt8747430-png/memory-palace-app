@@ -39,7 +39,11 @@ const SECTIONS: ShortcutSection[] = [
   },
   {
     heading: 'Create',
-    rows: [{ keys: ['C', 'P'], description: 'Create new palace' }],
+    rows: [
+      { keys: ['C', 'P'], description: 'Create new palace' },
+      { keys: ['C', 'R'], description: 'Create new room (on palace page)' },
+      { keys: ['C', 'N'], description: 'Create new node (on canvas)' },
+    ],
   },
   {
     heading: 'Canvas',

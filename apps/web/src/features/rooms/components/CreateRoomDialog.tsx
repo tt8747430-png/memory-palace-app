@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import { Plus } from 'lucide-react';
 import {
   Button,
@@ -20,12 +21,28 @@ import { createRoom } from '../actions/createRoom';
 interface CreateRoomDialogProps {
   palaceId: string;
   nextPosition?: number;
+  /** When true the dialog opens immediately (e.g. deep-linked via ?action=create-room). */
+  autoOpen?: boolean;
 }
 
-export function CreateRoomDialog({ palaceId, nextPosition = 0 }: CreateRoomDialogProps) {
-  const [open, setOpen] = useState(false);
+export function CreateRoomDialog({
+  palaceId,
+  nextPosition = 0,
+  autoOpen = false,
+}: CreateRoomDialogProps) {
+  const router = useRouter();
+  const [open, setOpen] = useState(autoOpen);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+
+  // Respond to autoOpen prop changes — handles both initial mount and the
+  // already-mounted case (user is on the palace page when the shortcut fires).
+  useEffect(() => {
+    if (autoOpen) {
+      setOpen(true);
+      router.replace(`/palaces/${palaceId}`);
+    }
+  }, [autoOpen, palaceId, router]);
 
   function handleSubmit(formData: FormData) {
     setError(null);

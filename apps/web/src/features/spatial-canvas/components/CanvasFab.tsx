@@ -1,6 +1,6 @@
 'use client';
 
-import { type CSSProperties, useState } from 'react';
+import { type CSSProperties, useEffect, useState } from 'react';
 import { Plus, X, MousePointer2, Hand, Grid2x2, Maximize } from 'lucide-react';
 import { useReactFlow } from '@xyflow/react';
 import { cn } from '@memory-palace/ui';
@@ -28,6 +28,16 @@ interface FabAction {
  */
 export function CanvasFab({ roomId }: CanvasFabProps) {
   const [open, setOpen] = useState(false);
+
+  // Close the action menu when the user presses Escape.
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [open]);
 
   const activeTool = useCanvasStore((s) => s.activeTool);
   const setActiveTool = useCanvasStore((s) => s.setActiveTool);

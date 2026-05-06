@@ -1,7 +1,7 @@
 'use client';
 
-import { useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useCallback, useTransition } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import {
   Home,
@@ -11,6 +11,10 @@ import {
   Sun,
   Keyboard,
   Plus,
+  DoorOpen,
+  Maximize2,
+  Grid3X3,
+  LogOut,
   type LucideIcon,
 } from 'lucide-react';
 import {
@@ -29,6 +33,7 @@ import {
 } from '@memory-palace/ui';
 import { useCommandPalette } from './CommandPaletteContext';
 import { useShortcutsOverlay } from './ShortcutsOverlayContext';
+import { signOut } from '@/shared/lib/signOut';
 
 interface PaletteAction {
   id: string;
@@ -38,10 +43,20 @@ interface PaletteAction {
   onSelect: () => void;
 }
 
+/** Matches /palaces/[palaceId] — the palace detail page only (not rooms sub-pages). */
+const PALACE_PAGE_RE = /^\/palaces\/([^/]+)$/;
+/** Matches /palaces/[palaceId]/rooms/[roomId] */
+const ROOM_ROUTE_RE = /^\/palaces\/[^/]+\/rooms\/[^/]+/;
+
 function useActions(closePalette: () => void): { group: string; actions: PaletteAction[] }[] {
   const router = useRouter();
+  const pathname = usePathname();
   const { setTheme, theme } = useTheme();
   const { openOverlay } = useShortcutsOverlay();
+  const [, startTransition] = useTransition();
+  const isOnRoomPage = ROOM_ROUTE_RE.test(pathname);
+  const palacePageMatch = PALACE_PAGE_RE.exec(pathname);
+  const palaceIdFromPath = palacePageMatch?.[1] ?? null;
 
   const navigate = useCallback(
     (href: string) => {
@@ -88,8 +103,62 @@ function useActions(closePalette: () => void): { group: string; actions: Palette
           shortcut: 'C P',
           onSelect: () => navigate('/palaces?action=create'),
         },
+        ...(isOnRoomPage
+          ? [
+              {
+                id: 'create-node',
+                label: 'Create New Node',
+                icon: Plus,
+                shortcut: 'C N',
+                onSelect: () => {
+                  closePalette();
+                  window.dispatchEvent(new CustomEvent('canvas:create-node'));
+                },
+              } satisfies PaletteAction,
+            ]
+          : []),
+        ...(palaceIdFromPath
+          ? [
+              {
+                id: 'create-room',
+                label: 'Create New Room',
+                icon: DoorOpen,
+                shortcut: 'C R',
+                onSelect: () => navigate(`/palaces/${palaceIdFromPath}?action=create-room`),
+              } satisfies PaletteAction,
+            ]
+          : []),
       ],
     },
+    ...(isOnRoomPage
+      ? [
+          {
+            group: 'Canvas',
+            actions: [
+              {
+                id: 'canvas-fit-view',
+                label: 'Fit View',
+                icon: Maximize2,
+                shortcut: 'F',
+                onSelect: () => {
+                  closePalette();
+                  window.dispatchEvent(new CustomEvent('canvas:fit-view'));
+                },
+              } satisfies PaletteAction,
+              {
+                id: 'canvas-toggle-snap',
+                label: 'Toggle Snap to Grid',
+                icon: Grid3X3,
+                shortcut: 'G',
+                onSelect: () => {
+                  closePalette();
+                  window.dispatchEvent(new CustomEvent('canvas:toggle-snap'));
+                },
+              } satisfies PaletteAction,
+            ],
+          },
+        ]
+      : []),
     {
       group: 'Tools',
       actions: [
@@ -111,6 +180,17 @@ function useActions(closePalette: () => void): { group: string; actions: Palette
           onSelect: () => {
             closePalette();
             openOverlay();
+          },
+        },
+        {
+          id: 'sign-out',
+          label: 'Sign Out',
+          icon: LogOut,
+          onSelect: () => {
+            closePalette();
+            startTransition(() => {
+              void signOut();
+            });
           },
         },
       ],
