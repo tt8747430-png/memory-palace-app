@@ -106,6 +106,15 @@ This project ships agent skills under `.agents/skills/`. Load the relevant skill
 
 When automating a convention, prefer in order: ESLint rule → lint-staged hook → skill → AGENTS.md prose. Only fall back to documenting in AGENTS.md when linter enforcement isn't feasible.
 
+## Agent workflow
+
+For non-trivial tasks, follow this sequence:
+
+1. **Research** — find existing patterns in the codebase before writing anything new. Load the relevant skill(s).
+2. **Plan** — write a concise plan before touching files. If scope is unclear, ask clarifying questions upfront and group them rather than interrupting mid-task.
+3. **Implement** — execute the plan. Go as far as possible; save any remaining questions for the end.
+4. **Verify** — run tests or lint to confirm the change works before declaring done. Never mark a task complete without a feedback loop.
+
 ## Documentation hygiene
 
 If a doc grows larger than the code it describes, trim it. Speculative future-phase decisions go in `docs/adr/<phase>-<topic>.md`, written when the phase begins. Don't expand `ARCHITECTURE.md` with tools the codebase doesn't import.
