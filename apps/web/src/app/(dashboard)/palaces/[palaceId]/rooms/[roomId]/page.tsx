@@ -20,7 +20,8 @@ export async function generateMetadata({ params }: RoomPageProps) {
   const { palaceId, roomId } = await params;
   const result = await getCachedRoom(roomId, palaceId);
   return {
-    title: result.success ? `${result.data.title} — Memory Palace` : 'Room — Memory Palace',
+    title: result.success ? result.data.title : 'Room',
+    description: result.success ? `Memory canvas for "${result.data.title}".` : undefined,
   };
 }
 

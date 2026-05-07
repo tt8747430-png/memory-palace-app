@@ -39,7 +39,10 @@ export function DashboardShell({ children, userProfile }: DashboardShellProps) {
         </header>
 
         {/* Main content */}
-        <main className="flex-1 overflow-y-auto pb-[calc(var(--height-bottom-nav)+env(safe-area-inset-bottom))] md:pb-0">
+        <main
+          id="main-content"
+          className="flex-1 overflow-y-auto pb-[calc(var(--height-bottom-nav)+env(safe-area-inset-bottom))] md:pb-0"
+        >
           <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</div>
         </main>
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { Component, type ReactNode, type ErrorInfo } from 'react';
+import * as Sentry from '@sentry/nextjs';
 import { AlertTriangle, RotateCcw } from 'lucide-react';
 import { Button } from '@memory-palace/ui';
 
@@ -29,7 +30,8 @@ export class CanvasErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    // In production, forward to your observability provider (Sentry, etc.).
+    // Forward to Sentry — no-ops when DSN is absent (local dev).
+    Sentry.captureException(error, { extra: { componentStack: info.componentStack } });
     console.error('[CanvasErrorBoundary]', error, info.componentStack);
   }
 

@@ -2,7 +2,10 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@memo
 import { getProfile } from '@/features/settings';
 import { ProfileForm } from '@/features/settings';
 
-export const metadata = { title: 'Settings — Memory Palace' };
+export const metadata = {
+  title: 'Settings',
+  description: 'Manage your profile, export data, and application preferences.',
+};
 
 export default async function SettingsPage() {
   const result = await getProfile();

@@ -21,7 +21,8 @@ export async function generateMetadata({ params }: PalacePageProps) {
   const { palaceId } = await params;
   const result = await getCachedPalace(palaceId);
   return {
-    title: result.success ? `${result.data.title} — Memory Palace` : 'Palace — Memory Palace',
+    title: result.success ? result.data.title : 'Palace',
+    description: result.success ? `Rooms in the "${result.data.title}" memory palace.` : undefined,
   };
 }
 

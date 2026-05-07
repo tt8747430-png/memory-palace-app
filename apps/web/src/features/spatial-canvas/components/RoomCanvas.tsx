@@ -37,6 +37,7 @@ import { CanvasLoadingSkeleton } from './CanvasLoadingSkeleton';
 import { NodeEditorSheet } from './NodeEditorSheet';
 import { SelectionToolbar } from './SelectionToolbar';
 import { CanvasSearch } from './CanvasSearch';
+import { CanvasDragAnnouncer, useCanvasDragAnnouncer } from './CanvasDragAnnouncer';
 import {
   CanvasStoreProvider,
   useCanvasStore,
@@ -232,6 +233,9 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
 
   // Layer 2: Subscribe to Supabase Realtime for cross-device sync.
   useRealtimeNodes(roomId);
+
+  // Screen reader announcements for drag operations.
+  const { announcerRef, announce } = useCanvasDragAnnouncer();
 
   const applyPositionSnapshot = useCallback(
     (snapshot: { id: string; x: number; y: number }[]) => {
@@ -461,13 +465,14 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
   }, [setActiveTool]);
 
   // Capture positions BEFORE a drag so we have a valid undo snapshot.
-  const onNodeDragStart: OnNodeDrag<MemoryNodeType> = () => {
+  const onNodeDragStart: OnNodeDrag<MemoryNodeType> = (_event, node) => {
     const snap = (getNodes() as MemoryNodeType[]).map((n) => ({
       id: n.id,
       x: n.position.x,
       y: n.position.y,
     }));
     pushPositionHistory(snap);
+    announce(`Moving ${node.data.title}`);
   };
 
   // Single-node drag — fires only when the dragged node is NOT part of a
@@ -478,6 +483,7 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
       positionX: node.position.x,
       positionY: node.position.y,
     });
+    announce(`${node.data.title} placed`);
   };
 
   // Selected-node drag — fires when dragging one or more selected nodes.
@@ -599,6 +605,7 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
   return (
     <CanvasNodeActionsProvider value={nodeActions}>
       <div className="relative h-full w-full" data-testid="canvas-container">
+        <CanvasDragAnnouncer announcerRef={announcerRef} />
         <ReactFlow<MemoryNodeType>
           nodes={displayNodes}
           edges={edges}
@@ -631,6 +638,7 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
           className="rounded-xl"
           deleteKeyCode={null}
           proOptions={{ hideAttribution: false }}
+          aria-label="Memory canvas — use Tab to navigate nodes, Enter to edit, Delete to remove"
         >
           <Background variant={BackgroundVariant.Dots} gap={20} size={1} className="opacity-40" />
           <Controls className="hidden md:flex" showInteractive={false} />

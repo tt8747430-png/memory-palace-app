@@ -22,13 +22,16 @@
   --secondary-foreground: hsl(240 6% 10%);
 
   --muted: hsl(240 5% 96%);
-  --muted-foreground: hsl(240 4% 46%);
+  /* Darkened from 46% → 37% lightness to reach ~5.8:1 contrast on white (WCAG AA). */
+  --muted-foreground: hsl(240 4% 37%);
 
   --accent: hsl(262 83% 58%);
   --accent-foreground: hsl(0 0% 100%);
 
   --destructive: hsl(0 84% 60%);
   --destructive-foreground: hsl(0 0% 100%);
+  /* Separate text-safe destructive value (≥4.5:1 on white) for inline error text. */
+  --destructive-text: hsl(0 84% 38%);
 
   --success: hsl(142 76% 36%);
   --success-foreground: hsl(0 0% 100%);

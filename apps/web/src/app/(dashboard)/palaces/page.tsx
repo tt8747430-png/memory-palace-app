@@ -11,7 +11,10 @@ import { EmptyState } from '@/shared/components/EmptyState';
 import { CardSkeleton } from '@/shared/components/CardSkeleton';
 import { EmptyStateCreateButton } from '@/shared/components/EmptyStateCreateButton';
 
-export const metadata = { title: 'Palaces — Memory Palace' };
+export const metadata = {
+  title: 'Palaces',
+  description: 'View and manage all your memory palaces.',
+};
 
 async function PalaceGrid() {
   const result = await getPalaces();
