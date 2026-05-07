@@ -9,6 +9,7 @@ import {
 } from '@/features/palaces';
 import { EmptyState } from '@/shared/components/EmptyState';
 import { CardSkeleton } from '@/shared/components/CardSkeleton';
+import { EmptyStateCreateButton } from '@/shared/components/EmptyStateCreateButton';
 
 export const metadata = { title: 'Palaces — Memory Palace' };
 
@@ -23,7 +24,11 @@ async function PalaceGrid() {
         title="No palaces yet"
         description="A Memory Palace is your top-level space. Create one to start adding rooms and nodes."
         headingLevel={2}
-        action={<CreatePalaceDialog />}
+        action={
+          <EmptyStateCreateButton dialogId="create-palace">
+            Create your first palace
+          </EmptyStateCreateButton>
+        }
       />
     );
   }
@@ -37,14 +42,7 @@ async function PalaceGrid() {
   );
 }
 
-export default async function PalacesPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ action?: string }>;
-}) {
-  const { action } = await searchParams;
-  const autoOpen = action === 'create';
-
+export default async function PalacesPage() {
   return (
     <div className="space-y-6">
       {/* ── Page header ─────────────────────────────────────────────────── */}
@@ -58,7 +56,7 @@ export default async function PalacesPage({
         <div className="flex flex-wrap items-center gap-2">
           <ImportDialog />
           <ExportButton />
-          <CreatePalaceDialog autoOpen={autoOpen} />
+          <CreatePalaceDialog />
         </div>
       </div>
 

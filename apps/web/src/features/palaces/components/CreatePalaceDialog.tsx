@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useState, useTransition } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
 import { Plus } from 'lucide-react';
 import {
   Button,
@@ -17,30 +16,17 @@ import {
   Textarea,
   Alert,
 } from '@memory-palace/ui';
+import { useAppDialog } from '@/shared/components/AppDialogContext';
 import { createPalace } from '../actions/createPalace';
 
-interface CreatePalaceDialogProps {
-  /** When true the dialog opens immediately (e.g. deep-linked via ?action=create). */
-  autoOpen?: boolean;
-}
-
-export function CreatePalaceDialog({ autoOpen = false }: CreatePalaceDialogProps) {
-  const router = useRouter();
-  // Seed userOpen from autoOpen so the dialog stays open after router.replace()
-  // strips the search param (making autoOpen false on re-render). useState only
-  // reads its argument on the initial mount, so subsequent re-renders with
-  // autoOpen=false don't collapse the dialog while the user is in it.
-  const [userOpen, setUserOpen] = useState(autoOpen);
-  const open = autoOpen || userOpen;
+export function CreatePalaceDialog() {
+  // Dialog is controlled entirely via AppDialogContext — the trigger button
+  // calls openDialog('create-palace'), which sets pending; closing calls
+  // consume(), which clears it. No local open state or useEffect needed.
+  const { pending, open: openDialog, consume } = useAppDialog();
+  const isOpen = pending === 'create-palace';
   const [error, setError] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
-
-  // Strip the search param so a refresh doesn't reopen the dialog.
-  useEffect(() => {
-    if (autoOpen) {
-      router.replace('/palaces');
-    }
-  }, [autoOpen, router]);
+  const [isSubmitting, startTransition] = useTransition();
 
   function handleSubmit(formData: FormData) {
     setError(null);
@@ -52,20 +38,21 @@ export function CreatePalaceDialog({ autoOpen = false }: CreatePalaceDialogProps
       if (!result.success) {
         setError(result.error.message);
       } else {
-        setUserOpen(false);
+        consume();
       }
     });
   }
 
   function handleOpenChange(next: boolean) {
-    if (!isPending) {
-      setUserOpen(next);
+    if (!isSubmitting) {
+      if (next) openDialog('create-palace');
+      else consume();
       setError(null);
     }
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button size="md" className="gap-2">
           <Plus className="h-4 w-4" />
@@ -88,7 +75,7 @@ export function CreatePalaceDialog({ autoOpen = false }: CreatePalaceDialogProps
               placeholder="e.g. Ancient Rome"
               required
               maxLength={100}
-              disabled={isPending}
+              disabled={isSubmitting}
             />
           </div>
           <div className="space-y-1.5">
@@ -98,7 +85,7 @@ export function CreatePalaceDialog({ autoOpen = false }: CreatePalaceDialogProps
               name="description"
               placeholder="What will you remember here?"
               maxLength={500}
-              disabled={isPending}
+              disabled={isSubmitting}
             />
           </div>
           {error ? (
@@ -111,13 +98,18 @@ export function CreatePalaceDialog({ autoOpen = false }: CreatePalaceDialogProps
               type="button"
               variant="outline"
               size="md"
-              onClick={() => handleOpenChange(false)}
-              disabled={isPending}
+              onClick={() => {
+                if (!isSubmitting) {
+                  consume();
+                  setError(null);
+                }
+              }}
+              disabled={isSubmitting}
             >
               Cancel
             </Button>
-            <Button type="submit" size="md" disabled={isPending}>
-              {isPending ? 'Creating…' : 'Create Palace'}
+            <Button type="submit" size="md" disabled={isSubmitting}>
+              {isSubmitting ? 'Creating…' : 'Create Palace'}
             </Button>
           </DialogFooter>
         </form>

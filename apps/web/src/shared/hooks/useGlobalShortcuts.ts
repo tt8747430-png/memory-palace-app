@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { useCommandPalette } from '../components/CommandPaletteContext';
 import { useShortcutsOverlay } from '../components/ShortcutsOverlayContext';
+import { useAppDialog } from '../components/AppDialogContext';
 import { CANVAS_EVENTS } from '../lib/canvasEvents';
 import { findChordAction } from '../lib/commandActions';
 
@@ -34,6 +35,7 @@ export function useGlobalShortcuts() {
   const { setTheme, resolvedTheme } = useTheme();
   const { openPalette } = useCommandPalette();
   const { openOverlay } = useShortcutsOverlay();
+  const { open: openDialog } = useAppDialog();
 
   const prefixTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -86,6 +88,7 @@ export function useGlobalShortcuts() {
           setTheme,
           resolvedTheme,
           openOverlay,
+          openDialog,
           // Sign-out has no chord, so this branch is unreachable from the hook.
           signOut: () => {},
           dispatchCanvas: (name) => window.dispatchEvent(new CustomEvent(name)),
@@ -109,7 +112,7 @@ export function useGlobalShortcuts() {
       document.removeEventListener('keydown', handleKeyDown);
       clearPrefix();
     };
-  }, [router, pathname, setTheme, resolvedTheme, openPalette, openOverlay]);
+  }, [router, pathname, setTheme, resolvedTheme, openPalette, openOverlay, openDialog]);
 }
 
 // Re-export for tests that previously imported via this path.

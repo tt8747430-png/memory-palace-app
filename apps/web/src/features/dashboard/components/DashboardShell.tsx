@@ -15,11 +15,9 @@ interface UserProfile {
 interface DashboardShellProps {
   children: ReactNode;
   userProfile?: UserProfile | null;
-  /** Injected search action — passed from the app layer to avoid boundary violations. */
-  onSearch?: React.ComponentProps<typeof Sidebar>['onSearch'];
 }
 
-export function DashboardShell({ children, userProfile, onSearch }: DashboardShellProps) {
+export function DashboardShell({ children, userProfile }: DashboardShellProps) {
   return (
     <AppCommandProvider>
       <div className="flex h-dvh flex-col md:flex-row">
@@ -28,11 +26,11 @@ export function DashboardShell({ children, userProfile, onSearch }: DashboardShe
           className="hidden md:flex md:w-64 md:flex-col md:border-r"
           aria-label="Main navigation"
         >
-          <Sidebar userProfile={userProfile} onSearch={onSearch} />
+          <Sidebar userProfile={userProfile} />
         </aside>
 
         <header className="flex items-center justify-between border-b px-4 py-3 md:hidden">
-          <MobileDrawer userProfile={userProfile} onSearch={onSearch} />
+          <MobileDrawer userProfile={userProfile} />
           <h1 className="text-lg font-semibold">Memory Palace</h1>
           <div className="flex items-center gap-1">
             <CommandPaletteTrigger />

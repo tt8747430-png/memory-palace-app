@@ -6,6 +6,7 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -570,24 +571,30 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
     },
   };
 
+  // Dim nodes that don't match the live search query (opacity only, no unmount).
+  // useMemo is required here for two reasons:
+  //  1. Avoids restarting CSS opacity transitions on every unrelated re-render
+  //     (browsers compare style strings byte-for-byte and restart on change).
+  //  2. Preserves node object identity during drag, which keeps React Flow's
+  //     snap-to-grid position stream intact when search is active.
+  // Must be called before the isLoading early return to satisfy rules-of-hooks.
+  const displayNodes = useMemo(() => {
+    if (canvasSearchQuery.trim().length === 0) return nodes;
+    const q = canvasSearchQuery.toLowerCase();
+    return nodes.map((n) => {
+      const matches =
+        n.data.title.toLowerCase().includes(q) ||
+        (n.data.content?.toLowerCase().includes(q) ?? false);
+      return matches
+        ? n
+        : { ...n, style: { ...n.style, opacity: 0.2, transition: 'opacity 150ms' } };
+    });
+  }, [nodes, canvasSearchQuery]);
+
   if (isLoading) return <CanvasLoadingSkeleton />;
 
   const isPanMode = activeTool === 'pan';
   const shouldFitView = initialNodes.length > 0;
-
-  // Dim nodes that don't match the live search query (opacity only, no unmount).
-  const displayNodes =
-    canvasSearchQuery.trim().length > 0
-      ? nodes.map((n) => {
-          const q = canvasSearchQuery.toLowerCase();
-          const matches =
-            n.data.title.toLowerCase().includes(q) ||
-            (n.data.content?.toLowerCase().includes(q) ?? false);
-          return matches
-            ? n
-            : { ...n, style: { ...n.style, opacity: 0.2, transition: 'opacity 150ms' } };
-        })
-      : nodes;
 
   return (
     <CanvasNodeActionsProvider value={nodeActions}>

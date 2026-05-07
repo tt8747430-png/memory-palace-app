@@ -35,19 +35,21 @@ export const searchNodes = defineAction({
       sql`${FTS_VECTOR} @@ ${ftsQuery}`,
     ];
 
-    const db = getDb();
-    let q = db.select(getTableColumns(nodes)).from(nodes).$dynamic();
-
     if (palaceId) {
-      // Inner-joining rooms (and filtering deleted ones) prevents soft-deleted
-      // rooms from leaking their nodes into search results.
-      q = q.innerJoin(
-        rooms,
-        and(eq(rooms.id, nodes.roomId), eq(rooms.palaceId, palaceId), isNull(rooms.deletedAt))!,
-      );
+      conditions.push(eq(rooms.palaceId, palaceId));
     }
 
-    return q
+    const db = getDb();
+
+    // Always join rooms so we can return palaceId for navigation.
+    // Filtering deleted rooms prevents soft-deleted rooms from leaking nodes.
+    return db
+      .select({
+        ...getTableColumns(nodes),
+        palaceId: rooms.palaceId,
+      })
+      .from(nodes)
+      .innerJoin(rooms, and(eq(rooms.id, nodes.roomId), isNull(rooms.deletedAt))!)
       .where(and(...conditions))
       .orderBy(sql`ts_rank(${FTS_VECTOR}, ${ftsQuery}) DESC`, desc(nodes.createdAt))
       .limit(limit);

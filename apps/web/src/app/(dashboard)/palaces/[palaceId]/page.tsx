@@ -7,6 +7,7 @@ import { getPalaceById } from '@/features/palaces';
 import { getRooms, RoomCard, CreateRoomDialog } from '@/features/rooms';
 import { EmptyState } from '@/shared/components/EmptyState';
 import { CardSkeleton } from '@/shared/components/CardSkeleton';
+import { EmptyStateCreateButton } from '@/shared/components/EmptyStateCreateButton';
 
 // cache() deduplicates calls with the same palaceId within a single request,
 // so generateMetadata and RoomGrid share one DB round-trip, not two.
@@ -14,7 +15,6 @@ const getCachedPalace = cache((palaceId: string) => getPalaceById({ id: palaceId
 
 interface PalacePageProps {
   params: Promise<{ palaceId: string }>;
-  searchParams: Promise<{ action?: string }>;
 }
 
 export async function generateMetadata({ params }: PalacePageProps) {
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: PalacePageProps) {
   };
 }
 
-async function RoomGrid({ palaceId, autoOpen }: { palaceId: string; autoOpen: boolean }) {
+async function RoomGrid({ palaceId }: { palaceId: string }) {
   const [palaceResult, roomsResult] = await Promise.all([
     getCachedPalace(palaceId),
     getRooms({ palaceId }),
@@ -59,7 +59,7 @@ async function RoomGrid({ palaceId, autoOpen }: { palaceId: string; autoOpen: bo
             <p className="mt-1 text-sm text-muted-foreground">{palace.description}</p>
           ) : null}
         </div>
-        <CreateRoomDialog palaceId={palaceId} nextPosition={nextPosition} autoOpen={autoOpen} />
+        <CreateRoomDialog palaceId={palaceId} nextPosition={nextPosition} />
       </div>
 
       {/* Rooms */}
@@ -74,7 +74,11 @@ async function RoomGrid({ palaceId, autoOpen }: { palaceId: string; autoOpen: bo
             title="No rooms yet"
             description="Add rooms to this palace to organise your memory nodes."
             headingLevel={3}
-            action={<CreateRoomDialog palaceId={palaceId} nextPosition={0} />}
+            action={
+              <EmptyStateCreateButton dialogId="create-room">
+                Add your first room
+              </EmptyStateCreateButton>
+            }
           />
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -88,13 +92,12 @@ async function RoomGrid({ palaceId, autoOpen }: { palaceId: string; autoOpen: bo
   );
 }
 
-export default async function PalaceDetailPage({ params, searchParams }: PalacePageProps) {
-  const [{ palaceId }, { action }] = await Promise.all([params, searchParams]);
-  const autoOpen = action === 'create-room';
+export default async function PalaceDetailPage({ params }: PalacePageProps) {
+  const { palaceId } = await params;
   return (
     <div className="space-y-6">
       <Suspense fallback={<CardSkeleton count={3} />}>
-        <RoomGrid palaceId={palaceId} autoOpen={autoOpen} />
+        <RoomGrid palaceId={palaceId} />
       </Suspense>
     </div>
   );

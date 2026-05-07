@@ -1,8 +1,17 @@
 'use client';
 
-import { Fragment, useMemo, useTransition } from 'react';
+import {
+  Fragment,
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
+import { FileText } from 'lucide-react';
 import {
   Command,
   CommandInput,
@@ -11,14 +20,16 @@ import {
   CommandGroup,
   CommandItem,
   CommandSeparator,
-  CommandShortcut,
   Dialog,
   DialogContent,
   DialogTitle,
   DialogDescription,
+  CommandShortcut,
 } from '@memory-palace/ui';
 import { useCommandPalette } from './CommandPaletteContext';
 import { useShortcutsOverlay } from './ShortcutsOverlayContext';
+import { useAppDialog } from './AppDialogContext';
+import { useSearch, type SearchResult } from './SearchContext';
 import { signOut } from '@/shared/lib/signOut';
 import { CANVAS_EVENTS } from '@/shared/lib/canvasEvents';
 import {
@@ -38,7 +49,43 @@ export function CommandPalette() {
   const pathname = usePathname();
   const { setTheme, resolvedTheme } = useTheme();
   const { openOverlay } = useShortcutsOverlay();
+  const { open: openDialog } = useAppDialog();
+  const searchFn = useSearch();
   const [, startTransition] = useTransition();
+
+  const [inputValue, setInputValue] = useState('');
+  const deferredQuery = useDeferredValue(inputValue);
+
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const searchAbortRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Debounced search: fires 200 ms after the deferred query settles.
+  // setState is only called inside the async callback — not synchronously in the
+  // effect body — to satisfy the react-hooks/set-state-in-effect rule.
+  useEffect(() => {
+    if (!searchFn || deferredQuery.trim().length === 0) return;
+    if (searchAbortRef.current !== null) clearTimeout(searchAbortRef.current);
+    searchAbortRef.current = setTimeout(() => {
+      void searchFn({ query: deferredQuery.trim(), limit: 8 }).then((result) => {
+        if (result.success) setSearchResults(result.data);
+      });
+    }, 200);
+    return () => {
+      if (searchAbortRef.current !== null) clearTimeout(searchAbortRef.current);
+    };
+  }, [deferredQuery, searchFn]);
+
+  // Derive visible results — empty array when query is blank so stale results
+  // never flash after the input is cleared (avoids a setState-in-effect reset).
+  const visibleResults = deferredQuery.trim().length > 0 ? searchResults : [];
+
+  const handleOpenChange = (next: boolean) => {
+    setOpen(next);
+    if (!next) {
+      setInputValue('');
+      setSearchResults([]);
+    }
+  };
 
   const groups = useMemo(() => {
     const visible = COMMAND_ACTIONS.filter((a) => scopeMatches(a.scope, pathname));
@@ -56,25 +103,60 @@ export function CommandPalette() {
       setTheme,
       resolvedTheme,
       openOverlay,
+      openDialog,
       signOut: () => startTransition(() => void signOut()),
       dispatchCanvas: (name) => window.dispatchEvent(new CustomEvent(name)),
     });
   };
 
+  const handleSelectResult = (result: SearchResult) => {
+    closePalette();
+    router.push(`/palaces/${result.palaceId}/rooms/${result.roomId}`);
+  };
+
+  const hasQuery = deferredQuery.trim().length > 0;
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="overflow-hidden p-0 shadow-xl sm:max-w-xl">
         <DialogTitle className="sr-only">Command Palette</DialogTitle>
         <DialogDescription className="sr-only">
           Type to search for actions, pages, or settings. Use arrow keys to navigate.
         </DialogDescription>
 
-        <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
-          <CommandInput placeholder="Type a command or search…" autoFocus />
+        <Command
+          shouldFilter={!hasQuery}
+          className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5"
+        >
+          <CommandInput
+            placeholder="Type a command or search…"
+            autoFocus
+            value={inputValue}
+            onValueChange={setInputValue}
+          />
           <CommandList>
             <CommandEmpty className="py-6 text-center text-sm text-muted-foreground">
               No results found.
             </CommandEmpty>
+
+            {/* Node search results — shown only when query is non-empty */}
+            {hasQuery && visibleResults.length > 0 && (
+              <>
+                <CommandGroup heading="Nodes">
+                  {visibleResults.map((result) => (
+                    <CommandItem
+                      key={result.id}
+                      value={`nodes ${result.title}`}
+                      onSelect={() => handleSelectResult(result)}
+                    >
+                      <FileText className="mr-2 h-4 w-4 shrink-0 opacity-70" aria-hidden />
+                      <span>{result.title}</span>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+                <CommandSeparator />
+              </>
+            )}
 
             {groups.map(({ group, actions }, groupIdx) => (
               <Fragment key={group}>

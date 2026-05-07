@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@memory-palace/ui';
-import { SearchDialog } from '@/shared/components/SearchDialog';
 import { CommandPaletteDesktopTrigger } from '@/shared/components/CommandPaletteTrigger';
 import { navItems, isNavItemActive } from '../nav';
 import { ModeToggle } from './ModeToggle';
@@ -17,13 +16,9 @@ interface UserProfile {
 
 interface SidebarProps {
   userProfile?: UserProfile | null;
-  /** Injected search action — passed from the app layer to avoid boundary violations. */
-  onSearch?: SearchDialogProps['onSearch'];
 }
 
-type SearchDialogProps = React.ComponentProps<typeof SearchDialog>;
-
-export function Sidebar({ userProfile, onSearch }: SidebarProps) {
+export function Sidebar({ userProfile }: SidebarProps) {
   const pathname = usePathname();
 
   return (
@@ -54,11 +49,10 @@ export function Sidebar({ userProfile, onSearch }: SidebarProps) {
         })}
       </nav>
 
-      {/* Footer: ⌘K trigger + search + profile menu + theme toggle */}
+      {/* Footer: ⌘K trigger + profile menu + theme toggle */}
       <div className="border-t px-3 py-3 space-y-2">
         <CommandPaletteDesktopTrigger />
         <div className="flex items-center gap-1">
-          {onSearch && <SearchDialog onSearch={onSearch} />}
           {userProfile ? (
             <ProfileMenu
               displayName={userProfile.displayName}

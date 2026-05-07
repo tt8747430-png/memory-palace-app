@@ -32,6 +32,7 @@ export interface CommandRunContext {
   openOverlay: () => void;
   signOut: () => void;
   dispatchCanvas: (name: (typeof CANVAS_EVENTS)[keyof typeof CANVAS_EVENTS]) => void;
+  openDialog: (id: 'create-palace' | 'create-room') => void;
 }
 
 type DisplayCtx = Pick<CommandRunContext, 'resolvedTheme'>;
@@ -106,7 +107,10 @@ export const COMMAND_ACTIONS: readonly CommandAction[] = [
     keys: ['C', 'P'],
     shortcutHint: 'C P',
     scope: 'always',
-    run: ({ router }) => router.push('/palaces?action=create'),
+    run: ({ router, openDialog }) => {
+      openDialog('create-palace');
+      router.push('/palaces');
+    },
   },
   {
     id: 'create-room',
@@ -118,9 +122,12 @@ export const COMMAND_ACTIONS: readonly CommandAction[] = [
     keys: ['C', 'R'],
     shortcutHint: 'C R',
     scope: 'on-palace',
-    run: ({ router, pathname }) => {
+    run: ({ router, pathname, openDialog }) => {
       const id = palaceIdFromPath(pathname);
-      if (id) router.push(`/palaces/${id}?action=create-room`);
+      if (id) {
+        openDialog('create-room');
+        router.push(`/palaces/${id}`);
+      }
     },
   },
   {

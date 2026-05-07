@@ -3,6 +3,7 @@ import { searchNodes } from '@/features/nodes';
 import { getUserProfile } from '@/shared/lib/userProfile';
 import { PageTransition } from '@/shared/components/PageTransition';
 import { QueryProvider } from '@/shared/components/QueryProvider';
+import { SearchProvider } from '@/shared/components/SearchContext';
 
 // Auth is enforced by src/proxy.ts (which redirects unauthenticated requests
 // before this layout renders) and by RLS at the database layer. No second
@@ -19,9 +20,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <QueryProvider>
-      <DashboardShell userProfile={userProfile} onSearch={searchNodes}>
-        <PageTransition>{children}</PageTransition>
-      </DashboardShell>
+      <SearchProvider value={searchNodes}>
+        <DashboardShell userProfile={userProfile}>
+          <PageTransition>{children}</PageTransition>
+        </DashboardShell>
+      </SearchProvider>
     </QueryProvider>
   );
 }

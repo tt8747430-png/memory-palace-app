@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useState, useTransition } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
 import { Plus } from 'lucide-react';
 import {
   Button,
@@ -16,34 +15,21 @@ import {
   Label,
   Alert,
 } from '@memory-palace/ui';
+import { useAppDialog } from '@/shared/components/AppDialogContext';
 import { createRoom } from '../actions/createRoom';
 
 interface CreateRoomDialogProps {
   palaceId: string;
   nextPosition?: number;
-  /** When true the dialog opens immediately (e.g. deep-linked via ?action=create-room). */
-  autoOpen?: boolean;
 }
 
-export function CreateRoomDialog({
-  palaceId,
-  nextPosition = 0,
-  autoOpen = false,
-}: CreateRoomDialogProps) {
-  const router = useRouter();
-  // Seed userOpen from autoOpen so the dialog stays open after router.replace()
-  // strips the search param (making autoOpen false on re-render).
-  const [userOpen, setUserOpen] = useState(autoOpen);
-  const open = autoOpen || userOpen;
+export function CreateRoomDialog({ palaceId, nextPosition = 0 }: CreateRoomDialogProps) {
+  // Dialog is controlled entirely via AppDialogContext — no local open state or
+  // useEffect needed. Closing calls consume() which clears pending.
+  const { pending, open: openDialog, consume } = useAppDialog();
+  const isOpen = pending === 'create-room';
   const [error, setError] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
-
-  // Strip the search param so a refresh doesn't reopen the dialog.
-  useEffect(() => {
-    if (autoOpen) {
-      router.replace(`/palaces/${palaceId}`);
-    }
-  }, [autoOpen, palaceId, router]);
+  const [isSubmitting, startTransition] = useTransition();
 
   function handleSubmit(formData: FormData) {
     setError(null);
@@ -54,20 +40,21 @@ export function CreateRoomDialog({
       if (!result.success) {
         setError(result.error.message);
       } else {
-        setUserOpen(false);
+        consume();
       }
     });
   }
 
   function handleOpenChange(next: boolean) {
-    if (!isPending) {
-      setUserOpen(next);
+    if (!isSubmitting) {
+      if (next) openDialog('create-room');
+      else consume();
       setError(null);
     }
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button size="md" className="gap-2">
           <Plus className="h-4 w-4" />
@@ -90,7 +77,7 @@ export function CreateRoomDialog({
               placeholder="e.g. The Library"
               required
               maxLength={100}
-              disabled={isPending}
+              disabled={isSubmitting}
             />
           </div>
           {error ? (
@@ -103,13 +90,18 @@ export function CreateRoomDialog({
               type="button"
               variant="outline"
               size="md"
-              onClick={() => handleOpenChange(false)}
-              disabled={isPending}
+              onClick={() => {
+                if (!isSubmitting) {
+                  consume();
+                  setError(null);
+                }
+              }}
+              disabled={isSubmitting}
             >
               Cancel
             </Button>
-            <Button type="submit" size="md" disabled={isPending}>
-              {isPending ? 'Creating…' : 'Create Room'}
+            <Button type="submit" size="md" disabled={isSubmitting}>
+              {isSubmitting ? 'Creating…' : 'Create Room'}
             </Button>
           </DialogFooter>
         </form>
