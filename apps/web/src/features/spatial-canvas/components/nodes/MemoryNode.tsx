@@ -60,10 +60,14 @@ function isHttpUrl(url: string | null | undefined): url is string {
  * - **Type-specific rendering**: image nodes show a thumbnail; link nodes show
  *   a clickable URL.
  */
-const nodeEnterVariants = {
+const NODE_VARIANTS = {
   initial: { scale: 0, opacity: 0 },
-  animate: { scale: 1, opacity: 1 },
-};
+  visible: { scale: 1, opacity: 1 },
+  exiting: { scale: 0.8, opacity: 0 },
+} as const;
+
+const ENTER_DURATION = 0.3;
+const EXIT_DURATION = 0.2;
 
 export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
   const { onEditNode, onDeleteNode, onDuplicateNode } = useCanvasNodeActions();
@@ -72,14 +76,15 @@ export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
   const [isExiting, setIsExiting] = useState(false);
   const shouldReduceMotion = useReducedMotion();
 
-  const handleDelete = useCallback(async () => {
+  const handleDelete = useCallback(() => {
     if (shouldReduceMotion) {
       onDeleteNode(id);
       return;
     }
+    // Triggers the `exiting` variant; deletion fires from onAnimationComplete
+    // when the transition reaches its target. Idempotent under rapid clicks —
+    // setting the same state value produces no new animation cycle.
     setIsExiting(true);
-    await new Promise<void>((resolve) => setTimeout(resolve, 200));
-    onDeleteNode(id);
   }, [id, onDeleteNode, shouldReduceMotion]);
 
   return (
@@ -129,12 +134,15 @@ export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
           <m.div
             onContextMenu={(e) => e.stopPropagation()}
             style={data.color ? { borderColor: data.color } : undefined}
-            variants={nodeEnterVariants}
+            variants={NODE_VARIANTS}
             initial="initial"
-            animate={isExiting ? { scale: 0.8, opacity: 0 } : 'animate'}
+            animate={isExiting ? 'exiting' : 'visible'}
             transition={{
-              duration: shouldReduceMotion ? 0 : isExiting ? 0.2 : 0.3,
+              duration: shouldReduceMotion ? 0 : isExiting ? EXIT_DURATION : ENTER_DURATION,
               ease: isExiting ? 'easeIn' : 'easeOut',
+            }}
+            onAnimationComplete={(definition) => {
+              if (definition === 'exiting') onDeleteNode(id);
             }}
             className={cn(
               'group relative rounded-lg border bg-card px-3 py-2 shadow-sm',
