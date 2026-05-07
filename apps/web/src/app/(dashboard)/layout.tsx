@@ -1,6 +1,7 @@
 import { DashboardShell } from '@/features/dashboard';
 import { searchNodes } from '@/features/nodes';
 import { getUserProfile } from '@/shared/lib/userProfile';
+import { PageTransition } from '@/shared/components/PageTransition';
 import { QueryProvider } from '@/shared/components/QueryProvider';
 
 // Auth is enforced by src/proxy.ts (which redirects unauthenticated requests
@@ -19,7 +20,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <QueryProvider>
       <DashboardShell userProfile={userProfile} onSearch={searchNodes}>
-        {children}
+        <PageTransition>{children}</PageTransition>
       </DashboardShell>
     </QueryProvider>
   );

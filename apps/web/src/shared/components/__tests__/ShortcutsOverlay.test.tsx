@@ -70,8 +70,8 @@ describe('ShortcutsOverlay', () => {
       </Wrapper>,
     );
     fireEvent.click(screen.getByRole('button', { name: 'Open shortcuts' }));
-    // Cmd+K badge
-    expect(screen.getByText('⌘')).toBeInTheDocument();
+    // Multiple shortcuts use the ⌘ modifier — assert at least one badge is rendered
+    expect(screen.getAllByText('⌘').length).toBeGreaterThanOrEqual(1);
   });
 
   it('renders all documented shortcuts', () => {

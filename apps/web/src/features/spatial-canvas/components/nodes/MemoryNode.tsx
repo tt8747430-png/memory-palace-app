@@ -1,7 +1,9 @@
 'use client';
 
+import { useState, useCallback } from 'react';
 import type { NodeType } from '@memory-palace/db';
 import { Handle, NodeToolbar, Position, type Node, type NodeProps } from '@xyflow/react';
+import { m, useReducedMotion } from 'framer-motion';
 import {
   Copy,
   ExternalLink,
@@ -58,10 +60,27 @@ function isHttpUrl(url: string | null | undefined): url is string {
  * - **Type-specific rendering**: image nodes show a thumbnail; link nodes show
  *   a clickable URL.
  */
+const nodeEnterVariants = {
+  initial: { scale: 0, opacity: 0 },
+  animate: { scale: 1, opacity: 1 },
+};
+
 export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
   const { onEditNode, onDeleteNode, onDuplicateNode } = useCanvasNodeActions();
   const hasImagePreview = data.nodeType === 'image' && isHttpUrl(data.content);
   const hasLinkContent = data.nodeType === 'link' && isHttpUrl(data.content);
+  const [isExiting, setIsExiting] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
+
+  const handleDelete = useCallback(async () => {
+    if (shouldReduceMotion) {
+      onDeleteNode(id);
+      return;
+    }
+    setIsExiting(true);
+    await new Promise<void>((resolve) => setTimeout(resolve, 200));
+    onDeleteNode(id);
+  }, [id, onDeleteNode, shouldReduceMotion]);
 
   return (
     <>
@@ -88,7 +107,7 @@ export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
           <button
             type="button"
             aria-label="Delete node"
-            onClick={() => onDeleteNode(id)}
+            onClick={handleDelete}
             className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
           >
             <Trash2 className="h-3.5 w-3.5" aria-hidden />
@@ -107,14 +126,21 @@ export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
           pane context menu from opening when right-clicking a node. */}
       <ContextMenu>
         <ContextMenuTrigger asChild>
-          <div
+          <m.div
             onContextMenu={(e) => e.stopPropagation()}
             style={data.color ? { borderColor: data.color } : undefined}
+            variants={nodeEnterVariants}
+            initial="initial"
+            animate={isExiting ? { scale: 0.8, opacity: 0 } : 'animate'}
+            transition={{
+              duration: shouldReduceMotion ? 0 : isExiting ? 0.2 : 0.3,
+              ease: isExiting ? 'easeIn' : 'easeOut',
+            }}
             className={cn(
               'group relative rounded-lg border bg-card px-3 py-2 shadow-sm',
               // Minimum 60×60px touch target on mobile; compact on desktop
               'min-h-[60px] min-w-[60px] md:min-w-[120px] md:max-w-[280px]',
-              'transition-shadow duration-150',
+              'transition-shadow duration-150 motion-reduce:transition-none',
               selected
                 ? 'border-primary shadow-md ring-2 ring-primary/30'
                 : 'border-border hover:shadow-md',
@@ -163,7 +189,7 @@ export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
                 {data.content}
               </p>
             )}
-          </div>
+          </m.div>
         </ContextMenuTrigger>
 
         <ContextMenuContent>
@@ -177,7 +203,7 @@ export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
           </ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem
-            onClick={() => onDeleteNode(id)}
+            onClick={handleDelete}
             className="text-destructive focus:text-destructive"
           >
             <Trash2 className="h-4 w-4" aria-hidden />

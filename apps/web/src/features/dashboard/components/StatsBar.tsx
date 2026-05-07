@@ -9,7 +9,7 @@ interface StatItemProps {
 
 function StatItem({ icon, label, value }: StatItemProps) {
   return (
-    <div className="flex items-center gap-3 rounded-lg border bg-card p-4">
+    <div className="flex items-center gap-3 rounded-lg border bg-card p-4 transition-all hover:-translate-y-0.5 hover:shadow-lg motion-reduce:hover:translate-y-0">
       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground">
         {icon}
       </div>

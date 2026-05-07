@@ -45,7 +45,7 @@ export async function RecentPalaces() {
           <Link
             key={palace.id}
             href={`/palaces/${palace.id}`}
-            className="group rounded-lg border bg-card p-4 transition-colors hover:border-primary/50 hover:bg-muted/40"
+            className="group rounded-lg border bg-card p-4 transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:bg-muted/40 hover:shadow-lg motion-reduce:hover:translate-y-0"
           >
             <p className="font-medium group-hover:text-primary">{palace.title}</p>
             {palace.description ? (

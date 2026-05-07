@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { MotionProvider } from '@/shared/components/MotionProvider';
 import { ThemeProvider } from '@/shared/components/ThemeProvider';
 import { env } from '@/shared/lib/env';
 import './globals.css';
@@ -45,7 +46,7 @@ function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <MotionProvider>{children}</MotionProvider>
         </ThemeProvider>
       </body>
     </html>

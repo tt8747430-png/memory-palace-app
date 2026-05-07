@@ -15,6 +15,10 @@ vi.mock('next-themes', () => ({
   useTheme: () => ({ theme: 'light', resolvedTheme: 'light', setTheme: vi.fn() }),
 }));
 
+vi.mock('@/shared/lib/signOut', () => ({
+  signOut: vi.fn().mockResolvedValue(undefined),
+}));
+
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
 function Wrapper({ children }: { children: React.ReactNode }) {
