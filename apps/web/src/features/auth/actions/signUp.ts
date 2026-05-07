@@ -22,6 +22,6 @@ export async function signUp(_prev: AuthFormState, formData: FormData): Promise<
   });
   if (error) return { status: 'error', message: error.message };
 
-  if (data.session) redirect('/');
+  if (data.session) redirect('/dashboard');
   return { status: 'check-email', message: 'Check your email to confirm your account.' };
 }

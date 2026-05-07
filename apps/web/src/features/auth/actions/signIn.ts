@@ -20,5 +20,5 @@ export async function signIn(_prev: AuthFormState, formData: FormData): Promise<
     return { status: 'error', message: error.message };
   }
 
-  redirect('/');
+  redirect('/dashboard');
 }

@@ -1,9 +1,19 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { createSupabaseForProxy } from '@/shared/lib/supabase';
+import { generateNonce, buildCsp } from '@/shared/lib/csp';
 
 // Public route segments — matched on segment boundaries, not as substrings.
 // `/login` matches `/login` and `/login/...` but NOT `/loginhacks`.
-const PUBLIC_SEGMENTS = new Set(['login', 'signup', 'about', 'callback', 'forgot-password']);
+// Empty string ('') represents the root path `/`.
+const PUBLIC_SEGMENTS = new Set([
+  '',
+  'login',
+  'signup',
+  'about',
+  'join',
+  'callback',
+  'forgot-password',
+]);
 
 function firstSegment(pathname: string): string {
   const i = pathname.indexOf('/', 1);
@@ -26,6 +36,8 @@ function redirectTo(request: NextRequest, source: NextResponse, path: string): N
 }
 
 export async function proxy(request: NextRequest) {
+  const nonce = generateNonce();
+
   const { supabase, getResponse } = createSupabaseForProxy(request);
 
   // Refresh session — must run with no logic between createServerClient and the
@@ -37,17 +49,43 @@ export async function proxy(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims ?? null;
 
-  const response = getResponse();
+  const supabaseResponse = getResponse();
   const { pathname } = request.nextUrl;
+  const seg = firstSegment(pathname);
+  const csp = buildCsp(nonce);
 
   if (!user && !isPublicPath(pathname)) {
-    return redirectTo(request, response, '/login');
+    const r = redirectTo(request, supabaseResponse, '/login');
+    r.headers.set('Content-Security-Policy', csp);
+    return r;
   }
 
-  const seg = firstSegment(pathname);
-  if (user && (seg === 'login' || seg === 'signup')) {
-    return redirectTo(request, response, '/');
+  // Root '/' → /dashboard for authenticated users.
+  if (user && (seg === 'login' || seg === 'signup' || seg === '')) {
+    const r = redirectTo(request, supabaseResponse, '/dashboard');
+    r.headers.set('Content-Security-Policy', csp);
+    return r;
   }
+
+  // /join: guests start onboarding at step 1; authenticated users can continue
+  // the wizard at step > 1 (e.g. after clicking an email confirmation link).
+  if (user && seg === 'join') {
+    const step = parseInt(request.nextUrl.searchParams.get('step') ?? '1', 10);
+    if (Number.isNaN(step) || step <= 1) {
+      const r = redirectTo(request, supabaseResponse, '/dashboard');
+      r.headers.set('Content-Security-Policy', csp);
+      return r;
+    }
+  }
+
+  // Rebuild the response with nonce-injected request headers so the RSC renderer
+  // can read `x-nonce` via `headers()` and pass it to Script components.
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-nonce', nonce);
+  const response = NextResponse.next({ request: { headers: requestHeaders } });
+
+  supabaseResponse.cookies.getAll().forEach((cookie) => response.cookies.set(cookie));
+  response.headers.set('Content-Security-Policy', csp);
 
   return response;
 }

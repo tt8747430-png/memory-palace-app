@@ -16,7 +16,15 @@ export async function createSupabaseFromCookies() {
           return cookieStore.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options),
+            );
+          } catch {
+            // Silently ignored when called from a Server Component — cookie
+            // writes are not allowed outside Server Actions / Route Handlers.
+            // Session refresh is handled by the proxy on every request.
+          }
         },
       },
     },

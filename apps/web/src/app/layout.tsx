@@ -1,14 +1,12 @@
 import type { Metadata, Viewport } from 'next';
+import { headers } from 'next/headers';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { MotionProvider } from '@/shared/components/MotionProvider';
 import { ThemeProvider } from '@/shared/components/ThemeProvider';
 import { SkipToContent } from '@/shared/components/SkipToContent';
-import { env } from '@/shared/lib/env';
+import { PostHogProvider } from '@/shared/components/PostHogProvider';
+import { siteUrl } from '@/shared/lib/env';
 import './globals.css';
-
-const siteUrl =
-  env.NEXT_PUBLIC_SITE_URL ??
-  (env.VERCEL_URL ? `https://${env.VERCEL_URL}` : 'http://localhost:3000');
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -54,9 +52,13 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 };
 
-function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  // x-nonce is injected by proxy.ts for every pass-through request so that
+  // Script components can forward it to browser-side <script> tags, satisfying
+  // the per-request nonce-based CSP.
+  const nonce = (await headers()).get('x-nonce') ?? '';
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning nonce={nonce}>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <SkipToContent />
         <ThemeProvider
@@ -65,7 +67,9 @@ function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
           enableSystem
           disableTransitionOnChange
         >
-          <MotionProvider>{children}</MotionProvider>
+          <PostHogProvider>
+            <MotionProvider>{children}</MotionProvider>
+          </PostHogProvider>
         </ThemeProvider>
       </body>
     </html>

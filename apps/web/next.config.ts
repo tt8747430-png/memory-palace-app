@@ -1,11 +1,9 @@
 import type { NextConfig } from 'next';
-import { withSentryConfig } from '@sentry/nextjs';
 
 // Headers that are correct and meaningful as static values. CSP is intentionally
-// omitted: a real CSP for App Router needs per-request nonces (added in the
-// Phase 8 hardening pass). Sending a permissive `'unsafe-inline' 'unsafe-eval'`
-// CSP would be security theatre — preferable to send no CSP than a misleading
-// one.
+// omitted here — a per-request nonce-based CSP is generated in src/proxy.ts and
+// attached to every response there. A static CSP in next.config cannot carry a
+// nonce, and a permissive fallback would be security theatre.
 const securityHeaders = [
   { key: 'X-Frame-Options', value: 'DENY' },
   { key: 'X-Content-Type-Options', value: 'nosniff' },
@@ -17,20 +15,26 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   transpilePackages: ['@memory-palace/db', '@memory-palace/ui'],
   async headers() {
-    return [{ source: '/(.*)', headers: securityHeaders }];
+    const origin = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+    return [
+      {
+        source: '/(.*)',
+        headers: securityHeaders,
+      },
+      {
+        // CORS for API routes — restrict to the canonical site origin.
+        // No wildcard '*' in production. Pre-flight OPTIONS is handled inline
+        // in each route handler.
+        source: '/api/(.*)',
+        headers: [
+          { key: 'Access-Control-Allow-Origin', value: origin },
+          { key: 'Access-Control-Allow-Methods', value: 'GET, POST, OPTIONS' },
+          { key: 'Access-Control-Allow-Headers', value: 'Content-Type, Authorization' },
+          { key: 'Access-Control-Max-Age', value: '86400' },
+        ],
+      },
+    ];
   },
 };
 
-export default withSentryConfig(nextConfig, {
-  // Suppress verbose Sentry CLI output in CI.
-  silent: true,
-  // Only upload source maps when SENTRY_AUTH_TOKEN is set (CI/CD only).
-  sourcemaps: {
-    disable: !process.env.SENTRY_AUTH_TOKEN,
-  },
-  // Disable automatic instrumentation of server components/routes — we
-  // control tracing manually to avoid unexpected overhead.
-  autoInstrumentServerFunctions: false,
-  // Disable the Sentry tunnel route to keep the Next.js route surface minimal.
-  tunnelRoute: undefined,
-});
+export default nextConfig;

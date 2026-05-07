@@ -13,11 +13,10 @@ const schema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   // Vercel system variable — only available in deployed environments.
   VERCEL_URL: z.string().min(1).optional(),
-  // Sentry — server-only DSN (never shipped to the browser).
-  // When absent (local dev without .env.local), Sentry init is a no-op.
-  SENTRY_DSN: z.string().url().optional(),
-  // Public Sentry DSN — safe to expose; used by the browser SDK.
-  NEXT_PUBLIC_SENTRY_DSN: z.string().url().optional(),
+  // PostHog — public project API key (safe to expose in the browser).
+  // When absent (local dev without .env.local), PostHog init is a no-op.
+  NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN: z.string().min(1).optional(),
+  NEXT_PUBLIC_POSTHOG_HOST: z.string().url().optional(),
 });
 
 export const env = schema.parse({
@@ -28,6 +27,12 @@ export const env = schema.parse({
   UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
   NODE_ENV: process.env.NODE_ENV,
   VERCEL_URL: process.env.VERCEL_URL,
-  SENTRY_DSN: process.env.SENTRY_DSN,
-  NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN: process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN,
+  NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
 });
+
+// Canonical public URL — prefer the explicit env var, fall back to the
+// Vercel-injected deployment URL, then localhost for local dev.
+export const siteUrl =
+  env.NEXT_PUBLIC_SITE_URL ??
+  (env.VERCEL_URL ? `https://${env.VERCEL_URL}` : 'http://localhost:3000');
