@@ -1,6 +1,9 @@
 import { defineConfig, globalIgnores } from 'eslint/config';
 import nextVitals from 'eslint-config-next/core-web-vitals';
 import nextTs from 'eslint-config-next/typescript';
+import jsxA11y from 'eslint-plugin-jsx-a11y';
+// jsxA11y is imported only to access its configs.strict.rules — the plugin
+// itself is already registered by eslint-config-next/core-web-vitals.
 import { makeBoundaryRules } from '@memory-palace/eslint-config';
 
 // Allow spatial-canvas → nodes cross-feature imports.
@@ -17,6 +20,20 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   ...boundaryRules,
+  // jsx-a11y strict ruleset — provides broader coverage than the subset
+  // included in eslint-config-next/core-web-vitals.
+  {
+    rules: {
+      ...jsxA11y.configs.strict.rules,
+      // Radix Dialog manages focus internally; auto-focus on first tabbable
+      // element is the correct pattern per ARIA authoring practices.
+      'jsx-a11y/no-autofocus': 'off',
+      // React Flow canvas nodes use pointer events, not raw onClick without
+      // keyboard handlers — keep as warn until canvas node pattern is audited.
+      'jsx-a11y/click-events-have-key-events': 'warn',
+      'jsx-a11y/no-static-element-interactions': 'warn',
+    },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts']),
 ]);
