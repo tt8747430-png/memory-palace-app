@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import { Plus } from 'lucide-react';
 import {
   Button,
@@ -24,12 +24,25 @@ interface CreateRoomDialogProps {
 }
 
 export function CreateRoomDialog({ palaceId, nextPosition = 0 }: CreateRoomDialogProps) {
-  // Dialog is controlled entirely via AppDialogContext — no local open state or
-  // useEffect needed. Closing calls consume() which clears pending.
+  // Dialog is controlled entirely via AppDialogContext — no local open state.
+  // Closing calls consume() which clears pending.
   const { pending, open: openDialog, consume } = useAppDialog();
   const isOpen = pending === 'create-room';
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, startTransition] = useTransition();
+
+  // Handle cross-page navigation: reads ?action=create-room from the URL once
+  // on mount and strips it with replaceState (not router.replace).
+  const initRef = useRef(false);
+  useEffect(() => {
+    if (initRef.current) return; // Strict Mode guard: only fire once
+    initRef.current = true;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('action') === 'create-room') {
+      openDialog('create-room');
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+  }, [openDialog]);
 
   function handleSubmit(formData: FormData) {
     setError(null);

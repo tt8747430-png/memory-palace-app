@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { useGlobalShortcuts } from '@/shared/hooks/useGlobalShortcuts';
 import { CommandPaletteProvider } from '@/shared/components/CommandPaletteContext';
 import { ShortcutsOverlayProvider } from '@/shared/components/ShortcutsOverlayContext';
+import { AppDialogProvider } from '@/shared/components/AppDialogContext';
 import type { ReactNode } from 'react';
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
@@ -23,7 +24,9 @@ vi.mock('next-themes', () => ({
 function wrapper({ children }: { children: ReactNode }) {
   return (
     <ShortcutsOverlayProvider>
-      <CommandPaletteProvider>{children}</CommandPaletteProvider>
+      <CommandPaletteProvider>
+        <AppDialogProvider>{children}</AppDialogProvider>
+      </CommandPaletteProvider>
     </ShortcutsOverlayProvider>
   );
 }
@@ -68,11 +71,13 @@ describe('useGlobalShortcuts', () => {
     expect(mockPush).toHaveBeenCalledWith('/settings');
   });
 
-  it('navigates to /palaces?action=create on c → p', () => {
+  it('navigates to /palaces?action=create-palace on c → p (cross-page)', () => {
     renderHook(() => useGlobalShortcuts(), { wrapper });
+    // pathname is mocked as '/' so we are not on /palaces — should navigate
+    // with the intent encoded in the URL instead of calling openDialog early.
     keydown('c');
     keydown('p');
-    expect(mockPush).toHaveBeenCalledWith('/palaces?action=create');
+    expect(mockPush).toHaveBeenCalledWith('/palaces?action=create-palace');
   });
 
   it('toggles theme on t → d (light → dark)', () => {

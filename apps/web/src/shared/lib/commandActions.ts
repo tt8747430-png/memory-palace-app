@@ -107,9 +107,17 @@ export const COMMAND_ACTIONS: readonly CommandAction[] = [
     keys: ['C', 'P'],
     shortcutHint: 'C P',
     scope: 'always',
-    run: ({ router, openDialog }) => {
-      openDialog('create-palace');
-      router.push('/palaces');
+    run: ({ router, pathname, openDialog }) => {
+      if (pathname === '/palaces') {
+        // Already on the page — open via context immediately, no navigation needed.
+        openDialog('create-palace');
+      } else {
+        // Cross-page: encode the intent in the URL. CreatePalaceDialog reads it
+        // on mount via window.location.search and strips it with replaceState.
+        // This avoids setting pending before the dialog component is mounted,
+        // which was the source of the Strict Mode ghost-dialog flicker.
+        router.push('/palaces?action=create-palace');
+      }
     },
   },
   {
@@ -122,12 +130,11 @@ export const COMMAND_ACTIONS: readonly CommandAction[] = [
     keys: ['C', 'R'],
     shortcutHint: 'C R',
     scope: 'on-palace',
-    run: ({ router, pathname, openDialog }) => {
+    run: ({ pathname, openDialog }) => {
+      // scope: 'on-palace' guarantees palaceIdFromPath returns a value here.
+      // The router.push was dead code — we are already on the palace page.
       const id = palaceIdFromPath(pathname);
-      if (id) {
-        openDialog('create-room');
-        router.push(`/palaces/${id}`);
-      }
+      if (id) openDialog('create-room');
     },
   },
   {
