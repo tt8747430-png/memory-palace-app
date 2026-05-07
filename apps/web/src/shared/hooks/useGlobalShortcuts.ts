@@ -5,6 +5,8 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { useCommandPalette } from '../components/CommandPaletteContext';
 import { useShortcutsOverlay } from '../components/ShortcutsOverlayContext';
+import { CANVAS_EVENTS } from '../lib/canvasEvents';
+import { PALACE_PAGE_RE, ROOM_ROUTE_RE } from '../lib/routes';
 
 /**
  * Duration of the prefix-key window in ms.  1 second is long enough for
@@ -24,10 +26,6 @@ const PREFIX_TIMEOUT_MS = 1_000;
  * This hook must be rendered inside both CommandPaletteProvider and
  * ShortcutsOverlayProvider.
  */
-/** Matches /palaces/[palaceId] — the palace detail page only (not rooms sub-pages). */
-const PALACE_PAGE_RE = /^\/palaces\/([^/]+)$/;
-/** Matches /palaces/[palaceId]/rooms/[roomId] */
-const ROOM_ROUTE_RE = /^\/palaces\/[^/]+\/rooms\/[^/]+/;
 
 export function useGlobalShortcuts() {
   const router = useRouter();
@@ -102,7 +100,7 @@ export function useGlobalShortcuts() {
             break;
           case 'cn':
             if (ROOM_ROUTE_RE.test(pathname)) {
-              window.dispatchEvent(new CustomEvent('canvas:create-node'));
+              window.dispatchEvent(new CustomEvent(CANVAS_EVENTS.CREATE_NODE));
             }
             break;
           case 'cr': {

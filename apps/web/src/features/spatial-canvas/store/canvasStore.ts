@@ -60,7 +60,7 @@ export type CanvasStore = ReturnType<typeof createCanvasStore>;
 /** Factory — call once per canvas mount, not at module level.
  * This prevents shared state between concurrent Next.js App Router renders. */
 export function createCanvasStore() {
-  return createStore<CanvasState>()((set) => ({
+  return createStore<CanvasState>()((set, get) => ({
     selectedNodeIds: new Set<string>(),
     activeTool: 'pointer' as CanvasTool,
 
@@ -83,33 +83,21 @@ export function createCanvasStore() {
       })),
 
     undoPositions: (currentSnapshot) => {
-      let result: NodePositionSnap[] | null = null;
-      set((s) => {
-        if (s.historyStack.length === 0) return s;
-        const stack = [...s.historyStack];
-        const entry = stack.pop()!;
-        result = entry;
-        return {
-          historyStack: stack,
-          futureStack: [...s.futureStack, currentSnapshot],
-        };
-      });
-      return result;
+      const { historyStack, futureStack } = get();
+      if (historyStack.length === 0) return null;
+      const stack = [...historyStack];
+      const entry = stack.pop()!;
+      set({ historyStack: stack, futureStack: [...futureStack, currentSnapshot] });
+      return entry;
     },
 
     redoPositions: (currentSnapshot) => {
-      let result: NodePositionSnap[] | null = null;
-      set((s) => {
-        if (s.futureStack.length === 0) return s;
-        const future = [...s.futureStack];
-        const entry = future.pop()!;
-        result = entry;
-        return {
-          futureStack: future,
-          historyStack: [...s.historyStack, currentSnapshot],
-        };
-      });
-      return result;
+      const { historyStack, futureStack } = get();
+      if (futureStack.length === 0) return null;
+      const future = [...futureStack];
+      const entry = future.pop()!;
+      set({ futureStack: future, historyStack: [...historyStack, currentSnapshot] });
+      return entry;
     },
 
     clearFuture: () => set({ futureStack: [] }),

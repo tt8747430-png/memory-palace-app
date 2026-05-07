@@ -1,7 +1,14 @@
 'use client';
 
 import { createPortal } from 'react-dom';
-import { type CSSProperties, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import {
+  type CSSProperties,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   ReactFlow,
   Background,
@@ -42,6 +49,7 @@ import { useRoomNodeMutations, type PositionUpdate } from '../hooks/useRoomNodeM
 import { useRoomEdgeMutations } from '../hooks/useRoomEdgeMutations';
 import { getCanvasCenterFlowPos } from '../lib/canvasUtils';
 import { OfflineBanner } from '@/shared/components/OfflineBanner';
+import { CANVAS_EVENTS } from '@/shared/lib/canvasEvents';
 
 const SNAP_GRID: [number, number] = [20, 20];
 
@@ -224,6 +232,22 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
   // Layer 2: Subscribe to Supabase Realtime for cross-device sync.
   useRealtimeNodes(roomId);
 
+  const applyPositionSnapshot = useCallback(
+    (snapshot: { id: string; x: number; y: number }[]) => {
+      const posMap = new Map(snapshot.map((p) => [p.id, p]));
+      setNodes((prev) =>
+        prev.map((n) => {
+          const snap = posMap.get(n.id);
+          return snap ? { ...n, position: { x: snap.x, y: snap.y } } : n;
+        }),
+      );
+      const updates = snapshot.map((p) => ({ id: p.id, positionX: p.x, positionY: p.y }));
+      if (updates.length > 1) saveBatchPositions.mutate(updates);
+      else if (updates.length === 1) savePosition.mutate(updates[0]);
+    },
+    [setNodes, saveBatchPositions, savePosition],
+  );
+
   // ── canvas:create-node event (fired by the command palette / C→N shortcut) ──
   useEffect(() => {
     const onCreate = () => {
@@ -236,37 +260,24 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
         positionY: Math.round(position.y),
       });
     };
-    window.addEventListener('canvas:create-node', onCreate);
-    return () => window.removeEventListener('canvas:create-node', onCreate);
+    window.addEventListener(CANVAS_EVENTS.CREATE_NODE, onCreate);
+    return () => window.removeEventListener(CANVAS_EVENTS.CREATE_NODE, onCreate);
   }, [addNode, roomId, screenToFlowPosition]);
 
   // ── canvas:fit-view / canvas:toggle-snap (fired by the command palette) ──
   useEffect(() => {
     const onFitView = () => fitView({ padding: 0.2, duration: 300 });
     const onToggleSnap = () => toggleSnap();
-    window.addEventListener('canvas:fit-view', onFitView);
-    window.addEventListener('canvas:toggle-snap', onToggleSnap);
+    window.addEventListener(CANVAS_EVENTS.FIT_VIEW, onFitView);
+    window.addEventListener(CANVAS_EVENTS.TOGGLE_SNAP, onToggleSnap);
     return () => {
-      window.removeEventListener('canvas:fit-view', onFitView);
-      window.removeEventListener('canvas:toggle-snap', onToggleSnap);
+      window.removeEventListener(CANVAS_EVENTS.FIT_VIEW, onFitView);
+      window.removeEventListener(CANVAS_EVENTS.TOGGLE_SNAP, onToggleSnap);
     };
   }, [fitView, toggleSnap]);
 
   // ── canvas:duplicate-node / canvas:delete-node / canvas:undo / canvas:redo ──
   useEffect(() => {
-    const applyPositionSnapshot = (snapshot: { id: string; x: number; y: number }[]) => {
-      const posMap = new Map(snapshot.map((p) => [p.id, p]));
-      setNodes((prev) =>
-        prev.map((n) => {
-          const snap = posMap.get(n.id);
-          return snap ? { ...n, position: { x: snap.x, y: snap.y } } : n;
-        }),
-      );
-      const updates = snapshot.map((p) => ({ id: p.id, positionX: p.x, positionY: p.y }));
-      if (updates.length > 1) saveBatchPositions.mutate(updates);
-      else if (updates.length === 1) savePosition.mutate(updates[0]);
-    };
-
     const onDuplicate = () => {
       const { selectedNodeIds } = canvasStoreApi.getState();
       if (selectedNodeIds.size === 0) return;
@@ -313,51 +324,22 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
       const snapshot = redoPositions(current);
       if (snapshot) applyPositionSnapshot(snapshot);
     };
-    window.addEventListener('canvas:duplicate-node', onDuplicate);
-    window.addEventListener('canvas:delete-node', onDeleteSelected);
-    window.addEventListener('canvas:undo', onUndo);
-    window.addEventListener('canvas:redo', onRedo);
+    window.addEventListener(CANVAS_EVENTS.DUPLICATE_NODE, onDuplicate);
+    window.addEventListener(CANVAS_EVENTS.DELETE_NODE, onDeleteSelected);
+    window.addEventListener(CANVAS_EVENTS.UNDO, onUndo);
+    window.addEventListener(CANVAS_EVENTS.REDO, onRedo);
     return () => {
-      window.removeEventListener('canvas:duplicate-node', onDuplicate);
-      window.removeEventListener('canvas:delete-node', onDeleteSelected);
-      window.removeEventListener('canvas:undo', onUndo);
-      window.removeEventListener('canvas:redo', onRedo);
+      window.removeEventListener(CANVAS_EVENTS.DUPLICATE_NODE, onDuplicate);
+      window.removeEventListener(CANVAS_EVENTS.DELETE_NODE, onDeleteSelected);
+      window.removeEventListener(CANVAS_EVENTS.UNDO, onUndo);
+      window.removeEventListener(CANVAS_EVENTS.REDO, onRedo);
     };
-  }, [
-    canvasStoreApi,
-    getNodes,
-    clearFuture,
-    setNodes,
-    undoPositions,
-    redoPositions,
-    savePosition,
-    saveBatchPositions,
-  ]);
+  }, [canvasStoreApi, getNodes, clearFuture, applyPositionSnapshot, undoPositions, redoPositions]);
 
   // ── Keyboard shortcuts: G = snap, F = fit view, Del/Backspace = delete,
   //    Cmd+A = select all, Cmd+D = duplicate, Cmd+Z/Shift+Z = undo/redo,
   //    E = open editor for single selected node ─────────────────────────────
   useEffect(() => {
-    const applyPositionSnapshot = (snapshot: { id: string; x: number; y: number }[]) => {
-      const posMap = new Map(snapshot.map((p) => [p.id, p]));
-      setNodes((prev) =>
-        prev.map((n) => {
-          const snap = posMap.get(n.id);
-          return snap ? { ...n, position: { x: snap.x, y: snap.y } } : n;
-        }),
-      );
-      const updates = snapshot.map((p) => ({
-        id: p.id,
-        positionX: p.x,
-        positionY: p.y,
-      }));
-      if (updates.length > 1) {
-        saveBatchPositions.mutate(updates);
-      } else if (updates.length === 1) {
-        savePosition.mutate(updates[0]);
-      }
-    };
-
     const onKeyDown = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement).tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
@@ -445,11 +427,10 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
     canvasStoreApi,
     getNodes,
     setNodes,
+    applyPositionSnapshot,
     undoPositions,
     redoPositions,
     clearFuture,
-    savePosition,
-    saveBatchPositions,
   ]);
 
   // ── Space hold — temporarily switch to pan mode ───────────────────────────

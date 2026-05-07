@@ -38,6 +38,8 @@ import {
 import { useCommandPalette } from './CommandPaletteContext';
 import { useShortcutsOverlay } from './ShortcutsOverlayContext';
 import { signOut } from '@/shared/lib/signOut';
+import { CANVAS_EVENTS } from '@/shared/lib/canvasEvents';
+import { PALACE_PAGE_RE, ROOM_ROUTE_RE } from '@/shared/lib/routes';
 
 interface PaletteAction {
   id: string;
@@ -46,11 +48,6 @@ interface PaletteAction {
   shortcut?: string;
   onSelect: () => void;
 }
-
-/** Matches /palaces/[palaceId] — the palace detail page only (not rooms sub-pages). */
-const PALACE_PAGE_RE = /^\/palaces\/([^/]+)$/;
-/** Matches /palaces/[palaceId]/rooms/[roomId] */
-const ROOM_ROUTE_RE = /^\/palaces\/[^/]+\/rooms\/[^/]+/;
 
 function useActions(closePalette: () => void): { group: string; actions: PaletteAction[] }[] {
   const router = useRouter();
@@ -116,7 +113,7 @@ function useActions(closePalette: () => void): { group: string; actions: Palette
                 shortcut: 'C N',
                 onSelect: () => {
                   closePalette();
-                  window.dispatchEvent(new CustomEvent('canvas:create-node'));
+                  window.dispatchEvent(new CustomEvent(CANVAS_EVENTS.CREATE_NODE));
                 },
               } satisfies PaletteAction,
             ]
@@ -146,7 +143,7 @@ function useActions(closePalette: () => void): { group: string; actions: Palette
                 shortcut: 'F',
                 onSelect: () => {
                   closePalette();
-                  window.dispatchEvent(new CustomEvent('canvas:fit-view'));
+                  window.dispatchEvent(new CustomEvent(CANVAS_EVENTS.FIT_VIEW));
                 },
               } satisfies PaletteAction,
               {
@@ -156,7 +153,7 @@ function useActions(closePalette: () => void): { group: string; actions: Palette
                 shortcut: 'G',
                 onSelect: () => {
                   closePalette();
-                  window.dispatchEvent(new CustomEvent('canvas:toggle-snap'));
+                  window.dispatchEvent(new CustomEvent(CANVAS_EVENTS.TOGGLE_SNAP));
                 },
               } satisfies PaletteAction,
               {
@@ -166,7 +163,7 @@ function useActions(closePalette: () => void): { group: string; actions: Palette
                 shortcut: '⌘Z',
                 onSelect: () => {
                   closePalette();
-                  window.dispatchEvent(new CustomEvent('canvas:undo'));
+                  window.dispatchEvent(new CustomEvent(CANVAS_EVENTS.UNDO));
                 },
               } satisfies PaletteAction,
               {
@@ -176,7 +173,7 @@ function useActions(closePalette: () => void): { group: string; actions: Palette
                 shortcut: '⌘⇧Z',
                 onSelect: () => {
                   closePalette();
-                  window.dispatchEvent(new CustomEvent('canvas:redo'));
+                  window.dispatchEvent(new CustomEvent(CANVAS_EVENTS.REDO));
                 },
               } satisfies PaletteAction,
               {
@@ -186,7 +183,7 @@ function useActions(closePalette: () => void): { group: string; actions: Palette
                 shortcut: '⌘D',
                 onSelect: () => {
                   closePalette();
-                  window.dispatchEvent(new CustomEvent('canvas:duplicate-node'));
+                  window.dispatchEvent(new CustomEvent(CANVAS_EVENTS.DUPLICATE_NODE));
                 },
               } satisfies PaletteAction,
               {
@@ -196,7 +193,7 @@ function useActions(closePalette: () => void): { group: string; actions: Palette
                 shortcut: '⌫',
                 onSelect: () => {
                   closePalette();
-                  window.dispatchEvent(new CustomEvent('canvas:delete-node'));
+                  window.dispatchEvent(new CustomEvent(CANVAS_EVENTS.DELETE_NODE));
                 },
               } satisfies PaletteAction,
             ],

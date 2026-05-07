@@ -25,6 +25,10 @@ export function CanvasSearch() {
     setQuery('');
   }, [setQuery]);
 
+  useEffect(() => {
+    if (visible) inputRef.current?.focus();
+  }, [visible]);
+
   // Toggle with Cmd/Ctrl+F or `/` (outside inputs).
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -34,13 +38,11 @@ export function CanvasSearch() {
       if ((e.metaKey || e.ctrlKey) && (e.key === 'f' || e.key === 'F')) {
         e.preventDefault();
         setVisible(true);
-        setTimeout(() => inputRef.current?.focus(), 0);
         return;
       }
       if (e.key === '/' && !inInput) {
         e.preventDefault();
         setVisible(true);
-        setTimeout(() => inputRef.current?.focus(), 0);
         return;
       }
       if (e.key === 'Escape' && visible) {
