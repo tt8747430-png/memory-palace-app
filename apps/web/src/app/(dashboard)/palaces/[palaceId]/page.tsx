@@ -74,7 +74,7 @@ async function RoomGrid({ palaceId, autoOpen }: { palaceId: string; autoOpen: bo
             title="No rooms yet"
             description="Add rooms to this palace to organise your memory nodes."
             headingLevel={3}
-            action={<CreateRoomDialog palaceId={palaceId} nextPosition={0} autoOpen={autoOpen} />}
+            action={<CreateRoomDialog palaceId={palaceId} nextPosition={0} />}
           />
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

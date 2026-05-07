@@ -6,7 +6,7 @@ import { cn } from '@memory-palace/ui';
 import { useCanvasStore } from '../store/CanvasStoreContext';
 import type { CanvasTool } from '../store/canvasStore';
 import { useRoomNodeMutations } from '../hooks/useRoomNodeMutations';
-import { getCanvasCenterFlowPos } from '../lib/canvasUtils';
+import { getCanvasCenterFlowPos, snapPosition } from '../lib/canvasUtils';
 
 const TOOLS: { id: CanvasTool; label: string; Icon: React.ElementType }[] = [
   { id: 'pointer', label: 'Select (V)', Icon: MousePointer2 },
@@ -35,8 +35,8 @@ export function CanvasToolbar({ roomId }: CanvasToolbarProps) {
       roomId,
       title: 'New Node',
       nodeType: 'text',
-      positionX: Math.round(position.x),
-      positionY: Math.round(position.y),
+      positionX: snapPosition(position.x, 20, snapEnabled),
+      positionY: snapPosition(position.y, 20, snapEnabled),
     });
   };
 

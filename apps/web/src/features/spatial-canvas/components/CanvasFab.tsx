@@ -6,7 +6,7 @@ import { useReactFlow } from '@xyflow/react';
 import { cn } from '@memory-palace/ui';
 import { useCanvasStore } from '../store/CanvasStoreContext';
 import { useRoomNodeMutations } from '../hooks/useRoomNodeMutations';
-import { getCanvasCenterFlowPos } from '../lib/canvasUtils';
+import { getCanvasCenterFlowPos, snapPosition } from '../lib/canvasUtils';
 
 interface CanvasFabProps {
   roomId: string;
@@ -52,8 +52,8 @@ export function CanvasFab({ roomId }: CanvasFabProps) {
       roomId,
       title: 'New Node',
       nodeType: 'text',
-      positionX: Math.round(position.x),
-      positionY: Math.round(position.y),
+      positionX: snapPosition(position.x, 20, snapEnabled),
+      positionY: snapPosition(position.y, 20, snapEnabled),
     });
     setOpen(false);
   };

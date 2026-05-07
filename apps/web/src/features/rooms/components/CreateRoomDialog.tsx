@@ -31,8 +31,9 @@ export function CreateRoomDialog({
   autoOpen = false,
 }: CreateRoomDialogProps) {
   const router = useRouter();
-  // Derive open from autoOpen (prop-driven) or userOpen (button/close).
-  const [userOpen, setUserOpen] = useState(false);
+  // Seed userOpen from autoOpen so the dialog stays open after router.replace()
+  // strips the search param (making autoOpen false on re-render).
+  const [userOpen, setUserOpen] = useState(autoOpen);
   const open = autoOpen || userOpen;
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();

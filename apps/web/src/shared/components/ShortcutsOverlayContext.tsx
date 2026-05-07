@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
 
 interface ShortcutsOverlayContextValue {
   overlayOpen: boolean;
@@ -12,13 +12,14 @@ const ShortcutsOverlayContext = createContext<ShortcutsOverlayContextValue | nul
 
 export function ShortcutsOverlayProvider({ children }: { children: ReactNode }) {
   const [overlayOpen, setOverlayOpen] = useState(false);
+  const openOverlay = useCallback(() => setOverlayOpen(true), []);
+  const value = useMemo<ShortcutsOverlayContextValue>(
+    () => ({ overlayOpen, setOverlayOpen, openOverlay }),
+    [overlayOpen, openOverlay],
+  );
 
   return (
-    <ShortcutsOverlayContext.Provider
-      value={{ overlayOpen, setOverlayOpen, openOverlay: () => setOverlayOpen(true) }}
-    >
-      {children}
-    </ShortcutsOverlayContext.Provider>
+    <ShortcutsOverlayContext.Provider value={value}>{children}</ShortcutsOverlayContext.Provider>
   );
 }
 

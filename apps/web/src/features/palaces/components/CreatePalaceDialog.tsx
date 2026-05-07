@@ -26,10 +26,11 @@ interface CreatePalaceDialogProps {
 
 export function CreatePalaceDialog({ autoOpen = false }: CreatePalaceDialogProps) {
   const router = useRouter();
-  // Derive open from autoOpen (prop-driven) or userOpen (button/close).
-  // autoOpen handles both the initial-mount and already-mounted cases without
-  // needing a synchronous setState inside an effect.
-  const [userOpen, setUserOpen] = useState(false);
+  // Seed userOpen from autoOpen so the dialog stays open after router.replace()
+  // strips the search param (making autoOpen false on re-render). useState only
+  // reads its argument on the initial mount, so subsequent re-renders with
+  // autoOpen=false don't collapse the dialog while the user is in it.
+  const [userOpen, setUserOpen] = useState(autoOpen);
   const open = autoOpen || userOpen;
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();

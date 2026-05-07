@@ -8,10 +8,19 @@ import {
   DialogDescription,
 } from '@memory-palace/ui';
 import { useShortcutsOverlay } from './ShortcutsOverlayContext';
+import { getAction } from '@/shared/lib/commandActions';
 
 interface ShortcutRow {
-  keys: string[];
+  keys: readonly string[];
   description: string;
+}
+
+/** Build a row from a `COMMAND_ACTIONS` entry by id, so a keystroke or
+ *  description change in one place updates the overlay automatically. */
+function rowFromAction(id: string): ShortcutRow {
+  const a = getAction(id);
+  if (!a.keys) throw new Error(`Action "${id}" is missing overlay keys`);
+  return { keys: a.keys, description: a.description ?? a.label };
 }
 
 interface ShortcutSection {
@@ -23,39 +32,39 @@ const SECTIONS: ShortcutSection[] = [
   {
     heading: 'Global',
     rows: [
+      // Cmd+K and Esc are not in the action map — palette open is hook-internal,
+      // Esc is handled by Radix Dialog. Theme toggle and the overlay opener come
+      // from the action map.
       { keys: ['⌘', 'K'], description: 'Open command palette' },
-      { keys: ['?'], description: 'Show this shortcuts overlay' },
-      { keys: ['T', 'D'], description: 'Toggle dark / light mode' },
+      rowFromAction('show-shortcuts'),
+      rowFromAction('toggle-theme'),
       { keys: ['Esc'], description: 'Close any open panel or modal' },
     ],
   },
   {
     heading: 'Navigation',
-    rows: [
-      { keys: ['G', 'H'], description: 'Go Home' },
-      { keys: ['G', 'P'], description: 'Go to Palaces' },
-      { keys: ['G', 'S'], description: 'Go to Settings' },
-    ],
+    rows: [rowFromAction('go-home'), rowFromAction('go-palaces'), rowFromAction('go-settings')],
   },
   {
     heading: 'Create',
     rows: [
-      { keys: ['C', 'P'], description: 'Create new palace' },
-      { keys: ['C', 'R'], description: 'Create new room (on palace page)' },
-      { keys: ['C', 'N'], description: 'Create new node (on canvas)' },
-      { keys: ['⌘', 'D'], description: 'Duplicate selected node(s) (on canvas)' },
+      rowFromAction('create-palace'),
+      rowFromAction('create-room'),
+      rowFromAction('create-node'),
+      rowFromAction('canvas-duplicate-node'),
     ],
   },
   {
     heading: 'Canvas',
     rows: [
-      { keys: ['G'], description: 'Toggle snap-to-grid' },
-      { keys: ['F'], description: 'Fit all nodes in view' },
-      { keys: ['Del'], description: 'Delete selected node(s)' },
+      rowFromAction('canvas-toggle-snap'),
+      rowFromAction('canvas-fit-view'),
+      rowFromAction('canvas-delete-node'),
+      // Doc-only: handled inside React Flow, not via the action map.
       { keys: ['Space'], description: 'Switch to pan tool (hold)' },
       { keys: ['⌘', 'A'], description: 'Select all nodes' },
-      { keys: ['⌘', 'Z'], description: 'Undo position change' },
-      { keys: ['⌘', '⇧', 'Z'], description: 'Redo position change' },
+      rowFromAction('canvas-undo'),
+      rowFromAction('canvas-redo'),
       { keys: ['E'], description: 'Edit selected node' },
       { keys: ['/'], description: 'Search / filter canvas nodes' },
     ],

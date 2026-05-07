@@ -12,7 +12,7 @@ import { CardSkeleton } from '@/shared/components/CardSkeleton';
 
 export const metadata = { title: 'Palaces — Memory Palace' };
 
-async function PalaceGrid({ autoOpen }: { autoOpen: boolean }) {
+async function PalaceGrid() {
   const result = await getPalaces();
   const items = result.success ? result.data : [];
 
@@ -23,7 +23,7 @@ async function PalaceGrid({ autoOpen }: { autoOpen: boolean }) {
         title="No palaces yet"
         description="A Memory Palace is your top-level space. Create one to start adding rooms and nodes."
         headingLevel={2}
-        action={<CreatePalaceDialog autoOpen={autoOpen} />}
+        action={<CreatePalaceDialog />}
       />
     );
   }
@@ -64,7 +64,7 @@ export default async function PalacesPage({
 
       {/* ── Palace grid ─────────────────────────────────────────────────── */}
       <Suspense fallback={<CardSkeleton count={3} />}>
-        <PalaceGrid autoOpen={autoOpen} />
+        <PalaceGrid />
       </Suspense>
     </div>
   );

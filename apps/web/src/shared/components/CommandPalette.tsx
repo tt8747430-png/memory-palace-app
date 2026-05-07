@@ -1,26 +1,8 @@
 'use client';
 
-import { useCallback, useTransition } from 'react';
+import { Fragment, useMemo, useTransition } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import {
-  Home,
-  Building2,
-  Settings,
-  Moon,
-  Sun,
-  Keyboard,
-  Plus,
-  DoorOpen,
-  Maximize2,
-  Grid3X3,
-  LogOut,
-  Redo2,
-  Undo2,
-  Copy,
-  Trash2,
-  type LucideIcon,
-} from 'lucide-react';
 import {
   Command,
   CommandInput,
@@ -39,211 +21,45 @@ import { useCommandPalette } from './CommandPaletteContext';
 import { useShortcutsOverlay } from './ShortcutsOverlayContext';
 import { signOut } from '@/shared/lib/signOut';
 import { CANVAS_EVENTS } from '@/shared/lib/canvasEvents';
-import { PALACE_PAGE_RE, ROOM_ROUTE_RE } from '@/shared/lib/routes';
+import {
+  COMMAND_ACTIONS,
+  scopeMatches,
+  type CommandAction,
+  type CommandGroup as ActionGroup,
+} from '@/shared/lib/commandActions';
 
-interface PaletteAction {
-  id: string;
-  label: string;
-  icon: LucideIcon;
-  shortcut?: string;
-  onSelect: () => void;
-}
-
-function useActions(closePalette: () => void): { group: string; actions: PaletteAction[] }[] {
-  const router = useRouter();
-  const pathname = usePathname();
-  const { setTheme, theme } = useTheme();
-  const { openOverlay } = useShortcutsOverlay();
-  const [, startTransition] = useTransition();
-  const isOnRoomPage = ROOM_ROUTE_RE.test(pathname);
-  const palacePageMatch = PALACE_PAGE_RE.exec(pathname);
-  const palaceIdFromPath = palacePageMatch?.[1] ?? null;
-
-  const navigate = useCallback(
-    (href: string) => {
-      closePalette();
-      router.push(href);
-    },
-    [closePalette, router],
-  );
-
-  return [
-    {
-      group: 'Navigate',
-      actions: [
-        {
-          id: 'go-home',
-          label: 'Go Home',
-          icon: Home,
-          shortcut: 'G H',
-          onSelect: () => navigate('/'),
-        },
-        {
-          id: 'go-palaces',
-          label: 'Go to Palaces',
-          icon: Building2,
-          shortcut: 'G P',
-          onSelect: () => navigate('/palaces'),
-        },
-        {
-          id: 'go-settings',
-          label: 'Go to Settings',
-          icon: Settings,
-          shortcut: 'G S',
-          onSelect: () => navigate('/settings'),
-        },
-      ],
-    },
-    {
-      group: 'Create',
-      actions: [
-        {
-          id: 'create-palace',
-          label: 'Create New Palace',
-          icon: Plus,
-          shortcut: 'C P',
-          onSelect: () => navigate('/palaces?action=create'),
-        },
-        ...(isOnRoomPage
-          ? [
-              {
-                id: 'create-node',
-                label: 'Create New Node',
-                icon: Plus,
-                shortcut: 'C N',
-                onSelect: () => {
-                  closePalette();
-                  window.dispatchEvent(new CustomEvent(CANVAS_EVENTS.CREATE_NODE));
-                },
-              } satisfies PaletteAction,
-            ]
-          : []),
-        ...(palaceIdFromPath
-          ? [
-              {
-                id: 'create-room',
-                label: 'Create New Room',
-                icon: DoorOpen,
-                shortcut: 'C R',
-                onSelect: () => navigate(`/palaces/${palaceIdFromPath}?action=create-room`),
-              } satisfies PaletteAction,
-            ]
-          : []),
-      ],
-    },
-    ...(isOnRoomPage
-      ? [
-          {
-            group: 'Canvas',
-            actions: [
-              {
-                id: 'canvas-fit-view',
-                label: 'Fit View',
-                icon: Maximize2,
-                shortcut: 'F',
-                onSelect: () => {
-                  closePalette();
-                  window.dispatchEvent(new CustomEvent(CANVAS_EVENTS.FIT_VIEW));
-                },
-              } satisfies PaletteAction,
-              {
-                id: 'canvas-toggle-snap',
-                label: 'Toggle Snap to Grid',
-                icon: Grid3X3,
-                shortcut: 'G',
-                onSelect: () => {
-                  closePalette();
-                  window.dispatchEvent(new CustomEvent(CANVAS_EVENTS.TOGGLE_SNAP));
-                },
-              } satisfies PaletteAction,
-              {
-                id: 'canvas-undo',
-                label: 'Undo',
-                icon: Undo2,
-                shortcut: '⌘Z',
-                onSelect: () => {
-                  closePalette();
-                  window.dispatchEvent(new CustomEvent(CANVAS_EVENTS.UNDO));
-                },
-              } satisfies PaletteAction,
-              {
-                id: 'canvas-redo',
-                label: 'Redo',
-                icon: Redo2,
-                shortcut: '⌘⇧Z',
-                onSelect: () => {
-                  closePalette();
-                  window.dispatchEvent(new CustomEvent(CANVAS_EVENTS.REDO));
-                },
-              } satisfies PaletteAction,
-              {
-                id: 'canvas-duplicate-node',
-                label: 'Duplicate Selected Node(s)',
-                icon: Copy,
-                shortcut: '⌘D',
-                onSelect: () => {
-                  closePalette();
-                  window.dispatchEvent(new CustomEvent(CANVAS_EVENTS.DUPLICATE_NODE));
-                },
-              } satisfies PaletteAction,
-              {
-                id: 'canvas-delete-node',
-                label: 'Delete Selected Node(s)',
-                icon: Trash2,
-                shortcut: '⌫',
-                onSelect: () => {
-                  closePalette();
-                  window.dispatchEvent(new CustomEvent(CANVAS_EVENTS.DELETE_NODE));
-                },
-              } satisfies PaletteAction,
-            ],
-          },
-        ]
-      : []),
-    {
-      group: 'Tools',
-      actions: [
-        {
-          id: 'toggle-theme',
-          label: theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode',
-          icon: theme === 'dark' ? Sun : Moon,
-          shortcut: 'T D',
-          onSelect: () => {
-            setTheme(theme === 'dark' ? 'light' : 'dark');
-            closePalette();
-          },
-        },
-        {
-          id: 'show-shortcuts',
-          label: 'Show Keyboard Shortcuts',
-          icon: Keyboard,
-          shortcut: '?',
-          onSelect: () => {
-            closePalette();
-            openOverlay();
-          },
-        },
-        {
-          id: 'sign-out',
-          label: 'Sign Out',
-          icon: LogOut,
-          onSelect: () => {
-            closePalette();
-            startTransition(() => {
-              void signOut();
-            });
-          },
-        },
-      ],
-    },
-  ];
-}
+const GROUP_ORDER: readonly ActionGroup[] = ['Navigate', 'Create', 'Canvas', 'Tools'];
 
 /** Full-screen command palette rendered as a Dialog.
  *  Open via Cmd/Ctrl+K or via `useCommandPalette().openPalette()`. */
 export function CommandPalette() {
   const { open, setOpen, closePalette } = useCommandPalette();
-  const groups = useActions(closePalette);
+  const router = useRouter();
+  const pathname = usePathname();
+  const { setTheme, resolvedTheme } = useTheme();
+  const { openOverlay } = useShortcutsOverlay();
+  const [, startTransition] = useTransition();
+
+  const groups = useMemo(() => {
+    const visible = COMMAND_ACTIONS.filter((a) => scopeMatches(a.scope, pathname));
+    return GROUP_ORDER.flatMap((group) => {
+      const actions = visible.filter((a) => a.group === group);
+      return actions.length > 0 ? [{ group, actions }] : [];
+    });
+  }, [pathname]);
+
+  const runAction = (action: CommandAction) => {
+    closePalette();
+    action.run({
+      router,
+      pathname,
+      setTheme,
+      resolvedTheme,
+      openOverlay,
+      signOut: () => startTransition(() => void signOut()),
+      dispatchCanvas: (name) => window.dispatchEvent(new CustomEvent(name)),
+    });
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -260,19 +76,29 @@ export function CommandPalette() {
               No results found.
             </CommandEmpty>
 
-            {groups.map((group, groupIdx) => (
-              <span key={group.group}>
+            {groups.map(({ group, actions }, groupIdx) => (
+              <Fragment key={group}>
                 {groupIdx > 0 && <CommandSeparator />}
-                <CommandGroup heading={group.group}>
-                  {group.actions.map(({ id, label, icon: Icon, shortcut, onSelect }) => (
-                    <CommandItem key={id} value={`${group.group} ${label}`} onSelect={onSelect}>
-                      <Icon className="mr-2 h-4 w-4 shrink-0 opacity-70" aria-hidden />
-                      <span>{label}</span>
-                      {shortcut && <CommandShortcut>{shortcut}</CommandShortcut>}
-                    </CommandItem>
-                  ))}
+                <CommandGroup heading={group}>
+                  {actions.map((action) => {
+                    const label = action.getLabel?.({ resolvedTheme }) ?? action.label;
+                    const Icon = action.getIcon?.({ resolvedTheme }) ?? action.icon;
+                    return (
+                      <CommandItem
+                        key={action.id}
+                        value={`${group} ${label}`}
+                        onSelect={() => runAction(action)}
+                      >
+                        <Icon className="mr-2 h-4 w-4 shrink-0 opacity-70" aria-hidden />
+                        <span>{label}</span>
+                        {action.shortcutHint && (
+                          <CommandShortcut>{action.shortcutHint}</CommandShortcut>
+                        )}
+                      </CommandItem>
+                    );
+                  })}
                 </CommandGroup>
-              </span>
+              </Fragment>
             ))}
           </CommandList>
         </Command>
@@ -280,3 +106,6 @@ export function CommandPalette() {
     </Dialog>
   );
 }
+
+// Re-export so external imports continue to compile.
+export { CANVAS_EVENTS };

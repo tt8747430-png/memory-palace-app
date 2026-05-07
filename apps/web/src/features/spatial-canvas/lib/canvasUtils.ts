@@ -15,3 +15,11 @@ export function getCanvasCenterFlowPos(
 ): XYPosition {
   return screenToFlowPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
 }
+
+/**
+ * Snap a raw flow coordinate to the nearest grid cell when snap is enabled.
+ * When disabled, rounds to the nearest integer to keep DB values clean.
+ */
+export function snapPosition(value: number, gridSize: number, enabled: boolean): number {
+  return enabled ? Math.round(value / gridSize) * gridSize : Math.round(value);
+}

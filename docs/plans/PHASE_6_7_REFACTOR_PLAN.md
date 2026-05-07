@@ -215,3 +215,8 @@ This file lives in `shared/lib/` (not in `spatial-canvas/`) because `CommandPale
 - **`InnerCanvas` God Component extraction** — the component is large (~450 lines) but each `useEffect` block has distinct dependencies and captures distinct mutation refs. Splitting it would require threading refs across hook boundaries, adding indirection with no observable simplification. Deferred to Phase 8 refactor if the file grows further.
 - **Context duplication (`CommandPaletteContext` vs `ShortcutsOverlayContext`)** — two instances do not meet the "three or more" threshold for a shared abstraction per `CLAUDE.md`.
 - **`handleDelete` async/Promise pattern in `MemoryNode`** — the ADR explicitly documents this design choice and its edge-case handling. No change warranted.
+- Tab switch underline (`layoutId`) — deferred to when tabbed navigation exists
+- Flashcard 3D flip — no flashcard feature built yet
+- Pull-to-refresh — no native mobile app; browser pull-to-refresh not in scope
+- Streak pulse glow — no streak/badge feature in current schema
+- `canvas-confetti` trigger point — the `useConfetti` hook is built but not wired to any achievement event (no badge/achievement feature exists yet); it is provided as a ready-to-use primitive

@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
 
 interface CommandPaletteContextValue {
   open: boolean;
@@ -13,19 +13,14 @@ const CommandPaletteContext = createContext<CommandPaletteContextValue | null>(n
 
 export function CommandPaletteProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
-
-  return (
-    <CommandPaletteContext.Provider
-      value={{
-        open,
-        setOpen,
-        openPalette: () => setOpen(true),
-        closePalette: () => setOpen(false),
-      }}
-    >
-      {children}
-    </CommandPaletteContext.Provider>
+  const openPalette = useCallback(() => setOpen(true), []);
+  const closePalette = useCallback(() => setOpen(false), []);
+  const value = useMemo<CommandPaletteContextValue>(
+    () => ({ open, setOpen, openPalette, closePalette }),
+    [open, openPalette, closePalette],
   );
+
+  return <CommandPaletteContext.Provider value={value}>{children}</CommandPaletteContext.Provider>;
 }
 
 export function useCommandPalette(): CommandPaletteContextValue {

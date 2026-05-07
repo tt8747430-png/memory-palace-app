@@ -47,7 +47,7 @@ import { useEdgesQuery } from '../hooks/useEdgesQuery';
 import { useRealtimeNodes } from '../hooks/useRealtimeNodes';
 import { useRoomNodeMutations, type PositionUpdate } from '../hooks/useRoomNodeMutations';
 import { useRoomEdgeMutations } from '../hooks/useRoomEdgeMutations';
-import { getCanvasCenterFlowPos } from '../lib/canvasUtils';
+import { getCanvasCenterFlowPos, snapPosition } from '../lib/canvasUtils';
 import { OfflineBanner } from '@/shared/components/OfflineBanner';
 import { CANVAS_EVENTS } from '@/shared/lib/canvasEvents';
 
@@ -252,17 +252,20 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
   useEffect(() => {
     const onCreate = () => {
       const position = getCanvasCenterFlowPos(screenToFlowPosition);
+      // Read snapEnabled imperatively to avoid stale closure (snapEnabled is not
+      // in this effect's deps — canvasStoreApi is stable and always current).
+      const { snapEnabled: snap } = canvasStoreApi.getState();
       addNode.mutate({
         roomId,
         title: 'New Node',
         nodeType: 'text',
-        positionX: Math.round(position.x),
-        positionY: Math.round(position.y),
+        positionX: snapPosition(position.x, SNAP_GRID[0], snap),
+        positionY: snapPosition(position.y, SNAP_GRID[1], snap),
       });
     };
     window.addEventListener(CANVAS_EVENTS.CREATE_NODE, onCreate);
     return () => window.removeEventListener(CANVAS_EVENTS.CREATE_NODE, onCreate);
-  }, [addNode, roomId, screenToFlowPosition]);
+  }, [addNode, canvasStoreApi, roomId, screenToFlowPosition]);
 
   // ── canvas:fit-view / canvas:toggle-snap (fired by the command palette) ──
   useEffect(() => {
@@ -536,8 +539,8 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
       roomId,
       title: 'New Node',
       nodeType: 'text',
-      positionX: Math.round(paneMenu.flowX),
-      positionY: Math.round(paneMenu.flowY),
+      positionX: snapPosition(paneMenu.flowX, SNAP_GRID[0], snapEnabled),
+      positionY: snapPosition(paneMenu.flowY, SNAP_GRID[1], snapEnabled),
     });
     setPaneMenu(null);
   };
@@ -611,7 +614,6 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
           zoomOnPinch
           zoomOnScroll={false}
           preventScrolling
-          onlyRenderVisibleElements
           defaultViewport={{ x: 0, y: 0, zoom: 1 }}
           nodeExtent={[
             [-5000, -5000],

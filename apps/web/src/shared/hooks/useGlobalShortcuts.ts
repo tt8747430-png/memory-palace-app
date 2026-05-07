@@ -6,7 +6,7 @@ import { useTheme } from 'next-themes';
 import { useCommandPalette } from '../components/CommandPaletteContext';
 import { useShortcutsOverlay } from '../components/ShortcutsOverlayContext';
 import { CANVAS_EVENTS } from '../lib/canvasEvents';
-import { PALACE_PAGE_RE, ROOM_ROUTE_RE } from '../lib/routes';
+import { findChordAction } from '../lib/commandActions';
 
 /**
  * Duration of the prefix-key window in ms.  1 second is long enough for
@@ -14,19 +14,20 @@ import { PALACE_PAGE_RE, ROOM_ROUTE_RE } from '../lib/routes';
  */
 const PREFIX_TIMEOUT_MS = 1_000;
 
+const PREFIX_KEYS = new Set(['g', 'c', 't']);
+
 /**
  * Registers all application-wide keyboard shortcuts.
  *
  * Sequential shortcuts (e.g. "g then h") use a prefix-key state-machine:
  *   1. A "prefix" key (g, c, t) arms a 1-second window.
- *   2. The next keystroke within that window fires the mapped action.
+ *   2. The next keystroke within that window resolves to a chord action.
  *
  * Cmd/Ctrl+K is handled separately because it must work even inside inputs.
  *
  * This hook must be rendered inside both CommandPaletteProvider and
  * ShortcutsOverlayProvider.
  */
-
 export function useGlobalShortcuts() {
   const router = useRouter();
   const pathname = usePathname();
@@ -34,12 +35,9 @@ export function useGlobalShortcuts() {
   const { openPalette } = useCommandPalette();
   const { openOverlay } = useShortcutsOverlay();
 
-  // Keep a stable ref to the prefix-key timer so cleanup can always reach it,
-  // even if the effect is torn down mid-sequence.
   const prefixTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    /** Key pressed during the prefix window, or null if no window is active. */
     let prefixKey: string | null = null;
 
     function clearPrefix() {
@@ -66,7 +64,6 @@ export function useGlobalShortcuts() {
     }
 
     function handleKeyDown(e: KeyboardEvent) {
-      // ── Cmd/Ctrl+K: open palette (works in all contexts) ────────────────
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
         openPalette();
@@ -74,60 +71,35 @@ export function useGlobalShortcuts() {
         return;
       }
 
-      // ── All other shortcuts ignore input elements ────────────────────────
       if (isInputFocused()) return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
 
       const key = e.key.toLowerCase();
 
-      // ── Sequential: resolve the pending prefix ────────────────────────────
       if (prefixKey !== null) {
         const combo = `${prefixKey}${key}`;
         clearPrefix();
-
-        switch (combo) {
-          case 'gh':
-            router.push('/');
-            break;
-          case 'gp':
-            router.push('/palaces');
-            break;
-          case 'gs':
-            router.push('/settings');
-            break;
-          case 'cp':
-            router.push('/palaces?action=create');
-            break;
-          case 'cn':
-            if (ROOM_ROUTE_RE.test(pathname)) {
-              window.dispatchEvent(new CustomEvent(CANVAS_EVENTS.CREATE_NODE));
-            }
-            break;
-          case 'cr': {
-            const palaceMatch = PALACE_PAGE_RE.exec(pathname);
-            if (palaceMatch) {
-              router.push(`/palaces/${palaceMatch[1]}?action=create-room`);
-            }
-            break;
-          }
-          case 'td':
-            setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
-            break;
-          default:
-            break;
-        }
+        const action = findChordAction(combo, pathname);
+        action?.run({
+          router,
+          pathname,
+          setTheme,
+          resolvedTheme,
+          openOverlay,
+          // Sign-out has no chord, so this branch is unreachable from the hook.
+          signOut: () => {},
+          dispatchCanvas: (name) => window.dispatchEvent(new CustomEvent(name)),
+        });
         return;
       }
 
-      // ── Single-key shortcuts ─────────────────────────────────────────────
       if (key === '?') {
         e.preventDefault();
         openOverlay();
         return;
       }
 
-      // ── Arm a prefix window ───────────────────────────────────────────────
-      if (key === 'g' || key === 'c' || key === 't') {
+      if (PREFIX_KEYS.has(key)) {
         armPrefix(key);
       }
     }
@@ -139,3 +111,6 @@ export function useGlobalShortcuts() {
     };
   }, [router, pathname, setTheme, resolvedTheme, openPalette, openOverlay]);
 }
+
+// Re-export for tests that previously imported via this path.
+export { CANVAS_EVENTS };
