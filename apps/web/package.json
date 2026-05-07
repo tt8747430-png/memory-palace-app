@@ -13,6 +13,7 @@
   "dependencies": {
     "@memory-palace/db": "workspace:*",
     "@memory-palace/ui": "workspace:*",
+    "@sentry/nextjs": "^10.52.0",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.105.1",
     "@tanstack/react-query": "^5.100.9",
@@ -47,6 +48,7 @@
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
     "jsdom": "^29.0.0",
     "tailwindcss": "^4",
     "typescript": "^5",

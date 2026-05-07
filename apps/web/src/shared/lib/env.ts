@@ -13,6 +13,11 @@ const schema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   // Vercel system variable — only available in deployed environments.
   VERCEL_URL: z.string().min(1).optional(),
+  // Sentry — server-only DSN (never shipped to the browser).
+  // When absent (local dev without .env.local), Sentry init is a no-op.
+  SENTRY_DSN: z.string().url().optional(),
+  // Public Sentry DSN — safe to expose; used by the browser SDK.
+  NEXT_PUBLIC_SENTRY_DSN: z.string().url().optional(),
 });
 
 export const env = schema.parse({
@@ -23,4 +28,6 @@ export const env = schema.parse({
   UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
   NODE_ENV: process.env.NODE_ENV,
   VERCEL_URL: process.env.VERCEL_URL,
+  SENTRY_DSN: process.env.SENTRY_DSN,
+  NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
 });
