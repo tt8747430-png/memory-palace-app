@@ -6,7 +6,7 @@ Track pre-launch verification for Memory Palace v1.0.0.
 
 ---
 
-## CI & Buildkk
+## CI & Build
 
 | Item                                       | Status | Notes                                  |
 | ------------------------------------------ | ------ | -------------------------------------- |
