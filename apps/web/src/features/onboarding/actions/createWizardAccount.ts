@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 import { createSupabaseFromCookies } from '@/shared/lib/supabase';
-import { buildCallbackUrl } from '@/features/auth/lib/callbackUrl';
+import { buildCallbackUrl } from '@/shared/lib/callbackUrl';
 
 // Cannot use defineAction — the user is unauthenticated at this step.
 const schema = z.object({
