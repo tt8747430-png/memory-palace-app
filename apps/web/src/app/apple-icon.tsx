@@ -1,9 +1,12 @@
 import { ImageResponse } from 'next/og';
+import { BrandIcon } from './_brand-icon';
 
 export const size = { width: 180, height: 180 };
 export const contentType = 'image/png';
 
 export default function AppleIcon() {
+  const s = Math.round(size.width * 0.84);
+
   return new ImageResponse(
     <div
       style={{
@@ -12,75 +15,10 @@ export default function AppleIcon() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(135deg, #0f172a 0%, #160b33 100%)',
+        background: 'radial-gradient(ellipse at 42% 38%, #1e1b4b 0%, #0f172a 52%, #160b33 100%)',
       }}
     >
-      {/*
-       * "M" shaped node-network — same motif as icon.tsx, scaled to 180 × 180.
-       * SVG rendered at 135 × 135 (75% of container) on a 24 × 24 viewBox.
-       */}
-      <svg
-        width="135"
-        height="135"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {/* Edges */}
-        <line
-          x1="3"
-          y1="20"
-          x2="3"
-          y2="4"
-          stroke="#6366f1"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeOpacity="0.8"
-        />
-        <line
-          x1="3"
-          y1="4"
-          x2="12"
-          y2="11"
-          stroke="#6366f1"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeOpacity="0.8"
-        />
-        <line
-          x1="12"
-          y1="11"
-          x2="21"
-          y2="4"
-          stroke="#6366f1"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeOpacity="0.8"
-        />
-        <line
-          x1="21"
-          y1="4"
-          x2="21"
-          y2="20"
-          stroke="#6366f1"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeOpacity="0.8"
-        />
-
-        {/* Bottom anchor nodes */}
-        <circle cx="3" cy="20" r="2.2" fill="#3b82f6" />
-        <circle cx="21" cy="20" r="2.2" fill="#3b82f6" />
-
-        {/* Top corner nodes */}
-        <circle cx="3" cy="4" r="2.2" fill="#8b5cf6" />
-        <circle cx="21" cy="4" r="2.2" fill="#8b5cf6" />
-
-        {/* Center hub */}
-        <circle cx="12" cy="11" r="3.8" fill="#312e81" />
-        <circle cx="12" cy="11" r="2.6" fill="#6366f1" />
-        <circle cx="12" cy="11" r="1.3" fill="#c7d2fe" />
-      </svg>
+      <BrandIcon size={s} />
     </div>,
     size,
   );

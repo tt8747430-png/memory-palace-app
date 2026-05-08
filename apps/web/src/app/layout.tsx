@@ -42,8 +42,20 @@ export const metadata: Metadata = {
     title: 'Memory Palace',
     description: 'A spatial learning platform using virtual palaces with draggable memory nodes',
   },
+  icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: '32x32', type: 'image/x-icon' },
+    ],
+    apple: '/apple-icon',
+  },
   // Authenticated routes are not crawlable — keep them private.
   robots: { index: false, follow: false },
+  appleWebApp: {
+    capable: true,
+    title: 'Memory Palace',
+    statusBarStyle: 'black-translucent',
+  },
 };
 
 export const viewport: Viewport = {
