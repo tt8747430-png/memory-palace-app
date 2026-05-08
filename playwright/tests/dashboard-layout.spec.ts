@@ -9,8 +9,10 @@ import { test, expect, devices } from '@playwright/test';
  */
 
 test.describe('Dashboard layout', () => {
-  test('unauthenticated visit to / redirects to /login', async ({ page }) => {
-    await page.goto('/');
+  test('unauthenticated visit to a protected route redirects to /login', async ({ page }) => {
+    // `/` is the public marketing landing page since the (marketing) route group
+    // shipped — use a dashboard route to verify the proxy redirect still works.
+    await page.goto('/dashboard');
     await expect(page).toHaveURL(/\/login/);
   });
 

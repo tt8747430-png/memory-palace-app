@@ -15,8 +15,8 @@ test.describe('Auth pages', () => {
 
     await expect(page).toHaveTitle(/Memory Palace/);
     await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible();
-    await expect(page.getByPlaceholder('Email')).toBeVisible();
-    await expect(page.getByPlaceholder('Password')).toBeVisible();
+    await expect(page.getByLabel('Email')).toBeVisible();
+    await expect(page.getByLabel('Password')).toBeVisible();
     await expect(page.getByRole('button', { name: /sign in/i })).toBeVisible();
     await expect(page.getByRole('link', { name: /sign up/i })).toBeVisible();
   });
@@ -26,8 +26,8 @@ test.describe('Auth pages', () => {
 
     await expect(page).toHaveTitle(/Memory Palace/);
     await expect(page.getByRole('heading', { name: /create account/i })).toBeVisible();
-    await expect(page.getByPlaceholder('Email')).toBeVisible();
-    await expect(page.getByPlaceholder('Password')).toBeVisible();
+    await expect(page.getByLabel('Email')).toBeVisible();
+    await expect(page.getByLabel('Password')).toBeVisible();
     await expect(page.getByRole('button', { name: /create account/i })).toBeVisible();
     await expect(page.getByRole('link', { name: /sign in/i })).toBeVisible();
   });
