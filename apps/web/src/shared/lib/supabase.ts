@@ -13,7 +13,7 @@ export async function createSupabaseFromCookies() {
     {
       cookies: {
         getAll() {
-          return cookieStore.getAll();
+          return cookieStore?.getAll() ?? [];
         },
         setAll(cookiesToSet) {
           try {
