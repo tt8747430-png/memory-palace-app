@@ -87,41 +87,29 @@ export default function OgImage() {
           <circle cx="12" cy="11" r="5" fill="#312e81" fillOpacity="0.35" />
 
           {/* Edges */}
-          <line
-            x1="3"
-            y1="20"
-            x2="3"
-            y2="4"
+          <path
+            d="M3,20 L3,4"
             stroke="#6366f1"
             strokeWidth="1.2"
             strokeLinecap="round"
             strokeOpacity="0.7"
           />
-          <line
-            x1="3"
-            y1="4"
-            x2="12"
-            y2="11"
+          <path
+            d="M3,4 L12,11"
             stroke="#6366f1"
             strokeWidth="1.2"
             strokeLinecap="round"
             strokeOpacity="0.7"
           />
-          <line
-            x1="12"
-            y1="11"
-            x2="21"
-            y2="4"
+          <path
+            d="M12,11 L21,4"
             stroke="#6366f1"
             strokeWidth="1.2"
             strokeLinecap="round"
             strokeOpacity="0.7"
           />
-          <line
-            x1="21"
-            y1="4"
-            x2="21"
-            y2="20"
+          <path
+            d="M21,4 L21,20"
             stroke="#6366f1"
             strokeWidth="1.2"
             strokeLinecap="round"

@@ -4,9 +4,9 @@ import { BrandIcon } from './_brand-icon';
 export const size = { width: 180, height: 180 };
 export const contentType = 'image/png';
 
-export default function AppleIcon() {
-  const s = Math.round(size.width * 0.84);
+const bg = 'radial-gradient(ellipse at 42% 38%, #1e1b4b 0%, #0f172a 52%, #160b33 100%)';
 
+export default function AppleIcon() {
   return new ImageResponse(
     <div
       style={{
@@ -15,10 +15,10 @@ export default function AppleIcon() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'radial-gradient(ellipse at 42% 38%, #1e1b4b 0%, #0f172a 52%, #160b33 100%)',
+        background: bg,
       }}
     >
-      <BrandIcon size={s} />
+      <BrandIcon size={size.width} />
     </div>,
     size,
   );

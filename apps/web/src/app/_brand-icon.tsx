@@ -21,21 +21,15 @@ export function BrandIcon({ size }: BrandIconProps) {
       fill="none"
     >
       {/* ── Side column lines ── */}
-      <line
-        x1="4"
-        y1="5"
-        x2="4.5"
-        y2="19"
+      <path
+        d="M4,5 L4.5,19"
         stroke="#818cf8"
         strokeWidth="0.6"
         strokeOpacity="0.4"
         strokeLinecap="round"
       />
-      <line
-        x1="20"
-        y1="5"
-        x2="19.5"
-        y2="19"
+      <path
+        d="M20,5 L19.5,19"
         stroke="#818cf8"
         strokeWidth="0.6"
         strokeOpacity="0.4"
@@ -43,41 +37,29 @@ export function BrandIcon({ size }: BrandIconProps) {
       />
 
       {/* ── Top-arch edge lines (palace crown) ── */}
-      <line
-        x1="4"
-        y1="5"
-        x2="8.5"
-        y2="2.5"
+      <path
+        d="M4,5 L8.5,2.5"
         stroke="#a78bfa"
         strokeWidth="0.75"
         strokeOpacity="0.65"
         strokeLinecap="round"
       />
-      <line
-        x1="8.5"
-        y1="2.5"
-        x2="12"
-        y2="1.8"
+      <path
+        d="M8.5,2.5 L12,1.8"
         stroke="#a78bfa"
         strokeWidth="0.75"
         strokeOpacity="0.65"
         strokeLinecap="round"
       />
-      <line
-        x1="12"
-        y1="1.8"
-        x2="15.5"
-        y2="2.5"
+      <path
+        d="M12,1.8 L15.5,2.5"
         stroke="#a78bfa"
         strokeWidth="0.75"
         strokeOpacity="0.65"
         strokeLinecap="round"
       />
-      <line
-        x1="15.5"
-        y1="2.5"
-        x2="20"
-        y2="5"
+      <path
+        d="M15.5,2.5 L20,5"
         stroke="#a78bfa"
         strokeWidth="0.75"
         strokeOpacity="0.65"
@@ -85,71 +67,50 @@ export function BrandIcon({ size }: BrandIconProps) {
       />
 
       {/* ── Spoke lines: every node → central hub ── */}
-      <line
-        x1="4"
-        y1="5"
-        x2="12"
-        y2="12"
+      <path
+        d="M4,5 L12,12"
         stroke="#818cf8"
         strokeWidth="0.65"
         strokeOpacity="0.5"
         strokeLinecap="round"
       />
-      <line
-        x1="8.5"
-        y1="2.5"
-        x2="12"
-        y2="12"
+      <path
+        d="M8.5,2.5 L12,12"
         stroke="#818cf8"
         strokeWidth="0.65"
         strokeOpacity="0.5"
         strokeLinecap="round"
       />
-      <line
-        x1="12"
-        y1="1.8"
-        x2="12"
-        y2="12"
+      <path
+        d="M12,1.8 L12,12"
         stroke="#818cf8"
         strokeWidth="0.65"
         strokeOpacity="0.5"
         strokeLinecap="round"
       />
-      <line
-        x1="15.5"
-        y1="2.5"
-        x2="12"
-        y2="12"
+      <path
+        d="M15.5,2.5 L12,12"
         stroke="#818cf8"
         strokeWidth="0.65"
         strokeOpacity="0.5"
         strokeLinecap="round"
       />
-      <line
-        x1="20"
-        y1="5"
-        x2="12"
-        y2="12"
+      <path
+        d="M20,5 L12,12"
         stroke="#818cf8"
         strokeWidth="0.65"
         strokeOpacity="0.5"
         strokeLinecap="round"
       />
-      <line
-        x1="4.5"
-        y1="19"
-        x2="12"
-        y2="12"
+      <path
+        d="M4.5,19 L12,12"
         stroke="#818cf8"
         strokeWidth="0.65"
         strokeOpacity="0.5"
         strokeLinecap="round"
       />
-      <line
-        x1="19.5"
-        y1="19"
-        x2="12"
-        y2="12"
+      <path
+        d="M19.5,19 L12,12"
         stroke="#818cf8"
         strokeWidth="0.65"
         strokeOpacity="0.5"

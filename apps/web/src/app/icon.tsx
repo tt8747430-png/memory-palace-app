@@ -20,10 +20,10 @@ export function generateImageMetadata() {
   }));
 }
 
-export default function Icon({ id }: { id: string }) {
-  const size = iconSizes[id as IconId] ?? iconSizes.md;
-  const s = Math.round(size.width * 0.84);
+const bg = 'radial-gradient(ellipse at 42% 38%, #1e1b4b 0%, #0f172a 52%, #160b33 100%)';
 
+export default function Icon({ id }: { id: string }) {
+  const { width, height } = iconSizes[id as IconId] ?? iconSizes.md;
   return new ImageResponse(
     <div
       style={{
@@ -32,11 +32,11 @@ export default function Icon({ id }: { id: string }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'radial-gradient(ellipse at 42% 38%, #1e1b4b 0%, #0f172a 52%, #160b33 100%)',
+        background: bg,
       }}
     >
-      <BrandIcon size={s} />
+      <BrandIcon size={width} />
     </div>,
-    { width: size.width, height: size.height },
+    { width, height },
   );
 }
