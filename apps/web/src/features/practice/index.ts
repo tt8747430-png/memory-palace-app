@@ -12,6 +12,7 @@ export { PracticePicker } from './components/PracticePicker';
 export { DailyReviewCta } from './components/DailyReviewCta';
 export { StreakCounter } from './components/StreakCounter';
 export { StatisticsPanel } from './components/StatisticsPanel';
+export { FlashcardDeck } from './components/FlashcardDeck';
 
 export { getDueNodesSchema, recordPracticeSchema, PRACTICE_MODES } from './schemas/practice';
 export type { GetDueNodesInput, RecordPracticeInput } from './schemas/practice';

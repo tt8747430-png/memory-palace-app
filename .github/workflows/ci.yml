@@ -65,7 +65,7 @@ jobs:
           TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
           TURBO_TEAM: ${{ github.repository_owner }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
 
   lint:
     name: ESLint + Prettier
@@ -170,7 +170,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Check Drizzle migration consistency
-        run: pnpm --filter @memory-palace/db drizzle-kit check
+        run: pnpm --filter @memory-palace/db exec drizzle-kit check
         env:
           DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
 
@@ -237,7 +237,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Apply migrations to test database
-        run: pnpm --filter @memory-palace/db drizzle-kit push
+        run: pnpm --filter @memory-palace/db exec drizzle-kit push
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/memory_palace_test
 
@@ -279,14 +279,14 @@ jobs:
           TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
           TURBO_TEAM: ${{ github.repository_owner }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
 
       - name: Run Playwright E2E tests
         run: pnpm exec playwright test
         env:
           DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
 
       - name: Upload Playwright report
         if: failure()

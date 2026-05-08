@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1777976675287,
+      "tag": "0000_talented_jamie_braddock",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1778191217075,
+      "tag": "0001_palaces_theme_fields",
+      "breakpoints": true
+    }
+  ]
+}

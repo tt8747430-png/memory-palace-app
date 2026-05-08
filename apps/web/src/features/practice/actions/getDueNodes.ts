@@ -23,9 +23,14 @@ export type DueNodeWithMeta = {
   id: string;
   title: string;
   content: string | null;
+  /** Optional Bible-mode hint — surfaced in flashcards/journey when palace.mode === 'bible'. */
+  verseHint: string | null;
+  bibleRef: string | null;
   roomId: string;
   palaceId: string;
   palaceTitle: string;
+  /** Parent palace mode — drives whether verse-hint UI renders. */
+  palaceMode: 'bible' | 'simple';
   roomTitle: string;
   mastery: number;
   streak: number;
@@ -70,9 +75,12 @@ export const getDueNodes = defineAction({
         id: nodes.id,
         title: nodes.title,
         content: nodes.content,
+        verseHint: nodes.verseHint,
+        bibleRef: nodes.bibleRef,
         roomId: nodes.roomId,
         palaceId: rooms.palaceId,
         palaceTitle: palaces.title,
+        palaceMode: palaces.mode,
         roomTitle: rooms.title,
         mastery: nodeReviewState.mastery,
         streak: nodeReviewState.streak,
@@ -99,9 +107,12 @@ export const getDueNodes = defineAction({
       id: r.id,
       title: r.title,
       content: r.content,
+      verseHint: r.verseHint,
+      bibleRef: r.bibleRef,
       roomId: r.roomId,
       palaceId: r.palaceId,
       palaceTitle: r.palaceTitle,
+      palaceMode: r.palaceMode,
       roomTitle: r.roomTitle,
       mastery: r.mastery ?? 0,
       streak: r.streak ?? 0,
