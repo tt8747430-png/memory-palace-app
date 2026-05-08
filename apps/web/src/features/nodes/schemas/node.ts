@@ -4,6 +4,8 @@ const DEFAULT_PAGE_SIZE = 20;
 const TITLE_MAX = 200;
 const CONTENT_MAX = 10_000;
 const COLOR_MAX = 20;
+const VERSE_HINT_MAX = 2_000;
+const BIBLE_REF_MAX = 120;
 
 const NODE_TYPES = ['text', 'image', 'link'] as const;
 
@@ -34,6 +36,9 @@ export const createNodeSchema = z.object({
   positionX: z.number().finite('positionX must be finite').optional().default(0),
   positionY: z.number().finite('positionY must be finite').optional().default(0),
   color: z.string().max(COLOR_MAX).optional(),
+  /** Bible-mode optional fields — silently ignored in Simple-mode UI. */
+  verseHint: z.string().max(VERSE_HINT_MAX).optional(),
+  bibleRef: z.string().max(BIBLE_REF_MAX).optional(),
 });
 
 export const updateNodeSchema = z.object({
@@ -43,6 +48,8 @@ export const updateNodeSchema = z.object({
   content: z.string().max(CONTENT_MAX).nullable().optional(),
   nodeType: z.enum(NODE_TYPES).optional(),
   color: z.string().max(COLOR_MAX).nullable().optional(),
+  verseHint: z.string().max(VERSE_HINT_MAX).nullable().optional(),
+  bibleRef: z.string().max(BIBLE_REF_MAX).nullable().optional(),
 });
 
 export const updateNodePositionSchema = z.object({

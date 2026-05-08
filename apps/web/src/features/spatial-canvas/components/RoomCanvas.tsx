@@ -28,7 +28,7 @@ import {
   type OnSelectionChangeFunc,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import type { SelectEdge, SelectNode } from '@memory-palace/db';
+import type { PalaceMode, SelectEdge, SelectNode } from '@memory-palace/db';
 import { nodeTypes } from './nodes/nodeTypes';
 import type { MemoryNodeType } from './nodes/MemoryNode';
 import { CanvasToolbar } from './CanvasToolbar';
@@ -162,9 +162,10 @@ function PaneContextMenu({
 interface InnerCanvasProps {
   roomId: string;
   initialNodes: SelectNode[];
+  palaceMode: PalaceMode;
 }
 
-function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
+function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
   const activeTool = useCanvasStore((s) => s.activeTool);
   const setActiveTool = useCanvasStore((s) => s.setActiveTool);
   const setEditingNodeId = useCanvasStore((s) => s.setEditingNodeId);
@@ -344,6 +345,31 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
     };
   }, [canvasStoreApi, getNodes, clearFuture, applyPositionSnapshot, undoPositions, redoPositions]);
 
+  // ── Refit viewport when the canvas container resizes ─────────────────────
+  // Triggers on device rotation, browser-chrome show/hide (iOS URL bar), and
+  // sidebar toggles. Skip while the user is actively dragging a node so we
+  // don't yank their cursor to a different flow position mid-gesture.
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isDraggingRef = useRef(false);
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    const observer = new ResizeObserver(() => {
+      if (isDraggingRef.current) return;
+      // Debounce: rapid-fire entries during rotation animations.
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        fitView({ padding: 0.2, duration: 200, maxZoom: 1.5 });
+      }, 120);
+    });
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [fitView]);
+
   // ── Keyboard shortcuts: G = snap, F = fit view, Del/Backspace = delete,
   //    Cmd+A = select all, Cmd+D = duplicate, Cmd+Z/Shift+Z = undo/redo,
   //    E = open editor for single selected node ─────────────────────────────
@@ -466,6 +492,7 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
 
   // Capture positions BEFORE a drag so we have a valid undo snapshot.
   const onNodeDragStart: OnNodeDrag<MemoryNodeType> = (_event, node) => {
+    isDraggingRef.current = true;
     const snap = (getNodes() as MemoryNodeType[]).map((n) => ({
       id: n.id,
       x: n.position.x,
@@ -478,6 +505,7 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
   // Single-node drag — fires only when the dragged node is NOT part of a
   // multi-selection (React Flow v12 routes selection drags to onSelectionDragStop).
   const onNodeDragStop: OnNodeDrag<MemoryNodeType> = (_event, node) => {
+    isDraggingRef.current = false;
     savePosition.mutate({
       id: node.id,
       positionX: node.position.x,
@@ -490,6 +518,7 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
   // For a single selected node, delegates to savePosition; for multiple, uses
   // the atomic batch mutation to persist all positions in one transaction.
   const onSelectionDragStop = (_event: React.MouseEvent, dragged: MemoryNodeType[]) => {
+    isDraggingRef.current = false;
     if (dragged.length === 0) return;
     const updates: PositionUpdate[] = dragged.map((n) => ({
       id: n.id,
@@ -604,7 +633,7 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
 
   return (
     <CanvasNodeActionsProvider value={nodeActions}>
-      <div className="relative h-full w-full" data-testid="canvas-container">
+      <div ref={containerRef} className="relative h-full w-full" data-testid="canvas-container">
         <CanvasDragAnnouncer announcerRef={announcerRef} />
         <ReactFlow<MemoryNodeType>
           nodes={displayNodes}
@@ -641,7 +670,7 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
           aria-label="Memory canvas — use Tab to navigate nodes, Enter to edit, Delete to remove"
         >
           <Background variant={BackgroundVariant.Dots} gap={20} size={1} className="opacity-40" />
-          <Controls className="hidden md:flex" showInteractive={false} />
+          <Controls className="flex md:flex" showInteractive={false} />
           <MiniMap<MemoryNodeType>
             className="hidden md:block"
             nodeColor={(n) => n.data.color ?? 'hsl(var(--muted-foreground))'}
@@ -654,7 +683,7 @@ function InnerCanvas({ roomId, initialNodes }: InnerCanvasProps) {
         <SelectionToolbar roomId={roomId} />
         <CanvasToolbar roomId={roomId} />
         <CanvasFab roomId={roomId} />
-        <NodeEditorSheet roomId={roomId} />
+        <NodeEditorSheet roomId={roomId} palaceMode={palaceMode} />
         <CanvasSearch />
         <OfflineBanner />
 
@@ -685,15 +714,17 @@ interface RoomCanvasProps {
   roomId: string;
   /** Server-side fetched nodes passed as TanStack Query initialData. */
   initialNodes: SelectNode[];
+  /** Parent palace mode — drives Bible-mode UI gating in the node editor. */
+  palaceMode?: PalaceMode;
 }
 
 /** Full canvas for a room — wraps ReactFlowProvider, CanvasStoreProvider,
  * TanStack Query hooks, and the canvas error boundary in a clean public API. */
-export function RoomCanvas({ roomId, initialNodes }: RoomCanvasProps) {
+export function RoomCanvas({ roomId, initialNodes, palaceMode = 'simple' }: RoomCanvasProps) {
   return (
     <CanvasStoreProvider>
       <ReactFlowProvider>
-        <InnerCanvas roomId={roomId} initialNodes={initialNodes} />
+        <InnerCanvas roomId={roomId} initialNodes={initialNodes} palaceMode={palaceMode} />
       </ReactFlowProvider>
     </CanvasStoreProvider>
   );

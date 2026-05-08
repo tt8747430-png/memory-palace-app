@@ -3,6 +3,9 @@ import { z } from 'zod';
 const TITLE_MAX = 100;
 const DESC_MAX = 500;
 
+export const PALACE_MODES = ['bible', 'simple'] as const;
+export type PalaceModeInput = (typeof PALACE_MODES)[number];
+
 export const createPalaceSchema = z.object({
   title: z
     .string()
@@ -12,16 +15,24 @@ export const createPalaceSchema = z.object({
     .string()
     .max(DESC_MAX, `Description must be ${DESC_MAX} characters or less`)
     .optional(),
+  mode: z.enum(PALACE_MODES).optional(),
 });
 
 export const updatePalaceSchema = z.object({
   id: z.string().uuid('Invalid palace ID'),
   title: z.string().min(1, 'Title cannot be empty').max(TITLE_MAX).optional(),
   description: z.string().max(DESC_MAX).nullable().optional(),
+  mode: z.enum(PALACE_MODES).optional(),
+});
+
+export const setPalaceModeSchema = z.object({
+  id: z.string().uuid('Invalid palace ID'),
+  mode: z.enum(PALACE_MODES),
 });
 
 export const palaceIdSchema = z.object({ id: z.string().uuid('Invalid palace ID') });
 
 export type CreatePalaceInput = z.infer<typeof createPalaceSchema>;
 export type UpdatePalaceInput = z.infer<typeof updatePalaceSchema>;
+export type SetPalaceModeInput = z.infer<typeof setPalaceModeSchema>;
 export type PalaceIdInput = z.infer<typeof palaceIdSchema>;

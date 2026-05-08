@@ -75,11 +75,14 @@ export default async function RoomPage({ params }: RoomPageProps) {
       </div>
 
       {/* Spatial canvas — error boundary ensures sidebar survives a crash.
-       * Needs an explicit height (not min-height) so React Flow's `h-full`
-       * child resolves; the parent layout chain doesn't propagate height. */}
-      <div className="h-[500px] md:h-[700px]">
+       * Uses dynamic viewport height (`dvh`) so iOS Safari URL-bar collapse
+       * doesn't leave the canvas with a stale fixed pixel height. The 16rem
+       * subtracted accounts for the dashboard chrome + this page's header.
+       * The inner `RoomCanvas` registers a ResizeObserver to refit viewport
+       * on container size changes (rotation, browser-chrome show/hide). */}
+      <div className="h-[calc(100dvh-16rem)] min-h-[420px] w-full">
         <CanvasErrorBoundary>
-          <RoomCanvas roomId={roomId} initialNodes={initialNodes} />
+          <RoomCanvas roomId={roomId} initialNodes={initialNodes} palaceMode={palace.mode} />
         </CanvasErrorBoundary>
       </div>
     </div>

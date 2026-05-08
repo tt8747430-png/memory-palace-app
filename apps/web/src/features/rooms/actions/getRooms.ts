@@ -15,6 +15,8 @@ export const getRooms = defineAction({
         palaceId: rooms.palaceId,
         title: rooms.title,
         position: rooms.position,
+        prevRoomId: rooms.prevRoomId,
+        nextRoomId: rooms.nextRoomId,
         createdAt: rooms.createdAt,
         updatedAt: rooms.updatedAt,
         deletedAt: rooms.deletedAt,

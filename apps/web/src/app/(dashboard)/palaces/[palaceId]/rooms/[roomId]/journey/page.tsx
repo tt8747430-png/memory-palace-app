@@ -39,7 +39,14 @@ export default async function RoomJourneyPage({ params }: JourneyPageProps) {
   const journeyNodes = allNodes
     .slice()
     .sort((a, b) => a.positionY - b.positionY || a.positionX - b.positionX)
-    .map((n) => ({ id: n.id, title: n.title, content: n.content, color: n.color }));
+    .map((n) => ({
+      id: n.id,
+      title: n.title,
+      content: n.content,
+      color: n.color,
+      verseHint: n.verseHint ?? null,
+      bibleRef: n.bibleRef ?? null,
+    }));
 
   return (
     <RoomJourney
@@ -47,6 +54,7 @@ export default async function RoomJourneyPage({ params }: JourneyPageProps) {
       roomId={roomId}
       palaceTitle={palaceResult.data.title}
       roomTitle={roomResult.data.title}
+      mode={palaceResult.data.mode}
       nodes={journeyNodes}
     />
   );

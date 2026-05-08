@@ -58,6 +58,7 @@ export const duplicatePalace = defineAction({
           description: source.description,
           color: source.color,
           icon: source.icon,
+          mode: source.mode,
         })
         .returning();
       if (!palace) throw new ActionError('INTERNAL_ERROR', 'Palace insert returned no row.');
@@ -113,6 +114,8 @@ export const duplicatePalace = defineAction({
               positionX: n.positionX,
               positionY: n.positionY,
               color: n.color,
+              verseHint: n.verseHint,
+              bibleRef: n.bibleRef,
             })),
           )
           .returning({ id: nodes.id });

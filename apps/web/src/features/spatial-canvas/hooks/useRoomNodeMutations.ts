@@ -20,7 +20,9 @@ export interface PositionUpdate {
   positionY: number;
 }
 
-export type NodePatch = Partial<Pick<UpdateNodeInput, 'title' | 'content' | 'nodeType' | 'color'>>;
+export type NodePatch = Partial<
+  Pick<UpdateNodeInput, 'title' | 'content' | 'nodeType' | 'color' | 'verseHint' | 'bibleRef'>
+>;
 
 /**
  * Single seam for every write that mutates the room's node cache.
@@ -137,6 +139,8 @@ export function useRoomNodeMutations(roomId: string) {
         positionX: vars.positionX ?? 0,
         positionY: vars.positionY ?? 0,
         color: vars.color ?? null,
+        verseHint: null,
+        bibleRef: null,
         createdAt: now,
         updatedAt: now,
         deletedAt: null,

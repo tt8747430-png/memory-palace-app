@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { Pencil } from 'lucide-react';
-import type { SelectPalace } from '@memory-palace/db';
+import type { PalaceMode, SelectPalace } from '@memory-palace/db';
 import {
   Button,
   Dialog,
@@ -16,6 +16,7 @@ import {
   Label,
   Textarea,
   Alert,
+  cn,
 } from '@memory-palace/ui';
 import { updatePalace } from '../actions/updatePalace';
 
@@ -27,6 +28,7 @@ export function EditPalaceDialog({ palace }: EditPalaceDialogProps) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [mode, setMode] = useState<PalaceMode>(palace.mode);
 
   function handleSubmit(formData: FormData) {
     setError(null);
@@ -34,7 +36,7 @@ export function EditPalaceDialog({ palace }: EditPalaceDialogProps) {
     const description = (formData.get('description') as string) || null;
 
     startTransition(async () => {
-      const result = await updatePalace({ id: palace.id, title, description });
+      const result = await updatePalace({ id: palace.id, title, description, mode });
       if (!result.success) {
         setError(result.error.message);
       } else {
@@ -47,6 +49,7 @@ export function EditPalaceDialog({ palace }: EditPalaceDialogProps) {
     if (!isPending) {
       setOpen(next);
       setError(null);
+      if (next) setMode(palace.mode);
     }
   }
 
@@ -61,7 +64,9 @@ export function EditPalaceDialog({ palace }: EditPalaceDialogProps) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Edit Palace</DialogTitle>
-          <DialogDescription>Update the title or description of this palace.</DialogDescription>
+          <DialogDescription>
+            Update the title, description, or mode of this palace.
+          </DialogDescription>
         </DialogHeader>
         <form action={handleSubmit} className="mt-4 space-y-4">
           <div className="space-y-1.5">
@@ -85,6 +90,32 @@ export function EditPalaceDialog({ palace }: EditPalaceDialogProps) {
               disabled={isPending}
             />
           </div>
+          <fieldset className="space-y-1.5" disabled={isPending}>
+            <legend className="text-sm font-medium">Mode</legend>
+            <div role="radiogroup" aria-label="Palace mode" className="flex gap-2">
+              {(['bible', 'simple'] as const).map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  role="radio"
+                  aria-checked={mode === m}
+                  onClick={() => setMode(m)}
+                  className={cn(
+                    'flex-1 rounded-md border px-3 py-2 text-sm capitalize transition-colors',
+                    mode === m
+                      ? 'border-primary bg-primary text-primary-foreground'
+                      : 'hover:bg-muted',
+                  )}
+                >
+                  {m === 'bible' ? 'Bible (chapters & verses)' : 'Simple'}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Bible mode labels rooms as chapters, nodes as verses, and unlocks the verse-hint field
+              on each node.
+            </p>
+          </fieldset>
           {error ? (
             <Alert variant="destructive" role="alert">
               {error}

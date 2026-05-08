@@ -11,7 +11,7 @@ import {
 import { Loader2, Plus, Trash2, X } from 'lucide-react';
 import { useDebouncedCallback } from 'use-debounce';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import type { NodeType, SelectNode } from '@memory-palace/db';
+import type { NodeType, PalaceMode, SelectNode } from '@memory-palace/db';
 import {
   Sheet,
   SheetContent,
@@ -61,9 +61,13 @@ function isHttpUrl(url: string): boolean {
 const DEBOUNCE_MS = 500;
 const TITLE_MAX = 200;
 const CONTENT_MAX = 10_000;
+const VERSE_HINT_MAX = 2_000;
+const BIBLE_REF_MAX = 120;
 
 interface NodeEditorSheetProps {
   roomId: string;
+  /** Parent palace mode — 'bible' surfaces verse-hint + reference fields. */
+  palaceMode?: PalaceMode;
 }
 
 interface EditorState {
@@ -71,6 +75,8 @@ interface EditorState {
   content: string;
   nodeType: NodeType;
   color: string;
+  verseHint: string;
+  bibleRef: string;
 }
 
 /**
@@ -83,7 +89,7 @@ interface EditorState {
  *     state automatically when the user switches nodes — no derived-state dance.
  *   - On close, any pending debounce is flushed so we never drop edits.
  */
-export function NodeEditorSheet({ roomId }: NodeEditorSheetProps) {
+export function NodeEditorSheet({ roomId, palaceMode = 'simple' }: NodeEditorSheetProps) {
   const editingNodeId = useCanvasStore((s) => s.editingNodeId);
   const setEditingNodeId = useCanvasStore((s) => s.setEditingNodeId);
   const isMobile = useIsMobile();
@@ -96,10 +102,12 @@ export function NodeEditorSheet({ roomId }: NodeEditorSheetProps) {
 
   const close = () => setEditingNodeId(null);
 
-  // On mobile, the sheet slides up from the bottom (h-[80dvh], rounded top
-  // corners). On desktop it slides in from the right (w-80).
+  // On mobile, the sheet takes the full dynamic viewport (`100dvh`) so iOS
+  // Safari's URL bar collapse doesn't push the form sticky-footer offscreen,
+  // and `pb-[env(safe-area-inset-bottom)]` keeps action buttons clear of the
+  // home-indicator. On desktop it slides in from the right.
   const sheetContentClass = isMobile
-    ? 'flex h-[80dvh] flex-col rounded-t-2xl overflow-y-auto'
+    ? 'flex h-[100dvh] flex-col rounded-t-2xl overflow-y-auto pb-[env(safe-area-inset-bottom)]'
     : 'flex w-full max-w-sm flex-col';
 
   return (
@@ -114,7 +122,13 @@ export function NodeEditorSheet({ roomId }: NodeEditorSheetProps) {
 
         {editingNode && (
           // key resets all NodeForm state automatically when the user switches nodes.
-          <NodeForm key={editingNode.id} node={editingNode} roomId={roomId} onClose={close} />
+          <NodeForm
+            key={editingNode.id}
+            node={editingNode}
+            roomId={roomId}
+            palaceMode={palaceMode}
+            onClose={close}
+          />
         )}
       </SheetContent>
     </Sheet>
@@ -126,6 +140,8 @@ const FIELD_TO_PATCH: Record<keyof EditorState, (v: string) => Partial<NodePatch
   content: (v) => ({ content: v === '' ? null : v }),
   nodeType: (v) => ({ nodeType: v as NodeType }),
   color: (v) => ({ color: v === '' ? null : v }),
+  verseHint: (v) => ({ verseHint: v === '' ? null : v }),
+  bibleRef: (v) => ({ bibleRef: v === '' ? null : v }),
 };
 
 // ─── Inner form — state initialised once from props, reset via key ────────────
@@ -133,10 +149,11 @@ const FIELD_TO_PATCH: Record<keyof EditorState, (v: string) => Partial<NodePatch
 interface NodeFormProps {
   node: SelectNode;
   roomId: string;
+  palaceMode: PalaceMode;
   onClose: () => void;
 }
 
-function NodeForm({ node, roomId, onClose }: NodeFormProps) {
+function NodeForm({ node, roomId, palaceMode, onClose }: NodeFormProps) {
   const { patchNode, removeNode } = useRoomNodeMutations(roomId);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
@@ -145,6 +162,8 @@ function NodeForm({ node, roomId, onClose }: NodeFormProps) {
     content: node.content ?? '',
     nodeType: node.nodeType,
     color: node.color ?? '',
+    verseHint: node.verseHint ?? '',
+    bibleRef: node.bibleRef ?? '',
   });
 
   // Accumulate field changes so that rapid edits across different fields are
@@ -259,6 +278,39 @@ function NodeForm({ node, roomId, onClose }: NodeFormProps) {
 
         <TagsField nodeId={node.id} />
 
+        {palaceMode === 'bible' ? (
+          <>
+            <div className="space-y-2">
+              <Label htmlFor="node-bible-ref">Reference (optional)</Label>
+              <Input
+                id="node-bible-ref"
+                value={form.bibleRef}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  onChange('bibleRef', e.target.value)
+                }
+                placeholder="e.g. John 3:16"
+                maxLength={BIBLE_REF_MAX}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="node-verse-hint">Verse hint (optional)</Label>
+              <Textarea
+                id="node-verse-hint"
+                value={form.verseHint}
+                onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                  onChange('verseHint', e.target.value)
+                }
+                placeholder="Hint shown in journey & flashcard reviews"
+                rows={3}
+                maxLength={VERSE_HINT_MAX}
+              />
+              <p className="text-xs text-muted-foreground">
+                {form.verseHint.length}/{VERSE_HINT_MAX.toLocaleString()}
+              </p>
+            </div>
+          </>
+        ) : null}
+
         <div className="space-y-2">
           <Label htmlFor="node-color">Border color (optional)</Label>
           <div className="flex items-center gap-3">
@@ -284,7 +336,7 @@ function NodeForm({ node, roomId, onClose }: NodeFormProps) {
         </div>
       </div>
 
-      <div className="flex gap-2 border-t pt-4">
+      <div className="sticky bottom-0 flex gap-2 border-t bg-background pt-4 pb-[env(safe-area-inset-bottom)]">
         <Button
           variant="destructive"
           onClick={handleDelete}

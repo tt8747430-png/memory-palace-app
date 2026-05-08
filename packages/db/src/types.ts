@@ -5,6 +5,7 @@ import type {
   nodeTags,
   nodeTypeEnum,
   nodes,
+  palaceModeEnum,
   palaces,
   practiceModeEnum,
   practiceSessions,
@@ -35,6 +36,7 @@ export type SelectNodeTag = InferSelectModel<typeof nodeTags>;
 export type InsertNodeTag = InferInsertModel<typeof nodeTags>;
 
 export type NodeType = (typeof nodeTypeEnum.enumValues)[number];
+export type PalaceMode = (typeof palaceModeEnum.enumValues)[number];
 
 export type SelectPracticeSession = InferSelectModel<typeof practiceSessions>;
 export type InsertPracticeSession = InferInsertModel<typeof practiceSessions>;

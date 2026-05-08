@@ -22,6 +22,14 @@ export const practiceModeEnum = pgEnum('practice_mode', [
   'flashcard',
 ]);
 
+/**
+ * Palace presentation mode.
+ *  - `bible` (default): rooms read as chapters and nodes as verses; verse-
+ *    hint and reference fields surface in the node editor and journey.
+ *  - `simple`: plain rooms + nodes; verse-specific UI is hidden.
+ */
+export const palaceModeEnum = pgEnum('palace_mode', ['bible', 'simple']);
+
 // ─── Tables ──────────────────────────────────────────────────────────────────
 
 /**
@@ -46,6 +54,8 @@ export const palaces = pgTable(
     description: text('description'),
     color: text('color'),
     icon: text('icon'),
+    /** Presentation mode — see {@link palaceModeEnum}. Default `bible`. */
+    mode: palaceModeEnum('mode').notNull().default('bible'),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
       .defaultNow()
@@ -64,8 +74,17 @@ export const rooms = pgTable(
       .notNull()
       .references(() => palaces.id, { onDelete: 'cascade' }),
     title: text('title').notNull(),
-    /** Zero-based ordering of rooms within a palace. */
+    /** Zero-based ordering of rooms within a palace (canonical sort key). */
     position: integer('position').notNull().default(0),
+    /**
+     * Doubly-linked-list pointers — auxiliary to `position`. Maintained by
+     * `setRoomOrder` so traversal UIs (journey/practice navigation) can walk
+     * a stable order without recomputing from `position` every time.
+     * Self-referential FK is added at runtime via raw SQL in the migration
+     * to avoid Drizzle's circular-reference issue.
+     */
+    prevRoomId: uuid('prev_room_id'),
+    nextRoomId: uuid('next_room_id'),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
       .defaultNow()
@@ -73,7 +92,11 @@ export const rooms = pgTable(
       .$onUpdate(() => new Date()),
     deletedAt: timestamp('deleted_at', { withTimezone: true }),
   },
-  (t) => [index('rooms_palace_id_idx').on(t.palaceId)],
+  (t) => [
+    index('rooms_palace_id_idx').on(t.palaceId),
+    index('rooms_prev_room_idx').on(t.prevRoomId),
+    index('rooms_next_room_idx').on(t.nextRoomId),
+  ],
 );
 
 export const nodes = pgTable(
@@ -94,6 +117,16 @@ export const nodes = pgTable(
     positionX: real('position_x').notNull().default(0),
     positionY: real('position_y').notNull().default(0),
     color: text('color'),
+    /**
+     * Optional hint text revealed during practice/flashcards/journey when
+     * the parent palace is in Bible mode. Plain text, ≤ 2,000 chars.
+     */
+    verseHint: text('verse_hint'),
+    /**
+     * Optional Bible reference label (e.g. "John 3:16"). ≤ 120 chars,
+     * surfaced as a chip in the journey/flashcard UI when Bible mode is on.
+     */
+    bibleRef: text('bible_ref'),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
       .defaultNow()

@@ -3,6 +3,7 @@ export { getRooms } from './actions/getRooms';
 export { getRoomById } from './actions/getRoomById';
 export { updateRoom } from './actions/updateRoom';
 export { deleteRoom } from './actions/deleteRoom';
+export { duplicateRoom } from './actions/duplicateRoom';
 export { createRoomSchema, updateRoomSchema } from './schemas/room';
 export type { CreateRoomInput, UpdateRoomInput, RoomIdInput, GetRoomsInput } from './schemas/room';
 export { RoomCard } from './components/RoomCard';
