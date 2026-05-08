@@ -45,8 +45,8 @@ supabase/.branches/
 # ──────────────────────────────────────────────
 # Drizzle ORM
 # ──────────────────────────────────────────────
-# Keep migrations tracked; ignore generated meta
-packages/db/migrations/meta/_journal.json
+# (Keep all of migrations/ tracked, including meta/_journal.json — the
+# journal is the registry of generated migrations and drizzle-kit needs it.)
 
 # ──────────────────────────────────────────────
 # Testing — Vitest & Playwright
