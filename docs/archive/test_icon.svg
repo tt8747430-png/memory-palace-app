@@ -14,7 +14,7 @@
       </defs>
       <rect width="24" height="24" fill="url(#brand-bg)" />
 
-      {/* ── Side column lines ── */}
+      {/* ── Side column lines ──jjj */}
       <path d="M4,5 L4.5,19" stroke="#818cf8" strokeWidth="0.6" strokeOpacity="0.4" strokeLinecap="round" />
       <path d="M20,5 L19.5,19" stroke="#818cf8" strokeWidth="0.6" strokeOpacity="0.4" strokeLinecap="round" />
 
