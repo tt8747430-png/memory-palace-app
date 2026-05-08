@@ -10,6 +10,7 @@ import {
 import { EmptyState } from '@/shared/components/EmptyState';
 import { CardSkeleton } from '@/shared/components/CardSkeleton';
 import { EmptyStateCreateButton } from '@/shared/components/EmptyStateCreateButton';
+import { MobileCreateFab } from '@/shared/components/MobileCreateFab';
 
 export const metadata = {
   title: 'Palaces',
@@ -67,6 +68,8 @@ export default async function PalacesPage() {
       <Suspense fallback={<CardSkeleton count={3} />}>
         <PalaceGrid />
       </Suspense>
+
+      <MobileCreateFab dialogId="create-palace" label="Create palace" />
     </div>
   );
 }

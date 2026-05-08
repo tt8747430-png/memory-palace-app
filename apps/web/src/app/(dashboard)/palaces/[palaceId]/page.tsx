@@ -4,10 +4,11 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronRight, DoorOpen } from 'lucide-react';
 import { getPalaceById } from '@/features/palaces';
-import { getRooms, RoomCard, CreateRoomDialog } from '@/features/rooms';
+import { getRooms, RoomCard, CreateRoomDialog, RoomReorderControls } from '@/features/rooms';
 import { EmptyState } from '@/shared/components/EmptyState';
 import { CardSkeleton } from '@/shared/components/CardSkeleton';
 import { EmptyStateCreateButton } from '@/shared/components/EmptyStateCreateButton';
+import { MobileCreateFab } from '@/shared/components/MobileCreateFab';
 
 // cache() deduplicates calls with the same palaceId within a single request,
 // so generateMetadata and RoomGrid share one DB round-trip, not two.
@@ -83,8 +84,20 @@ async function RoomGrid({ palaceId }: { palaceId: string }) {
           />
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {rooms.map((room) => (
-              <RoomCard key={room.id} room={room} />
+            {rooms.map((room, i) => (
+              <RoomCard
+                key={room.id}
+                room={room}
+                reorderControls={
+                  rooms.length > 1 ? (
+                    <RoomReorderControls
+                      palaceId={palaceId}
+                      orderedIds={rooms.map((r) => r.id)}
+                      index={i}
+                    />
+                  ) : null
+                }
+              />
             ))}
           </div>
         )}
@@ -100,6 +113,8 @@ export default async function PalaceDetailPage({ params }: PalacePageProps) {
       <Suspense fallback={<CardSkeleton count={3} />}>
         <RoomGrid palaceId={palaceId} />
       </Suspense>
+
+      <MobileCreateFab dialogId="create-room" label="Add room" />
     </div>
   );
 }
