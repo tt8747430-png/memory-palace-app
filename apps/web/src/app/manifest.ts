@@ -12,18 +12,18 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: '#6366f1',
     icons: [
       {
-        src: '/icon?id=sm',
+        src: '/icon/sm',
         sizes: '32x32',
         type: 'image/png',
       },
       {
-        src: '/icon?id=md',
+        src: '/icon/md',
         sizes: '192x192',
         type: 'image/png',
         purpose: 'any',
       },
       {
-        src: '/icon?id=lg',
+        src: '/icon/lg',
         sizes: '512x512',
         type: 'image/png',
         purpose: 'maskable',
