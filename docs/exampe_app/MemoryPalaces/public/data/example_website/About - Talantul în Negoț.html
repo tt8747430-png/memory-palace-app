@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About - Talantul în Negoț</title>
+
+    <link rel="icon" type="image/png" href="/static/favicon.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              display: ['Playfair Display', 'serif'],
+              sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              gold: {
+                400: '#FFD54F',
+                500: '#FFC107',
+                600: '#FFB300',
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .gold-text {
+        background: linear-gradient(135deg, #ffd700, #ffa500);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-950 font-sans text-white min-h-screen flex flex-col">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-gray-950/95 backdrop-blur-md border-b border-gray-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+          <a href="/" class="flex items-center gap-3">
+            <div
+              class="w-10 h-10 bg-gradient-to-br from-gold-500 to-gold-600 rounded-xl flex items-center justify-center shadow-lg"
+            >
+              <i class="fas fa-bible text-gray-900 text-lg"></i>
+            </div>
+            <span class="font-display font-bold text-xl text-white"
+              >Talantul<span class="gold-text">App</span></span
+            >
+          </a>
+
+          <div class="hidden lg:flex items-center gap-1">
+            <a
+              href="/"
+              class="px-4 py-2 rounded-lg font-medium transition-colors text-gray-400 hover:text-white hover:bg-white/5"
+              >Home</a
+            >
+            <a
+              href="/about"
+              class="px-4 py-2 rounded-lg font-medium transition-colors text-gold-400 bg-white/5"
+              >About</a
+            >
+            <a
+              href="/churches"
+              class="px-4 py-2 rounded-lg font-medium transition-colors text-gray-400 hover:text-white hover:bg-white/5"
+              >Churches</a
+            >
+            <a
+              href="/join"
+              class="px-4 py-2 rounded-lg font-medium transition-colors text-gray-400 hover:text-white hover:bg-white/5"
+              >Join Us</a
+            >
+            <a
+              href="/platform"
+              class="px-4 py-2 rounded-lg font-medium transition-colors text-gray-400 hover:text-white hover:bg-white/5"
+              >Platform</a
+            >
+            <a
+              href="/contact"
+              class="px-4 py-2 rounded-lg font-medium transition-colors text-gray-400 hover:text-white hover:bg-white/5"
+              >Contact</a
+            >
+            <a
+              href="/app"
+              class="ml-4 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-gray-900 font-bold py-2.5 px-6 rounded-full transition-all shadow-lg hover:shadow-xl"
+            >
+              <i class="fas fa-play mr-2"></i>Enter Platform
+            </a>
+          </div>
+
+          <button id="mobile-menu-btn" class="lg:hidden p-2 text-gray-400 hover:text-white">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+
+      <div id="mobile-menu" class="hidden lg:hidden bg-gray-900 border-t border-gray-800">
+        <div class="px-4 py-4 space-y-2">
+          <a href="/" class="block py-3 px-4 text-gray-300 hover:bg-gray-800 rounded-lg">Home</a>
+          <a href="/about" class="block py-3 px-4 text-gray-300 hover:bg-gray-800 rounded-lg"
+            >About</a
+          >
+          <a href="/churches" class="block py-3 px-4 text-gray-300 hover:bg-gray-800 rounded-lg"
+            >Churches</a
+          >
+          <a href="/join" class="block py-3 px-4 text-gray-300 hover:bg-gray-800 rounded-lg"
+            >Join Us</a
+          >
+          <a href="/platform" class="block py-3 px-4 text-gray-300 hover:bg-gray-800 rounded-lg"
+            >Platform</a
+          >
+          <a href="/contact" class="block py-3 px-4 text-gray-300 hover:bg-gray-800 rounded-lg"
+            >Contact</a
+          >
+          <a
+            href="/app"
+            class="block w-full text-center bg-gold-500 text-gray-900 font-bold py-3 rounded-lg mt-4"
+            >Enter Platform</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <main class="flex-grow pt-16">
+      <!-- Page Header -->
+      <section class="py-16 bg-gray-900 border-b border-gray-800">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+          <span
+            class="inline-block bg-gold-500/20 text-gold-400 px-4 py-2 rounded-full text-sm font-semibold mb-4"
+            >About the Contest</span
+          >
+          <h1 class="font-display text-4xl md:text-5xl font-bold text-white mb-4">
+            Talantul în Negoț
+          </h1>
+          <p class="text-xl text-gray-400">A Bible Contest celebrating spiritual talents</p>
+        </div>
+      </section>
+
+      <!-- History -->
+      <section class="py-16 bg-gray-950">
+        <div class="max-w-4xl mx-auto px-4">
+          <div class="glass-card rounded-2xl p-8 md:p-12">
+            <h2 class="font-display text-2xl font-bold text-white mb-6">Our History</h2>
+            <p class="text-gray-400 text-lg leading-relaxed mb-6">
+              Talantul în Negoț is a Bible Contest that began in Romania over
+              <strong class="text-white">25 years ago</strong>. It has expanded to
+              <strong class="text-white">19 countries</strong>,
+              <strong class="text-white">452 churches</strong>, and nearly
+              <strong class="text-white">10,000 annual contestants</strong>.
+            </p>
+            <p class="text-gray-400 text-lg leading-relaxed mb-8">
+              In 2024, America (US & Canada) joined the contest with 12 churches and in 2025 with 26
+              churches. Our mission is to inspire individuals to deepen their understanding of the
+              Scriptures and grow in their faith in the Lord Jesus Christ.
+            </p>
+            <blockquote class="border-l-4 border-gold-500 pl-6 italic text-xl text-gray-300">
+              "I have hidden your word in my heart, that I may not sin against you"
+              <span class="block text-gold-500 font-semibold mt-2 not-italic">— Psalms 119:11</span>
+            </blockquote>
+          </div>
+        </div>
+      </section>
+
+      <!-- Two Branches -->
+      <section class="py-16 bg-gray-900">
+        <div class="max-w-5xl mx-auto px-4">
+          <div class="text-center mb-12">
+            <h2 class="font-display text-3xl font-bold text-white mb-4">
+              Two Branches of Competition
+            </h2>
+            <p class="text-gray-500">Contestants may participate in one or both branches</p>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-8">
+            <!-- Bible Knowledge -->
+            <div class="glass-card rounded-2xl overflow-hidden">
+              <div class="bg-gradient-to-r from-blue-600 to-blue-700 p-6">
+                <div class="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mb-4">
+                  <i class="fas fa-book-open text-white text-2xl"></i>
+                </div>
+                <h3 class="font-display text-2xl font-bold text-white">Bible Knowledge</h3>
+              </div>
+              <div class="p-6">
+                <p class="text-gray-400 mb-4">
+                  A test of Biblical knowledge based on age groups and bibliography. Contestants
+                  study throughout the year and take a
+                  <strong class="text-white">1-hour written test</strong> on the day of the contest.
+                </p>
+                <ul class="space-y-2 text-gray-400 text-sm">
+                  <li>
+                    <i class="fas fa-check text-green-400 mr-2"></i>Age-appropriate study materials
+                  </li>
+                  <li>
+                    <i class="fas fa-check text-green-400 mr-2"></i>Written examination format
+                  </li>
+                  <li>
+                    <i class="fas fa-check text-green-400 mr-2"></i>Practice with our online
+                    platform
+                  </li>
+                </ul>
+                <a
+                  href="/app"
+                  class="inline-block mt-4 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg text-sm transition-colors"
+                >
+                  <i class="fas fa-laptop mr-2"></i>Practice Now
+                </a>
+              </div>
+            </div>
+
+            <!-- Memorization -->
+            <div class="glass-card rounded-2xl overflow-hidden">
+              <div class="bg-gradient-to-r from-purple-600 to-purple-700 p-6">
+                <div class="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mb-4">
+                  <i class="fas fa-brain text-white text-2xl"></i>
+                </div>
+                <h3 class="font-display text-2xl font-bold text-white">Memorization</h3>
+              </div>
+              <div class="p-6">
+                <p class="text-gray-400 mb-4">
+                  ALL age groups memorize the same Book of the Bible. In 2026:
+                  <strong class="text-white">John chapters 14, 15, 16 (NIV)</strong>. Contestants
+                  recite in front of judges.
+                </p>
+                <ul class="space-y-2 text-gray-400 text-sm">
+                  <li>
+                    <i class="fas fa-check text-green-400 mr-2"></i>Same material for all ages
+                  </li>
+                  <li><i class="fas fa-check text-green-400 mr-2"></i>Oral recitation to judges</li>
+                  <li>
+                    <i class="fas fa-check text-green-400 mr-2"></i>Flashcard practice available
+                  </li>
+                </ul>
+                <a
+                  href="/memorization"
+                  class="inline-block mt-4 bg-purple-600 hover:bg-purple-500 text-white font-semibold py-2 px-4 rounded-lg text-sm transition-colors"
+                >
+                  <i class="fas fa-clone mr-2"></i>Practice Memorization
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Benefits -->
+      <section class="py-16 bg-gray-950">
+        <div class="max-w-5xl mx-auto px-4">
+          <div class="text-center mb-12">
+            <h2 class="font-display text-3xl font-bold text-white mb-4">
+              Benefits for Contestants
+            </h2>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <h3 class="text-lg font-bold text-white mb-4 flex items-center">
+                <span
+                  class="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center mr-3"
+                >
+                  <i class="fas fa-bolt text-green-400 text-sm"></i>
+                </span>
+                Immediate Benefits
+              </h3>
+              <div class="space-y-3">
+                <div class="glass-card rounded-lg p-4 flex items-center gap-3">
+                  <i class="fas fa-book text-gold-400"></i>
+                  <span class="text-gray-300 text-sm">Deepen knowledge of the Scriptures</span>
+                </div>
+                <div class="glass-card rounded-lg p-4 flex items-center gap-3">
+                  <i class="fas fa-cross text-gold-400"></i>
+                  <span class="text-gray-300 text-sm">Draw nearer to Jesus</span>
+                </div>
+                <div class="glass-card rounded-lg p-4 flex items-center gap-3">
+                  <i class="fas fa-compass text-gold-400"></i>
+                  <span class="text-gray-300 text-sm">Understand God's will for their lives</span>
+                </div>
+                <div class="glass-card rounded-lg p-4 flex items-center gap-3">
+                  <i class="fas fa-gift text-gold-400"></i>
+                  <span class="text-gray-300 text-sm">Discover their God-given talents</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="text-lg font-bold text-white mb-4 flex items-center">
+                <span
+                  class="w-8 h-8 bg-blue-500/20 rounded-full flex items-center justify-center mr-3"
+                >
+                  <i class="fas fa-seedling text-blue-400 text-sm"></i>
+                </span>
+                Long-term Benefits
+              </h3>
+              <div class="space-y-3">
+                <div class="glass-card rounded-lg p-4 flex items-center gap-3">
+                  <i class="fas fa-heart text-gold-400"></i>
+                  <span class="text-gray-300 text-sm">Character molded on Biblical principles</span>
+                </div>
+                <div class="glass-card rounded-lg p-4 flex items-center gap-3">
+                  <i class="fas fa-pray text-gold-400"></i>
+                  <span class="text-gray-300 text-sm">Lifestyle devoted to God's Word</span>
+                </div>
+                <div class="glass-card rounded-lg p-4 flex items-center gap-3">
+                  <i class="fas fa-users text-gold-400"></i>
+                  <span class="text-gray-300 text-sm">Form bonds around God's Word</span>
+                </div>
+                <div class="glass-card rounded-lg p-4 flex items-center gap-3">
+                  <i class="fas fa-globe text-gold-400"></i>
+                  <span class="text-gray-300 text-sm">Unite our global community</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Rules Link -->
+      <section class="py-12 bg-gray-900">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+          <h3 class="text-xl font-bold text-white mb-4">Rules & Regulations</h3>
+          <div class="flex flex-wrap justify-center gap-4">
+            <a
+              href="https://drive.google.com/file/d/1b4i83gl_dC0PwKxOwCxJAzP7_TS4ta2I/view?usp=drive_link"
+              target="_blank"
+              class="glass-card px-6 py-3 rounded-lg hover:border-gold-500/50 transition-colors"
+            >
+              <i class="fas fa-file-pdf text-red-400 mr-2"></i>English
+            </a>
+            <a
+              href="https://drive.google.com/file/d/1Lry9qZeFisfN_A8QJWYQqBZimQW0jkpb/view?usp=drive_link"
+              target="_blank"
+              class="glass-card px-6 py-3 rounded-lg hover:border-gold-500/50 transition-colors"
+            >
+              <i class="fas fa-file-pdf text-red-400 mr-2"></i>Romanian
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-950 border-t border-gray-800 text-gray-400 py-8">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-gold-500 rounded-lg flex items-center justify-center">
+              <i class="fas fa-bible text-gray-900 text-sm"></i>
+            </div>
+            <span class="font-display font-bold text-white">TalantulApp</span>
+          </div>
+          <p class="text-sm">© 2026 Talantul în Negoț. All rights reserved.</p>
+          <a
+            href="https://youtu.be/kefuQJKvRXU"
+            target="_blank"
+            class="hover:text-white transition-colors"
+            ><i class="fab fa-youtube text-xl"></i
+          ></a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      document.getElementById('mobile-menu-btn')?.addEventListener('click', function () {
+        document.getElementById('mobile-menu').classList.toggle('hidden');
+      });
+    </script>
+  </body>
+</html>

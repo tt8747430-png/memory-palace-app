@@ -1,0 +1,769 @@
+/* noinspection CssUnresolvedCustomProperty,CssUnusedSymbol */
+@import './variables.css';
+
+/* ─── Tablet / wide station editor (max-width: 900px) ───────────────────── */
+@media (max-width: 900px) {
+  .station-editor-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: unset;
+  }
+
+  .station-list-container {
+    max-height: 220px;
+  }
+
+  .modal-content.modal-large {
+    max-width: 100%;
+  }
+
+  .stats-section-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Medium / tablet (max-width: 768px) ────────────────────────────────── */
+@media (max-width: 768px) {
+  .container {
+    padding-top: var(--spacing-lg);
+    padding-bottom: max(var(--spacing-lg), env(safe-area-inset-bottom));
+  }
+
+  /* Header — compact with icon row below */
+  header {
+    padding: var(--spacing-md) var(--spacing-lg);
+    padding-left: max(var(--spacing-lg), env(safe-area-inset-left));
+    padding-right: max(var(--spacing-lg), env(safe-area-inset-right));
+    padding-top: max(var(--spacing-md), env(safe-area-inset-top));
+  }
+
+  .header-content {
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: flex-end;
+    gap: 0.35rem;
+  }
+
+  header h1 {
+    font-size: clamp(1.1rem, 5vw, 1.5rem);
+  }
+
+  header p {
+    font-size: 0.82rem;
+  }
+
+  /* ── Show hamburger toggle on mobile ── */
+  .hamburger-toggle {
+    display: flex;
+  }
+
+  /* ── Hide toolbar action buttons — they live in the hamburger drawer now ── */
+  .toolbar > #newPalaceBtn,
+  .toolbar > #importBtn,
+  .toolbar > #exportAllBtn,
+  .toolbar > #practiceBtn {
+    display: none;
+  }
+
+  /* Toolbar — simplified: only search + filter visible */
+  .toolbar {
+    padding: var(--spacing-md);
+    gap: var(--spacing-sm);
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  /* Action buttons in toolbar — 2-per-row (for any remaining) */
+  .toolbar > .btn {
+    flex: 1 1 calc(50% - var(--spacing-sm) / 2);
+    min-width: 0;
+    white-space: normal;
+    font-size: var(--font-size-sm);
+    padding: 0.65rem var(--spacing-md);
+  }
+
+  /* Search and filter always full-width */
+  .toolbar > .search-box {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .toolbar > .filter-group {
+    flex: 1 1 100%;
+  }
+
+  .filter-group {
+    flex-direction: column;
+  }
+
+  .filter-group select {
+    min-width: 0;
+    width: 100%;
+  }
+
+  /* Palaces grid — single column on tablets & phones */
+  .palaces-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+
+  /* Palace card */
+  .palace-card {
+    padding: var(--spacing-md);
+  }
+
+  /* Palace actions — keep wrapping, don't force column */
+  .palace-actions {
+    gap: 0.4rem;
+  }
+
+  /* Stats grid — 2 columns */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  /* Modals — slide up from bottom as a sheet */
+  .modal {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  /* Override desktop scale animation with bottom-sheet slide */
+  .modal-content {
+    max-width: 100%;
+    width: 100%;
+    max-height: 93vh;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    /* Slide in from bottom instead of scale */
+    transform: translateY(100%);
+    transition: transform 0.35s var(--ease-premium);
+  }
+
+  .modal.active .modal-content {
+    transform: translateY(0) !important;
+  }
+
+  @supports (height: 100dvh) {
+    .modal-content {
+      max-height: 93dvh;
+    }
+  }
+
+  /* Drag handle */
+  .modal-content::before {
+    content: '';
+    display: block;
+    width: 56px;
+    height: 6px;
+    background: var(--border);
+    border-radius: var(--radius-full);
+    margin: 12px auto 0;
+    flex-shrink: 0;
+    opacity: 0.5;
+    transition: opacity var(--transition-fast);
+  }
+
+  .modal-content:hover::before {
+    opacity: 0.8;
+  }
+
+  .modal-content.modal-large {
+    max-width: 100%;
+    max-height: 93vh;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  }
+
+  @supports (height: 100dvh) {
+    .modal-content.modal-large {
+      max-height: 93dvh;
+    }
+  }
+
+  .modal-header {
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+
+  .modal-body {
+    padding: var(--spacing-md);
+    padding-bottom: max(var(--spacing-md), env(safe-area-inset-bottom));
+  }
+
+  /* Form actions — stacked, primary last (thumb-reachable at bottom) */
+  .form-actions {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    padding-bottom: max(var(--spacing-sm), env(safe-area-inset-bottom));
+  }
+
+  .form-actions .btn {
+    width: 100%;
+  }
+
+  /* Station editor */
+  .station-form-container {
+    padding: var(--spacing-md);
+  }
+
+  /* Journey */
+  .journey-station {
+    padding: var(--spacing-lg) var(--spacing-md);
+  }
+
+  .journey-station-content {
+    padding-left: var(--spacing-md);
+    margin-left: 0;
+  }
+
+  .journey-station-title {
+    font-size: 1.4rem;
+  }
+
+  .journey-controls {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .journey-controls .btn {
+    flex: 1 1 calc(50% - 0.375rem);
+  }
+
+  .journey-station-counter {
+    flex: 1 1 100%;
+    text-align: center;
+    order: -1;
+  }
+
+  /* Rich journey responsive */
+  .journey-zone-header {
+    margin: 0 var(--spacing-sm) 0.5rem;
+    font-size: 0.75rem;
+    padding: 0.4rem 1rem;
+  }
+
+  .journey-image-box {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .journey-senses {
+    gap: 0.25rem;
+  }
+
+  .journey-sense-tag {
+    font-size: 0.65rem;
+    padding: 0.1rem 0.4rem;
+  }
+
+  /* Practice */
+  .practice-palace-list {
+    max-height: 38vh;
+  }
+
+  .practice-palace-item {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.85rem 1rem;
+  }
+
+  .practice-badge {
+    margin-left: 0;
+    /* On wrap, badge sits on its own row */
+    flex: 0 0 auto;
+  }
+
+  /* Quiz typed */
+  .quiz-typed-wrap {
+    flex-direction: column;
+  }
+
+  .quiz-typed-input {
+    min-width: 0;
+    width: 100%;
+  }
+
+  /* Notifications — full width from top */
+  .notification-container {
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    left: var(--spacing-sm);
+    width: auto;
+  }
+
+  .notification-toast {
+    min-width: 0;
+    max-width: 100%;
+    transform: translateY(-130%);
+  }
+
+  .notification-toast.show {
+    transform: translateY(0);
+  }
+
+  /* Empty state — reduce padding on mobile */
+  .empty-state {
+    padding: 3rem var(--spacing-lg);
+  }
+
+  /* Stats section grid — single col */
+  .stats-section-grid {
+    gap: 1rem;
+  }
+}
+
+/* ─── Phones (max-width: 600px) ─────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .header-actions {
+    justify-content: flex-start;
+  }
+
+  .toolbar > .btn {
+    flex: 1 1 calc(50% - var(--spacing-sm, 0.4rem));
+    min-width: 0;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Large phones / small tablets (640px–900px) ───────────────────────── */
+@media (min-width: 640px) and (max-width: 900px) {
+  .palaces-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ─── Small phones (max-width: 480px) ───────────────────────────────────── */
+@media (max-width: 480px) {
+  header {
+    padding: var(--spacing-sm) var(--spacing-md);
+    padding-left: max(var(--spacing-md), env(safe-area-inset-left));
+    padding-right: max(var(--spacing-md), env(safe-area-inset-right));
+    padding-top: max(var(--spacing-sm), env(safe-area-inset-top));
+  }
+
+  .container {
+    padding-top: var(--spacing-md);
+  }
+
+  .scroll-top-fab {
+    right: max(0.75rem, env(safe-area-inset-right));
+    bottom: max(0.75rem, env(safe-area-inset-bottom));
+  }
+
+  /* Shrink visual size but keep touch area via min-w/min-h */
+  .btn-icon {
+    width: 44px;
+    height: 44px;
+    min-width: var(--touch-target);
+    min-height: var(--touch-target);
+    padding: 0;
+    font-size: 1rem;
+  }
+
+  .toolbar {
+    gap: 0.4rem;
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  .toolbar > .btn {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  /* Palace card */
+  .palace-title {
+    font-size: var(--font-size-lg);
+  }
+
+  .palace-stats {
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+  }
+
+  .palace-actions .btn {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.55rem;
+    min-height: var(--touch-target);
+  }
+
+  /* Stats */
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+
+  .stat-card {
+    padding: 1rem 0.75rem;
+  }
+
+  .stat-value {
+    font-size: 1.7rem;
+  }
+
+  .stat-label {
+    font-size: 0.72rem;
+  }
+
+  /* Modal */
+  .modal-header h2 {
+    font-size: 1.1rem;
+  }
+
+  /* Journey */
+  .journey-station {
+    padding: var(--spacing-md) var(--spacing-sm);
+  }
+
+  .journey-station-header {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .journey-station-num {
+    width: 44px;
+    height: 44px;
+    font-size: 1.1rem;
+  }
+
+  .journey-station-title {
+    font-size: 1.15rem;
+    text-align: center;
+  }
+
+  .journey-station-content {
+    padding-left: var(--spacing-sm);
+    border-left-width: 2px;
+  }
+
+  .journey-controls .btn {
+    flex: 1 1 100%;
+  }
+
+  /* Quiz */
+  .quiz-score {
+    font-size: 2.8rem;
+  }
+
+  /* Station editor */
+  .station-item {
+    font-size: 0.88rem;
+    padding: 0.4rem 0.75rem;
+  }
+
+  /* Form — keep 16px to avoid iOS zoom */
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    font-size: 1rem;
+  }
+
+  /* Empty state — less top padding on small screens */
+  .empty-state {
+    padding: 2.5rem var(--spacing-md);
+  }
+}
+
+/* ─── Very small screens (max-width: 360px) ─────────────────────────────── */
+@media (max-width: 360px) {
+  .toolbar > .btn {
+    flex: 1 1 100%;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Landscape phones (short viewport) ─────────────────────────────────── */
+@media (max-height: 500px) and (orientation: landscape) {
+  /* Modal: maximize vertical space */
+  .modal-content {
+    max-height: 100vh;
+    border-radius: var(--radius-lg);
+  }
+
+  .modal-content.modal-large {
+    max-height: 100vh;
+  }
+
+  @supports (height: 100dvh) {
+    .modal-content,
+    .modal-content.modal-large {
+      max-height: 100dvh;
+    }
+  }
+
+  /* No bottom-sheet — center modal */
+  .modal {
+    align-items: center;
+    padding: var(--spacing-sm);
+  }
+
+  /* Remove bottom-sheet drag handle */
+  .modal-content::before {
+    display: none;
+  }
+
+  .modal-body {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  .modal-header {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  /* Journey — compact in landscape */
+  .journey-station {
+    padding: var(--spacing-md);
+  }
+
+  .journey-station-header {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spacing-md);
+  }
+
+  .journey-station-num {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .journey-station-title {
+    font-size: 1.2rem;
+  }
+
+  /* Station editor — side-by-side even on small landscape */
+  .station-editor-layout {
+    grid-template-columns: 200px 1fr;
+    height: auto;
+    min-height: unset;
+  }
+
+  .station-list-container {
+    max-height: 40vh;
+  }
+
+  /* Toolbar — minimal padding */
+  .toolbar {
+    padding: var(--spacing-sm);
+    gap: var(--spacing-xs);
+  }
+
+  /* Header compact — visually hide subtitle but keep accessible */
+  header p {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+/* ─── Tablet portrait (769px–1024px) ────────────────────────────────────── */
+@media (min-width: 769px) and (max-width: 1024px) and (orientation: portrait) {
+  .palaces-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .toolbar > .btn {
+    flex: 0 1 auto;
+    min-width: auto;
+  }
+
+  .container {
+    padding-top: var(--spacing-lg);
+  }
+}
+
+/* ─── Ultrawide screens (1800px+) ───────────────────────────────────────── */
+@media (min-width: 1800px) {
+  .container {
+    max-width: 1600px;
+  }
+
+  .container-narrow {
+    max-width: 80rem; /* 1280px */
+  }
+
+  .palaces-grid {
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  }
+
+  .stats-section-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .station-editor-layout {
+    grid-template-columns: 320px 1fr;
+  }
+}
+
+/* ─── Large desktops (1280px–1799px) ───────────────────────────────────── */
+@media (min-width: 1280px) and (max-width: 1799px) {
+  .palaces-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ─── Foldable screens (dual segments) ──────────────────────────────────── */
+@media (horizontal-viewport-segments: 2) {
+  .palaces-grid {
+    /* Avoid content spanning the fold */
+    column-gap: env(viewport-segment-right 0 0, var(--spacing-lg));
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .container {
+    padding-left: env(viewport-segment-left 0 0, var(--container-inline));
+    padding-right: env(viewport-segment-right 1 0, var(--container-inline));
+  }
+}
+
+/* ─── High contrast / forced colors ─────────────────────────────────────── */
+@media (forced-colors: active) {
+  .btn {
+    border: 2px solid ButtonText;
+  }
+
+  .palace-card {
+    border: 2px solid CanvasText;
+  }
+
+  .modal-content {
+    border: 2px solid CanvasText;
+  }
+
+  .journey-dot.active {
+    forced-color-adjust: none;
+  }
+}
+
+/* ─── High contrast preference ──────────────────────────────────────────── */
+@media (prefers-contrast: more) {
+  :root {
+    --border: #666;
+    --shadow: rgba(0, 0, 0, 0.3);
+  }
+
+  .btn {
+    border-width: 2px;
+    font-weight: 700;
+  }
+
+  .palace-card {
+    border-width: 2px;
+  }
+
+  .progress-bar {
+    border: 1px solid currentColor;
+  }
+}
+
+/* ─── Touch devices — enlarge interactive targets ───────────────────────── */
+@media (pointer: coarse) {
+  .palace-actions .btn {
+    min-height: var(--touch-target);
+    padding: 0.6rem 0.8rem;
+  }
+
+  .station-item {
+    min-height: var(--touch-target);
+    padding: 0.6rem 0.75rem;
+  }
+
+  .station-item-btn {
+    min-width: var(--touch-target);
+    min-height: var(--touch-target);
+  }
+
+  .journey-dot {
+    min-width: 16px;
+    min-height: 16px;
+  }
+
+  .quiz-option {
+    min-height: var(--touch-target);
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* ─── No hover capability — remove hover-dependent UX ───────────────────── */
+@media (hover: none) {
+  .palace-card:hover {
+    transform: none;
+    box-shadow: var(--shadow-md);
+  }
+
+  .stat-card:hover {
+    transform: none;
+  }
+}
+
+/* ─── Desktop: ensure mobile nav is always hidden ───────────────────────── */
+@media (min-width: 769px) {
+  .mobile-nav-drawer {
+    display: none !important;
+  }
+
+  .hamburger-toggle {
+    display: none !important;
+  }
+}
+
+/* ─── Reduced motion ────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* Disable sticky header/toolbar blur for perf */
+  header,
+  .toolbar {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .skeleton-block,
+  .skeleton-line {
+    animation: none !important;
+  }
+}
+
+/* ─── Print ─────────────────────────────────────────────────────────────── */
+@media print {
+  .toolbar,
+  .palace-actions,
+  header {
+    display: none;
+  }
+
+  .palace-card {
+    page-break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid var(--border);
+  }
+
+  body {
+    background: white;
+  }
+}

@@ -1,0 +1,790 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   premium.css — Additive premium effects layer
+   All rules use tokens from variables.css / theme-dark.css.
+   Purely additive: new class names only, no overrides of existing selectors.
+   ═══════════════════════════════════════════════════════════════════════ */
+@import './variables.css';
+
+/* ============================================
+   1. FLOATING ORB SYSTEM — Subtle Ambient Light
+   ============================================ */
+
+.orb-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.floating-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.25;
+  animation: float-drift 25s ease-in-out infinite;
+  will-change: transform;
+}
+
+.floating-orb--1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(212, 168, 83, 0.3) 0%, transparent 70%);
+  top: -150px;
+  left: -100px;
+  animation-duration: 30s;
+}
+
+.floating-orb--2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.2) 0%, transparent 70%);
+  top: 40%;
+  right: -100px;
+  animation-delay: -8s;
+  animation-duration: 35s;
+}
+
+.floating-orb--3 {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(212, 168, 83, 0.2) 0%, transparent 70%);
+  bottom: -50px;
+  left: 30%;
+  animation-delay: -15s;
+  animation-duration: 28s;
+}
+
+.floating-orb--4 {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.1) 0%, transparent 70%);
+  top: 60%;
+  left: 10%;
+  animation-delay: -20s;
+  animation-duration: 32s;
+}
+
+@keyframes float-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(20px, -30px) scale(1.02);
+  }
+  50% {
+    transform: translate(-15px, 15px) scale(0.98);
+  }
+  75% {
+    transform: translate(-25px, -15px) scale(1.01);
+  }
+}
+
+/* ============================================
+   2. SPARKLE PARTICLE FIELD
+   ============================================ */
+
+.sparkle-field {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.sparkle-dot {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: var(--gold);
+  border-radius: 50%;
+  opacity: 0;
+  animation: sparkle-float 10s ease-in-out infinite;
+}
+
+.sparkle-dot::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  border-radius: inherit;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 4px 1px rgba(212, 168, 83, 0.5);
+}
+
+/* Sparkle positions — scattered across the viewport */
+.sparkle-dot:nth-child(1) {
+  left: 8%;
+  top: 15%;
+  animation-delay: 0s;
+}
+.sparkle-dot:nth-child(2) {
+  left: 18%;
+  top: 75%;
+  animation-delay: 1s;
+}
+.sparkle-dot:nth-child(3) {
+  left: 28%;
+  top: 35%;
+  animation-delay: 2s;
+}
+.sparkle-dot:nth-child(4) {
+  left: 38%;
+  top: 55%;
+  animation-delay: 3s;
+}
+.sparkle-dot:nth-child(5) {
+  left: 48%;
+  top: 20%;
+  animation-delay: 4s;
+}
+.sparkle-dot:nth-child(6) {
+  left: 58%;
+  top: 80%;
+  animation-delay: 5s;
+}
+.sparkle-dot:nth-child(7) {
+  left: 68%;
+  top: 45%;
+  animation-delay: 6s;
+}
+.sparkle-dot:nth-child(8) {
+  left: 78%;
+  top: 65%;
+  animation-delay: 7s;
+}
+.sparkle-dot:nth-child(9) {
+  left: 88%;
+  top: 30%;
+  animation-delay: 8s;
+}
+.sparkle-dot:nth-child(10) {
+  left: 95%;
+  top: 50%;
+  animation-delay: 9s;
+}
+.sparkle-dot:nth-child(11) {
+  left: 12%;
+  top: 50%;
+  animation-delay: 0.5s;
+}
+.sparkle-dot:nth-child(12) {
+  left: 22%;
+  top: 85%;
+  animation-delay: 1.5s;
+}
+.sparkle-dot:nth-child(13) {
+  left: 32%;
+  top: 10%;
+  animation-delay: 2.5s;
+}
+.sparkle-dot:nth-child(14) {
+  left: 42%;
+  top: 70%;
+  animation-delay: 3.5s;
+}
+.sparkle-dot:nth-child(15) {
+  left: 52%;
+  top: 40%;
+  animation-delay: 4.5s;
+}
+.sparkle-dot:nth-child(16) {
+  left: 62%;
+  top: 25%;
+  animation-delay: 5.5s;
+}
+.sparkle-dot:nth-child(17) {
+  left: 72%;
+  top: 90%;
+  animation-delay: 6.5s;
+}
+.sparkle-dot:nth-child(18) {
+  left: 82%;
+  top: 38%;
+  animation-delay: 7.5s;
+}
+.sparkle-dot:nth-child(19) {
+  left: 92%;
+  top: 60%;
+  animation-delay: 8.5s;
+}
+.sparkle-dot:nth-child(20) {
+  left: 5%;
+  top: 45%;
+  animation-delay: 9.5s;
+}
+
+@keyframes sparkle-float {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+  15% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.4;
+    transform: translateY(-20px) scale(1);
+  }
+  85% {
+    opacity: 0.6;
+  }
+}
+
+/* ============================================
+   3. SHOOTING STARS
+   ============================================ */
+
+.shooting-star-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.shooting-star {
+  position: absolute;
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(212, 168, 83, 0.6) 50%, transparent 100%);
+  transform: rotate(-45deg);
+  animation: shooting 8s ease-in-out infinite;
+  opacity: 0;
+}
+
+.shooting-star::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  width: 4px;
+  height: 4px;
+  background: var(--gold-light);
+  border-radius: 50%;
+  box-shadow: 0 0 6px 2px rgba(212, 168, 83, 0.4);
+  transform: translateY(-1.5px);
+}
+
+.shooting-star:nth-child(1) {
+  top: 15%;
+  left: 75%;
+  animation-delay: 0s;
+}
+.shooting-star:nth-child(2) {
+  top: 25%;
+  left: 90%;
+  animation-delay: 4s;
+}
+.shooting-star:nth-child(3) {
+  top: 8%;
+  left: 45%;
+  animation-delay: 8s;
+  width: 60px;
+}
+
+@keyframes shooting {
+  0% {
+    opacity: 0;
+    transform: rotate(-45deg) translateX(0);
+  }
+  3% {
+    opacity: 0.8;
+  }
+  12% {
+    opacity: 0.8;
+    transform: rotate(-45deg) translateX(-250px);
+  }
+  15%,
+  100% {
+    opacity: 0;
+    transform: rotate(-45deg) translateX(-300px);
+  }
+}
+
+/* ============================================
+   4. GLASSMORPHISM CARDS
+   ============================================ */
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--glass-shadow);
+  transition: all 0.4s var(--ease-premium);
+}
+
+@media (hover: hover) {
+  .glass-card:hover {
+    border-color: var(--border-accent);
+    box-shadow:
+      0 20px 60px var(--shadow),
+      0 0 0 1px var(--border-accent);
+    transform: translateY(-4px);
+  }
+}
+
+.glass-card-subtle {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+}
+
+@media (hover: hover) {
+  .glass-card-subtle:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+}
+
+/* Deep-glass variant — use on hero/featured cards */
+.glass-card-premium {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-2xl, 24px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: all 0.4s var(--ease-premium);
+}
+
+@media (hover: hover) {
+  .glass-card-premium:hover {
+    border-color: var(--border-accent);
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.4),
+      0 0 0 1px var(--border-accent);
+    transform: translateY(-4px);
+  }
+}
+
+/* ============================================
+   5. PREMIUM BUTTONS
+   ============================================ */
+
+/* Base shimmer layer — add alongside existing .btn */
+.btn-premium {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-premium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  transition: left 0.5s;
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .btn-premium:hover::before {
+    left: 100%;
+  }
+}
+
+/* Gold variant */
+.btn-gold {
+  background: var(--gold);
+  color: var(--premium-bg);
+  box-shadow: 0 8px 30px rgba(212, 168, 83, 0.25);
+}
+
+@media (hover: hover) {
+  .btn-gold:hover {
+    background: var(--gold-light);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(212, 168, 83, 0.35);
+  }
+}
+
+/* Glass variant */
+.btn-glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text);
+}
+
+@media (hover: hover) {
+  .btn-glass:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
+  }
+}
+
+/* Gold gradient CTA — pill shape, deep shadow, shimmer-ready */
+.btn-gold-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--gold-dark, #8f6a08),
+    var(--gold, #b8860b),
+    var(--gold-light, #d4a843)
+  );
+  color: var(--premium-bg, #0a0a0f);
+  border: none;
+  border-radius: var(--radius-full);
+  box-shadow: 0 8px 30px rgba(212, 168, 83, 0.3);
+  font-weight: 700;
+  letter-spacing: var(--ls-alt, -0.02em);
+  transition: all 0.3s var(--ease-premium);
+}
+
+@media (hover: hover) {
+  .btn-gold-gradient:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 12px 40px rgba(212, 168, 83, 0.45);
+    filter: brightness(1.08);
+  }
+}
+
+.btn-gold-gradient:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 4px 16px rgba(212, 168, 83, 0.25);
+}
+
+/* ============================================
+   6. FEATURE CARDS — 3D HOVER EFFECT
+   ============================================ */
+
+.feature-card-3d {
+  position: relative;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: var(--spacing-xl);
+  transition: all 0.4s var(--ease-premium);
+}
+
+@media (hover: hover) {
+  .feature-card-3d:hover {
+    transform: translateY(-8px);
+    border-color: var(--border-accent);
+    box-shadow:
+      0 25px 50px var(--shadow),
+      0 0 0 1px var(--border-accent);
+  }
+}
+
+/* Icon container with glow — used inside feature cards */
+.icon-container {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s;
+}
+
+.feature-card-3d:hover .icon-container {
+  transform: scale(1.08);
+}
+
+/* Icon colour variants */
+.icon-blue {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+.icon-purple {
+  background: rgba(139, 92, 246, 0.15);
+  color: #a78bfa;
+}
+.icon-cyan {
+  background: rgba(34, 211, 238, 0.15);
+  color: #22d3ee;
+}
+.icon-gold {
+  background: rgba(212, 168, 83, 0.15);
+  color: var(--gold);
+}
+.icon-rose {
+  background: rgba(244, 63, 94, 0.15);
+  color: #fb7185;
+}
+.icon-emerald {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+}
+
+/* ============================================
+   7. STAT CARDS — Gold Top-Line on Hover
+   ============================================ */
+
+.premium-stat-card {
+  position: relative;
+  text-align: center;
+  padding: var(--spacing-lg) var(--spacing-md);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all 0.3s var(--ease-premium);
+}
+
+.premium-stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gold);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+@media (hover: hover) {
+  .premium-stat-card:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: var(--border-accent);
+  }
+
+  .premium-stat-card:hover::before {
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   8. SCROLL-REVEAL ANIMATIONS
+   ============================================ */
+
+.reveal-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 0.7s var(--ease-premium),
+    transform 0.7s var(--ease-premium);
+}
+
+.reveal-up.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.95);
+  transition:
+    opacity 0.6s var(--ease-premium),
+    transform 0.6s var(--ease-premium);
+}
+
+.reveal-scale.revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Stagger delays — add alongside .reveal-up / .reveal-scale */
+.stagger-1 {
+  transition-delay: 0.1s;
+}
+.stagger-2 {
+  transition-delay: 0.2s;
+}
+.stagger-3 {
+  transition-delay: 0.3s;
+}
+.stagger-4 {
+  transition-delay: 0.4s;
+}
+.stagger-5 {
+  transition-delay: 0.5s;
+}
+.stagger-6 {
+  transition-delay: 0.6s;
+}
+
+/* ============================================
+   9. GOLD TEXT UTILITY
+   ============================================ */
+
+.text-gold {
+  color: var(--gold);
+}
+.text-gold-light {
+  color: var(--gold-light);
+}
+
+/* ============================================
+   9b. SECTION HEADER PATTERN
+   Badge → Title → Subtitle hierarchy
+   ============================================ */
+
+.section-header {
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.section-badge {
+  display: inline-block;
+  background: rgba(212, 168, 83, 0.15);
+  color: var(--gold);
+  padding: 0.4rem 1rem;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-label, var(--font-size-sm));
+  font-weight: 600;
+  font-family: var(--font-family-alt), sans-serif;
+  letter-spacing: var(--ls-alt);
+  margin-bottom: var(--spacing-md);
+}
+
+/* Color variants for section badge */
+.section-badge--emerald {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--accent-emerald);
+}
+.section-badge--rose {
+  background: rgba(244, 63, 94, 0.15);
+  color: var(--accent-rose);
+}
+.section-badge--cyan {
+  background: rgba(34, 211, 238, 0.15);
+  color: var(--accent-cyan);
+}
+
+.section-title {
+  font-family: var(--font-family-heading), serif;
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: var(--ls-heading);
+  margin-bottom: var(--spacing-sm);
+}
+
+.section-subtitle {
+  color: var(--text-muted);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed, 1.7);
+  max-width: 36rem;
+  margin-inline: auto;
+}
+
+/* ============================================
+   10. LIGHT-THEME ADJUSTMENTS
+   ============================================ */
+
+/* Hide ambient effects in light mode — they're designed for dark bg */
+:root:not([data-theme='dark']) .orb-container,
+:root:not([data-theme='dark']) .sparkle-field,
+:root:not([data-theme='dark']) .shooting-star-container {
+  display: none;
+}
+
+/* Also hide when system is light and no explicit theme set */
+@media (prefers-color-scheme: light) {
+  html:not([data-theme='dark']) .orb-container,
+  html:not([data-theme='dark']) .sparkle-field,
+  html:not([data-theme='dark']) .shooting-star-container {
+    display: none;
+  }
+}
+
+/* ============================================
+   11. REDUCED-MOTION SAFETY
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-orb,
+  .sparkle-dot,
+  .shooting-star {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+
+  .orb-container,
+  .sparkle-field,
+  .shooting-star-container {
+    display: none;
+  }
+
+  .reveal-up,
+  .reveal-scale {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .glass-card,
+  .glass-card-subtle,
+  .glass-card-premium,
+  .feature-card-3d,
+  .premium-stat-card,
+  .btn-gold,
+  .btn-gold-gradient,
+  .btn-glass {
+    transition: none;
+  }
+}
+
+/* ============================================
+   12. RESPONSIVE — Mobile Adjustments
+   ============================================ */
+
+@media (max-width: 768px) {
+  .floating-orb {
+    opacity: 0.15;
+  }
+
+  .floating-orb--1 {
+    width: 250px;
+    height: 250px;
+  }
+  .floating-orb--2 {
+    width: 200px;
+    height: 200px;
+  }
+  .floating-orb--3 {
+    width: 180px;
+    height: 180px;
+  }
+  .floating-orb--4 {
+    width: 150px;
+    height: 150px;
+  }
+
+  .shooting-star-container {
+    display: none;
+  }
+
+  .feature-card-3d:hover {
+    transform: translateY(-4px);
+  }
+
+  /* Premium buttons — full-width on mobile */
+  .btn-gold-gradient {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Section headers — tighter on mobile */
+  .section-title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .section-badge {
+    font-size: clamp(0.7rem, 2vw, var(--font-size-sm));
+    padding: 0.3rem 0.75rem;
+  }
+
+  .section-subtitle {
+    font-size: var(--font-size-sm);
+  }
+}

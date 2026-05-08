@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Talantul în Negoț - Bible Contest USA & Canada</title>
+
+    <link rel="icon" type="image/png" href="/static/favicon.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              display: ['Playfair Display', 'serif'],
+              sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              gold: {
+                400: '#FFD54F',
+                500: '#FFC107',
+                600: '#FFB300',
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .gold-text {
+        background: linear-gradient(135deg, #ffd700, #ffa500);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+    </style>
+
+    <style>
+      .sparkle {
+        position: absolute;
+        color: #ffd700;
+        animation: twinkle 2s infinite;
+        pointer-events: none;
+      }
+
+      @keyframes twinkle {
+        0%,
+        100% {
+          opacity: 0.3;
+          transform: scale(1);
+        }
+
+        50% {
+          opacity: 1;
+          transform: scale(1.2);
+        }
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-950 font-sans text-white min-h-screen flex flex-col">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-gray-950/95 backdrop-blur-md border-b border-gray-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+          <a href="/" class="flex items-center gap-3">
+            <div
+              class="w-10 h-10 bg-gradient-to-br from-gold-500 to-gold-600 rounded-xl flex items-center justify-center shadow-lg"
+            >
+              <i class="fas fa-bible text-gray-900 text-lg"></i>
+            </div>
+            <span class="font-display font-bold text-xl text-white"
+              >Talantul<span class="gold-text">App</span></span
+            >
+          </a>
+
+          <div class="hidden lg:flex items-center gap-1">
+            <a
+              href="/"
+              class="px-4 py-2 rounded-lg font-medium transition-colors text-gold-400 bg-white/5"
+              >Home</a
+            >
+            <a
+              href="/about"
+              class="px-4 py-2 rounded-lg font-medium transition-colors text-gray-400 hover:text-white hover:bg-white/5"
+              >About</a
+            >
+            <a
+              href="/churches"
+              class="px-4 py-2 rounded-lg font-medium transition-colors text-gray-400 hover:text-white hover:bg-white/5"
+              >Churches</a
+            >
+            <a
+              href="/join"
+              class="px-4 py-2 rounded-lg font-medium transition-colors text-gray-400 hover:text-white hover:bg-white/5"
+              >Join Us</a
+            >
+            <a
+              href="/platform"
+              class="px-4 py-2 rounded-lg font-medium transition-colors text-gray-400 hover:text-white hover:bg-white/5"
+              >Platform</a
+            >
+            <a
+              href="/contact"
+              class="px-4 py-2 rounded-lg font-medium transition-colors text-gray-400 hover:text-white hover:bg-white/5"
+              >Contact</a
+            >
+            <a
+              href="/app"
+              class="ml-4 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-gray-900 font-bold py-2.5 px-6 rounded-full transition-all shadow-lg hover:shadow-xl"
+            >
+              <i class="fas fa-play mr-2"></i>Enter Platform
+            </a>
+          </div>
+
+          <button id="mobile-menu-btn" class="lg:hidden p-2 text-gray-400 hover:text-white">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+
+      <div id="mobile-menu" class="hidden lg:hidden bg-gray-900 border-t border-gray-800">
+        <div class="px-4 py-4 space-y-2">
+          <a href="/" class="block py-3 px-4 text-gray-300 hover:bg-gray-800 rounded-lg">Home</a>
+          <a href="/about" class="block py-3 px-4 text-gray-300 hover:bg-gray-800 rounded-lg"
+            >About</a
+          >
+          <a href="/churches" class="block py-3 px-4 text-gray-300 hover:bg-gray-800 rounded-lg"
+            >Churches</a
+          >
+          <a href="/join" class="block py-3 px-4 text-gray-300 hover:bg-gray-800 rounded-lg"
+            >Join Us</a
+          >
+          <a href="/platform" class="block py-3 px-4 text-gray-300 hover:bg-gray-800 rounded-lg"
+            >Platform</a
+          >
+          <a href="/contact" class="block py-3 px-4 text-gray-300 hover:bg-gray-800 rounded-lg"
+            >Contact</a
+          >
+          <a
+            href="/app"
+            class="block w-full text-center bg-gold-500 text-gray-900 font-bold py-3 rounded-lg mt-4"
+            >Enter Platform</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <main class="flex-grow pt-16">
+      <!-- Hero Section -->
+      <section
+        class="min-h-[90vh] flex items-center justify-center relative overflow-hidden bg-gradient-to-b from-gray-900 via-gray-950 to-gray-950"
+      >
+        <!-- Sparkles -->
+        <div class="absolute inset-0 pointer-events-none overflow-hidden">
+          <span class="sparkle text-2xl" style="top: 15%; left: 10%">✦</span>
+          <span class="sparkle text-xl" style="top: 25%; left: 85%; animation-delay: 0.5s">★</span>
+          <span class="sparkle text-3xl" style="top: 55%; left: 8%; animation-delay: 1s">✧</span>
+          <span class="sparkle text-xl" style="top: 65%; left: 90%; animation-delay: 1.5s">✦</span>
+        </div>
+
+        <div class="max-w-5xl mx-auto px-4 text-center relative z-10">
+          <div class="mb-6">
+            <span
+              class="inline-block bg-gold-500/20 text-gold-400 px-4 py-2 rounded-full text-sm font-semibold tracking-wide border border-gold-500/30"
+            >
+              USA & CANADA • 2026 Season
+            </span>
+          </div>
+
+          <h1
+            class="font-display text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight"
+          >
+            Talantul în<br /><span class="gold-text">Negoț</span>
+          </h1>
+
+          <p class="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto mb-10 leading-relaxed">
+            A Bible contest celebrating spiritual talents within the Romanian Pentecostal community.
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+            <a
+              href="/app"
+              class="bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-gray-900 font-bold py-4 px-10 rounded-full text-lg transition-all shadow-xl hover:shadow-2xl hover:scale-105"
+            >
+              <i class="fas fa-play mr-2"></i> Enter Platform
+            </a>
+            <a
+              href="/about"
+              class="bg-white/5 hover:bg-white/10 text-white font-semibold py-4 px-10 rounded-full text-lg transition-all border border-white/20"
+            >
+              Learn More <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+          </div>
+
+          <!-- Stats Grid -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="glass-card rounded-2xl p-6">
+              <div class="text-3xl md:text-4xl font-bold gold-text">25+</div>
+              <div class="text-gray-500 text-sm mt-1">Years</div>
+            </div>
+            <div class="glass-card rounded-2xl p-6">
+              <div class="text-3xl md:text-4xl font-bold gold-text">19</div>
+              <div class="text-gray-500 text-sm mt-1">Countries</div>
+            </div>
+            <div class="glass-card rounded-2xl p-6">
+              <div class="text-3xl md:text-4xl font-bold gold-text">452+</div>
+              <div class="text-gray-500 text-sm mt-1">Churches</div>
+            </div>
+            <div class="glass-card rounded-2xl p-6">
+              <div class="text-3xl md:text-4xl font-bold gold-text">10K+</div>
+              <div class="text-gray-500 text-sm mt-1">Contestants</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Upcoming Events -->
+      <section class="py-20 bg-gray-900">
+        <div class="max-w-6xl mx-auto px-4">
+          <div class="text-center mb-12">
+            <span
+              class="inline-block bg-gold-500/20 text-gold-400 px-4 py-2 rounded-full text-sm font-semibold mb-4"
+              >2026 Contest Dates</span
+            >
+            <h2 class="font-display text-3xl md:text-4xl font-bold text-white">Upcoming Events</h2>
+          </div>
+
+          <div class="grid md:grid-cols-3 gap-6">
+            <div class="glass-card rounded-2xl p-6 text-center">
+              <div
+                class="w-14 h-14 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-4"
+              >
+                <i class="fas fa-church text-blue-400 text-xl"></i>
+              </div>
+              <h3 class="font-bold text-white text-lg mb-1">Church Phase</h3>
+              <p class="text-gold-400 font-bold">April 18, 2026</p>
+              <div id="countdown-church" class="mt-2"></div>
+            </div>
+            <div class="glass-card rounded-2xl p-6 text-center">
+              <div
+                class="w-14 h-14 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-4"
+              >
+                <i class="fas fa-map-marked-alt text-purple-400 text-xl"></i>
+              </div>
+              <h3 class="font-bold text-white text-lg mb-1">Regional Phase</h3>
+              <p class="text-gold-400 font-bold">May 9, 2026</p>
+              <div id="countdown-regional" class="mt-2"></div>
+            </div>
+            <div class="glass-card rounded-2xl p-6 text-center">
+              <div
+                class="w-14 h-14 bg-gold-500/20 rounded-full flex items-center justify-center mx-auto mb-4"
+              >
+                <i class="fas fa-trophy text-gold-400 text-xl"></i>
+              </div>
+              <h3 class="font-bold text-white text-lg mb-1">National Phase</h3>
+              <p class="text-gold-400 font-bold">June 6, 2026</p>
+              <div id="countdown-national" class="mt-2"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick Links -->
+      <section class="py-20 bg-gray-950">
+        <div class="max-w-6xl mx-auto px-4">
+          <div class="text-center mb-12">
+            <h2 class="font-display text-3xl md:text-4xl font-bold text-white">Explore</h2>
+            <p class="text-gray-500 mt-2">Learn more about the contest</p>
+          </div>
+
+          <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <a
+              href="/about"
+              class="glass-card rounded-2xl p-6 hover:border-gold-500/50 transition-all group"
+            >
+              <div
+                class="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
+              >
+                <i class="fas fa-info-circle text-blue-400 text-xl"></i>
+              </div>
+              <h3 class="font-bold text-white mb-2">About</h3>
+              <p class="text-gray-500 text-sm">
+                Learn about the contest, its history, and two branches of competition.
+              </p>
+            </a>
+
+            <a
+              href="/churches"
+              class="glass-card rounded-2xl p-6 hover:border-gold-500/50 transition-all group"
+            >
+              <div
+                class="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
+              >
+                <i class="fas fa-church text-green-400 text-xl"></i>
+              </div>
+              <h3 class="font-bold text-white mb-2">Churches</h3>
+              <p class="text-gray-500 text-sm">
+                View all 37 participating churches across USA & Canada.
+              </p>
+            </a>
+
+            <a
+              href="/join"
+              class="glass-card rounded-2xl p-6 hover:border-gold-500/50 transition-all group"
+            >
+              <div
+                class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
+              >
+                <i class="fas fa-hand-point-right text-purple-400 text-xl"></i>
+              </div>
+              <h3 class="font-bold text-white mb-2">Join Us</h3>
+              <p class="text-gray-500 text-sm">Steps for churches interested in participating.</p>
+            </a>
+
+            <a
+              href="/contact"
+              class="glass-card rounded-2xl p-6 hover:border-gold-500/50 transition-all group"
+            >
+              <div
+                class="w-12 h-12 bg-gold-500/20 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
+              >
+                <i class="fas fa-envelope text-gold-400 text-xl"></i>
+              </div>
+              <h3 class="font-bold text-white mb-2">Contact</h3>
+              <p class="text-gray-500 text-sm">Get in touch with the leadership team.</p>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Platform CTA -->
+      <section class="py-16 bg-gradient-to-r from-gold-600 to-gold-500">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+          <h2 class="font-display text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Ready to Practice?
+          </h2>
+          <p class="text-lg text-gray-800 mb-8">
+            Access our interactive platform with practice questions, games, and study tools.
+          </p>
+          <a
+            href="/app"
+            class="inline-block bg-gray-900 hover:bg-gray-800 text-white font-bold py-4 px-10 rounded-full text-lg transition-all shadow-xl hover:shadow-2xl hover:scale-105"
+          >
+            <i class="fas fa-rocket mr-2"></i> Enter the Platform
+          </a>
+        </div>
+      </section>
+
+      <!-- YouTube Video -->
+      <section class="py-20 bg-gray-900">
+        <div class="max-w-4xl mx-auto px-4">
+          <div class="text-center mb-8">
+            <h2 class="font-display text-2xl font-bold text-white">Watch the 2024 Experience</h2>
+          </div>
+          <div class="aspect-video rounded-2xl overflow-hidden shadow-2xl border border-gray-800">
+            <iframe
+              class="w-full h-full"
+              src="https://www.youtube-nocookie.com/embed/kefuQJKvRXU"
+              title="Talantul în Negoț 2024"
+              frameborder="0"
+              allow="
+                accelerometer;
+                autoplay;
+                clipboard-write;
+                encrypted-media;
+                gyroscope;
+                picture-in-picture;
+              "
+              allowfullscreen
+              loading="lazy"
+            ></iframe>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-950 border-t border-gray-800 text-gray-400 py-8">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-gold-500 rounded-lg flex items-center justify-center">
+              <i class="fas fa-bible text-gray-900 text-sm"></i>
+            </div>
+            <span class="font-display font-bold text-white">TalantulApp</span>
+          </div>
+          <p class="text-sm">© 2026 Talantul în Negoț. All rights reserved.</p>
+          <a
+            href="https://youtu.be/kefuQJKvRXU"
+            target="_blank"
+            class="hover:text-white transition-colors"
+            ><i class="fab fa-youtube text-xl"></i
+          ></a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      document.getElementById('mobile-menu-btn')?.addEventListener('click', function () {
+        document.getElementById('mobile-menu').classList.toggle('hidden');
+      });
+    </script>
+
+    <script>
+      function updateCountdown(targetDate, elementId) {
+        const target = new Date(targetDate).getTime();
+        const now = new Date().getTime();
+        const distance = target - now;
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        const element = document.getElementById(elementId);
+        if (element) {
+          if (distance < 0) {
+            element.innerHTML = 'Event has passed!';
+          } else {
+            element.innerHTML = `<span class="text-white text-lg font-semibold">${days}d ${hours}h ${minutes}m ${seconds}s</span>`;
+          }
+        }
+      }
+
+      // Set target dates for each event
+      const churchPhaseDate = 'April 18, 2026 00:00:00';
+      const regionalPhaseDate = 'May 9, 2026 00:00:00';
+      const nationalPhaseDate = 'June 6, 2026 00:00:00';
+
+      // Update countdowns every second
+      setInterval(() => {
+        updateCountdown(churchPhaseDate, 'countdown-church');
+        updateCountdown(regionalPhaseDate, 'countdown-regional');
+        updateCountdown(nationalPhaseDate, 'countdown-national');
+      }, 1000);
+
+      // Initial call to display countdown immediately
+      updateCountdown(churchPhaseDate, 'countdown-church');
+      updateCountdown(regionalPhaseDate, 'countdown-regional');
+      updateCountdown(nationalPhaseDate, 'countdown-national');
+    </script>
+  </body>
+</html>

@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact - Talantul în Negoț</title>
+
+    <link rel="icon" type="image/png" href="/static/favicon.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              display: ['Playfair Display', 'serif'],
+              sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              gold: {
+                400: '#FFD54F',
+                500: '#FFC107',
+                600: '#FFB300',
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .gold-text {
+        background: linear-gradient(135deg, #ffd700, #ffa500);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-950 font-sans text-white min-h-screen flex flex-col">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-gray-950/95 backdrop-blur-md border-b border-gray-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+          <a href="/" class="flex items-center gap-3">
+            <div
+              class="w-10 h-10 bg-gradient-to-br from-gold-500 to-gold-600 rounded-xl flex items-center justify-center shadow-lg"
+            >
+              <i class="fas fa-bible text-gray-900 text-lg"></i>
+            </div>
+            <span class="font-display font-bold text-xl text-white"
+              >Talantul<span class="gold-text">App</span></span
+            >
+          </a>
+
+          <div class="hidden lg:flex items-center gap-1">
+            <a
+              href="/"
+              class="px-4 py-2 rounded-lg font-medium transition-colors text-gray-400 hover:text-white hover:bg-white/5"
+              >Home</a
+            >
+            <a
+              href="/about"
+              class="px-4 py-2 rounded-lg font-medium transition-colors text-gray-400 hover:text-white hover:bg-white/5"
+              >About</a
+            >
+            <a
+              href="/churches"
+              class="px-4 py-2 rounded-lg font-medium transition-colors text-gray-400 hover:text-white hover:bg-white/5"
+              >Churches</a
+            >
+            <a
+              href="/join"
+              class="px-4 py-2 rounded-lg font-medium transition-colors text-gray-400 hover:text-white hover:bg-white/5"
+              >Join Us</a
+            >
+            <a
+              href="/platform"
+              class="px-4 py-2 rounded-lg font-medium transition-colors text-gray-400 hover:text-white hover:bg-white/5"
+              >Platform</a
+            >
+            <a
+              href="/contact"
+              class="px-4 py-2 rounded-lg font-medium transition-colors text-gold-400 bg-white/5"
+              >Contact</a
+            >
+            <a
+              href="/app"
+              class="ml-4 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-gray-900 font-bold py-2.5 px-6 rounded-full transition-all shadow-lg hover:shadow-xl"
+            >
+              <i class="fas fa-play mr-2"></i>Enter Platform
+            </a>
+          </div>
+
+          <button id="mobile-menu-btn" class="lg:hidden p-2 text-gray-400 hover:text-white">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+
+      <div id="mobile-menu" class="hidden lg:hidden bg-gray-900 border-t border-gray-800">
+        <div class="px-4 py-4 space-y-2">
+          <a href="/" class="block py-3 px-4 text-gray-300 hover:bg-gray-800 rounded-lg">Home</a>
+          <a href="/about" class="block py-3 px-4 text-gray-300 hover:bg-gray-800 rounded-lg"
+            >About</a
+          >
+          <a href="/churches" class="block py-3 px-4 text-gray-300 hover:bg-gray-800 rounded-lg"
+            >Churches</a
+          >
+          <a href="/join" class="block py-3 px-4 text-gray-300 hover:bg-gray-800 rounded-lg"
+            >Join Us</a
+          >
+          <a href="/platform" class="block py-3 px-4 text-gray-300 hover:bg-gray-800 rounded-lg"
+            >Platform</a
+          >
+          <a href="/contact" class="block py-3 px-4 text-gray-300 hover:bg-gray-800 rounded-lg"
+            >Contact</a
+          >
+          <a
+            href="/app"
+            class="block w-full text-center bg-gold-500 text-gray-900 font-bold py-3 rounded-lg mt-4"
+            >Enter Platform</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <main class="flex-grow pt-16">
+      <!-- Page Header -->
+      <section class="py-16 bg-gray-900 border-b border-gray-800">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+          <span
+            class="inline-block bg-gold-500/20 text-gold-400 px-4 py-2 rounded-full text-sm font-semibold mb-4"
+            >Get in Touch</span
+          >
+          <h1 class="font-display text-4xl md:text-5xl font-bold text-white mb-4">Contact Us</h1>
+          <p class="text-xl text-gray-400">Core Leadership Team for North America</p>
+        </div>
+      </section>
+
+      <!-- Leadership Team -->
+      <section class="py-16 bg-gray-950">
+        <div class="max-w-5xl mx-auto px-4">
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div
+              class="glass-card rounded-2xl p-6 text-center hover:border-gold-500/30 transition-colors"
+            >
+              <div
+                class="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden border-2 border-gold-500/30"
+              >
+                <img
+                  src="/uploads/leaders/c37c472f837847bdad0f4b982ef2e128.png"
+                  alt="Pastor Daniel Neagoe"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <h4 class="font-bold text-white text-lg">Pastor Daniel Neagoe</h4>
+              <p class="text-gold-400 text-sm mb-4">Children&#39;s Ministry Romania</p>
+              <div class="space-y-2 text-sm">
+                <a
+                  href="/cdn-cgi/l/email-protection#f6989397919993d89297989f939ab6919b979f9ad895999b"
+                  class="flex items-center justify-center gap-2 text-gray-400 hover:text-white transition-colors"
+                >
+                  <i class="fas fa-envelope"></i>
+                  <span
+                    class="__cf_email__"
+                    data-cfemail="3a545f5b5d555f145e5b54535f567a5d575b535614595557"
+                    >[email&#160;protected]</span
+                  >
+                </a>
+
+                <p class="text-gray-500"><i class="fas fa-phone mr-2"></i>+40 785 202 531</p>
+              </div>
+            </div>
+
+            <div
+              class="glass-card rounded-2xl p-6 text-center hover:border-gold-500/30 transition-colors"
+            >
+              <div
+                class="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden border-2 border-gold-500/30"
+              >
+                <img
+                  src="/uploads/leaders/7cce6f7da7d94087a8f0b87bb9c98d2f.png"
+                  alt="Persida Bujdei"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <h4 class="font-bold text-white text-lg">Persida Bujdei</h4>
+              <p class="text-gold-400 text-sm mb-4">Coordinator USA/Canada</p>
+              <div class="space-y-2 text-sm">
+                <a
+                  href="/cdn-cgi/l/email-protection#e090859293898481ce82958a848589a0878d81898cce838f8d"
+                  class="flex items-center justify-center gap-2 text-gray-400 hover:text-white transition-colors"
+                >
+                  <i class="fas fa-envelope"></i>
+                  <span
+                    class="__cf_email__"
+                    data-cfemail="1b6b7e6968727f7a35796e717f7e725b7c767a727735787476"
+                    >[email&#160;protected]</span
+                  >
+                </a>
+
+                <p class="text-gray-500"><i class="fas fa-phone mr-2"></i>847-529-6459</p>
+              </div>
+            </div>
+
+            <div
+              class="glass-card rounded-2xl p-6 text-center hover:border-gold-500/30 transition-colors"
+            >
+              <div
+                class="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden border-2 border-gold-500/30"
+              >
+                <img
+                  src="/uploads/leaders/70a56e375765429fa8d9f77a8e720235.png"
+                  alt="Laura Budris"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <h4 class="font-bold text-white text-lg">Laura Budris</h4>
+              <p class="text-gold-400 text-sm mb-4">Leadership Team</p>
+              <div class="space-y-2 text-sm">
+                <a
+                  href="/cdn-cgi/l/email-protection#7a161b1b0f081b0f093a031b12151554191517"
+                  class="flex items-center justify-center gap-2 text-gray-400 hover:text-white transition-colors"
+                >
+                  <i class="fas fa-envelope"></i>
+                  <span class="__cf_email__" data-cfemail="0b676a6a7e796a7e784b726a63646425686466"
+                    >[email&#160;protected]</span
+                  >
+                </a>
+
+                <p class="text-gray-500"><i class="fas fa-phone mr-2"></i>726-206-9861</p>
+              </div>
+            </div>
+
+            <div
+              class="glass-card rounded-2xl p-6 text-center hover:border-gold-500/30 transition-colors"
+            >
+              <div
+                class="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden border-2 border-gold-500/30"
+              >
+                <img
+                  src="/uploads/leaders/e418ffad25fe4486ace2e9696dede24b.png"
+                  alt="Bogdan Gramisteanu"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <h4 class="font-bold text-white text-lg">Bogdan Gramisteanu</h4>
+              <p class="text-gold-400 text-sm mb-4">Leadership Team</p>
+              <div class="space-y-2 text-sm">
+                <a
+                  href="/cdn-cgi/l/email-protection#92f0fdf5f6f3fcbcf5e0f3fffbe1e6f7f3fce7d2f0f7e6faf7fef6f7e6e0fdfbe6bcf1fdff"
+                  class="flex items-center justify-center gap-2 text-gray-400 hover:text-white transition-colors"
+                >
+                  <i class="fas fa-envelope"></i>
+                  <span
+                    class="__cf_email__"
+                    data-cfemail="97f5f8f0f3f6f9b9f0e5f6fafee4e3f2f6f9e2d7f5f2e3fff2fbf3f2e3e5f8fee3b9f4f8fa"
+                    >[email&#160;protected]</span
+                  >
+                </a>
+
+                <p class="text-gray-500"><i class="fas fa-phone mr-2"></i>226-506-2400</p>
+              </div>
+            </div>
+
+            <div
+              class="glass-card rounded-2xl p-6 text-center hover:border-gold-500/30 transition-colors"
+            >
+              <div
+                class="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden border-2 border-gold-500/30"
+              >
+                <img
+                  src="/uploads/leaders/d625c3b5ad704d64a6b40c4722aa1a02.png"
+                  alt="Nicoleta Romanuc"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <h4 class="font-bold text-white text-lg">Nicoleta Romanuc</h4>
+              <p class="text-gold-400 text-sm mb-4">Leadership Team</p>
+              <div class="space-y-2 text-sm">
+                <a
+                  href="/cdn-cgi/l/email-protection#fd93949e929191ce909c9388bd849c959292d39e9290"
+                  class="flex items-center justify-center gap-2 text-gray-400 hover:text-white transition-colors"
+                >
+                  <i class="fas fa-envelope"></i>
+                  <span
+                    class="__cf_email__"
+                    data-cfemail="e08e89838f8c8cd38d818e95a09981888f8fce838f8d"
+                    >[email&#160;protected]</span
+                  >
+                </a>
+
+                <p class="text-gray-500"><i class="fas fa-phone mr-2"></i>773-807-5054</p>
+              </div>
+            </div>
+
+            <div
+              class="glass-card rounded-2xl p-6 text-center hover:border-gold-500/30 transition-colors"
+            >
+              <div
+                class="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden border-2 border-gold-500/30"
+              >
+                <img
+                  src="/uploads/leaders/165b9a290c8c4778a64282bd87de0da7.png"
+                  alt="Iosif Mateiu"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <h4 class="font-bold text-white text-lg">Iosif Mateiu</h4>
+              <p class="text-gold-400 text-sm mb-4">Leadership Team / Coordinator Canada</p>
+              <div class="space-y-2 text-sm">
+                <a
+                  href="/cdn-cgi/l/email-protection#e78e82c98a8693828e92a7808a868e8bc984888a"
+                  class="flex items-center justify-center gap-2 text-gray-400 hover:text-white transition-colors"
+                >
+                  <i class="fas fa-envelope"></i>
+                  <span class="__cf_email__" data-cfemail="89e0eca7e4e8fdece0fcc9eee4e8e0e5a7eae6e4"
+                    >[email&#160;protected]</span
+                  >
+                </a>
+
+                <p class="text-gray-500"><i class="fas fa-phone mr-2"></i>519-819-3065</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Group Photo -->
+          <div class="mt-12">
+            <h3 class="text-xl font-bold text-white text-center mb-6">Our Team</h3>
+            <div class="rounded-2xl overflow-hidden border border-gray-800 shadow-2xl">
+              <img src="/uploads/leaders/group_photo.jpg" alt="Leadership Team" class="w-full" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Social -->
+      <section class="py-12 bg-gray-900 text-center">
+        <div class="max-w-2xl mx-auto px-4">
+          <h3 class="text-xl font-bold text-white mb-6">Follow Our Journey</h3>
+          <a
+            href="https://www.youtube.com/watch?v=kefuQJKvRXU"
+            target="_blank"
+            class="inline-flex items-center gap-3 bg-red-600 hover:bg-red-500 text-white font-semibold py-3 px-6 rounded-full transition-colors"
+          >
+            <i class="fab fa-youtube text-xl"></i> Watch 2024 Experience
+          </a>
+        </div>
+      </section>
+
+      <!-- Verse -->
+      <section class="py-12 bg-gray-950">
+        <div class="max-w-2xl mx-auto px-4 text-center">
+          <blockquote class="italic text-xl text-gray-400">
+            "I have hidden your word in my heart, that I may not sin against you"
+          </blockquote>
+          <p class="text-gold-500 font-semibold mt-2">— Psalms 119:11</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-950 border-t border-gray-800 text-gray-400 py-8">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-gold-500 rounded-lg flex items-center justify-center">
+              <i class="fas fa-bible text-gray-900 text-sm"></i>
+            </div>
+            <span class="font-display font-bold text-white">TalantulApp</span>
+          </div>
+          <p class="text-sm">© 2026 Talantul în Negoț. All rights reserved.</p>
+          <a
+            href="https://youtu.be/kefuQJKvRXU"
+            target="_blank"
+            class="hover:text-white transition-colors"
+            ><i class="fab fa-youtube text-xl"></i
+          ></a>
+        </div>
+      </div>
+    </footer>
+
+    <script
+      data-cfasync="false"
+      src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
+    ></script>
+    <script>
+      document.getElementById('mobile-menu-btn')?.addEventListener('click', function () {
+        document.getElementById('mobile-menu').classList.toggle('hidden');
+      });
+    </script>
+  </body>
+</html>

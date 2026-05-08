@@ -1,0 +1,1089 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Platform Features - Talantul in Negot</title>
+
+    <link rel="icon" type="image/png" href="/static/favicon.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              display: ['Playfair Display', 'serif'],
+              sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              gold: {
+                400: '#FFD54F',
+                500: '#FFC107',
+                600: '#FFB300',
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .gold-text {
+        background: linear-gradient(135deg, #ffd700, #ffa500);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-950 font-sans text-white min-h-screen flex flex-col">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-gray-950/95 backdrop-blur-md border-b border-gray-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+          <a href="/" class="flex items-center gap-3">
+            <div
+              class="w-10 h-10 bg-gradient-to-br from-gold-500 to-gold-600 rounded-xl flex items-center justify-center shadow-lg"
+            >
+              <i class="fas fa-bible text-gray-900 text-lg"></i>
+            </div>
+            <span class="font-display font-bold text-xl text-white"
+              >Talantul<span class="gold-text">App</span></span
+            >
+          </a>
+
+          <div class="hidden lg:flex items-center gap-1">
+            <a
+              href="/"
+              class="px-4 py-2 rounded-lg font-medium transition-colors text-gray-400 hover:text-white hover:bg-white/5"
+              >Home</a
+            >
+            <a
+              href="/about"
+              class="px-4 py-2 rounded-lg font-medium transition-colors text-gray-400 hover:text-white hover:bg-white/5"
+              >About</a
+            >
+            <a
+              href="/churches"
+              class="px-4 py-2 rounded-lg font-medium transition-colors text-gray-400 hover:text-white hover:bg-white/5"
+              >Churches</a
+            >
+            <a
+              href="/join"
+              class="px-4 py-2 rounded-lg font-medium transition-colors text-gray-400 hover:text-white hover:bg-white/5"
+              >Join Us</a
+            >
+            <a
+              href="/platform"
+              class="px-4 py-2 rounded-lg font-medium transition-colors text-gold-400 bg-white/5"
+              >Platform</a
+            >
+            <a
+              href="/contact"
+              class="px-4 py-2 rounded-lg font-medium transition-colors text-gray-400 hover:text-white hover:bg-white/5"
+              >Contact</a
+            >
+            <a
+              href="/app"
+              class="ml-4 bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-gray-900 font-bold py-2.5 px-6 rounded-full transition-all shadow-lg hover:shadow-xl"
+            >
+              <i class="fas fa-play mr-2"></i>Enter Platform
+            </a>
+          </div>
+
+          <button id="mobile-menu-btn" class="lg:hidden p-2 text-gray-400 hover:text-white">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+
+      <div id="mobile-menu" class="hidden lg:hidden bg-gray-900 border-t border-gray-800">
+        <div class="px-4 py-4 space-y-2">
+          <a href="/" class="block py-3 px-4 text-gray-300 hover:bg-gray-800 rounded-lg">Home</a>
+          <a href="/about" class="block py-3 px-4 text-gray-300 hover:bg-gray-800 rounded-lg"
+            >About</a
+          >
+          <a href="/churches" class="block py-3 px-4 text-gray-300 hover:bg-gray-800 rounded-lg"
+            >Churches</a
+          >
+          <a href="/join" class="block py-3 px-4 text-gray-300 hover:bg-gray-800 rounded-lg"
+            >Join Us</a
+          >
+          <a href="/platform" class="block py-3 px-4 text-gray-300 hover:bg-gray-800 rounded-lg"
+            >Platform</a
+          >
+          <a href="/contact" class="block py-3 px-4 text-gray-300 hover:bg-gray-800 rounded-lg"
+            >Contact</a
+          >
+          <a
+            href="/app"
+            class="block w-full text-center bg-gold-500 text-gray-900 font-bold py-3 rounded-lg mt-4"
+            >Enter Platform</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <main class="flex-grow pt-16">
+      <!-- Page Header -->
+      <section class="py-16 bg-gray-900 border-b border-gray-800">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+          <span
+            class="inline-block bg-gold-500/20 text-gold-400 px-4 py-2 rounded-full text-sm font-semibold mb-4"
+          >
+            Platform Guide
+          </span>
+          <h1 class="font-display text-4xl md:text-5xl font-bold text-white mb-4">
+            Platform Features
+          </h1>
+          <p class="text-xl text-gray-400">
+            Everything you need to study, compete, and grow in God's Word
+          </p>
+        </div>
+      </section>
+
+      <!-- For Players Section -->
+      <section class="py-16 bg-gray-950">
+        <div class="max-w-6xl mx-auto px-4">
+          <div class="text-center mb-12">
+            <span
+              class="inline-block bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-sm font-semibold mb-3"
+            >
+              <i class="fas fa-user mr-2"></i>For Players
+            </span>
+            <h2 class="font-display text-3xl font-bold text-white mb-4">Your Learning Journey</h2>
+            <p class="text-gray-500 max-w-2xl mx-auto">
+              Multiple ways to study, practice, and compete with fellow believers
+            </p>
+          </div>
+
+          <!-- Game Modes -->
+          <div class="mb-12">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center">
+              <span
+                class="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center mr-3"
+              >
+                <i class="fas fa-gamepad text-blue-400"></i>
+              </span>
+              9 Game Modes
+            </h3>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              <div
+                class="glass-card rounded-xl p-4 text-center hover:border-blue-500/50 transition-colors"
+              >
+                <div
+                  class="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mx-auto mb-3"
+                >
+                  <i class="fas fa-bolt text-blue-400 text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-white text-sm">Quick Quiz</h4>
+                <p class="text-xs text-gray-500 mt-1">Fast-paced questions</p>
+              </div>
+              <div
+                class="glass-card rounded-xl p-4 text-center hover:border-purple-500/50 transition-colors"
+              >
+                <div
+                  class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mx-auto mb-3"
+                >
+                  <i class="fas fa-calendar-day text-purple-400 text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-white text-sm">Daily Quiz</h4>
+                <p class="text-xs text-gray-500 mt-1">New challenge daily</p>
+              </div>
+              <div
+                class="glass-card rounded-xl p-4 text-center hover:border-green-500/50 transition-colors"
+              >
+                <div
+                  class="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mx-auto mb-3"
+                >
+                  <i class="fas fa-pen text-green-400 text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-white text-sm">Fill in Blank</h4>
+                <p class="text-xs text-gray-500 mt-1">Complete verses</p>
+              </div>
+              <div
+                class="glass-card rounded-xl p-4 text-center hover:border-yellow-500/50 transition-colors"
+              >
+                <div
+                  class="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center mx-auto mb-3"
+                >
+                  <i class="fas fa-link text-yellow-400 text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-white text-sm">Matching</h4>
+                <p class="text-xs text-gray-500 mt-1">Connect pairs</p>
+              </div>
+              <div
+                class="glass-card rounded-xl p-4 text-center hover:border-red-500/50 transition-colors"
+              >
+                <div
+                  class="w-12 h-12 bg-red-500/20 rounded-xl flex items-center justify-center mx-auto mb-3"
+                >
+                  <i class="fas fa-check-double text-red-400 text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-white text-sm">True/False</h4>
+                <p class="text-xs text-gray-500 mt-1">Test your facts</p>
+              </div>
+              <div
+                class="glass-card rounded-xl p-4 text-center hover:border-indigo-500/50 transition-colors"
+              >
+                <div
+                  class="w-12 h-12 bg-indigo-500/20 rounded-xl flex items-center justify-center mx-auto mb-3"
+                >
+                  <i class="fas fa-brain text-indigo-400 text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-white text-sm">Memorization</h4>
+                <p class="text-xs text-gray-500 mt-1">Learn by heart</p>
+              </div>
+              <div
+                class="glass-card rounded-xl p-4 text-center hover:border-orange-500/50 transition-colors"
+              >
+                <div
+                  class="w-12 h-12 bg-orange-500/20 rounded-xl flex items-center justify-center mx-auto mb-3"
+                >
+                  <i class="fas fa-mountain text-orange-400 text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-white text-sm">Adventure</h4>
+                <p class="text-xs text-gray-500 mt-1">Story mode</p>
+              </div>
+              <div
+                class="glass-card rounded-xl p-4 text-center hover:border-pink-500/50 transition-colors"
+              >
+                <div
+                  class="w-12 h-12 bg-pink-500/20 rounded-xl flex items-center justify-center mx-auto mb-3"
+                >
+                  <i class="fas fa-users text-pink-400 text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-white text-sm">Kahoot-style</h4>
+                <p class="text-xs text-gray-500 mt-1">Group play</p>
+              </div>
+              <div
+                class="glass-card rounded-xl p-4 text-center hover:border-teal-500/50 transition-colors"
+              >
+                <div
+                  class="w-12 h-12 bg-teal-500/20 rounded-xl flex items-center justify-center mx-auto mb-3"
+                >
+                  <i class="fas fa-scroll text-teal-400 text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-white text-sm">Memory Verse</h4>
+                <p class="text-xs text-gray-500 mt-1">Audio practice</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feature Cards Grid -->
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Study Mode -->
+            <div class="glass-card rounded-2xl overflow-hidden">
+              <div class="bg-gradient-to-r from-purple-600 to-purple-700 p-5">
+                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-3">
+                  <i class="fas fa-book-reader text-white text-xl"></i>
+                </div>
+                <h3 class="font-display text-xl font-bold text-white">Study Mode</h3>
+              </div>
+              <div class="p-5">
+                <ul class="space-y-2 text-gray-400 text-sm">
+                  <li>
+                    <i class="fas fa-check text-purple-400 mr-2"></i>Browse questions by chapter &
+                    book
+                  </li>
+                  <li>
+                    <i class="fas fa-check text-purple-400 mr-2"></i>View Bible verses (NIV
+                    translation)
+                  </li>
+                  <li>
+                    <i class="fas fa-check text-purple-400 mr-2"></i>Community discussion on each
+                    question
+                  </li>
+                  <li><i class="fas fa-check text-purple-400 mr-2"></i>Flashcard practice mode</li>
+                  <li>
+                    <i class="fas fa-check text-purple-400 mr-2"></i>Filter by difficulty level
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Social Features -->
+            <div class="glass-card rounded-2xl overflow-hidden">
+              <div class="bg-gradient-to-r from-green-600 to-green-700 p-5">
+                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-3">
+                  <i class="fas fa-user-friends text-white text-xl"></i>
+                </div>
+                <h3 class="font-display text-xl font-bold text-white">Friends System</h3>
+              </div>
+              <div class="p-5">
+                <ul class="space-y-2 text-gray-400 text-sm">
+                  <li>
+                    <i class="fas fa-check text-green-400 mr-2"></i>Discover players from any church
+                  </li>
+                  <li>
+                    <i class="fas fa-check text-green-400 mr-2"></i>Smart filters (church, points,
+                    activity)
+                  </li>
+                  <li><i class="fas fa-check text-green-400 mr-2"></i>Send friend requests</li>
+                  <li><i class="fas fa-check text-green-400 mr-2"></i>Friends-only leaderboard</li>
+                  <li><i class="fas fa-check text-green-400 mr-2"></i>Challenge top players</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Leaderboards -->
+            <div class="glass-card rounded-2xl overflow-hidden">
+              <div class="bg-gradient-to-r from-gold-500 to-gold-600 p-5">
+                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-3">
+                  <i class="fas fa-trophy text-white text-xl"></i>
+                </div>
+                <h3 class="font-display text-xl font-bold text-white">Leaderboards</h3>
+              </div>
+              <div class="p-5">
+                <ul class="space-y-2 text-gray-400 text-sm">
+                  <li><i class="fas fa-check text-gold-400 mr-2"></i>Global rankings</li>
+                  <li>
+                    <i class="fas fa-check text-gold-400 mr-2"></i>Church vs Church competition
+                  </li>
+                  <li>
+                    <i class="fas fa-check text-gold-400 mr-2"></i>Within your church rankings
+                  </li>
+                  <li>
+                    <i class="fas fa-check text-gold-400 mr-2"></i>Daily, Weekly, Monthly, All-Time
+                  </li>
+                  <li><i class="fas fa-check text-gold-400 mr-2"></i>Daily Quiz podium bonuses</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Progress Tracking -->
+            <div class="glass-card rounded-2xl overflow-hidden">
+              <div class="bg-gradient-to-r from-blue-600 to-blue-700 p-5">
+                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-3">
+                  <i class="fas fa-chart-line text-white text-xl"></i>
+                </div>
+                <h3 class="font-display text-xl font-bold text-white">Progress Tracking</h3>
+              </div>
+              <div class="p-5">
+                <ul class="space-y-2 text-gray-400 text-sm">
+                  <li><i class="fas fa-check text-blue-400 mr-2"></i>Points & scoring system</li>
+                  <li><i class="fas fa-check text-blue-400 mr-2"></i>Daily streaks & bonuses</li>
+                  <li><i class="fas fa-check text-blue-400 mr-2"></i>Achievement badges</li>
+                  <li><i class="fas fa-check text-blue-400 mr-2"></i>Level progression</li>
+                  <li><i class="fas fa-check text-blue-400 mr-2"></i>Detailed game history</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Parent Reports -->
+            <div class="glass-card rounded-2xl overflow-hidden">
+              <div class="bg-gradient-to-r from-pink-600 to-pink-700 p-5">
+                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-3">
+                  <i class="fas fa-envelope text-white text-xl"></i>
+                </div>
+                <h3 class="font-display text-xl font-bold text-white">Parent Reports</h3>
+              </div>
+              <div class="p-5">
+                <ul class="space-y-2 text-gray-400 text-sm">
+                  <li><i class="fas fa-check text-pink-400 mr-2"></i>Subscribe parent emails</li>
+                  <li><i class="fas fa-check text-pink-400 mr-2"></i>Weekly progress summaries</li>
+                  <li><i class="fas fa-check text-pink-400 mr-2"></i>Accuracy trends</li>
+                  <li>
+                    <i class="fas fa-check text-pink-400 mr-2"></i>Chapter performance breakdown
+                  </li>
+                  <li><i class="fas fa-check text-pink-400 mr-2"></i>Streak & rank updates</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Custom Tests -->
+            <div class="glass-card rounded-2xl overflow-hidden">
+              <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 p-5">
+                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-3">
+                  <i class="fas fa-file-alt text-white text-xl"></i>
+                </div>
+                <h3 class="font-display text-xl font-bold text-white">Custom Tests</h3>
+              </div>
+              <div class="p-5">
+                <ul class="space-y-2 text-gray-400 text-sm">
+                  <li>
+                    <i class="fas fa-check text-indigo-400 mr-2"></i>Choose chapters & difficulty
+                  </li>
+                  <li><i class="fas fa-check text-indigo-400 mr-2"></i>Set question count</li>
+                  <li><i class="fas fa-check text-indigo-400 mr-2"></i>Mix question types</li>
+                  <li><i class="fas fa-check text-indigo-400 mr-2"></i>PDF export for offline</li>
+                  <li><i class="fas fa-check text-indigo-400 mr-2"></i>Practice mode available</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- For Church Leaders Section -->
+      <section class="py-16 bg-gray-900">
+        <div class="max-w-6xl mx-auto px-4">
+          <div class="text-center mb-12">
+            <span
+              class="inline-block bg-gold-500/20 text-gold-400 px-3 py-1 rounded-full text-sm font-semibold mb-3"
+            >
+              <i class="fas fa-church mr-2"></i>For Church Leaders
+            </span>
+            <h2 class="font-display text-3xl font-bold text-white mb-4">Lead Your Congregation</h2>
+            <p class="text-gray-500 max-w-2xl mx-auto">
+              Dedicated tools to track, motivate, and support your church members
+            </p>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-8 mb-12">
+            <!-- Dashboard Preview -->
+            <div class="glass-card rounded-2xl p-6">
+              <div class="flex items-center gap-4 mb-6">
+                <div class="w-14 h-14 bg-gold-500/20 rounded-xl flex items-center justify-center">
+                  <i class="fas fa-tachometer-alt text-gold-400 text-2xl"></i>
+                </div>
+                <div>
+                  <h3 class="font-display text-xl font-bold text-white">Church Dashboard</h3>
+                  <p class="text-gray-500 text-sm">Real-time overview of your congregation</p>
+                </div>
+              </div>
+              <div class="space-y-4">
+                <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                  <span class="text-gray-400"
+                    ><i class="fas fa-users mr-2 text-blue-400"></i>Active Members</span
+                  >
+                  <span class="text-white font-semibold">Track participation</span>
+                </div>
+                <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                  <span class="text-gray-400"
+                    ><i class="fas fa-chart-bar mr-2 text-green-400"></i>Weekly Activity</span
+                  >
+                  <span class="text-white font-semibold">Visualized trends</span>
+                </div>
+                <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                  <span class="text-gray-400"
+                    ><i class="fas fa-medal mr-2 text-gold-400"></i>Top Performers</span
+                  >
+                  <span class="text-white font-semibold">Recognize excellence</span>
+                </div>
+                <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
+                  <span class="text-gray-400"
+                    ><i class="fas fa-exclamation-triangle mr-2 text-red-400"></i>Areas Needing
+                    Work</span
+                  >
+                  <span class="text-white font-semibold">Chapter analysis</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Features List -->
+            <div class="glass-card rounded-2xl p-6">
+              <div class="flex items-center gap-4 mb-6">
+                <div class="w-14 h-14 bg-purple-500/20 rounded-xl flex items-center justify-center">
+                  <i class="fas fa-tools text-purple-400 text-2xl"></i>
+                </div>
+                <div>
+                  <h3 class="font-display text-xl font-bold text-white">Leadership Tools</h3>
+                  <p class="text-gray-500 text-sm">Everything you need to manage</p>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="p-4 bg-gray-800/50 rounded-lg text-center">
+                  <i class="fas fa-user-check text-green-400 text-xl mb-2"></i>
+                  <p class="text-white text-sm font-medium">Member Tracking</p>
+                  <p class="text-xs text-gray-500">Individual progress</p>
+                </div>
+                <div class="p-4 bg-gray-800/50 rounded-lg text-center">
+                  <i class="fas fa-users-cog text-blue-400 text-xl mb-2"></i>
+                  <p class="text-white text-sm font-medium">Team Management</p>
+                  <p class="text-xs text-gray-500">Create competitions</p>
+                </div>
+                <div class="p-4 bg-gray-800/50 rounded-lg text-center">
+                  <i class="fas fa-file-csv text-yellow-400 text-xl mb-2"></i>
+                  <p class="text-white text-sm font-medium">CSV Export</p>
+                  <p class="text-xs text-gray-500">Download data</p>
+                </div>
+                <div class="p-4 bg-gray-800/50 rounded-lg text-center">
+                  <i class="fas fa-file-pdf text-red-400 text-xl mb-2"></i>
+                  <p class="text-white text-sm font-medium">PDF Reports</p>
+                  <p class="text-xs text-gray-500">Print-ready</p>
+                </div>
+                <div class="p-4 bg-gray-800/50 rounded-lg text-center">
+                  <i class="fas fa-certificate text-gold-400 text-xl mb-2"></i>
+                  <p class="text-white text-sm font-medium">Certificates</p>
+                  <p class="text-xs text-gray-500">Achievement awards</p>
+                </div>
+                <div class="p-4 bg-gray-800/50 rounded-lg text-center">
+                  <i class="fas fa-chart-pie text-purple-400 text-xl mb-2"></i>
+                  <p class="text-white text-sm font-medium">Analytics</p>
+                  <p class="text-xs text-gray-500">Deep insights</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Leader CTA -->
+          <div class="text-center">
+            <a
+              href="/church-leader/login"
+              class="inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-600 text-gray-900 font-bold py-3 px-8 rounded-full transition-all shadow-lg hover:shadow-xl"
+            >
+              <i class="fas fa-sign-in-alt"></i>Church Leader Login
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Daily Quiz Deep Dive -->
+      <section class="py-16 bg-gray-950">
+        <div class="max-w-6xl mx-auto px-4">
+          <div class="text-center mb-12">
+            <span
+              class="inline-block bg-purple-500/20 text-purple-400 px-3 py-1 rounded-full text-sm font-semibold mb-3"
+            >
+              <i class="fas fa-calendar-day mr-2"></i>Featured Game
+            </span>
+            <h2 class="font-display text-3xl font-bold text-white mb-4">Daily Quiz Challenge</h2>
+            <p class="text-gray-500 max-w-2xl mx-auto">
+              A new quiz every day with competitive rankings and bonus rewards
+            </p>
+          </div>
+
+          <div class="grid lg:grid-cols-2 gap-8 mb-12">
+            <!-- How It Works -->
+            <div class="glass-card rounded-2xl p-6">
+              <h3 class="text-xl font-bold text-white mb-6 flex items-center">
+                <i class="fas fa-question-circle text-purple-400 mr-3"></i>How It Works
+              </h3>
+              <div class="space-y-4">
+                <div class="flex gap-4">
+                  <div
+                    class="w-8 h-8 bg-purple-500/20 rounded-full flex items-center justify-center flex-shrink-0"
+                  >
+                    <span class="text-purple-400 font-bold text-sm">1</span>
+                  </div>
+                  <div>
+                    <h4 class="text-white font-semibold">New Quiz Every Day</h4>
+                    <p class="text-gray-400 text-sm">
+                      A fresh set of 10 questions is generated daily at midnight. Everyone gets the
+                      same questions.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex gap-4">
+                  <div
+                    class="w-8 h-8 bg-purple-500/20 rounded-full flex items-center justify-center flex-shrink-0"
+                  >
+                    <span class="text-purple-400 font-bold text-sm">2</span>
+                  </div>
+                  <div>
+                    <h4 class="text-white font-semibold">One Attempt Per Day</h4>
+                    <p class="text-gray-400 text-sm">
+                      You get ONE chance to complete the daily quiz. No restarts, no do-overs. Think
+                      carefully!
+                    </p>
+                  </div>
+                </div>
+                <div class="flex gap-4">
+                  <div
+                    class="w-8 h-8 bg-purple-500/20 rounded-full flex items-center justify-center flex-shrink-0"
+                  >
+                    <span class="text-purple-400 font-bold text-sm">3</span>
+                  </div>
+                  <div>
+                    <h4 class="text-white font-semibold">Timed Competition</h4>
+                    <p class="text-gray-400 text-sm">
+                      Answer quickly! Your completion time is tracked and used for tiebreakers on
+                      the podium.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex gap-4">
+                  <div
+                    class="w-8 h-8 bg-purple-500/20 rounded-full flex items-center justify-center flex-shrink-0"
+                  >
+                    <span class="text-purple-400 font-bold text-sm">4</span>
+                  </div>
+                  <div>
+                    <h4 class="text-white font-semibold">Daily Podium</h4>
+                    <p class="text-gray-400 text-sm">
+                      Top 3 finishers earn podium positions with bonus points. Rankings update in
+                      real-time!
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Rewards & Bonuses -->
+            <div class="glass-card rounded-2xl p-6">
+              <h3 class="text-xl font-bold text-white mb-6 flex items-center">
+                <i class="fas fa-gift text-gold-400 mr-3"></i>Rewards & Bonuses
+              </h3>
+              <div class="space-y-4">
+                <div
+                  class="bg-gradient-to-r from-yellow-500/20 to-yellow-600/10 rounded-xl p-4 border border-yellow-500/30"
+                >
+                  <div class="flex items-center gap-3 mb-2">
+                    <i class="fas fa-trophy text-yellow-400 text-2xl"></i>
+                    <div>
+                      <h4 class="text-yellow-400 font-bold">1st Place - Gold</h4>
+                      <p class="text-white text-lg font-semibold">Bonus Points</p>
+                    </div>
+                  </div>
+                  <p class="text-gray-400 text-sm">
+                    Highest score + fastest time wins gold! Points vary by difficulty.
+                  </p>
+                </div>
+                <div
+                  class="bg-gradient-to-r from-gray-400/20 to-gray-500/10 rounded-xl p-4 border border-gray-400/30"
+                >
+                  <div class="flex items-center gap-3 mb-2">
+                    <i class="fas fa-medal text-gray-300 text-2xl"></i>
+                    <div>
+                      <h4 class="text-gray-300 font-bold">2nd Place - Silver</h4>
+                      <p class="text-white text-lg font-semibold">Bonus Points</p>
+                    </div>
+                  </div>
+                  <p class="text-gray-400 text-sm">
+                    Runner-up earns silver! Points scale with quiz difficulty.
+                  </p>
+                </div>
+                <div
+                  class="bg-gradient-to-r from-orange-500/20 to-orange-600/10 rounded-xl p-4 border border-orange-500/30"
+                >
+                  <div class="flex items-center gap-3 mb-2">
+                    <i class="fas fa-award text-orange-400 text-2xl"></i>
+                    <div>
+                      <h4 class="text-orange-400 font-bold">3rd Place - Bronze</h4>
+                      <p class="text-white text-lg font-semibold">Bonus Points</p>
+                    </div>
+                  </div>
+                  <p class="text-gray-400 text-sm">
+                    Third place earns bronze! Rewards based on performance.
+                  </p>
+                </div>
+                <div class="bg-gray-800/50 rounded-xl p-4">
+                  <div class="flex items-center gap-3">
+                    <i class="fas fa-fire text-red-400 text-xl"></i>
+                    <div>
+                      <h4 class="text-white font-semibold">Streak Bonuses</h4>
+                      <p class="text-gray-400 text-sm">
+                        Complete daily quizzes consecutively to build your streak. Longer streaks
+                        unlock higher multipliers and bonus rewards!
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p class="text-gray-500 text-xs mt-4 italic">
+                Note: Exact point values vary based on quiz difficulty, question count, and other
+                factors.
+              </p>
+            </div>
+          </div>
+
+          <!-- Where to Find It -->
+          <div class="glass-card rounded-2xl p-6 border-purple-500/30">
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center">
+              <i class="fas fa-map-marker-alt text-purple-400 mr-2"></i>Where to Find Daily Quiz
+            </h3>
+            <div class="grid md:grid-cols-3 gap-4">
+              <div class="bg-gray-800/50 rounded-lg p-4">
+                <p class="text-purple-400 font-semibold text-sm mb-1">From Home Page</p>
+                <p class="text-gray-400 text-sm">Click "Daily Quiz" card on the main dashboard</p>
+              </div>
+              <div class="bg-gray-800/50 rounded-lg p-4">
+                <p class="text-purple-400 font-semibold text-sm mb-1">From Navigation</p>
+                <p class="text-gray-400 text-sm">Games menu > Daily Quiz</p>
+              </div>
+              <div class="bg-gray-800/50 rounded-lg p-4">
+                <p class="text-purple-400 font-semibold text-sm mb-1">Direct Link</p>
+                <p class="text-gray-400 text-sm">/daily-quiz in your browser</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- How To Find Features Guide -->
+      <section class="py-16 bg-gray-900">
+        <div class="max-w-6xl mx-auto px-4">
+          <div class="text-center mb-12">
+            <span
+              class="inline-block bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-sm font-semibold mb-3"
+            >
+              <i class="fas fa-map-signs mr-2"></i>Navigation Guide
+            </span>
+            <h2 class="font-display text-3xl font-bold text-white mb-4">
+              Where to Find Everything
+            </h2>
+            <p class="text-gray-500 max-w-2xl mx-auto">
+              Quick reference for locating all platform features
+            </p>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-6">
+            <!-- For Players -->
+            <div class="glass-card rounded-2xl p-6">
+              <h3 class="text-xl font-bold text-white mb-6 flex items-center">
+                <i class="fas fa-user text-blue-400 mr-3"></i>For Players
+              </h3>
+              <div class="space-y-4">
+                <div class="flex items-start gap-3 p-3 bg-gray-800/50 rounded-lg">
+                  <i class="fas fa-envelope text-pink-400 mt-1"></i>
+                  <div>
+                    <h4 class="text-white font-semibold">Parent Reports</h4>
+                    <p class="text-gray-400 text-sm">
+                      Profile page > scroll down > "Parent Reports" button (purple)
+                    </p>
+                    <p class="text-gray-500 text-xs mt-1">
+                      Add parent emails to receive weekly progress summaries
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3 p-3 bg-gray-800/50 rounded-lg">
+                  <i class="fas fa-user-friends text-green-400 mt-1"></i>
+                  <div>
+                    <h4 class="text-white font-semibold">Friends</h4>
+                    <p class="text-gray-400 text-sm">
+                      Navigation menu > "Friends" or go to /friends
+                    </p>
+                    <p class="text-gray-500 text-xs mt-1">
+                      Discover players, send requests, view friend rankings
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3 p-3 bg-gray-800/50 rounded-lg">
+                  <i class="fas fa-book-reader text-purple-400 mt-1"></i>
+                  <div>
+                    <h4 class="text-white font-semibold">Study Mode</h4>
+                    <p class="text-gray-400 text-sm">Navigation menu > "Study" or go to /study</p>
+                    <p class="text-gray-500 text-xs mt-1">
+                      Browse questions, read Bible verses, join discussions
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3 p-3 bg-gray-800/50 rounded-lg">
+                  <i class="fas fa-trophy text-gold-400 mt-1"></i>
+                  <div>
+                    <h4 class="text-white font-semibold">Leaderboards</h4>
+                    <p class="text-gray-400 text-sm">
+                      Navigation menu > "Leaderboard" or go to /leaderboard
+                    </p>
+                    <p class="text-gray-500 text-xs mt-1">
+                      Global, Church, Within Church, and Friends tabs available
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3 p-3 bg-gray-800/50 rounded-lg">
+                  <i class="fas fa-user-circle text-blue-400 mt-1"></i>
+                  <div>
+                    <h4 class="text-white font-semibold">Your Profile</h4>
+                    <p class="text-gray-400 text-sm">
+                      Click your avatar/name in the top navigation
+                    </p>
+                    <p class="text-gray-500 text-xs mt-1">
+                      View stats, achievements, game history, manage settings
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3 p-3 bg-gray-800/50 rounded-lg">
+                  <i class="fas fa-gamepad text-indigo-400 mt-1"></i>
+                  <div>
+                    <h4 class="text-white font-semibold">All Games</h4>
+                    <p class="text-gray-400 text-sm">Home page or Navigation > "Games"</p>
+                    <p class="text-gray-500 text-xs mt-1">
+                      Quick Quiz, Daily Quiz, Memorization, Fill in Blank, Matching, and more
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- For Church Leaders -->
+            <div class="glass-card rounded-2xl p-6">
+              <h3 class="text-xl font-bold text-white mb-6 flex items-center">
+                <i class="fas fa-church text-gold-400 mr-3"></i>For Church Leaders
+              </h3>
+              <div class="space-y-4">
+                <div class="flex items-start gap-3 p-3 bg-gray-800/50 rounded-lg">
+                  <i class="fas fa-sign-in-alt text-gold-400 mt-1"></i>
+                  <div>
+                    <h4 class="text-white font-semibold">Leader Login</h4>
+                    <p class="text-gray-400 text-sm">Go to /church-leader/login</p>
+                    <p class="text-gray-500 text-xs mt-1">
+                      Use credentials provided by your regional coordinator
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3 p-3 bg-gray-800/50 rounded-lg">
+                  <i class="fas fa-tachometer-alt text-blue-400 mt-1"></i>
+                  <div>
+                    <h4 class="text-white font-semibold">Church Dashboard</h4>
+                    <p class="text-gray-400 text-sm">Automatically shown after leader login</p>
+                    <p class="text-gray-500 text-xs mt-1">
+                      Overview of church activity, top performers, weak areas
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3 p-3 bg-gray-800/50 rounded-lg">
+                  <i class="fas fa-users text-green-400 mt-1"></i>
+                  <div>
+                    <h4 class="text-white font-semibold">Member List</h4>
+                    <p class="text-gray-400 text-sm">Dashboard > "View All Members" button</p>
+                    <p class="text-gray-500 text-xs mt-1">
+                      See all members, their points, accuracy, last activity
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3 p-3 bg-gray-800/50 rounded-lg">
+                  <i class="fas fa-user-chart text-purple-400 mt-1"></i>
+                  <div>
+                    <h4 class="text-white font-semibold">Individual Member Details</h4>
+                    <p class="text-gray-400 text-sm">Member List > Click on any member's name</p>
+                    <p class="text-gray-500 text-xs mt-1">
+                      Detailed performance by chapter, game history, trends
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3 p-3 bg-gray-800/50 rounded-lg">
+                  <i class="fas fa-users-cog text-orange-400 mt-1"></i>
+                  <div>
+                    <h4 class="text-white font-semibold">Team Competition</h4>
+                    <p class="text-gray-400 text-sm">Dashboard > "Teams" tab</p>
+                    <p class="text-gray-500 text-xs mt-1">
+                      Create teams, assign members, view team standings
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3 p-3 bg-gray-800/50 rounded-lg">
+                  <i class="fas fa-download text-cyan-400 mt-1"></i>
+                  <div>
+                    <h4 class="text-white font-semibold">Export Data</h4>
+                    <p class="text-gray-400 text-sm">
+                      Dashboard > "Export CSV" or "Export PDF" buttons
+                    </p>
+                    <p class="text-gray-500 text-xs mt-1">
+                      Download member data for offline use or printing
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3 p-3 bg-gray-800/50 rounded-lg">
+                  <i class="fas fa-certificate text-yellow-400 mt-1"></i>
+                  <div>
+                    <h4 class="text-white font-semibold">Achievement Certificates</h4>
+                    <p class="text-gray-400 text-sm">
+                      Member Details > "Generate Certificate" button
+                    </p>
+                    <p class="text-gray-500 text-xs mt-1">
+                      Create printable certificates for top performers
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Scoring System Explained -->
+      <section class="py-16 bg-gray-950">
+        <div class="max-w-6xl mx-auto px-4">
+          <div class="text-center mb-12">
+            <span
+              class="inline-block bg-gold-500/20 text-gold-400 px-3 py-1 rounded-full text-sm font-semibold mb-3"
+            >
+              <i class="fas fa-star mr-2"></i>Points System
+            </span>
+            <h2 class="font-display text-3xl font-bold text-white mb-4">How Scoring Works</h2>
+            <p class="text-gray-500 max-w-2xl mx-auto">
+              Understand how points are calculated and earn more
+            </p>
+          </div>
+
+          <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <div class="glass-card rounded-2xl p-6 text-center">
+              <div
+                class="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4"
+              >
+                <i class="fas fa-check-circle text-blue-400 text-3xl"></i>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-2">Base Points</h3>
+              <p class="text-gray-400 text-sm mb-4">
+                Earn points for each correct answer based on difficulty
+              </p>
+              <div class="space-y-2 text-left">
+                <div class="flex justify-between text-sm">
+                  <span class="text-green-400">Easy</span>
+                  <span class="text-white font-semibold">Base points</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span class="text-yellow-400">Medium</span>
+                  <span class="text-white font-semibold">More points</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span class="text-red-400">Hard</span>
+                  <span class="text-white font-semibold">Most points</span>
+                </div>
+              </div>
+              <p class="text-gray-500 text-xs mt-3 italic">Harder questions = bigger rewards</p>
+            </div>
+
+            <div class="glass-card rounded-2xl p-6 text-center">
+              <div
+                class="w-16 h-16 bg-orange-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4"
+              >
+                <i class="fas fa-fire-alt text-orange-400 text-3xl"></i>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-2">Streak Multipliers</h3>
+              <p class="text-gray-400 text-sm mb-4">Consecutive correct answers boost your score</p>
+              <div class="space-y-2 text-left">
+                <div class="flex justify-between text-sm">
+                  <span class="text-gray-400">Short streak</span>
+                  <span class="text-white font-semibold">Small boost</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span class="text-gray-400">Medium streak</span>
+                  <span class="text-white font-semibold">Better boost</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span class="text-gray-400">Long streak</span>
+                  <span class="text-white font-semibold">Big multiplier</span>
+                </div>
+              </div>
+              <p class="text-gray-500 text-xs mt-3 italic">Keep answering correctly!</p>
+            </div>
+
+            <div class="glass-card rounded-2xl p-6 text-center">
+              <div
+                class="w-16 h-16 bg-purple-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4"
+              >
+                <i class="fas fa-calendar-check text-purple-400 text-3xl"></i>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-2">Daily Bonuses</h3>
+              <p class="text-gray-400 text-sm mb-4">Play every day to maximize your earnings</p>
+              <div class="space-y-2 text-left">
+                <div class="flex justify-between text-sm">
+                  <span class="text-gray-400">Weekly streak</span>
+                  <span class="text-white font-semibold">Bonus %</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span class="text-gray-400">Monthly streak</span>
+                  <span class="text-white font-semibold">Bigger bonus %</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                  <span class="text-gray-400">Daily Quiz podium</span>
+                  <span class="text-white font-semibold">Extra points</span>
+                </div>
+              </div>
+              <p class="text-gray-500 text-xs mt-3 italic">Consistency is key!</p>
+            </div>
+          </div>
+
+          <div class="glass-card rounded-2xl p-6 border-gold-500/30">
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center">
+              <i class="fas fa-lightbulb text-gold-400 mr-2"></i>Pro Tips to Earn More Points
+            </h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div class="flex items-start gap-3">
+                <i class="fas fa-check text-green-400 mt-1"></i>
+                <p class="text-gray-400 text-sm">
+                  Complete the Daily Quiz every day to maintain your streak
+                </p>
+              </div>
+              <div class="flex items-start gap-3">
+                <i class="fas fa-check text-green-400 mt-1"></i>
+                <p class="text-gray-400 text-sm">
+                  Try harder difficulties once you master easy questions
+                </p>
+              </div>
+              <div class="flex items-start gap-3">
+                <i class="fas fa-check text-green-400 mt-1"></i>
+                <p class="text-gray-400 text-sm">
+                  Use Study Mode to review questions before quizzes
+                </p>
+              </div>
+              <div class="flex items-start gap-3">
+                <i class="fas fa-check text-green-400 mt-1"></i>
+                <p class="text-gray-400 text-sm">
+                  Answer quickly in Daily Quiz - time is a tiebreaker!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA Section -->
+      <section class="py-20 bg-gray-950">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+          <div class="glass-card rounded-3xl p-10 md:p-16 border-gold-500/20">
+            <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-4">
+              Ready to Start?
+            </h2>
+            <p class="text-gray-400 text-lg mb-8 max-w-xl mx-auto">
+              Join thousands of believers growing in their knowledge of God's Word through
+              interactive study and friendly competition.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+              <a
+                href="/app"
+                class="bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-gray-900 font-bold py-4 px-10 rounded-full transition-all shadow-lg hover:shadow-xl text-lg"
+              >
+                <i class="fas fa-play mr-2"></i>Enter Platform
+              </a>
+              <a
+                href="/signup"
+                class="bg-white/10 hover:bg-white/20 text-white font-bold py-4 px-10 rounded-full transition-all border border-white/20 text-lg"
+              >
+                <i class="fas fa-user-plus mr-2"></i>Sign Up
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-950 border-t border-gray-800 text-gray-400 py-8">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-gold-500 rounded-lg flex items-center justify-center">
+              <i class="fas fa-bible text-gray-900 text-sm"></i>
+            </div>
+            <span class="font-display font-bold text-white">TalantulApp</span>
+          </div>
+          <p class="text-sm">© 2026 Talantul în Negoț. All rights reserved.</p>
+          <a
+            href="https://youtu.be/kefuQJKvRXU"
+            target="_blank"
+            class="hover:text-white transition-colors"
+            ><i class="fab fa-youtube text-xl"></i
+          ></a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      document.getElementById('mobile-menu-btn')?.addEventListener('click', function () {
+        document.getElementById('mobile-menu').classList.toggle('hidden');
+      });
+    </script>
+  </body>
+</html>
