@@ -1,14 +1,26 @@
 import { ImageResponse } from 'next/og';
 
+// Next.js only guarantees `id` is forwarded as a prop from generateImageMetadata;
+// `size` is used for HTTP headers / <link> attributes but is not reliably passed
+// to the component. Keep a module-level map and look up by id instead.
+const iconSizes = {
+  sm: { width: 32, height: 32 },
+  md: { width: 192, height: 192 },
+  lg: { width: 512, height: 512 },
+} as const;
+
+type IconId = keyof typeof iconSizes;
+
 export function generateImageMetadata() {
-  return [
-    { contentType: 'image/png', size: { width: 32, height: 32 }, id: 'sm' },
-    { contentType: 'image/png', size: { width: 192, height: 192 }, id: 'md' },
-    { contentType: 'image/png', size: { width: 512, height: 512 }, id: 'lg' },
-  ];
+  return (Object.keys(iconSizes) as IconId[]).map((id) => ({
+    contentType: 'image/png' as const,
+    size: iconSizes[id],
+    id,
+  }));
 }
 
-export default function Icon({ size }: { id: string; size: { width: number; height: number } }) {
+export default function Icon({ id }: { id: string }) {
+  const size = iconSizes[id as IconId] ?? iconSizes.md;
   const svgSize = Math.round(size.width * 0.75);
 
   return new ImageResponse(
