@@ -5,13 +5,13 @@ export function MarketingNav() {
   return (
     <header className="sticky top-0 z-40 border-b border-border/40 bg-background/80 backdrop-blur-sm">
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 md:px-6">
-        <Link href="/" className="text-xl font-bold tracking-tight">
+        <Link href="/" className="inline-flex items-center py-2 text-xl font-bold tracking-tight">
           Memory Palace
         </Link>
         <div className="flex items-center gap-2 md:gap-4">
           <Link
             href="/about"
-            className="hidden text-sm text-muted-foreground transition-colors hover:text-foreground md:block"
+            className="hidden items-center px-2 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground md:inline-flex"
           >
             About
           </Link>

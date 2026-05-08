@@ -39,7 +39,13 @@ export function HowItWorks() {
         <ol className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {STEPS.map(({ number, title, description }) => (
             <li key={number} className="flex flex-col gap-3">
-              <span className="text-5xl font-bold text-primary/20">{number}</span>
+              {/* Step badge — primary text on primary/10 bg meets WCAG 3:1. */}
+              <span
+                aria-hidden="true"
+                className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-xl font-bold text-primary"
+              >
+                {number}
+              </span>
               <h3 className="text-lg font-semibold">{title}</h3>
               <p className="text-sm leading-relaxed text-muted-foreground">{description}</p>
             </li>

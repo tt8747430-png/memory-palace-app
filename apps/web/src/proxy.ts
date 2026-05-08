@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { createSupabaseForProxy } from '@/shared/lib/supabase';
-import { generateNonce, buildCsp } from '@/shared/lib/csp';
+import { buildCsp } from '@/shared/lib/csp';
 
 // Public route segments — matched on segment boundaries, not as substrings.
 // `/login` matches `/login` and `/login/...` but NOT `/loginhacks`.
@@ -36,8 +36,6 @@ function redirectTo(request: NextRequest, source: NextResponse, path: string): N
 }
 
 export async function proxy(request: NextRequest) {
-  const nonce = generateNonce();
-
   const { supabase, getResponse } = createSupabaseForProxy(request);
 
   // Refresh session — must run with no logic between createServerClient and the
@@ -52,7 +50,7 @@ export async function proxy(request: NextRequest) {
   const supabaseResponse = getResponse();
   const { pathname } = request.nextUrl;
   const seg = firstSegment(pathname);
-  const csp = buildCsp(nonce);
+  const csp = buildCsp();
 
   if (!user && !isPublicPath(pathname)) {
     const r = redirectTo(request, supabaseResponse, '/login');
@@ -78,12 +76,7 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // Rebuild the response with nonce-injected request headers so the RSC renderer
-  // can read `x-nonce` via `headers()` and pass it to Script components.
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.set('x-nonce', nonce);
-  const response = NextResponse.next({ request: { headers: requestHeaders } });
-
+  const response = NextResponse.next({ request });
   supabaseResponse.cookies.getAll().forEach((cookie) => response.cookies.set(cookie));
   response.headers.set('Content-Security-Policy', csp);
 
@@ -91,5 +84,11 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'],
+  // Excludes Next.js internals, image assets, and the metadata routes
+  // (robots.txt, sitemap.xml, manifest.webmanifest, opengraph-image, apple-icon,
+  // /icon/*) so they don't get auth-redirected to /login. Lighthouse and crawlers
+  // need these to return their actual content, not the login page HTML.
+  matcher: [
+    '/((?!_next/static|_next/image|favicon\\.ico|robots\\.txt|sitemap\\.xml|llms\\.txt|manifest\\.webmanifest|opengraph-image|apple-icon|icon/.*|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+  ],
 };
