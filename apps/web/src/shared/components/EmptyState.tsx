@@ -8,6 +8,13 @@ interface EmptyStateProps {
   action?: ReactNode;
   className?: string;
   headingLevel?: 2 | 3 | 4;
+  /**
+   * Set to true when the empty state is rendered as the result of a live data
+   * change (e.g. after a refetch returns no rows) and should be announced.
+   * For first-paint empty states, leave undefined — there's nothing to
+   * "announce" since the user hasn't done anything yet.
+   */
+  announce?: boolean;
 }
 
 export function EmptyState({
@@ -17,11 +24,15 @@ export function EmptyState({
   action,
   className,
   headingLevel = 2,
+  announce,
 }: EmptyStateProps) {
   const Heading = `h${headingLevel}` as const;
+  const liveRegionProps = announce
+    ? { role: 'status' as const, 'aria-live': 'polite' as const }
+    : {};
   return (
     <div
-      role="status"
+      {...liveRegionProps}
       className={cn(
         'flex flex-col items-center justify-center gap-1.5 px-4 py-16 text-center',
         className,

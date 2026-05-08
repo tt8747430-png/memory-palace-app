@@ -44,13 +44,18 @@ describe('EmptyState', () => {
     expect(iconWrapper).toHaveAttribute('aria-hidden');
   });
 
-  it('exposes role="status" so live regions announce empty state changes', () => {
+  it('does not expose role="status" by default (avoids spurious announcements on first paint)', () => {
     render(<EmptyState title="Loaded but empty" />);
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+  });
+
+  it('exposes role="status" only when announce is true (post-refetch live update)', () => {
+    render(<EmptyState title="Loaded but empty" announce />);
     expect(screen.getByRole('status')).toBeInTheDocument();
   });
 
   it('merges the consumer className with the base layout classes', () => {
-    render(<EmptyState title="x" className="bg-card" />);
+    render(<EmptyState title="x" className="bg-card" announce />);
     const container = screen.getByRole('status');
     expect(container.className).toMatch(/bg-card/);
     expect(container.className).toMatch(/flex/);
