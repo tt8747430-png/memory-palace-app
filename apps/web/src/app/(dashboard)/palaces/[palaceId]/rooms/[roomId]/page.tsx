@@ -1,7 +1,7 @@
 import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Footprints } from 'lucide-react';
 import { getPalaceById } from '@/features/palaces';
 import { getRoomById } from '@/features/rooms';
 import { getRoomNodes } from '@/features/nodes';
@@ -64,6 +64,14 @@ export default async function RoomPage({ params }: RoomPageProps) {
         <p className="mt-1 text-sm text-muted-foreground">
           Room in <span className="font-medium text-foreground">{palace.title}</span>
         </p>
+        {initialNodes.length > 0 ? (
+          <Link
+            href={`/palaces/${palaceId}/rooms/${roomId}/journey`}
+            className="mt-3 inline-flex items-center gap-1.5 rounded-md border bg-background px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted"
+          >
+            <Footprints className="h-4 w-4" /> Start journey
+          </Link>
+        ) : null}
       </div>
 
       {/* Spatial canvas — error boundary ensures sidebar survives a crash.

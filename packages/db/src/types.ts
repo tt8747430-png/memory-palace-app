@@ -1,5 +1,17 @@
 import type { InferInsertModel, InferSelectModel } from 'drizzle-orm';
-import type { edges, nodeTags, nodeTypeEnum, nodes, palaces, rooms, tags, users } from './schema';
+import type {
+  edges,
+  nodeReviewState,
+  nodeTags,
+  nodeTypeEnum,
+  nodes,
+  palaces,
+  practiceModeEnum,
+  practiceSessions,
+  rooms,
+  tags,
+  users,
+} from './schema';
 
 export type SelectUser = InferSelectModel<typeof users>;
 export type InsertUser = InferInsertModel<typeof users>;
@@ -23,3 +35,11 @@ export type SelectNodeTag = InferSelectModel<typeof nodeTags>;
 export type InsertNodeTag = InferInsertModel<typeof nodeTags>;
 
 export type NodeType = (typeof nodeTypeEnum.enumValues)[number];
+
+export type SelectPracticeSession = InferSelectModel<typeof practiceSessions>;
+export type InsertPracticeSession = InferInsertModel<typeof practiceSessions>;
+
+export type SelectNodeReviewState = InferSelectModel<typeof nodeReviewState>;
+export type InsertNodeReviewState = InferInsertModel<typeof nodeReviewState>;
+
+export type PracticeMode = (typeof practiceModeEnum.enumValues)[number];

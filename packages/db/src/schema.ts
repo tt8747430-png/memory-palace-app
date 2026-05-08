@@ -1,4 +1,5 @@
 import {
+  boolean,
   index,
   integer,
   pgEnum,
@@ -14,6 +15,12 @@ import {
 // ─── Enums ───────────────────────────────────────────────────────────────────
 
 export const nodeTypeEnum = pgEnum('node_type', ['text', 'image', 'link']);
+
+export const practiceModeEnum = pgEnum('practice_mode', [
+  'multiple-choice',
+  'typed-recall',
+  'flashcard',
+]);
 
 // ─── Tables ──────────────────────────────────────────────────────────────────
 
@@ -150,4 +157,65 @@ export const nodeTags = pgTable(
       .references(() => tags.id, { onDelete: 'cascade' }),
   },
   (t) => [primaryKey({ columns: [t.nodeId, t.tagId] }), index('node_tags_tag_id_idx').on(t.tagId)],
+);
+
+/**
+ * Append-only log of practice attempts. One row per question answered.
+ * Drives history/analytics; the SR algorithm itself reads from `nodeReviewState`.
+ */
+export const practiceSessions = pgTable(
+  'practice_sessions',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    nodeId: uuid('node_id')
+      .notNull()
+      .references(() => nodes.id, { onDelete: 'cascade' }),
+    /** 0–100 — caller-clamped on input. */
+    score: integer('score').notNull(),
+    correct: boolean('correct').notNull(),
+    mode: practiceModeEnum('mode').notNull(),
+    practicedAt: timestamp('practiced_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [
+    index('practice_sessions_user_practiced_idx').on(t.userId, t.practicedAt),
+    index('practice_sessions_node_idx').on(t.nodeId),
+  ],
+);
+
+/**
+ * Per-node SM-2 state. One row per (node, user) — but `userId` is denormalised
+ * for fast RLS checks (mirrors the `nodes` table convention).
+ * Lazy-initialised: a row only exists once the user has practiced the node at
+ * least once. `getDueNodes` LEFT JOINs to find never-practiced nodes too.
+ */
+export const nodeReviewState = pgTable(
+  'node_review_state',
+  {
+    nodeId: uuid('node_id')
+      .primaryKey()
+      .references(() => nodes.id, { onDelete: 'cascade' }),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    /** Total practice attempts (sum across modes). */
+    practiceCount: integer('practice_count').notNull().default(0),
+    /** Consecutive correct answers — resets to 0 on any miss. */
+    streak: integer('streak').notNull().default(0),
+    /** Exponentially-weighted mastery 0–100. */
+    mastery: real('mastery').notNull().default(0),
+    /** SM-2 ease factor (default 2.5, floor 1.3). */
+    easeFactor: real('ease_factor').notNull().default(2.5),
+    /** Current interval in days (0 means new). */
+    intervalDays: integer('interval_days').notNull().default(0),
+    lastPracticed: timestamp('last_practiced', { withTimezone: true }),
+    /** Next review date — drives the due queue; never NULL once initialised. */
+    nextReview: timestamp('next_review', { withTimezone: true }),
+  },
+  (t) => [
+    index('node_review_state_user_next_review_idx').on(t.userId, t.nextReview),
+    index('node_review_state_user_idx').on(t.userId),
+  ],
 );

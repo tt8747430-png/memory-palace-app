@@ -53,6 +53,17 @@
   --ring: hsl(220 90% 56%);
 
   --radius: 0.5rem;
+
+  /* Marketing-only accent palette (Slice C / ADR 9C).
+   * These tokens are **opt-in** — only consumed by surfaces under
+   * `app/(marketing)/`. Product surfaces must use `--primary`/`--accent`.
+   * An ESLint guard (`no-restricted-syntax` on `text-gold`/`bg-gold`/…)
+   * enforces this outside the marketing route group. */
+  --gold: hsl(38 60% 58%);
+  --emerald: hsl(160 84% 39%);
+  --rose: hsl(347 91% 61%);
+  --cyan: hsl(189 95% 53%);
+  --amber: hsl(38 92% 50%);
 }
 
 .dark {
@@ -81,6 +92,13 @@
   --warning-foreground: hsl(0 0% 10%);
 
   --card: hsl(240 10% 6%);
+
+  /* Slightly brighter accent values for dark surfaces. */
+  --gold: hsl(38 70% 65%);
+  --emerald: hsl(160 70% 50%);
+  --rose: hsl(347 85% 67%);
+  --cyan: hsl(189 90% 60%);
+  --amber: hsl(38 90% 60%);
   --card-foreground: hsl(0 0% 93%);
 
   --popover: hsl(240 10% 6%);
@@ -114,6 +132,16 @@
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
+  /* Marketing-only accent tokens (see :root comment). */
+  --color-gold: var(--gold);
+  --color-emerald: var(--emerald);
+  --color-rose: var(--rose);
+  --color-cyan: var(--cyan);
+  --color-amber: var(--amber);
+
+  /* Display font for marketing headlines (Slice C). */
+  --font-display:
+    var(--font-space-grotesk), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --color-popover-foreground: var(--popover-foreground);
   --color-surface: var(--surface);
   --color-surface-foreground: var(--surface-foreground);
@@ -150,5 +178,52 @@
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-sans), system-ui, sans-serif;
+  }
+}
+
+/* ----- Marketing-only utilities (Slice C / ADR 9C) ----------------------
+ * These classes are consumed by `app/(marketing)/` surfaces. They live in
+ * globals.css rather than a separate stylesheet so Tailwind's `@source`
+ * scanner finds them in dev and production builds. */
+
+/* IntersectionObserver-driven reveal. The element starts off-screen-faded;
+ * `useReveal()` flips `data-revealed="true"` once it enters the viewport.
+ * Reduced-motion users see the final state immediately. */
+.reveal-up {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 600ms ease-out,
+    transform 600ms ease-out;
+}
+.reveal-up[data-revealed='true'] {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal-up {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Ambient floating orbs — pure CSS, no JavaScript. Hidden for users with
+ * `prefers-reduced-motion`. */
+@keyframes ambient-orb-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -24px, 0);
+  }
+}
+.ambient-orb {
+  animation: ambient-orb-float 14s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ambient-orb {
+    animation: none;
   }
 }

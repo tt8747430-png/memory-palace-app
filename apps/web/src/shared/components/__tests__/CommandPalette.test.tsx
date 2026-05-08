@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { CommandPaletteProvider, useCommandPalette } from '../CommandPaletteContext';
 import { ShortcutsOverlayProvider } from '../ShortcutsOverlayContext';
+import { AppDialogProvider } from '../AppDialogContext';
 import { CommandPalette } from '../CommandPalette';
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
@@ -24,7 +25,9 @@ vi.mock('@/shared/lib/signOut', () => ({
 function Wrapper({ children }: { children: React.ReactNode }) {
   return (
     <ShortcutsOverlayProvider>
-      <CommandPaletteProvider>{children}</CommandPaletteProvider>
+      <AppDialogProvider>
+        <CommandPaletteProvider>{children}</CommandPaletteProvider>
+      </AppDialogProvider>
     </ShortcutsOverlayProvider>
   );
 }

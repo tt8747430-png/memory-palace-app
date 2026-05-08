@@ -1,6 +1,8 @@
 import { Suspense } from 'react';
 import { WelcomeBanner, StatsBar, RecentPalaces } from '@/features/dashboard';
+import { DailyReviewCta, StreakCounter } from '@/features/practice';
 import { Skeleton } from '@memory-palace/ui';
+import { StatisticsPanelSection } from './_components/StatisticsPanelSection';
 
 export const metadata = {
   title: 'Home',
@@ -10,8 +12,17 @@ export const metadata = {
 export default function DashboardPage() {
   return (
     <div className="space-y-8">
-      <Suspense fallback={<Skeleton className="h-12 w-64" />}>
-        <WelcomeBanner />
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <Suspense fallback={<Skeleton className="h-12 w-64" />}>
+          <WelcomeBanner />
+        </Suspense>
+        <Suspense fallback={<Skeleton className="h-7 w-24 rounded-full" />}>
+          <StreakCounter />
+        </Suspense>
+      </div>
+
+      <Suspense fallback={<Skeleton className="h-24 rounded-lg" />}>
+        <DailyReviewCta />
       </Suspense>
 
       <Suspense
@@ -36,6 +47,10 @@ export default function DashboardPage() {
         }
       >
         <RecentPalaces />
+      </Suspense>
+
+      <Suspense fallback={<Skeleton className="h-64 rounded-xl" />}>
+        <StatisticsPanelSection />
       </Suspense>
     </div>
   );

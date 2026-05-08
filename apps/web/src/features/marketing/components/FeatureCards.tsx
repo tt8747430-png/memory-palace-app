@@ -1,29 +1,64 @@
-import { Card, CardHeader, CardTitle, CardDescription } from '@memory-palace/ui';
+import {
+  BookOpen,
+  Brain,
+  Gamepad2,
+  Sparkles,
+  Trophy,
+  TrendingUp,
+  type LucideIcon,
+} from 'lucide-react';
+import { Reveal } from '@/shared/components/Reveal';
 
-const FEATURES = [
+interface Feature {
+  Icon: LucideIcon;
+  title: string;
+  description: string;
+  /** Tailwind gradient classes for the header strip — accent palette. */
+  gradient: string;
+}
+
+const FEATURES: ReadonlyArray<Feature> = [
   {
-    icon: '🏛️',
+    Icon: BookOpen,
+    title: 'Study & Quiz',
+    description:
+      'Multiple-choice, typed recall, and flashcards adapt to what you actually struggle with.',
+    gradient: 'from-gold to-amber',
+  },
+  {
+    Icon: Brain,
+    title: 'Memorization Tools',
+    description:
+      'Spaced repetition powered by SM-2 picks the right node at the right time, every time.',
+    gradient: 'from-emerald to-cyan',
+  },
+  {
+    Icon: Gamepad2,
     title: 'Spatial Canvas',
     description:
-      'Drag and connect memory nodes on an infinite canvas. See your knowledge as a map, not a list.',
+      'Drag, connect, and arrange knowledge on an infinite canvas — your palace, your rules.',
+    gradient: 'from-cyan to-primary',
   },
   {
-    icon: '📅',
-    title: 'Daily Review',
+    Icon: Trophy,
+    title: 'Daily Streaks',
     description:
-      'A 5-minute session of 10 random nodes keeps your memory sharp without overwhelming you.',
+      'Build momentum with a single 5-minute review session — streaks that mean something.',
+    gradient: 'from-rose to-gold',
   },
   {
-    icon: '🎮',
-    title: 'Memory Games',
+    Icon: TrendingUp,
+    title: 'Track Progress',
     description:
-      'Matching, fill-in-the-blank, flashcards — five game modes to make practice actually fun.',
+      'A statistics dashboard shows your weakest nodes, weekly activity, and recent attempts.',
+    gradient: 'from-amber to-rose',
   },
   {
-    icon: '📈',
-    title: 'Progress Tracking',
+    Icon: Sparkles,
+    title: 'Rich Content',
     description:
-      'Streaks, badges, and spaced repetition scores show you exactly what needs attention.',
+      'Plain text today, attachments and rich formatting on the way — your palace stays portable.',
+    gradient: 'from-primary to-emerald',
   },
 ];
 
@@ -31,29 +66,31 @@ export function FeatureCards() {
   return (
     <section className="py-20 md:py-28">
       <div className="mx-auto max-w-6xl px-4 md:px-6">
-        <div className="mb-12 text-center">
-          <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+        <Reveal className="mb-12 text-center">
+          <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
             Everything you need to remember
           </h2>
           <p className="mt-3 text-muted-foreground">
             Built around how human memory actually works.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {FEATURES.map(({ icon, title, description }) => (
-            <Card
-              key={title}
-              className="border-border/60 bg-muted/20 transition-colors hover:bg-muted/40"
-            >
-              <CardHeader>
-                <div className="mb-3 text-4xl" role="img" aria-label={title}>
-                  {icon}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {FEATURES.map(({ Icon, title, description, gradient }, i) => (
+            <Reveal key={title} delayMs={i * 80}>
+              <article className="group h-full overflow-hidden rounded-xl border border-border/60 bg-card/70 backdrop-blur-md transition-colors hover:bg-card">
+                <div aria-hidden="true" className={`h-1.5 w-full bg-gradient-to-r ${gradient}`} />
+                <div className="p-6">
+                  <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-muted/50 text-foreground transition-colors group-hover:bg-muted">
+                    <Icon className="h-6 w-6" aria-hidden="true" />
+                  </div>
+                  <h3 className="font-display text-lg font-semibold tracking-tight">{title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {description}
+                  </p>
                 </div>
-                <CardTitle className="text-lg">{title}</CardTitle>
-                <CardDescription>{description}</CardDescription>
-              </CardHeader>
-            </Card>
+              </article>
+            </Reveal>
           ))}
         </div>
       </div>

@@ -61,7 +61,17 @@ async function main() {
   console.log('✅ Backfilled existing auth users');
 
   // ── 2. Enable RLS on all tables ────────────────────────────────────────────
-  for (const table of ['users', 'palaces', 'rooms', 'nodes', 'edges', 'tags', 'node_tags']) {
+  for (const table of [
+    'users',
+    'palaces',
+    'rooms',
+    'nodes',
+    'edges',
+    'tags',
+    'node_tags',
+    'practice_sessions',
+    'node_review_state',
+  ]) {
     await sql`ALTER TABLE ${sql(table)} ENABLE ROW LEVEL SECURITY`;
   }
   console.log('✅ RLS enabled on all tables');
@@ -147,7 +157,24 @@ async function main() {
   `;
   console.log('✅ node_tags policies');
 
-  console.log('\n✅ All Phase 3B RLS policies applied successfully.');
+  // ── 10. practice_sessions policies (Phase 9A) ─────────────────────────────
+  // Denormalised user_id — O(1) check, mirrors the nodes pattern.
+  await drop('practice_sessions', 'practice_sessions_all_own');
+  await sql`
+    CREATE POLICY practice_sessions_all_own ON practice_sessions
+      FOR ALL USING (auth.uid() = user_id)
+  `;
+  console.log('✅ practice_sessions policies');
+
+  // ── 11. node_review_state policies (Phase 9A) ─────────────────────────────
+  await drop('node_review_state', 'node_review_state_all_own');
+  await sql`
+    CREATE POLICY node_review_state_all_own ON node_review_state
+      FOR ALL USING (auth.uid() = user_id)
+  `;
+  console.log('✅ node_review_state policies');
+
+  console.log('\n✅ All RLS policies applied successfully.');
 }
 
 main()

@@ -1,10 +1,11 @@
 import type { Metadata, Viewport } from 'next';
 import { headers } from 'next/headers';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Geist, Geist_Mono, Space_Grotesk } from 'next/font/google';
 import { MotionProvider } from '@/shared/components/MotionProvider';
 import { ThemeProvider } from '@/shared/components/ThemeProvider';
 import { SkipToContent } from '@/shared/components/SkipToContent';
 import { PostHogProvider } from '@/shared/components/PostHogProvider';
+import { Toaster } from '@/shared/components/Toaster';
 import { siteUrl } from '@/shared/lib/env';
 import './globals.css';
 
@@ -18,6 +19,17 @@ const geistSans = Geist({
 // console warning and saves the round-trip on the critical path.
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
+  subsets: ['latin'],
+  display: 'swap',
+  preload: false,
+});
+
+// Space Grotesk powers the marketing display headlines — exposed via
+// `--font-space-grotesk` and consumed by the `--font-display` token in
+// globals.css. Loaded once at the root so dashboard and marketing share the
+// same network round-trip when the user crosses surfaces.
+const spaceGrotesk = Space_Grotesk({
+  variable: '--font-space-grotesk',
   subsets: ['latin'],
   display: 'swap',
   preload: false,
@@ -71,7 +83,9 @@ async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>)
   const nonce = (await headers()).get('x-nonce') ?? '';
   return (
     <html lang="en" suppressHydrationWarning nonce={nonce}>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} antialiased`}
+      >
         <SkipToContent />
         <ThemeProvider
           attribute="class"
@@ -82,6 +96,7 @@ async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>)
           <PostHogProvider>
             <MotionProvider>{children}</MotionProvider>
           </PostHogProvider>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

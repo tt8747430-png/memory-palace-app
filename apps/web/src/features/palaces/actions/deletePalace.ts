@@ -3,13 +3,20 @@
 import { revalidatePath } from 'next/cache';
 import { getDb, palaces, and, eq, isNull } from '@memory-palace/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
+import { signUndoToken } from '@/shared/lib/undoToken';
 import { palaceIdSchema } from '../schemas/palace';
+
+export type DeletePalaceResult = {
+  id: string;
+  /** HMAC-signed token; pass to `restorePalace` within 30s to undo. */
+  undoToken: string;
+};
 
 export const deletePalace = defineAction({
   name: 'deletePalace',
   schema: palaceIdSchema,
   rateLimit: 'write',
-  handler: async ({ user, input }) => {
+  handler: async ({ user, input }): Promise<DeletePalaceResult> => {
     const [deleted] = await getDb()
       .update(palaces)
       .set({ deletedAt: new Date() })
@@ -18,6 +25,9 @@ export const deletePalace = defineAction({
     if (!deleted) throw new ActionError('NOT_FOUND', 'Palace not found.');
     revalidatePath('/palaces');
     revalidatePath('/');
-    return { id: deleted.id };
+    return {
+      id: deleted.id,
+      undoToken: signUndoToken({ kind: 'palace.delete', id: deleted.id, userId: user.id }),
+    };
   },
 });

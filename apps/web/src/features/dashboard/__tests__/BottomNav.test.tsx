@@ -4,7 +4,7 @@ import { BottomNav } from '../components/BottomNav';
 import { navItems } from '../nav';
 
 vi.mock('next/navigation', () => ({
-  usePathname: vi.fn(() => '/'),
+  usePathname: vi.fn(() => '/dashboard'),
 }));
 
 describe('BottomNav', () => {

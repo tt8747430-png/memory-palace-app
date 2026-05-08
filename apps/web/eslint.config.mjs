@@ -34,6 +34,37 @@ const eslintConfig = defineConfig([
       'jsx-a11y/no-static-element-interactions': 'warn',
     },
   },
+  // Slice C / ADR 9C — accent palette tokens (gold/emerald/rose/cyan/amber)
+  // are opt-in for marketing surfaces only. Product code must use the
+  // semantic tokens (`primary`, `accent`, `success`, `warning`, …).
+  {
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: [
+      'src/app/(marketing)/**',
+      'src/features/marketing/**',
+      // The `_brand-icon` and OG image generators legitimately use brand
+      // gradients on the marketing-adjacent assets shipped from `app/`.
+      'src/app/_brand-icon.tsx',
+      'src/app/opengraph-image.tsx',
+      'src/app/icon.tsx',
+      'src/app/apple-icon.tsx',
+    ],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          // Match `text-gold` / `bg-emerald/20` / `from-rose` etc. — but
+          // explicitly NOT Tailwind's numeric scale (`emerald-500`,
+          // `rose-400`). Negative lookahead `(?!-)` rejects the dash that
+          // would precede a Tailwind shade number.
+          selector:
+            'Literal[value=/\\b(?:text|bg|border|from|to|via|ring|fill|stroke)-(?:gold|emerald|rose|cyan|amber)(?!-)(?:\\/[0-9]+)?\\b/]',
+          message:
+            'Accent palette tokens (gold/emerald/rose/cyan/amber) are marketing-only — use semantic tokens (primary/accent/success/warning) instead. See ADR 9C.',
+        },
+      ],
+    },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts']),
 ]);

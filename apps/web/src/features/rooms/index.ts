@@ -9,3 +9,4 @@ export { RoomCard } from './components/RoomCard';
 export { CreateRoomDialog } from './components/CreateRoomDialog';
 export { EditRoomDialog } from './components/EditRoomDialog';
 export { DeleteRoomButton } from './components/DeleteRoomButton';
+export { RoomJourney } from './components/RoomJourney';

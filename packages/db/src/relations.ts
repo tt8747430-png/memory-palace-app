@@ -1,10 +1,22 @@
 import { relations } from 'drizzle-orm';
-import { edges, nodeTags, nodes, palaces, rooms, tags, users } from './schema';
+import {
+  edges,
+  nodeReviewState,
+  nodeTags,
+  nodes,
+  palaces,
+  practiceSessions,
+  rooms,
+  tags,
+  users,
+} from './schema';
 
 export const usersRelations = relations(users, ({ many }) => ({
   palaces: many(palaces),
   nodes: many(nodes),
   tags: many(tags),
+  practiceSessions: many(practiceSessions),
+  nodeReviewStates: many(nodeReviewState),
 }));
 
 export const palacesRelations = relations(palaces, ({ one, many }) => ({
@@ -23,6 +35,21 @@ export const nodesRelations = relations(nodes, ({ one, many }) => ({
   outgoingEdges: many(edges, { relationName: 'source' }),
   incomingEdges: many(edges, { relationName: 'target' }),
   nodeTags: many(nodeTags),
+  practiceSessions: many(practiceSessions),
+  reviewState: one(nodeReviewState, {
+    fields: [nodes.id],
+    references: [nodeReviewState.nodeId],
+  }),
+}));
+
+export const practiceSessionsRelations = relations(practiceSessions, ({ one }) => ({
+  user: one(users, { fields: [practiceSessions.userId], references: [users.id] }),
+  node: one(nodes, { fields: [practiceSessions.nodeId], references: [nodes.id] }),
+}));
+
+export const nodeReviewStateRelations = relations(nodeReviewState, ({ one }) => ({
+  user: one(users, { fields: [nodeReviewState.userId], references: [users.id] }),
+  node: one(nodes, { fields: [nodeReviewState.nodeId], references: [nodes.id] }),
 }));
 
 export const edgesRelations = relations(edges, ({ one }) => ({

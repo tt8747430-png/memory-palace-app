@@ -19,7 +19,7 @@ export function LandingHero() {
           Open Beta — Free to Use
         </div>
 
-        <h1 className="text-4xl font-bold leading-tight tracking-tight md:text-6xl lg:text-7xl">
+        <h1 className="font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl lg:text-7xl">
           Build Your
           <br />
           <span className="bg-linear-to-r from-primary to-primary/60 bg-clip-text text-transparent">
