@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { DashboardShell } from '@/features/dashboard';
 import { searchNodes } from '@/features/nodes';
 import { getUserProfile } from '@/shared/lib/userProfile';
