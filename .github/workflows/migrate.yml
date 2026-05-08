@@ -31,7 +31,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run migrations
-        run: pnpm --filter @memory-palace/db drizzle-kit migrate
+        run: pnpm --filter @memory-palace/db exec drizzle-kit migrate
         env:
           # Use the DIRECT connection (not pooled) for migrations — Supavisor
           # does not support DDL statements over the pooled connection.

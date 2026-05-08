@@ -57,8 +57,11 @@ export const setRoomOrder = defineAction({
     }
 
     await db.transaction(async (tx) => {
+      // Drizzle binds tagged-template parameters as text by default; without
+      // an ::int cast Postgres rejects assigning the CASE result to the
+      // integer `position` column ("expression is of type text").
       const cases = input.orderedIds
-        .map((id, i) => sql`WHEN ${rooms.id} = ${id} THEN ${i}`)
+        .map((id, i) => sql`WHEN ${rooms.id} = ${id} THEN ${i}::int`)
         .reduce((acc, frag) => sql`${acc} ${frag}`, sql``);
       await tx
         .update(rooms)
