@@ -2,15 +2,17 @@
  * Cinematic background.
  *
  * Two modes:
- *   - **default** — deep-navy base + slow aurora sweep + drifting nebula
- *     blobs + static starfield + radial vignette. Used by surfaces with no
- *     looping video (auth shell, about, join).
+ *   - **default** — deep-navy base + canvas starfield + slow aurora sweep
+ *     + drifting nebula blobs + static CSS stars + radial vignette. Used
+ *     by surfaces with no looping video (auth shell, about, join).
  *   - **videoOnly** — fullscreen looping `<video>` over the navy base, no
  *     CSS layers. Per the cinematic spec the video provides all visual
  *     depth, so no orbs/aurora/vignette layers are stacked on top.
  *
  * Both modes render `pointer-events: none` and `aria-hidden`.
  */
+import { Starfield } from './Starfield';
+
 type CinematicBackgroundProps = {
   /** Optional fullscreen looping video URL. */
   videoSrc?: string;

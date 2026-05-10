@@ -4,6 +4,7 @@ import {
   CinematicHero,
   Capabilities,
   Features,
+  PalacePreviewRow,
   CinematicFooter,
 } from '@/features/marketing';
 
@@ -27,6 +28,7 @@ export default function LandingPage() {
       <div className="relative z-10 flex flex-col">
         <CinematicHero />
         <Capabilities />
+        <PalacePreviewRow />
         <Features />
         <CinematicFooter />
       </div>

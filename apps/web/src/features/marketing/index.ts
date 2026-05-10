@@ -7,3 +7,4 @@ export { CinematicFooter } from './components/CinematicFooter';
 export { AuthShell, type AuthStep } from './components/AuthShell';
 export { Capabilities } from './components/Capabilities';
 export { Features } from './components/Features';
+export { PalacePreviewRow } from './components/PalacePreviewRow';
