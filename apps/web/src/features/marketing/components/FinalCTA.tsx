@@ -9,9 +9,9 @@ import { GradientText } from '@/shared/components/GradientText';
  */
 export function FinalCTA() {
   return (
-    <section className="relative w-full px-6 py-28 md:px-10 lg:px-14">
+    <section className="relative w-full px-4 py-20 sm:px-6 md:px-10 md:py-28 lg:px-14">
       <div className="mx-auto flex max-w-5xl flex-col items-center text-center">
-        <h2 className="font-heading max-w-4xl text-5xl font-normal leading-[0.95] tracking-[-1.8px] text-foreground md:text-7xl">
+        <h2 className="font-heading max-w-4xl text-4xl font-normal leading-[0.95] tracking-[-1.2px] text-foreground sm:text-5xl md:text-7xl md:tracking-[-1.8px]">
           <BlurText text="Build your first " perWordDelay={60} />
           <em className="not-italic">
             <GradientText className="italic">palace</GradientText>

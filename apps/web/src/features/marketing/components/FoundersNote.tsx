@@ -7,7 +7,7 @@ import { SectionEyebrow } from './SectionEyebrow';
  */
 export function FoundersNote() {
   return (
-    <section className="relative w-full px-6 py-24 md:px-10 lg:px-14">
+    <section className="relative w-full px-4 py-16 sm:px-6 md:px-10 md:py-24 lg:px-14">
       <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
         <SectionEyebrow>Founders&apos; note</SectionEyebrow>
         <blockquote className="mt-6 font-heading text-2xl font-normal italic leading-[1.25] tracking-tight text-foreground md:text-4xl lg:text-[2.6rem]">

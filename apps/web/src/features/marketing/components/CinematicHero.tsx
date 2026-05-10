@@ -25,8 +25,8 @@ export function CinematicHero() {
   return (
     <section className="relative flex min-h-dvh flex-col text-foreground">
       <div className="relative z-10 flex flex-1 flex-col">
-        <div className="flex flex-1 flex-col items-center justify-center px-6 pt-20 pb-16 text-center">
-          <h1 className="font-heading max-w-7xl text-5xl font-normal leading-[0.95] tracking-[-2.46px] text-foreground sm:text-7xl md:text-8xl">
+        <div className="flex flex-1 flex-col items-center justify-center px-4 pt-20 pb-16 text-center sm:px-6">
+          <h1 className="font-heading max-w-7xl text-[2.6rem] font-normal leading-[0.95] tracking-[-1.4px] text-foreground sm:text-7xl sm:tracking-[-2.46px] md:text-8xl">
             <BlurText text="Remember" perWordDelay={60} startDelay={0.05} />{' '}
             <em className="not-italic">
               <GradientText className="italic">everything</GradientText>

@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
   return (
-    <div className="relative min-h-dvh overflow-hidden bg-cinematic text-foreground">
+    <div className="relative min-h-dvh bg-cinematic text-foreground">
       <CinematicBackground />
       <div className="relative z-10 flex flex-col">
         <CinematicNav />

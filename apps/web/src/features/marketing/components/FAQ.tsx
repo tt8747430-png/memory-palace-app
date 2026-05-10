@@ -51,7 +51,7 @@ export function FAQ() {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="relative w-full px-6 py-20 md:px-10 lg:px-14">
+    <section id="faq" className="relative w-full px-4 py-14 sm:px-6 md:px-10 md:py-20 lg:px-14">
       <div className="mx-auto max-w-3xl">
         <header className="mb-12 text-center">
           <SectionEyebrow className="inline-block">FAQ</SectionEyebrow>
@@ -70,7 +70,7 @@ export function FAQ() {
               <div
                 key={item.q}
                 className={cn(
-                  'liquid-glass overflow-hidden rounded-2xl border border-foreground/10',
+                  'liquid-glass overflow-hidden rounded-2xl border border-foreground/15',
                 )}
               >
                 <button

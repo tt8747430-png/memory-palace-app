@@ -28,7 +28,7 @@ const themPoints = [
 
 export function Comparison() {
   return (
-    <section id="compare" className="relative w-full px-6 py-20 md:px-10 lg:px-14">
+    <section id="compare" className="relative w-full px-4 py-14 sm:px-6 md:px-10 md:py-20 lg:px-14">
       <div className="mx-auto max-w-6xl">
         <header className="mb-12 max-w-2xl">
           <SectionEyebrow>Comparison</SectionEyebrow>
@@ -41,7 +41,7 @@ export function Comparison() {
         </header>
 
         <div className="grid gap-5 md:grid-cols-2">
-          <article className="liquid-glass-strong rounded-3xl p-8">
+          <article className="liquid-glass-raised rounded-3xl border border-emerald/25 p-6 md:p-8">
             <h3 className="font-heading text-2xl tracking-tight text-foreground">Memory Palace</h3>
             <p className="font-body mt-2 text-sm text-muted-foreground">
               The Method of Loci, evolved for a screen.
@@ -58,7 +58,7 @@ export function Comparison() {
             </ul>
           </article>
 
-          <article className="liquid-glass rounded-3xl p-8 opacity-90">
+          <article className="liquid-glass rounded-3xl border border-foreground/15 p-6 opacity-90 md:p-8">
             <h3 className="font-heading text-2xl tracking-tight text-muted-foreground">Others</h3>
             <p className="font-body mt-2 text-sm text-muted-foreground/80">
               Generic flashcards and quiz apps.

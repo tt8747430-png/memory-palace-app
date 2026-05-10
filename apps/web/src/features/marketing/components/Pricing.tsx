@@ -82,7 +82,7 @@ export function Pricing() {
   const [yearly, setYearly] = useState(true);
 
   return (
-    <section id="pricing" className="relative w-full px-6 py-20 md:px-10 lg:px-14">
+    <section id="pricing" className="relative w-full px-4 py-14 sm:px-6 md:px-10 md:py-20 lg:px-14">
       <div className="mx-auto max-w-6xl">
         <header className="mb-10 max-w-2xl">
           <SectionEyebrow>Pricing &amp; plans</SectionEyebrow>
@@ -138,10 +138,10 @@ export function Pricing() {
               <article
                 key={plan.id}
                 className={cn(
-                  'flex flex-col rounded-3xl p-8',
+                  'flex flex-col rounded-3xl p-6 md:p-8',
                   plan.highlighted
-                    ? 'liquid-glass-strong border border-gold/40 shadow-[0_8px_40px_rgba(0,0,0,0.35)]'
-                    : 'liquid-glass border border-foreground/10',
+                    ? 'liquid-glass-raised border border-gold/40'
+                    : 'liquid-glass border border-foreground/15',
                 )}
               >
                 <header className="mb-6">

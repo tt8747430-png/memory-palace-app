@@ -51,7 +51,7 @@ const quotes: Quote[] = [
 
 export function WallOfLove() {
   return (
-    <section className="relative w-full px-6 py-20 md:px-10 lg:px-14">
+    <section className="relative w-full px-4 py-14 sm:px-6 md:px-10 md:py-20 lg:px-14">
       <div className="mx-auto max-w-6xl">
         <header className="mb-12 max-w-2xl">
           <SectionEyebrow>Wall of love</SectionEyebrow>
@@ -67,7 +67,7 @@ export function WallOfLove() {
           {quotes.map((q) => (
             <article
               key={q.author}
-              className="liquid-glass flex flex-col gap-4 rounded-2xl border border-foreground/10 p-6"
+              className="liquid-glass flex flex-col gap-4 rounded-2xl border border-foreground/15 p-6"
             >
               <div className="flex items-center gap-1">
                 {Array.from({ length: 5 }).map((_, i) => (
