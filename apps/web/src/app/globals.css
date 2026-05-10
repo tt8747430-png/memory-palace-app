@@ -293,6 +293,45 @@
   }
 }
 
+/* Animated gradient-fill text (marketing only). Pans a multi-stop
+ * gradient across an inline-block span clipped to glyphs. The gradient
+ * uses our marketing accent palette so it stays on-brand. Reduced-motion
+ * users see a static gradient. */
+@keyframes gradient-text-pan {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+.gradient-text {
+  background-image: linear-gradient(
+    90deg,
+    var(--gold),
+    var(--emerald),
+    var(--cyan),
+    var(--emerald),
+    var(--gold)
+  );
+  background-size: 300% 100%;
+  background-position: 0% 50%;
+  animation: gradient-text-pan 6s ease-in-out infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Italic display text often clips on the right edge — give it room. */
+  padding-right: 0.05em;
+}
+@media (prefers-reduced-motion: reduce) {
+  .gradient-text {
+    animation: none;
+  }
+}
+
 .liquid-glass {
   background: rgba(255, 255, 255, 0.01);
   background-blend-mode: luminosity;

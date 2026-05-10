@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { BlurText } from '@/shared/components/BlurText';
 
 function MapIcon({ className }: { className?: string }) {
   return (
@@ -64,9 +65,9 @@ export function Capabilities() {
             The method
           </p>
           <h2 className="font-heading text-5xl font-normal leading-[0.95] tracking-[-2.46px] text-foreground sm:text-6xl md:text-7xl lg:text-8xl">
-            <em className="not-italic text-muted-foreground">Method of Loci,</em>
+            <BlurText text="Method of Loci," perWordDelay={70} className="text-muted-foreground" />
             <br />
-            evolved.
+            <BlurText text="evolved." perWordDelay={70} startDelay={0.25} />
           </h2>
           <p className="mt-8 max-w-2xl font-body text-base leading-relaxed text-muted-foreground sm:text-lg">
             Three primitives, one continuous loop. Build the palace, link what you know, and let

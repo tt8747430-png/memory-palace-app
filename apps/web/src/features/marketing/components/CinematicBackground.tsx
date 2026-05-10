@@ -44,6 +44,7 @@ export function CinematicBackground({
       ) : null}
       {videoOnly ? null : (
         <>
+          <Starfield className="pointer-events-none absolute inset-0 h-full w-full opacity-40" />
           <div className="cinematic-aurora" />
           <div className="cinematic-nebula" />
           <div className="cinematic-stars" />

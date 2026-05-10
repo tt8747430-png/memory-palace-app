@@ -19,6 +19,7 @@ import {
   Wand2,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { BlurText } from '@/shared/components/BlurText';
 
 /**
  * Landing bento grid.
@@ -211,7 +212,7 @@ export function Features() {
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div className="max-w-3xl">
             <h2 className="font-heading text-[28px] font-normal leading-[1.15] tracking-tight text-foreground sm:text-3xl md:text-4xl lg:text-[44px]">
-              Hi — Memory Palace, in three glances.
+              <BlurText text="Hi — Memory Palace, in three glances." perWordDelay={55} />
             </h2>
             <p className="mt-4 max-w-3xl font-body text-sm leading-[1.6] text-muted-foreground md:text-[15px]">
               A spatial knowledge tool with a thousand-year pedigree. Build palaces, place ideas in
