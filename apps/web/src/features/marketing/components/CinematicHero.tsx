@@ -47,7 +47,7 @@ export function CinematicHero() {
 
           <Link
             href="/signup"
-            className="animate-fade-rise-delay-2 liquid-glass mt-12 cursor-pointer rounded-full px-14 py-5 font-body text-base text-foreground transition-transform hover:scale-[1.03]"
+            className="animate-fade-rise-delay-2 liquid-glass mt-12 cursor-pointer rounded-full px-14 py-5 font-body text-base text-foreground shadow-[0_4px_14px_rgba(0,0,0,0.2)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-foreground/10 hover:shadow-[0_10px_28px_rgba(0,0,0,0.4)] active:translate-y-0 active:scale-[0.98]"
           >
             Begin Journey
           </Link>
@@ -57,7 +57,7 @@ export function CinematicHero() {
             {stats.map(({ icon: Icon, value, label }) => (
               <div
                 key={label}
-                className="liquid-glass flex flex-col items-start gap-4 rounded-2xl p-5 text-left"
+                className="liquid-glass flex flex-col items-start gap-4 rounded-2xl p-5 text-left transition-all duration-500 ease-out hover:-translate-y-1 hover:bg-foreground/[0.06]"
               >
                 <Icon className="h-5 w-5 text-foreground" strokeWidth={1.5} aria-hidden="true" />
                 <div className="font-heading text-4xl font-normal leading-none tracking-[-1px] text-foreground">

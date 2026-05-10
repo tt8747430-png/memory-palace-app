@@ -67,7 +67,7 @@ export function WallOfLove() {
           {quotes.map((q) => (
             <article
               key={q.author}
-              className="liquid-glass flex flex-col gap-4 rounded-2xl border border-foreground/15 p-6"
+              className="liquid-glass flex flex-col gap-4 rounded-2xl border border-foreground/15 p-6 transition-all duration-500 ease-out hover:-translate-y-1 hover:border-foreground/25 hover:shadow-[0_12px_30px_rgba(0,0,0,0.3)]"
             >
               <div className="flex items-center gap-1">
                 {Array.from({ length: 5 }).map((_, i) => (

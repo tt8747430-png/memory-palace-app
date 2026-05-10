@@ -138,7 +138,7 @@ export function Pricing() {
               <article
                 key={plan.id}
                 className={cn(
-                  'flex flex-col rounded-3xl p-6 md:p-8',
+                  'flex flex-col rounded-3xl p-6 transition-transform duration-500 ease-out hover:-translate-y-1 md:p-8',
                   plan.highlighted
                     ? 'liquid-glass-raised border border-gold/40'
                     : 'liquid-glass border border-foreground/15',
@@ -176,8 +176,10 @@ export function Pricing() {
                 <Link
                   href={plan.href}
                   className={cn(
-                    'rounded-full px-5 py-3 text-center font-body text-sm transition-transform hover:scale-[1.02]',
-                    plan.highlighted ? 'bg-gold text-background' : 'bg-foreground text-background',
+                    'rounded-full px-5 py-3 text-center font-body text-sm transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]',
+                    plan.highlighted
+                      ? 'bg-gold text-background shadow-[0_4px_14px_rgba(255,200,80,0.25)] hover:shadow-[0_10px_24px_rgba(255,200,80,0.4)]'
+                      : 'bg-foreground text-background shadow-[0_4px_12px_rgba(0,0,0,0.2)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.35)]',
                   )}
                 >
                   {plan.cta}

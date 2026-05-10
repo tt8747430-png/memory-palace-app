@@ -77,14 +77,21 @@ export function FAQ() {
                   type="button"
                   onClick={() => setOpenIdx(isOpen ? null : i)}
                   aria-expanded={isOpen ? 'true' : 'false'}
-                  className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left"
+                  className="group/faq flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors hover:bg-foreground/[0.03]"
                 >
-                  <span className="font-heading text-lg tracking-tight text-foreground md:text-xl">
+                  <span className="font-heading text-lg tracking-tight text-foreground transition-colors group-hover/faq:text-foreground md:text-xl">
                     {item.q}
                   </span>
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-foreground/10 text-foreground">
+                  <m.span
+                    animate={{ rotate: isOpen ? 180 : 0, scale: isOpen ? 1.1 : 1 }}
+                    transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+                    className={cn(
+                      'flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-colors',
+                      isOpen ? 'bg-foreground text-background' : 'bg-foreground/10 text-foreground',
+                    )}
+                  >
                     {isOpen ? <Minus className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
-                  </span>
+                  </m.span>
                 </button>
                 <m.div
                   initial={false}

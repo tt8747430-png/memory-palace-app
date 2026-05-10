@@ -180,10 +180,26 @@
 }
 
 @layer base {
+  html {
+    /* Smooth in-page anchor scrolling for nav links. Disabled for
+     * prefers-reduced-motion users via the media query below. */
+    scroll-behavior: smooth;
+    /* Sticky nav (~4 rem pill) + a little breathing room so anchored
+     * sections don't get tucked under the floating bar. */
+    scroll-padding-top: 5.5rem;
+  }
   body {
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-sans), system-ui, sans-serif;
+    /* Smooth out font edges on dark cinematic surfaces. */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 }
 

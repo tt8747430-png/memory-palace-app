@@ -27,16 +27,16 @@ export function FinalCTA() {
           Free forever for one palace. No card required. Walk in, place a few rooms, and feel the
           method work.
         </p>
-        <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
+        <div className="mt-10 flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row sm:gap-4">
           <Link
             href="/signup"
-            className="rounded-full bg-foreground px-7 py-3.5 font-body text-sm text-background transition-transform hover:scale-[1.03]"
+            className="w-full rounded-full bg-foreground px-7 py-3.5 text-center font-body text-sm text-background shadow-[0_4px_14px_rgba(0,0,0,0.25)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_24px_rgba(0,0,0,0.4)] active:translate-y-0 active:scale-[0.98] sm:w-auto"
           >
             Begin Journey
           </Link>
           <Link
             href="#capabilities"
-            className="liquid-glass rounded-full px-7 py-3.5 font-body text-sm text-foreground transition-transform hover:scale-[1.03]"
+            className="liquid-glass w-full rounded-full px-7 py-3.5 text-center font-body text-sm text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:bg-foreground/10 active:translate-y-0 active:scale-[0.98] sm:w-auto"
           >
             See the method
           </Link>
