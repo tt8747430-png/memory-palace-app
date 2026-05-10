@@ -142,6 +142,12 @@
   /* Display font for marketing headlines (Slice C). */
   --font-display:
     var(--font-space-grotesk), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+
+  /* Cinematic marketing fonts: Instrument Serif (italic display headings)
+   * and Barlow (subdued body copy). Used by `font-heading` / `font-body`
+   * Tailwind utilities under `app/(marketing)/`. */
+  --font-heading: var(--font-instrument-serif), ui-serif, Georgia, serif;
+  --font-body: var(--font-barlow), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --color-popover-foreground: var(--popover-foreground);
   --color-surface: var(--surface);
   --color-surface-foreground: var(--surface-foreground);
@@ -226,4 +232,257 @@
   .ambient-orb {
     animation: none;
   }
+}
+
+/* ----- Liquid-glass surfaces (Cinematic marketing) ---------------------
+ * Two variants modeled on the Apple-style "liquid glass" treatment used
+ * across the cinematic hero + capabilities sections. The outer layer
+ * provides the frosted fill; `::before` paints a 1.4px gradient stroke
+ * that masks-out the interior so it reads as a hairline border.
+ *
+ * Both variants are dark-surface only — they assume the section uses a
+ * black/very-dark background. Do not consume them on light surfaces. */
+/* Cinematic deep-navy canvas (Velorah-style spec). Used as the base
+ * surface behind the marketing video + auth shell. Locally overrides the
+ * shadcn theme tokens (foreground / muted-foreground / border / input /
+ * primary) so utilities like `text-muted-foreground` and `border-border`
+ * resolve against the dark plate without needing the global `.dark`
+ * class. Pure CSS so it's consumable by any layout that needs a dark
+ * unauthenticated bg. */
+.bg-cinematic {
+  background-color: hsl(201 100% 13%);
+  --background: hsl(201 100% 13%);
+  --foreground: hsl(0 0% 100%);
+  --muted-foreground: hsl(240 4% 66%);
+  --primary: hsl(0 0% 100%);
+  --primary-foreground: hsl(0 0% 4%);
+  --secondary: hsl(0 0% 10%);
+  --muted: hsl(0 0% 10%);
+  --accent: hsl(0 0% 10%);
+  --border: hsl(0 0% 18%);
+  --input: hsl(0 0% 18%);
+  color: var(--foreground);
+}
+
+/* Fade-rise sequence for hero typography + CTAs. Mirrors the spec's
+ * three-stagger reveal. Reduced-motion users skip the animation. */
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-rise {
+  animation: fade-rise 0.8s ease-out both;
+}
+.animate-fade-rise-delay {
+  animation: fade-rise 0.8s ease-out 0.2s both;
+}
+.animate-fade-rise-delay-2 {
+  animation: fade-rise 0.8s ease-out 0.4s both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-rise,
+  .animate-fade-rise-delay,
+  .animate-fade-rise-delay-2 {
+    animation: none;
+  }
+}
+
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.01);
+  background-blend-mode: luminosity;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  border: none;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.45) 0%,
+    rgba(255, 255, 255, 0.15) 20%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0) 60%,
+    rgba(255, 255, 255, 0.15) 80%,
+    rgba(255, 255, 255, 0.45) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.liquid-glass-strong {
+  background: rgba(255, 255, 255, 0.01);
+  background-blend-mode: luminosity;
+  -webkit-backdrop-filter: blur(50px);
+  backdrop-filter: blur(50px);
+  border: none;
+  box-shadow:
+    4px 4px 4px rgba(0, 0, 0, 0.05),
+    inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+.liquid-glass-strong::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0) 60%,
+    rgba(255, 255, 255, 0.2) 80%,
+    rgba(255, 255, 255, 0.5) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ----- Cinematic CSS background -----------------------------------------
+ * Pure-CSS replacement for the looping space-travel video. Three layers:
+ *   1. Aurora gradient (slow conic sweep)
+ *   2. Drifting nebula blobs (radial gradients translated on a long loop)
+ *   3. Static starfield (multi-stop radial gradient — no animation, cheap)
+ * Suppressed for `prefers-reduced-motion`. */
+@keyframes cinematic-aurora {
+  0% {
+    transform: rotate(0deg) scale(1.4);
+  }
+  100% {
+    transform: rotate(360deg) scale(1.4);
+  }
+}
+@keyframes cinematic-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-3%, 4%, 0);
+  }
+}
+.cinematic-aurora {
+  position: absolute;
+  inset: -20%;
+  background: conic-gradient(
+    from 90deg at 50% 50%,
+    hsl(var(--cyan) / 0.18) 0%,
+    hsl(var(--rose) / 0.15) 25%,
+    hsl(var(--gold) / 0.18) 50%,
+    hsl(220 90% 56% / 0.2) 75%,
+    hsl(var(--cyan) / 0.18) 100%
+  );
+  filter: blur(80px);
+  animation: cinematic-aurora 60s linear infinite;
+  will-change: transform;
+}
+.cinematic-nebula {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, hsl(var(--cyan) / 0.25) 0%, transparent 35%),
+    radial-gradient(circle at 80% 70%, hsl(var(--rose) / 0.2) 0%, transparent 40%),
+    radial-gradient(circle at 60% 20%, hsl(var(--gold) / 0.15) 0%, transparent 30%);
+  filter: blur(40px);
+  animation: cinematic-drift 24s ease-in-out infinite;
+  will-change: transform;
+}
+.cinematic-stars {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 20% 25%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1px 1px at 75% 15%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1.5px 1.5px at 45% 60%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1px 1px at 88% 45%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 15% 80%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1.5px 1.5px at 65% 85%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 35% 35%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(1px 1px at 92% 75%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 5% 50%, rgba(255, 255, 255, 0.4), transparent);
+  background-size: 400px 400px;
+  opacity: 0.7;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cinematic-aurora,
+  .cinematic-nebula {
+    animation: none;
+  }
+}
+
+/* Marquee rails for the Daily Practice card on the landing bento grid.
+ * Two opposing directions; track widths are 200% so duplicating the
+ * children produces a seamless loop. */
+@keyframes marquee-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes marquee-right {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.animate-marquee-left {
+  animation: marquee-left 22s linear infinite;
+}
+.animate-marquee-right {
+  animation: marquee-right 26s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee-left,
+  .animate-marquee-right {
+    animation: none;
+  }
+}
+
+/* Subtle film-grain overlay for the testimonial / CTA cards on the
+ * landing bento grid. Soft-light blend over a turbulence-driven SVG. */
+.noise-overlay {
+  position: relative;
+}
+.noise-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.4;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-size: 240px 240px;
 }

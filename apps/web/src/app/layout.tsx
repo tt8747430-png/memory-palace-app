@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { headers } from 'next/headers';
-import { Geist, Geist_Mono, Space_Grotesk } from 'next/font/google';
+import { Geist, Geist_Mono, Space_Grotesk, Instrument_Serif, Barlow } from 'next/font/google';
 import { MotionProvider } from '@/shared/components/MotionProvider';
 import { ThemeProvider } from '@/shared/components/ThemeProvider';
 import { SkipToContent } from '@/shared/components/SkipToContent';
@@ -31,6 +31,26 @@ const geistMono = Geist_Mono({
 const spaceGrotesk = Space_Grotesk({
   variable: '--font-space-grotesk',
   subsets: ['latin'],
+  display: 'swap',
+  preload: false,
+});
+
+// Cinematic marketing typography (ADR-9D follow-up): Instrument Serif (italic
+// display) and Barlow (body). Loaded once at the root so the entire marketing
+// surface picks them up via `--font-heading` / `--font-body` tokens.
+const instrumentSerif = Instrument_Serif({
+  variable: '--font-instrument-serif',
+  subsets: ['latin'],
+  weight: '400',
+  style: ['normal', 'italic'],
+  display: 'swap',
+  preload: false,
+});
+
+const barlow = Barlow({
+  variable: '--font-barlow',
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600'],
   display: 'swap',
   preload: false,
 });
@@ -84,7 +104,7 @@ async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>)
   return (
     <html lang="en" suppressHydrationWarning nonce={nonce}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${instrumentSerif.variable} ${barlow.variable} antialiased`}
       >
         <SkipToContent />
         <ThemeProvider

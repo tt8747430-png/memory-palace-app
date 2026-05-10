@@ -5,6 +5,12 @@ import { Button, Input, Label } from '@memory-palace/ui';
 import { createWizardSetup } from '../../actions/createWizardSetup';
 import type { ActionResponse } from '@/shared/types';
 import type { WizardSetupResult } from '../../actions/createWizardSetup';
+import {
+  onboardingInputClass,
+  onboardingLabelClass,
+  onboardingMutedTextClass,
+  onboardingSubmitButtonClass,
+} from '../onboardingStyles';
 
 const SUGGESTIONS = ['My Study Palace', 'History Palace', 'Science Lab', 'Language House'];
 
@@ -24,17 +30,20 @@ export function StepNamePalace({ onSuccess }: StepNamePalaceProps) {
 
   return (
     <div className="space-y-6">
-      <div className="space-y-1 text-center">
-        <div className="mb-2 text-4xl">🏛️</div>
-        <h2 className="text-2xl font-bold">Name your palace</h2>
-        <p className="text-sm text-muted-foreground">
+      <div className="space-y-2 text-center">
+        <h2 className="font-heading text-3xl font-normal tracking-[-1px] text-white md:text-4xl">
+          Name your palace.
+        </h2>
+        <p className={`text-sm ${onboardingMutedTextClass}`}>
           Think of a subject or topic you want to master.
         </p>
       </div>
 
       <form action={action} className="space-y-4">
         <div className="space-y-1.5">
-          <Label htmlFor="palace-name">Palace name</Label>
+          <Label htmlFor="palace-name" className={onboardingLabelClass}>
+            Palace name
+          </Label>
           <Input
             id="palace-name"
             name="name"
@@ -43,6 +52,7 @@ export function StepNamePalace({ onSuccess }: StepNamePalaceProps) {
             maxLength={100}
             required
             disabled={isPending}
+            className={onboardingInputClass}
           />
         </div>
 
@@ -57,7 +67,7 @@ export function StepNamePalace({ onSuccess }: StepNamePalaceProps) {
                 )?.elements.namedItem('name') as HTMLInputElement | null;
                 if (input) input.value = s;
               }}
-              className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-primary hover:text-foreground"
+              className="liquid-glass rounded-full px-3 py-1 font-body text-xs text-white/80 transition-transform hover:scale-[1.03] hover:text-white"
             >
               {s}
             </button>
@@ -65,12 +75,12 @@ export function StepNamePalace({ onSuccess }: StepNamePalaceProps) {
         </div>
 
         {state && !state.success && (
-          <p role="alert" className="text-sm text-destructive">
+          <p role="alert" className="text-sm text-rose-300">
             {state.error.message}
           </p>
         )}
 
-        <Button type="submit" className="w-full" disabled={isPending}>
+        <Button type="submit" disabled={isPending} className={onboardingSubmitButtonClass}>
           {isPending ? 'Creating…' : 'Continue'}
         </Button>
       </form>

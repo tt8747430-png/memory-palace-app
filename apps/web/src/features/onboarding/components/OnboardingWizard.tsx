@@ -71,71 +71,64 @@ export function OnboardingWizard() {
   const canGoBack = state.step > 1 && state.step < TOTAL_STEPS;
 
   return (
-    <div className="flex min-h-[100dvh] flex-col">
-      <div className="fixed inset-x-0 top-0 z-10 border-b border-border/40 bg-background/95 backdrop-blur-sm">
-        <div className="mx-auto flex h-14 max-w-md items-center justify-between px-4">
-          {canGoBack ? (
-            <button
-              type="button"
-              onClick={() => dispatch({ type: 'BACK' })}
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-              aria-label="Go back"
-            >
-              ← Back
-            </button>
-          ) : (
-            <span />
-          )}
-          <StepIndicator current={state.step} total={TOTAL_STEPS} />
-          <span aria-hidden className="w-12" />
-        </div>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        {canGoBack ? (
+          <button
+            type="button"
+            onClick={() => dispatch({ type: 'BACK' })}
+            className="font-body text-sm text-white/60 transition-colors hover:text-white"
+            aria-label="Go back"
+          >
+            ← Back
+          </button>
+        ) : (
+          <span />
+        )}
+        <StepIndicator current={state.step} total={TOTAL_STEPS} />
+        <span aria-hidden className="w-12" />
       </div>
 
-      <div className="flex flex-1 items-center justify-center px-4 pt-20 pb-8">
-        <div className="w-full max-w-sm">
-          {state.step === 1 && <StepCreateAccount onSuccess={() => dispatch({ type: 'NEXT' })} />}
-          {state.step === 2 && (
-            <StepNamePalace
-              onSuccess={(palaceId, roomId) => dispatch({ type: 'SET_PALACE', palaceId, roomId })}
-            />
-          )}
-          {state.step === 3 && state.palaceId ? (
-            <StepChooseTheme
-              palaceId={state.palaceId}
-              onSuccess={() => dispatch({ type: 'NEXT' })}
-            />
-          ) : state.step === 3 ? (
-            <div className="space-y-4 text-center">
-              <p className="text-muted-foreground">
-                Your session was interrupted. Let&rsquo;s pick up where you left off.
-              </p>
-              <button
-                type="button"
-                onClick={() => dispatch({ type: 'RESET_TO_SETUP' })}
-                className="text-sm underline underline-offset-4 hover:text-foreground"
-              >
-                Go back to palace setup
-              </button>
-            </div>
-          ) : null}
-          {state.step === 4 && state.roomId ? (
-            <StepAddNode roomId={state.roomId} onSuccess={() => dispatch({ type: 'NEXT' })} />
-          ) : state.step === 4 ? (
-            <div className="space-y-4 text-center">
-              <p className="text-muted-foreground">
-                Your session was interrupted. Let&rsquo;s pick up where you left off.
-              </p>
-              <button
-                type="button"
-                onClick={() => dispatch({ type: 'RESET_TO_SETUP' })}
-                className="text-sm underline underline-offset-4 hover:text-foreground"
-              >
-                Go back to palace setup
-              </button>
-            </div>
-          ) : null}
-          {state.step === 5 && <StepComplete />}
-        </div>
+      <div className="w-full">
+        {state.step === 1 && <StepCreateAccount onSuccess={() => dispatch({ type: 'NEXT' })} />}
+        {state.step === 2 && (
+          <StepNamePalace
+            onSuccess={(palaceId, roomId) => dispatch({ type: 'SET_PALACE', palaceId, roomId })}
+          />
+        )}
+        {state.step === 3 && state.palaceId ? (
+          <StepChooseTheme palaceId={state.palaceId} onSuccess={() => dispatch({ type: 'NEXT' })} />
+        ) : state.step === 3 ? (
+          <div className="space-y-4 text-center">
+            <p className="font-body text-white/60">
+              Your session was interrupted. Let&rsquo;s pick up where you left off.
+            </p>
+            <button
+              type="button"
+              onClick={() => dispatch({ type: 'RESET_TO_SETUP' })}
+              className="font-body text-sm text-white underline underline-offset-4 hover:text-white"
+            >
+              Go back to palace setup
+            </button>
+          </div>
+        ) : null}
+        {state.step === 4 && state.roomId ? (
+          <StepAddNode roomId={state.roomId} onSuccess={() => dispatch({ type: 'NEXT' })} />
+        ) : state.step === 4 ? (
+          <div className="space-y-4 text-center">
+            <p className="font-body text-white/60">
+              Your session was interrupted. Let&rsquo;s pick up where you left off.
+            </p>
+            <button
+              type="button"
+              onClick={() => dispatch({ type: 'RESET_TO_SETUP' })}
+              className="font-body text-sm text-white underline underline-offset-4 hover:text-white"
+            >
+              Go back to palace setup
+            </button>
+          </div>
+        ) : null}
+        {state.step === 5 && <StepComplete />}
       </div>
     </div>
   );

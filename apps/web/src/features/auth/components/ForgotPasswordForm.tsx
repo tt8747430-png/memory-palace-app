@@ -6,6 +6,7 @@ import { Alert, Input, Label } from '@memory-palace/ui';
 import { requestPasswordReset } from '../actions/requestPasswordReset';
 import { initialAuthFormState } from '../actions/types';
 import { AuthSubmitButton } from './AuthSubmitButton';
+import { authInputClass, authLabelClass, authLinkClass, authMutedTextClass } from './authStyles';
 
 export function ForgotPasswordForm() {
   const [state, formAction] = useActionState(requestPasswordReset, initialAuthFormState);
@@ -21,7 +22,9 @@ export function ForgotPasswordForm() {
   return (
     <form action={formAction} className="space-y-4">
       <div className="space-y-1.5">
-        <Label htmlFor="forgot-email">Email</Label>
+        <Label htmlFor="forgot-email" className={authLabelClass}>
+          Email
+        </Label>
         <Input
           id="forgot-email"
           name="email"
@@ -29,6 +32,7 @@ export function ForgotPasswordForm() {
           placeholder="you@example.com"
           required
           autoComplete="email"
+          className={authInputClass}
         />
       </div>
       {state.status === 'error' ? (
@@ -37,9 +41,9 @@ export function ForgotPasswordForm() {
         </Alert>
       ) : null}
       <AuthSubmitButton idleLabel="Send reset link" pendingLabel="Sending…" />
-      <p className="text-center text-sm text-muted-foreground">
+      <p className={`text-center text-sm ${authMutedTextClass}`}>
         Remembered it?{' '}
-        <Link href="/login" className="text-primary underline-offset-4 hover:underline">
+        <Link href="/login" className={authLinkClass}>
           Sign in
         </Link>
       </p>

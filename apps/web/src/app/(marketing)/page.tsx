@@ -1,5 +1,11 @@
 import type { Metadata } from 'next';
-import { LandingHero, StatsBar, FeatureCards, HowItWorks, LandingCta } from '@/features/marketing';
+import {
+  CinematicBackground,
+  CinematicHero,
+  Capabilities,
+  Features,
+  CinematicFooter,
+} from '@/features/marketing';
 
 export const dynamic = 'force-static';
 
@@ -16,12 +22,14 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
   return (
-    <>
-      <LandingHero />
-      <StatsBar />
-      <FeatureCards />
-      <HowItWorks />
-      <LandingCta />
-    </>
+    <div className="relative min-h-dvh overflow-hidden bg-cinematic text-foreground">
+      <CinematicBackground />
+      <div className="relative z-10 flex flex-col">
+        <CinematicHero />
+        <Capabilities />
+        <Features />
+        <CinematicFooter />
+      </div>
+    </div>
   );
 }

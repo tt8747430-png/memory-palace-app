@@ -3,6 +3,13 @@
 import { useActionState } from 'react';
 import { Button, Input, Label } from '@memory-palace/ui';
 import { createWizardAccount, type WizardAccountState } from '../../actions/createWizardAccount';
+import {
+  onboardingInputClass,
+  onboardingLabelClass,
+  onboardingLinkClass,
+  onboardingMutedTextClass,
+  onboardingSubmitButtonClass,
+} from '../onboardingStyles';
 
 interface StepCreateAccountProps {
   onSuccess: () => void;
@@ -23,23 +30,30 @@ export function StepCreateAccount({ onSuccess }: StepCreateAccountProps) {
   if (state.status === 'check-email') {
     return (
       <div className="space-y-4 text-center">
-        <div className="text-5xl">📬</div>
-        <h2 className="text-2xl font-bold">Check your inbox</h2>
-        <p className="text-muted-foreground">{state.message}</p>
+        <h2 className="font-heading text-3xl font-normal tracking-[-1px] text-white md:text-4xl">
+          Check your inbox.
+        </h2>
+        <p className={onboardingMutedTextClass}>{state.message}</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      <div className="space-y-1 text-center">
-        <h2 className="text-2xl font-bold">Create your account</h2>
-        <p className="text-sm text-muted-foreground">Free forever. No credit card required.</p>
+      <div className="space-y-2 text-center">
+        <h2 className="font-heading text-3xl font-normal tracking-[-1px] text-white md:text-4xl">
+          Create your account.
+        </h2>
+        <p className={`text-sm ${onboardingMutedTextClass}`}>
+          Free forever. No credit card required.
+        </p>
       </div>
 
       <form action={action} className="space-y-4">
         <div className="space-y-1.5">
-          <Label htmlFor="wizard-email">Email</Label>
+          <Label htmlFor="wizard-email" className={onboardingLabelClass}>
+            Email
+          </Label>
           <Input
             id="wizard-email"
             name="email"
@@ -48,10 +62,13 @@ export function StepCreateAccount({ onSuccess }: StepCreateAccountProps) {
             placeholder="you@example.com"
             required
             disabled={isPending}
+            className={onboardingInputClass}
           />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="wizard-password">Password</Label>
+          <Label htmlFor="wizard-password" className={onboardingLabelClass}>
+            Password
+          </Label>
           <Input
             id="wizard-password"
             name="password"
@@ -61,23 +78,24 @@ export function StepCreateAccount({ onSuccess }: StepCreateAccountProps) {
             required
             minLength={8}
             disabled={isPending}
+            className={onboardingInputClass}
           />
         </div>
 
         {state.status === 'error' && (
-          <p role="alert" className="text-sm text-destructive">
+          <p role="alert" className="text-sm text-rose-300">
             {state.message}
           </p>
         )}
 
-        <Button type="submit" className="w-full" disabled={isPending}>
+        <Button type="submit" disabled={isPending} className={onboardingSubmitButtonClass}>
           {isPending ? 'Creating account…' : 'Continue'}
         </Button>
       </form>
 
-      <p className="text-center text-xs text-muted-foreground">
+      <p className={`text-center text-xs ${onboardingMutedTextClass}`}>
         Already have an account?{' '}
-        <a href="/login" className="underline underline-offset-4 hover:text-foreground">
+        <a href="/login" className={onboardingLinkClass}>
           Log in
         </a>
       </p>

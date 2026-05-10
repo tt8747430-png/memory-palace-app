@@ -21,8 +21,8 @@ export function StepIndicator({ current, total }: StepIndicatorProps) {
           <div
             key={step}
             className={[
-              'h-2 rounded-full transition-all duration-300',
-              isActive ? 'w-6 bg-primary' : isDone ? 'w-2 bg-primary/40' : 'w-2 bg-muted',
+              'h-1.5 rounded-full transition-all duration-300',
+              isActive ? 'w-8 bg-white' : isDone ? 'w-2 bg-white/50' : 'w-2 bg-white/15',
             ].join(' ')}
           />
         );

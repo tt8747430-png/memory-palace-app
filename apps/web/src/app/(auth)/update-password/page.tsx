@@ -1,18 +1,17 @@
 import { UpdatePasswordForm } from '@/features/auth/components/UpdatePasswordForm';
+import { AuthShell } from '@/features/marketing';
 
 function UpdatePasswordPage() {
   return (
-    <div className="flex min-h-[100dvh] items-center justify-center px-4">
-      <div className="w-full max-w-sm space-y-6">
-        <header className="text-center">
-          <h1 className="text-2xl font-bold md:text-4xl">Set New Password</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Choose a new password for your account.
-          </p>
-        </header>
-        <UpdatePasswordForm />
-      </div>
-    </div>
+    <AuthShell
+      brandTitle="Almost there."
+      brandSubtitle="Set a fresh password and we'll get you back to your palace."
+      kicker="New password"
+      title="Set a new password."
+      subtitle="Choose something memorable — you've got the technique for it."
+    >
+      <UpdatePasswordForm />
+    </AuthShell>
   );
 }
 

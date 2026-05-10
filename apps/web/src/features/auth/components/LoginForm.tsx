@@ -6,6 +6,7 @@ import { Alert, Input, Label } from '@memory-palace/ui';
 import { signIn } from '../actions/signIn';
 import { initialAuthFormState } from '../actions/types';
 import { AuthSubmitButton } from './AuthSubmitButton';
+import { authInputClass, authLabelClass, authLinkClass, authMutedTextClass } from './authStyles';
 
 export function LoginForm() {
   const [state, formAction] = useActionState(signIn, initialAuthFormState);
@@ -13,7 +14,9 @@ export function LoginForm() {
   return (
     <form action={formAction} className="space-y-4">
       <div className="space-y-1.5">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email" className={authLabelClass}>
+          Email
+        </Label>
         <Input
           id="email"
           name="email"
@@ -21,14 +24,17 @@ export function LoginForm() {
           placeholder="you@example.com"
           required
           autoComplete="email"
+          className={authInputClass}
         />
       </div>
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password" className={authLabelClass}>
+            Password
+          </Label>
           <Link
             href="/forgot-password"
-            className="text-sm text-muted-foreground underline-offset-4 hover:underline"
+            className={`text-sm ${authMutedTextClass} underline-offset-4 hover:underline`}
           >
             Forgot?
           </Link>
@@ -40,6 +46,7 @@ export function LoginForm() {
           placeholder="••••••••"
           required
           autoComplete="current-password"
+          className={authInputClass}
         />
       </div>
       {state.status === 'error' ? (
@@ -48,9 +55,9 @@ export function LoginForm() {
         </Alert>
       ) : null}
       <AuthSubmitButton idleLabel="Sign In" pendingLabel="Signing in…" />
-      <p className="text-center text-sm text-muted-foreground">
+      <p className={`text-center text-sm ${authMutedTextClass}`}>
         No account?{' '}
-        <Link href="/signup" className="text-primary underline-offset-4 hover:underline">
+        <Link href="/signup" className={authLinkClass}>
           Sign up
         </Link>
       </p>

@@ -5,6 +5,7 @@ import { Alert, Input, Label } from '@memory-palace/ui';
 import { updatePassword } from '../actions/updatePassword';
 import { initialAuthFormState } from '../actions/types';
 import { AuthSubmitButton } from './AuthSubmitButton';
+import { authInputClass, authLabelClass } from './authStyles';
 
 export function UpdatePasswordForm() {
   const [state, formAction] = useActionState(updatePassword, initialAuthFormState);
@@ -12,7 +13,9 @@ export function UpdatePasswordForm() {
   return (
     <form action={formAction} className="space-y-4">
       <div className="space-y-1.5">
-        <Label htmlFor="new-password">New password</Label>
+        <Label htmlFor="new-password" className={authLabelClass}>
+          New password
+        </Label>
         <Input
           id="new-password"
           name="password"
@@ -21,7 +24,9 @@ export function UpdatePasswordForm() {
           required
           autoComplete="new-password"
           minLength={8}
+          className={authInputClass}
         />
+        <p className="text-xs text-white/50">Requires at least 8 characters.</p>
       </div>
       {state.status === 'error' ? (
         <Alert variant="destructive" role="alert">

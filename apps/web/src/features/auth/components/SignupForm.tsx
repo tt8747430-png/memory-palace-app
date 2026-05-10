@@ -6,6 +6,7 @@ import { Alert, Input, Label } from '@memory-palace/ui';
 import { signUp } from '../actions/signUp';
 import { initialAuthFormState } from '../actions/types';
 import { AuthSubmitButton } from './AuthSubmitButton';
+import { authInputClass, authLabelClass, authLinkClass, authMutedTextClass } from './authStyles';
 
 export function SignupForm() {
   const [state, formAction] = useActionState(signUp, initialAuthFormState);
@@ -21,7 +22,9 @@ export function SignupForm() {
   return (
     <form action={formAction} className="space-y-4">
       <div className="space-y-1.5">
-        <Label htmlFor="signup-email">Email</Label>
+        <Label htmlFor="signup-email" className={authLabelClass}>
+          Email
+        </Label>
         <Input
           id="signup-email"
           name="email"
@@ -29,10 +32,13 @@ export function SignupForm() {
           placeholder="you@example.com"
           required
           autoComplete="email"
+          className={authInputClass}
         />
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="signup-password">Password</Label>
+        <Label htmlFor="signup-password" className={authLabelClass}>
+          Password
+        </Label>
         <Input
           id="signup-password"
           name="password"
@@ -41,7 +47,9 @@ export function SignupForm() {
           required
           autoComplete="new-password"
           minLength={8}
+          className={authInputClass}
         />
+        <p className="text-xs text-white/50">Requires at least 8 characters.</p>
       </div>
       {state.status === 'error' ? (
         <Alert variant="destructive" role="alert">
@@ -49,9 +57,9 @@ export function SignupForm() {
         </Alert>
       ) : null}
       <AuthSubmitButton idleLabel="Create Account" pendingLabel="Creating account…" />
-      <p className="text-center text-sm text-muted-foreground">
+      <p className={`text-center text-sm ${authMutedTextClass}`}>
         Already have an account?{' '}
-        <Link href="/login" className="text-primary underline-offset-4 hover:underline">
+        <Link href="/login" className={authLinkClass}>
           Sign in
         </Link>
       </p>

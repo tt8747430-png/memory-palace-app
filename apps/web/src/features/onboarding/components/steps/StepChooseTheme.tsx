@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { Button, cn } from '@memory-palace/ui';
 import { updateWizardTheme } from '../../actions/updateWizardTheme';
+import { onboardingMutedTextClass, onboardingSubmitButtonClass } from '../onboardingStyles';
 
 const COLORS = [
   { label: 'violet', tw: 'bg-violet-600' },
@@ -49,17 +50,16 @@ export function StepChooseTheme({ palaceId, onSuccess }: StepChooseThemeProps) {
 
   return (
     <div className="space-y-6">
-      <div className="space-y-1 text-center">
-        <div className="mb-2 text-4xl" role="img" aria-label="Chosen icon">
-          {icon}
-        </div>
-        <h2 className="text-2xl font-bold">Choose a theme</h2>
-        <p className="text-sm text-muted-foreground">Give your palace a colour and icon.</p>
+      <div className="space-y-2 text-center">
+        <h2 className="font-heading text-3xl font-normal tracking-[-1px] text-white md:text-4xl">
+          Choose a theme.
+        </h2>
+        <p className={`text-sm ${onboardingMutedTextClass}`}>Give your palace a colour and icon.</p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-5">
         <div>
-          <p className="mb-2 text-sm font-medium">Colour</p>
+          <p className="mb-3 font-body text-sm font-medium text-white">Colour</p>
           <div className="flex flex-wrap gap-3">
             {COLORS.map((c) => (
               <button
@@ -69,9 +69,9 @@ export function StepChooseTheme({ palaceId, onSuccess }: StepChooseThemeProps) {
                 aria-pressed={color === c.label ? 'true' : 'false'}
                 onClick={() => setColor(c.label)}
                 className={cn(
-                  'h-8 w-8 rounded-full ring-offset-2 transition-all',
+                  'h-9 w-9 rounded-full ring-offset-2 ring-offset-transparent transition-all',
                   c.tw,
-                  color === c.label ? 'ring-2 ring-primary' : 'ring-0',
+                  color === c.label ? 'ring-2 ring-white' : 'ring-0',
                 )}
               />
             ))}
@@ -79,7 +79,7 @@ export function StepChooseTheme({ palaceId, onSuccess }: StepChooseThemeProps) {
         </div>
 
         <div>
-          <p className="mb-2 text-sm font-medium">Icon</p>
+          <p className="mb-3 font-body text-sm font-medium text-white">Icon</p>
           <div className="flex flex-wrap gap-2">
             {ICONS.map(({ emoji, label }) => (
               <button
@@ -89,8 +89,8 @@ export function StepChooseTheme({ palaceId, onSuccess }: StepChooseThemeProps) {
                 aria-pressed={icon === emoji ? 'true' : 'false'}
                 onClick={() => setIcon(emoji)}
                 className={cn(
-                  'rounded-lg border p-2 text-xl transition-colors',
-                  icon === emoji ? 'border-primary bg-primary/10' : 'border-border',
+                  'liquid-glass rounded-xl p-2 text-xl transition-transform hover:scale-[1.05]',
+                  icon === emoji ? 'bg-white/15 ring-2 ring-white' : 'bg-transparent',
                 )}
               >
                 {emoji}
@@ -101,12 +101,17 @@ export function StepChooseTheme({ palaceId, onSuccess }: StepChooseThemeProps) {
       </div>
 
       {error && (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-sm text-rose-300">
           {error}
         </p>
       )}
 
-      <Button type="button" className="w-full" onClick={handleContinue} disabled={isPending}>
+      <Button
+        type="button"
+        onClick={handleContinue}
+        disabled={isPending}
+        className={onboardingSubmitButtonClass}
+      >
         {isPending ? 'Saving…' : 'Continue'}
       </Button>
     </div>

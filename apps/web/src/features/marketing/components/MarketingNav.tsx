@@ -18,7 +18,7 @@ export function MarketingNav() {
           <Link href="/login" className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }))}>
             Log In
           </Link>
-          <Link href="/join" className={cn(buttonVariants({ size: 'sm' }))}>
+          <Link href="/signup" className={cn(buttonVariants({ size: 'sm' }))}>
             Get Started
           </Link>
         </div>

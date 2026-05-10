@@ -4,6 +4,12 @@ import { useActionState } from 'react';
 import { Button, Input, Label, Textarea } from '@memory-palace/ui';
 import { createWizardNode } from '../../actions/createWizardNode';
 import type { ActionResponse } from '@/shared/types';
+import {
+  onboardingInputClass,
+  onboardingLabelClass,
+  onboardingMutedTextClass,
+  onboardingSubmitButtonClass,
+} from '../onboardingStyles';
 
 interface StepAddNodeProps {
   roomId: string;
@@ -26,17 +32,20 @@ export function StepAddNode({ roomId, onSuccess }: StepAddNodeProps) {
 
   return (
     <div className="space-y-6">
-      <div className="space-y-1 text-center">
-        <div className="mb-2 text-4xl">💡</div>
-        <h2 className="text-2xl font-bold">Add your first memory</h2>
-        <p className="text-sm text-muted-foreground">
+      <div className="space-y-2 text-center">
+        <h2 className="font-heading text-3xl font-normal tracking-[-1px] text-white md:text-4xl">
+          Add your first memory.
+        </h2>
+        <p className={`text-sm ${onboardingMutedTextClass}`}>
           A node is a single idea, fact, or concept. Start with something simple.
         </p>
       </div>
 
       <form action={action} className="space-y-4">
         <div className="space-y-1.5">
-          <Label htmlFor="node-title">Title</Label>
+          <Label htmlFor="node-title" className={onboardingLabelClass}>
+            Title
+          </Label>
           <Input
             id="node-title"
             name="title"
@@ -45,11 +54,12 @@ export function StepAddNode({ roomId, onSuccess }: StepAddNodeProps) {
             maxLength={200}
             required
             disabled={isPending}
+            className={onboardingInputClass}
           />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="node-content">
-            Notes <span className="text-xs text-muted-foreground">(optional)</span>
+          <Label htmlFor="node-content" className={onboardingLabelClass}>
+            Notes <span className="text-xs text-white/40">(optional)</span>
           </Label>
           <Textarea
             id="node-content"
@@ -58,16 +68,17 @@ export function StepAddNode({ roomId, onSuccess }: StepAddNodeProps) {
             rows={3}
             maxLength={2000}
             disabled={isPending}
+            className={onboardingInputClass}
           />
         </div>
 
         {state && !state.success && (
-          <p role="alert" className="text-sm text-destructive">
+          <p role="alert" className="text-sm text-rose-300">
             {state.error.message}
           </p>
         )}
 
-        <Button type="submit" className="w-full" disabled={isPending}>
+        <Button type="submit" disabled={isPending} className={onboardingSubmitButtonClass}>
           {isPending ? 'Saving…' : 'Add to my palace'}
         </Button>
       </form>

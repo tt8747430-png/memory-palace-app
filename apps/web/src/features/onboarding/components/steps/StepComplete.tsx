@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@memory-palace/ui';
 import { useConfetti } from '@/shared/hooks/useConfetti';
+import { onboardingMutedTextClass, onboardingSubmitButtonClass } from '../onboardingStyles';
 
 export function StepComplete() {
   const router = useRouter();
@@ -18,20 +19,20 @@ export function StepComplete() {
   }, [fire]);
 
   return (
-    <div className="space-y-6 text-center">
-      <div className="text-6xl">🎉</div>
-      <div className="space-y-2">
-        <h2 className="text-3xl font-bold">Your palace is ready!</h2>
-        <p className="text-muted-foreground">
+    <div className="space-y-8 text-center">
+      <div className="space-y-3">
+        <h2 className="font-heading text-4xl font-normal leading-[1.05] tracking-[-1.5px] text-white md:text-5xl">
+          Your palace is <em className="not-italic text-white/60">ready.</em>
+        </h2>
+        <p className={`mx-auto max-w-md text-base ${onboardingMutedTextClass}`}>
           You&rsquo;ve created your first memory palace and added your first node. Your memory
           journey starts now.
         </p>
       </div>
       <Button
         type="button"
-        size="lg"
-        className="w-full sm:w-auto"
         onClick={() => router.push('/dashboard')}
+        className={onboardingSubmitButtonClass}
       >
         Enter my palace
       </Button>
