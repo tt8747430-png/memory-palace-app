@@ -1,10 +1,17 @@
 import type { Metadata } from 'next';
 import {
   CinematicBackground,
+  CinematicNav,
   CinematicHero,
   Capabilities,
   Features,
   PalacePreviewRow,
+  Comparison,
+  WallOfLove,
+  Pricing,
+  FoundersNote,
+  FAQ,
+  FinalCTA,
   CinematicFooter,
 } from '@/features/marketing';
 
@@ -26,10 +33,17 @@ export default function LandingPage() {
     <div className="relative min-h-dvh overflow-hidden bg-cinematic text-foreground">
       <CinematicBackground />
       <div className="relative z-10 flex flex-col">
+        <CinematicNav />
         <CinematicHero />
         <Capabilities />
         <PalacePreviewRow />
         <Features />
+        <Comparison />
+        <FoundersNote />
+        <WallOfLove />
+        <Pricing />
+        <FAQ />
+        <FinalCTA />
         <CinematicFooter />
       </div>
     </div>

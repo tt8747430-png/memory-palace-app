@@ -70,7 +70,7 @@ export function PalacePreviewRow() {
 
   if (isMobile) {
     return (
-      <section className="relative w-full px-4 py-12">
+      <section id="palaces" className="relative w-full px-4 py-12">
         <div className="mx-auto flex max-w-md flex-col gap-4">
           {slides.map((s) => (
             <PalaceCard key={s.id} slide={s} expanded className="h-[180px]" />
@@ -81,7 +81,7 @@ export function PalacePreviewRow() {
   }
 
   return (
-    <section className="relative w-full px-6 py-16 md:px-10 lg:px-14">
+    <section id="palaces" className="relative w-full px-6 py-16 md:px-10 lg:px-14">
       <div className="mx-auto max-w-7xl">
         <header className="mb-8 max-w-2xl">
           <p className="font-body text-xs uppercase tracking-[0.2em] text-muted-foreground">

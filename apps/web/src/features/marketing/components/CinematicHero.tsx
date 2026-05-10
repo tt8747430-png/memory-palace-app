@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { Clock, Flame, TrendingUp } from 'lucide-react';
 import { BlurText } from '@/shared/components/BlurText';
 import { GradientText } from '@/shared/components/GradientText';
-import { CinematicNav } from './CinematicNav';
 
 type Stat = { icon: typeof Clock; value: string; label: string };
 
@@ -24,10 +23,8 @@ const trustWords = ['Method', 'Cathedral', 'Atlas', 'Lineage', 'Recall'];
  */
 export function CinematicHero() {
   return (
-    <section className="relative flex min-h-[100dvh] flex-col text-foreground">
+    <section className="relative flex min-h-dvh flex-col text-foreground">
       <div className="relative z-10 flex flex-1 flex-col">
-        <CinematicNav />
-
         <div className="flex flex-1 flex-col items-center justify-center px-6 pt-20 pb-16 text-center">
           <h1 className="font-heading max-w-7xl text-5xl font-normal leading-[0.95] tracking-[-2.46px] text-foreground sm:text-7xl md:text-8xl">
             <BlurText text="Remember" perWordDelay={60} startDelay={0.05} />{' '}
