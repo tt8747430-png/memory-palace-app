@@ -48,7 +48,7 @@ export default async function RoomPage({ params }: RoomPageProps) {
      * the mobile chrome (top header + bottom nav + safe area). On md+ the
      * sidebar replaces the mobile header, so we recover that space.
      */
-    <div className="-mx-4 -my-6 flex h-[calc(100dvh-3.5rem-var(--height-bottom-nav)-env(safe-area-inset-bottom))] flex-col sm:-mx-6 md:h-dvh lg:-mx-8">
+    <div className="-mx-4 -my-6 flex h-[calc(100dvh-3.5rem-3rem-var(--height-bottom-nav)-env(safe-area-inset-bottom))] flex-col sm:-mx-6 md:h-dvh lg:-mx-8">
       {/* Sticky breadcrumb bar — stays pinned even if the canvas scrolls. */}
       <div className="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-2 border-b bg-background/95 px-4 py-2.5 backdrop-blur supports-backdrop-filter:bg-background/75 sm:px-6 lg:px-8">
         <nav
