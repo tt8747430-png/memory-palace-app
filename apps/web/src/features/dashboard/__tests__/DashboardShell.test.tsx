@@ -72,7 +72,7 @@ describe('DashboardShell', () => {
 
   it('renders the mobile top bar with title and hamburger menu', () => {
     render(<DashboardShell>Content</DashboardShell>);
-    expect(screen.getByText('Memory Palace')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: 'Memory Palace' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /open navigation menu/i })).toBeInTheDocument();
   });
 
