@@ -18,8 +18,8 @@ interface AreaChartProps {
   label?: string;
   /** Tailwind classes — `text-*` colors propagate via `currentColor`. */
   className?: string;
-  /** Format the tooltip value (default: identity). */
-  formatValue?: (v: number, i: number) => string;
+  /** Optional unit suffix used in the tooltip pill (singular/plural). */
+  valueUnit?: { singular: string; plural: string };
 }
 
 /**
@@ -36,8 +36,10 @@ export function AreaChart({
   strokeWidth = 1.75,
   label,
   className,
-  formatValue = (v) => `${v}`,
+  valueUnit,
 }: AreaChartProps) {
+  const formatValue = (v: number) =>
+    valueUnit ? `${v} ${v === 1 ? valueUnit.singular : valueUnit.plural}` : `${v}`;
   const gradientId = useId();
   const [hover, setHover] = useState<number | null>(null);
 
@@ -140,9 +142,7 @@ export function AreaChart({
             x={hoverPoint[0]}
             y={hoverPoint[1]}
             text={
-              hoverLabel
-                ? `${hoverLabel} · ${formatValue(hoverValue, hover!)}`
-                : formatValue(hoverValue, hover!)
+              hoverLabel ? `${hoverLabel} · ${formatValue(hoverValue)}` : formatValue(hoverValue)
             }
             W={W}
           />

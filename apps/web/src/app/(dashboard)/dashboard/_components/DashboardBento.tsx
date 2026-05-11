@@ -138,7 +138,7 @@ export async function DashboardBento() {
             height={56}
             className="h-14 w-full"
             label={`Weekly attempts: ${totalThisWeek}`}
-            formatValue={(v) => `${v} ${v === 1 ? 'attempt' : 'attempts'}`}
+            valueUnit={{ singular: 'attempt', plural: 'attempts' }}
           />
           <p className="mt-1 text-xs text-muted-foreground">
             {totalThisWeek === 0 ? 'no activity yet' : 'attempts, last 7 days'}
