@@ -57,12 +57,49 @@ const SMOOTH_EASE = [0.25, 0.1, 0.25, 1] as const;
 export function CinematicNav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Active-section tracking. IntersectionObserver with a top-anchored
+  // root margin so a section is considered "active" once its top crosses
+  // ~30% of the viewport. Falls back silently in non-IO environments.
+  useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') return;
+    const ids = links.map((l) => l.href.replace('#', ''));
+    const targets = ids
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (targets.length === 0) return;
+
+    const visible = new Map<string, number>();
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) visible.set(e.target.id, e.intersectionRatio);
+          else visible.delete(e.target.id);
+        }
+        // Pick the section with the largest visible ratio; ties broken by
+        // document order (Map insertion order suffices since we set fresh).
+        let best: string | null = null;
+        let bestRatio = 0;
+        for (const [id, ratio] of visible) {
+          if (ratio > bestRatio) {
+            best = id;
+            bestRatio = ratio;
+          }
+        }
+        setActiveId(best);
+      },
+      { rootMargin: '-30% 0px -55% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] },
+    );
+    targets.forEach((t) => io.observe(t));
+    return () => io.disconnect();
   }, []);
 
   // Lock body scroll + close on Escape while sheet is open.
@@ -106,16 +143,38 @@ export function CinematicNav() {
           </Link>
 
           <nav className="hidden items-center gap-7 md:flex">
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="font-body group relative text-sm text-muted-foreground transition-colors hover:text-foreground"
-              >
-                {link.label}
-                <span className="pointer-events-none absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-foreground transition-transform duration-300 ease-out group-hover:scale-x-100" />
-              </Link>
-            ))}
+            {links.map((link) => {
+              const id = link.href.replace('#', '');
+              const isActive = activeId === id;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  aria-current={isActive ? 'true' : undefined}
+                  className={cn(
+                    'font-body group relative text-sm transition-colors',
+                    isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
+                  )}
+                >
+                  {link.label}
+                  {/* Active dot — soft glow indicator beneath the label. */}
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      'pointer-events-none absolute -bottom-2 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-foreground transition-all duration-300',
+                      isActive ? 'opacity-100 shadow-[0_0_8px_rgba(255,255,255,0.6)]' : 'opacity-0',
+                    )}
+                  />
+                  {/* Hover underline — suppressed when the link is active. */}
+                  <span
+                    className={cn(
+                      'pointer-events-none absolute -bottom-1 left-0 h-px w-full origin-left bg-foreground transition-transform duration-300 ease-out',
+                      isActive ? 'scale-x-0' : 'scale-x-0 group-hover:scale-x-100',
+                    )}
+                  />
+                </Link>
+              );
+            })}
           </nav>
 
           <Link

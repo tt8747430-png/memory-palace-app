@@ -15,3 +15,5 @@ export { Pricing } from './components/Pricing';
 export { FAQ } from './components/FAQ';
 export { FoundersNote } from './components/FoundersNote';
 export { FinalCTA } from './components/FinalCTA';
+export { ScrollProgress } from './components/ScrollProgress';
+export { ComparisonRadar } from './components/ComparisonRadar';

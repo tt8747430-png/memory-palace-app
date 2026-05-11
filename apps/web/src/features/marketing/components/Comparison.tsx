@@ -1,5 +1,6 @@
 import { Check, X } from 'lucide-react';
 import { SectionEyebrow } from './SectionEyebrow';
+import { ComparisonRadar } from './ComparisonRadar';
 import { BlurText } from '@/shared/components/BlurText';
 
 /**
@@ -77,6 +78,13 @@ export function Comparison() {
             </ul>
           </article>
         </div>
+
+        {/*
+         * Radar visualisation — distills the two bullet lists above into a
+         * single shape comparison so the reader sees the gap before they
+         * read it. Pure SVG, no client JS.
+         */}
+        <ComparisonRadar className="mt-12 md:mt-16" />
       </div>
     </section>
   );

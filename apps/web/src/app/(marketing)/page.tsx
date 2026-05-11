@@ -13,6 +13,7 @@ import {
   FAQ,
   FinalCTA,
   CinematicFooter,
+  ScrollProgress,
 } from '@/features/marketing';
 
 export const dynamic = 'force-static';
@@ -31,6 +32,7 @@ export const metadata: Metadata = {
 export default function LandingPage() {
   return (
     <div className="relative min-h-dvh bg-cinematic text-foreground">
+      <ScrollProgress />
       <CinematicBackground />
       <div className="relative z-10 flex flex-col">
         <CinematicNav />
