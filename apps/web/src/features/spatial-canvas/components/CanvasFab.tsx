@@ -1,7 +1,6 @@
 'use client';
 
-import { type CSSProperties, useEffect, useState } from 'react';
-import { Plus, X, MousePointer2, Hand, Grid2x2, Maximize } from 'lucide-react';
+import { Plus, MousePointer2, Hand, Grid2x2, Maximize } from 'lucide-react';
 import { useReactFlow } from '@xyflow/react';
 import { cn } from '@memory-palace/ui';
 import { useCanvasStore } from '../store/CanvasStoreContext';
@@ -12,33 +11,13 @@ interface CanvasFabProps {
   roomId: string;
 }
 
-interface FabAction {
-  label: string;
-  Icon: React.ElementType;
-  onClick: () => void;
-  active?: boolean;
-}
-
 /**
- * Mobile-only Floating Action Button (md:hidden).
- *
- * Tapping the FAB expands a radial-style vertical menu with the primary
- * canvas actions. Positioned above the bottom navigation bar using
- * `safe-area-inset-bottom` so it clears iOS and Android chrome.
+ * Mobile-only canvas toolbar (`md:hidden`). Mirrors `CanvasToolbar`'s
+ * affordance — a single pill-shaped floating bar with all primary actions
+ * visible at once — sized with larger touch targets and pinned safely
+ * above the dashboard bottom-nav + iOS safe-area inset.
  */
 export function CanvasFab({ roomId }: CanvasFabProps) {
-  const [open, setOpen] = useState(false);
-
-  // Close the action menu when the user presses Escape.
-  useEffect(() => {
-    if (!open) return;
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false);
-    };
-    document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
-  }, [open]);
-
   const activeTool = useCanvasStore((s) => s.activeTool);
   const setActiveTool = useCanvasStore((s) => s.setActiveTool);
   const snapEnabled = useCanvasStore((s) => s.snapEnabled);
@@ -55,88 +34,71 @@ export function CanvasFab({ roomId }: CanvasFabProps) {
       positionX: snapPosition(position.x, 20, snapEnabled),
       positionY: snapPosition(position.y, 20, snapEnabled),
     });
-    setOpen(false);
   };
 
-  const actions: FabAction[] = [
-    {
-      label: 'Add node',
-      Icon: Plus,
-      onClick: handleAddNode,
-    },
-    {
-      label: activeTool === 'pointer' ? 'Switch to pan' : 'Switch to select',
-      Icon: activeTool === 'pointer' ? Hand : MousePointer2,
-      onClick: () => {
-        setActiveTool(activeTool === 'pointer' ? 'pan' : 'pointer');
-        setOpen(false);
-      },
-      active: activeTool === 'pan',
-    },
-    {
-      label: snapEnabled ? 'Snap: on' : 'Snap: off',
-      Icon: Grid2x2,
-      onClick: () => {
-        toggleSnap();
-        setOpen(false);
-      },
-      active: snapEnabled,
-    },
-    {
-      label: 'Fit view',
-      Icon: Maximize,
-      onClick: () => {
-        fitView({ padding: 0.2, duration: 300 });
-        setOpen(false);
-      },
-    },
-  ];
-
   return (
-    // md:hidden — CanvasToolbar handles larger screens.
-    // --fab-bottom uses env(safe-area-inset-bottom) so the FAB clears iOS/Android system chrome.
     <div
-      className="absolute right-4 z-20 flex flex-col items-end gap-2 bottom-(--fab-bottom) md:hidden"
-      style={{ '--fab-bottom': 'calc(env(safe-area-inset-bottom, 0px) + 1rem)' } as CSSProperties}
+      role="toolbar"
+      aria-label="Canvas tools"
+      // Floating pill — bottom-center, above iOS safe area. Bottom nav is
+      // outside the canvas viewport (canvas page already subtracts its
+      // height), so 0.75rem of clearance is enough breathing room.
+      className="pointer-events-auto absolute bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 rounded-full border bg-card/95 p-1 shadow-lg backdrop-blur-sm md:hidden"
     >
-      {/* Expanded action items */}
-      {open && (
-        <div role="menu" aria-label="Canvas actions" className="flex flex-col items-end gap-2">
-          {actions.map(({ label, Icon, onClick, active }) => (
-            <button
-              key={label}
-              type="button"
-              role="menuitem"
-              aria-label={label}
-              onClick={onClick}
-              className={cn(
-                'flex h-12 w-12 items-center justify-center rounded-full shadow-md transition-colors',
-                'border bg-card/90 backdrop-blur-sm',
-                active
-                  ? 'bg-primary text-primary-foreground border-primary'
-                  : 'text-foreground hover:bg-accent',
-              )}
-            >
-              <Icon className="h-5 w-5" aria-hidden />
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* Main FAB button */}
+      {/* Primary action — add node */}
       <button
         type="button"
-        aria-label={open ? 'Close canvas actions' : 'Open canvas actions'}
-        aria-haspopup="menu"
-        aria-expanded={open ? 'true' : 'false'}
-        onClick={() => setOpen((prev) => !prev)}
+        aria-label="Add node"
+        onClick={handleAddNode}
+        className="flex h-11 items-center gap-1.5 rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 active:scale-95"
+      >
+        <Plus className="h-4 w-4" aria-hidden />
+        Add
+      </button>
+
+      <div className="mx-0.5 h-6 w-px bg-border" />
+
+      <button
+        type="button"
+        aria-label={activeTool === 'pointer' ? 'Switch to pan' : 'Switch to select'}
+        aria-pressed={activeTool === 'pan'}
+        onClick={() => setActiveTool(activeTool === 'pointer' ? 'pan' : 'pointer')}
         className={cn(
-          'flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-all duration-200',
-          'bg-primary text-primary-foreground',
-          'hover:bg-primary/90 active:scale-95',
+          'flex h-11 w-11 items-center justify-center rounded-full transition-colors',
+          activeTool === 'pan'
+            ? 'bg-primary/10 text-primary'
+            : 'text-muted-foreground hover:bg-muted hover:text-foreground',
         )}
       >
-        {open ? <X className="h-6 w-6" aria-hidden /> : <Plus className="h-6 w-6" aria-hidden />}
+        {activeTool === 'pointer' ? (
+          <Hand className="h-5 w-5" aria-hidden />
+        ) : (
+          <MousePointer2 className="h-5 w-5" aria-hidden />
+        )}
+      </button>
+
+      <button
+        type="button"
+        aria-label={snapEnabled ? 'Snap to grid: on' : 'Snap to grid: off'}
+        aria-pressed={snapEnabled}
+        onClick={toggleSnap}
+        className={cn(
+          'flex h-11 w-11 items-center justify-center rounded-full transition-colors',
+          snapEnabled
+            ? 'bg-primary/10 text-primary'
+            : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+        )}
+      >
+        <Grid2x2 className="h-5 w-5" aria-hidden />
+      </button>
+
+      <button
+        type="button"
+        aria-label="Fit view"
+        onClick={() => fitView({ padding: 0.2, duration: 300 })}
+        className="flex h-11 w-11 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+      >
+        <Maximize className="h-5 w-5" aria-hidden />
       </button>
     </div>
   );

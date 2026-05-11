@@ -89,12 +89,9 @@ export default async function FlashcardsPage({ searchParams }: PageProps) {
   const dueResult = await getDueNodes({ palaceId, roomId, limit: DECK_LIMIT });
   const cards = dueResult.success ? dueResult.data : [];
 
-  return (
-    <div className="space-y-4">
-      <BackToGames />
-      <FlashcardDeck nodes={cards} />
-    </div>
-  );
+  // FlashcardDeck is a self-contained full-bleed surface with its own
+  // exit affordance — render it raw, no wrapper padding or back-link chrome.
+  return <FlashcardDeck nodes={cards} />;
 }
 
 function BackToGames() {

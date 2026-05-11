@@ -152,7 +152,7 @@ export function QuizSession({ nodes, initialMode = 'multiple-choice' }: Props) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 pb-[max(1rem,env(safe-area-inset-bottom))] md:pb-0">
       <header className="flex items-center justify-between text-xs text-muted-foreground">
         <span>
           Question {index + 1} of {nodes.length}
@@ -206,94 +206,103 @@ export function QuizSession({ nodes, initialMode = 'multiple-choice' }: Props) {
         ) : null}
       </div>
 
-      {question.mode === 'multiple-choice' ? (
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-          {question.options.map((option, i) => {
-            const isCorrect = option === current.title;
-            const showState = outcome !== null;
-            return (
-              <button
-                key={`${option}-${i}`}
-                type="button"
-                onClick={() => handleChoice(option)}
-                disabled={isSubmitting || outcome !== null}
-                className={cn(
-                  'rounded-md border bg-card px-4 py-3 text-left text-sm transition-colors',
-                  'hover:border-primary/50 hover:bg-muted/40',
-                  showState && isCorrect && 'border-emerald-500 bg-emerald-500/10',
-                  showState &&
-                    !isCorrect &&
-                    outcome === 'wrong' &&
-                    'border-destructive bg-destructive/10',
-                )}
-              >
-                <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full border text-xs">
-                  {i + 1}
-                </span>
-                {option}
-              </button>
-            );
-          })}
-        </div>
-      ) : null}
+      {/*
+       * Action surface — sticky to the bottom on mobile so the user can
+       * answer without scrolling. Pinned above the dashboard bottom nav
+       * via env(safe-area-inset-bottom). Static on md+ where there's no
+       * bottom nav and content fits comfortably.
+       */}
+      <div className="sticky bottom-0 -mx-4 space-y-3 border-t bg-background/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur supports-backdrop-filter:bg-background/75 sm:-mx-6 sm:px-6 md:static md:mx-0 md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none">
+        {question.mode === 'multiple-choice' ? (
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            {question.options.map((option, i) => {
+              const isCorrect = option === current.title;
+              const showState = outcome !== null;
+              return (
+                <button
+                  key={`${option}-${i}`}
+                  type="button"
+                  onClick={() => handleChoice(option)}
+                  disabled={isSubmitting || outcome !== null}
+                  className={cn(
+                    'rounded-md border bg-card px-4 py-3 text-left text-sm transition-colors',
+                    'hover:border-primary/50 hover:bg-muted/40',
+                    showState && isCorrect && 'border-emerald-500 bg-emerald-500/10',
+                    showState &&
+                      !isCorrect &&
+                      outcome === 'wrong' &&
+                      'border-destructive bg-destructive/10',
+                  )}
+                >
+                  <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full border text-xs">
+                    {i + 1}
+                  </span>
+                  {option}
+                </button>
+              );
+            })}
+          </div>
+        ) : null}
 
-      {question.mode === 'typed-recall' ? (
-        <form onSubmit={handleTypedSubmit} className="flex gap-2">
-          <Input
-            value={typed}
-            onChange={(e) => setTyped(e.target.value)}
-            placeholder="Type the answer…"
-            autoComplete="off"
-            disabled={outcome !== null}
-            aria-label="Your answer"
-          />
-          <Button type="submit" disabled={isSubmitting || outcome !== null}>
-            {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Check'}
-          </Button>
-        </form>
-      ) : null}
-
-      {question.mode === 'flashcard' ? (
-        <div className="grid grid-cols-5 gap-2">
-          {[1, 2, 3, 4, 5].map((rating) => (
-            <Button
-              key={rating}
-              variant={rating >= 4 ? 'primary' : 'outline'}
-              onClick={() => void submit(rating >= 3, rating)}
-              disabled={!revealed || isSubmitting || outcome !== null}
-            >
-              {rating}
+        {question.mode === 'typed-recall' ? (
+          <form onSubmit={handleTypedSubmit} className="flex gap-2">
+            <Input
+              value={typed}
+              onChange={(e) => setTyped(e.target.value)}
+              placeholder="Type the answer…"
+              autoComplete="off"
+              disabled={outcome !== null}
+              aria-label="Your answer"
+            />
+            <Button type="submit" size="lg" disabled={isSubmitting || outcome !== null}>
+              {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Check'}
             </Button>
-          ))}
-        </div>
-      ) : null}
+          </form>
+        ) : null}
 
-      {outcome ? (
-        <div
-          className={cn(
-            'flex items-center justify-between rounded-md border p-3 text-sm',
-            outcome === 'correct'
-              ? 'border-emerald-500/50 bg-emerald-500/10'
-              : 'border-destructive/50 bg-destructive/10',
-          )}
-          role="status"
-        >
-          <span className="flex items-center gap-2 font-medium">
-            {outcome === 'correct' ? (
-              <>
-                <Check className="h-4 w-4" /> Correct
-              </>
-            ) : (
-              <>
-                <X className="h-4 w-4" /> The answer was &ldquo;{current.title}&rdquo;
-              </>
+        {question.mode === 'flashcard' ? (
+          <div className="grid grid-cols-5 gap-2">
+            {[1, 2, 3, 4, 5].map((rating) => (
+              <Button
+                key={rating}
+                variant={rating >= 4 ? 'primary' : 'outline'}
+                size="lg"
+                onClick={() => void submit(rating >= 3, rating)}
+                disabled={!revealed || isSubmitting || outcome !== null}
+              >
+                {rating}
+              </Button>
+            ))}
+          </div>
+        ) : null}
+
+        {outcome ? (
+          <div
+            className={cn(
+              'flex items-center justify-between rounded-md border p-3 text-sm',
+              outcome === 'correct'
+                ? 'border-emerald-500/50 bg-emerald-500/10'
+                : 'border-destructive/50 bg-destructive/10',
             )}
-          </span>
-          <Button size="sm" onClick={advance}>
-            Next <ArrowRight className="ml-1 h-4 w-4" />
-          </Button>
-        </div>
-      ) : null}
+            role="status"
+          >
+            <span className="flex items-center gap-2 font-medium">
+              {outcome === 'correct' ? (
+                <>
+                  <Check className="h-4 w-4" /> Correct
+                </>
+              ) : (
+                <>
+                  <X className="h-4 w-4" /> The answer was &ldquo;{current.title}&rdquo;
+                </>
+              )}
+            </span>
+            <Button size="md" onClick={advance}>
+              Next <ArrowRight className="ml-1 h-4 w-4" />
+            </Button>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }
