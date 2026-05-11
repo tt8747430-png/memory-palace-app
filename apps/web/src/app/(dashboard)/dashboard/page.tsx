@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
-import { WelcomeBanner, StatsBar, RecentPalaces } from '@/features/dashboard';
-import { DailyReviewCta, StreakCounter } from '@/features/practice';
 import { Skeleton } from '@memory-palace/ui';
+import { DashboardBento } from './_components/DashboardBento';
 import { StatisticsPanelSection } from './_components/StatisticsPanelSection';
 
 export const metadata = {
@@ -11,42 +10,21 @@ export const metadata = {
 
 export default function DashboardPage() {
   return (
-    <div className="space-y-8">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <Suspense fallback={<Skeleton className="h-12 w-64" />}>
-          <WelcomeBanner />
-        </Suspense>
-        <Suspense fallback={<Skeleton className="h-7 w-24 rounded-full" />}>
-          <StreakCounter />
-        </Suspense>
-      </div>
-
-      <Suspense fallback={<Skeleton className="h-24 rounded-lg" />}>
-        <DailyReviewCta />
-      </Suspense>
-
+    <div className="space-y-6 sm:space-y-8">
       <Suspense
         fallback={
-          <div className="grid grid-cols-3 gap-3 md:gap-4">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <Skeleton key={i} className="h-[72px] rounded-lg" />
-            ))}
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-6 sm:gap-4">
+            <Skeleton className="col-span-2 h-56 rounded-2xl sm:col-span-4 sm:row-span-2 sm:h-full" />
+            <Skeleton className="col-span-1 h-28 rounded-2xl sm:col-span-2" />
+            <Skeleton className="col-span-1 h-28 rounded-2xl sm:col-span-2" />
+            <Skeleton className="col-span-1 h-24 rounded-2xl sm:col-span-2" />
+            <Skeleton className="col-span-1 h-24 rounded-2xl sm:col-span-2" />
+            <Skeleton className="col-span-2 h-24 rounded-2xl sm:col-span-2" />
+            <Skeleton className="col-span-2 h-40 rounded-2xl sm:col-span-6" />
           </div>
         }
       >
-        <StatsBar />
-      </Suspense>
-
-      <Suspense
-        fallback={
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="h-20 rounded-lg" />
-            ))}
-          </div>
-        }
-      >
-        <RecentPalaces />
+        <DashboardBento />
       </Suspense>
 
       <Suspense fallback={<Skeleton className="h-64 rounded-xl" />}>
