@@ -118,7 +118,22 @@ export function CommandPalette() {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="overflow-hidden p-0 shadow-xl sm:max-w-xl">
+      <DialogContent
+        className={[
+          // Override the global mobile bottom-sheet: anchor near top, breathe
+          // on both sides, cap height so the on-screen keyboard fits below.
+          'inset-x-3 bottom-auto top-[max(env(safe-area-inset-top),1rem)] w-auto max-h-[80dvh]',
+          'overflow-hidden rounded-2xl border bg-background p-0 shadow-2xl',
+          'data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top',
+          // Hide the inherited drag-handle and Close button — cmdk dialogs
+          // don't need a redundant X (Esc + outside click already close).
+          '[&>div[aria-hidden]:first-child]:hidden [&>button]:hidden',
+          // Desktop: centered, larger, scale-in.
+          'sm:inset-x-auto sm:top-[12dvh] sm:left-1/2 sm:max-h-[70dvh] sm:w-full sm:max-w-xl sm:-translate-x-1/2 sm:translate-y-0 sm:rounded-xl',
+          'sm:data-[state=closed]:slide-out-to-top-[40%] sm:data-[state=open]:slide-in-from-top-[40%]',
+          'sm:data-[state=closed]:zoom-out-95 sm:data-[state=open]:zoom-in-95',
+        ].join(' ')}
+      >
         <DialogTitle className="sr-only">Command Palette</DialogTitle>
         <DialogDescription className="sr-only">
           Type to search for actions, pages, or settings. Use arrow keys to navigate.
