@@ -75,7 +75,7 @@ export function RoomJourney({ palaceId, roomId, roomTitle, palaceTitle, mode, no
 
   if (!current) {
     return (
-      <div className="flex min-h-[100dvh] flex-col items-center justify-center gap-4 p-8 text-center">
+      <div className="-mx-4 -my-6 flex min-h-[calc(100dvh-var(--height-bottom-nav)-env(safe-area-inset-bottom))] flex-col items-center justify-center gap-4 p-8 text-center sm:-mx-6 md:min-h-dvh lg:-mx-8">
         <h1 className="text-2xl font-semibold">{roomTitle}</h1>
         <p className="text-muted-foreground">This room has no nodes yet.</p>
         <Link
@@ -92,38 +92,62 @@ export function RoomJourney({ palaceId, roomId, roomTitle, palaceTitle, mode, no
   const headerLabel = isBible
     ? `${palaceTitle} · Chapter — ${roomTitle}`
     : `${palaceTitle} · ${roomTitle}`;
+  const progress = total > 0 ? ((index + 1) / total) * 100 : 0;
 
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-background">
-      <header className="flex items-center justify-between border-b px-4 py-3 sm:px-6">
-        <div className="min-w-0">
-          <p className="truncate text-xs uppercase tracking-wider text-muted-foreground">
-            {headerLabel}
-          </p>
-          <p className="text-sm tabular-nums">{stepLabel}</p>
+    /*
+     * Full-bleed journey viewer. Escapes the dashboard wrapper's centered
+     * `mx-auto max-w-7xl px-4 py-6` padding via negative margins, then sets
+     * an explicit viewport-aware height (mobile subtracts the bottom nav +
+     * iOS safe area; md+ uses the full dvh because the sidebar replaces
+     * the mobile header).
+     */
+    <div className="-mx-4 -my-6 flex h-[calc(100dvh-var(--height-bottom-nav)-env(safe-area-inset-bottom))] flex-col bg-background sm:-mx-6 md:h-dvh lg:-mx-8">
+      {/* Sticky header — breadcrumb-style identity + exit affordance + linear progress. */}
+      <header className="sticky top-0 z-20 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/75">
+        <div className="flex items-center justify-between gap-3 px-4 py-2.5 sm:px-6">
+          <div className="min-w-0">
+            <p className="truncate text-[11px] uppercase tracking-wider text-muted-foreground">
+              {headerLabel}
+            </p>
+            <p className="text-sm tabular-nums">{stepLabel}</p>
+          </div>
+          <Link
+            href={`/palaces/${palaceId}/rooms/${roomId}`}
+            aria-label="Exit journey"
+            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
+          >
+            <X className="h-5 w-5" />
+          </Link>
         </div>
-        <Link
-          href={`/palaces/${palaceId}/rooms/${roomId}`}
-          aria-label="Exit journey"
-          className="rounded-full p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
+        <div
+          className="h-1 w-full bg-muted/60"
+          role="progressbar"
+          aria-valuemin={0}
+          aria-valuemax={total}
+          aria-valuenow={index + 1}
+          aria-label="Journey progress"
         >
-          <X className="h-5 w-5" />
-        </Link>
+          <div
+            className="h-full bg-primary transition-[width] duration-300 ease-out"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+        <div className="border-t px-4 py-2.5 sm:px-6">
+          <JourneyStepper
+            items={nodes.map((n) => ({ id: n.id, title: n.title }))}
+            currentIndex={index}
+            onJump={(i) => {
+              setHintRevealed(false);
+              setDirection(i > index ? 1 : -1);
+              setIndex(i);
+            }}
+          />
+        </div>
       </header>
 
-      <div className="border-b px-4 py-3 sm:px-6">
-        <JourneyStepper
-          items={nodes.map((n) => ({ id: n.id, title: n.title }))}
-          currentIndex={index}
-          onJump={(i) => {
-            setHintRevealed(false);
-            setDirection(i > index ? 1 : -1);
-            setIndex(i);
-          }}
-        />
-      </div>
-
-      <main className="flex flex-1 items-center justify-center px-4 py-10 sm:px-6">
+      {/* Scrollable card area — fills remaining flex space; long content scrolls inside. */}
+      <main className="flex flex-1 items-start justify-center overflow-y-auto px-4 py-6 sm:items-center sm:px-6 sm:py-10">
         <m.article
           key={current.id}
           drag={swipe.drag}
@@ -133,11 +157,11 @@ export function RoomJourney({ palaceId, roomId, roomTitle, palaceTitle, mode, no
           initial={{ opacity: 0, x: direction * 32 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.2 }}
-          className="w-full max-w-2xl cursor-grab touch-pan-y rounded-xl border bg-card p-8 shadow-sm active:cursor-grabbing"
+          className="w-full max-w-2xl cursor-grab touch-pan-y rounded-2xl border bg-card p-6 shadow-sm active:cursor-grabbing sm:p-8"
           style={current.color ? { borderColor: current.color } : undefined}
         >
           {isBible ? (
-            <div className="mb-3 flex items-center gap-2">
+            <div className="mb-3 flex flex-wrap items-center gap-2">
               <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-primary">
                 Verse {index + 1}
               </span>
@@ -149,7 +173,7 @@ export function RoomJourney({ palaceId, roomId, roomTitle, palaceTitle, mode, no
             </div>
           ) : null}
 
-          <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">{current.title}</h2>
+          <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">{current.title}</h2>
           {current.content ? (
             <p className="mt-4 whitespace-pre-wrap text-base leading-relaxed text-muted-foreground">
               {current.content}
@@ -185,14 +209,28 @@ export function RoomJourney({ palaceId, roomId, roomTitle, palaceTitle, mode, no
         </m.article>
       </main>
 
-      <footer className="flex items-center justify-between gap-3 border-t px-4 py-3 sm:px-6">
-        <Button variant="outline" size="md" onClick={prev} disabled={index === 0}>
-          <ArrowLeft className="mr-1 h-4 w-4" /> Previous
+      {/* Sticky footer — large touch targets on mobile, swipe hint on desktop. */}
+      <footer className="flex items-center justify-between gap-3 border-t bg-background/95 px-4 py-3 backdrop-blur supports-backdrop-filter:bg-background/75 sm:px-6">
+        <Button
+          variant="outline"
+          size="md"
+          onClick={prev}
+          disabled={index === 0}
+          className="flex-1 sm:flex-none"
+        >
+          <ArrowLeft className="mr-1 h-4 w-4" />
+          <span className="hidden sm:inline">Previous</span>
+          <span className="sm:hidden">Prev</span>
         </Button>
         <p className="hidden text-xs text-muted-foreground sm:block">
           Swipe or use ← → to navigate
         </p>
-        <Button size="md" onClick={next} disabled={index >= total - 1}>
+        <Button
+          size="md"
+          onClick={next}
+          disabled={index >= total - 1}
+          className="flex-1 sm:flex-none"
+        >
           Next <ArrowRight className="ml-1 h-4 w-4" />
         </Button>
       </footer>
