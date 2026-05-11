@@ -51,7 +51,12 @@ export function MasteryRings({
   ];
 
   return (
-    <div className={cn('flex items-center gap-5', className)}>
+    <div
+      className={cn(
+        'flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:gap-5',
+        className,
+      )}
+    >
       <svg
         width={size}
         height={size}

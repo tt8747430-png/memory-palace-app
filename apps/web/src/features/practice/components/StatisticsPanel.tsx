@@ -74,7 +74,7 @@ export function StatisticsPanel({ stats }: Props) {
     .map((s) => s.score);
 
   return (
-    <section className="rounded-xl border bg-card p-5 shadow-sm">
+    <section className="rounded-xl border bg-card p-4 shadow-sm sm:p-5">
       <header className="mb-4 flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold tracking-tight">Practice statistics</h2>
@@ -89,16 +89,20 @@ export function StatisticsPanel({ stats }: Props) {
         </div>
       </header>
 
-      <div role="tablist" aria-label="Statistics tabs" className="mb-4 flex gap-1 border-b">
+      <div
+        role="tablist"
+        aria-label="Statistics tabs"
+        className="mb-4 -mx-1 flex gap-1 overflow-x-auto border-b px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
         {TABS.map(({ id, label, Icon }) => (
           <button
             key={id}
             role="tab"
-            aria-selected={tab === id}
+            aria-selected={tab === id ? 'true' : 'false'}
             type="button"
             onClick={() => setTab(id)}
             className={cn(
-              'inline-flex items-center gap-1.5 border-b-2 px-3 py-2 text-sm transition-colors',
+              'inline-flex shrink-0 items-center gap-1.5 border-b-2 px-3 py-2 text-sm transition-colors',
               tab === id
                 ? 'border-primary text-foreground'
                 : 'border-transparent text-muted-foreground hover:text-foreground',
@@ -112,7 +116,7 @@ export function StatisticsPanel({ stats }: Props) {
 
       {tab === 'overview' && (
         <div className="space-y-4">
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             <Stat
               label="Attempts"
               value={stats.totalPracticed}

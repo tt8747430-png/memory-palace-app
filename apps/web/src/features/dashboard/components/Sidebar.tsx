@@ -7,7 +7,6 @@ import { navItems, isNavItemActive } from '../nav';
 import { ModeToggle } from './ModeToggle';
 import { ProfileMenu } from './ProfileMenu';
 import { QuickActionsRow } from './QuickActionsRow';
-import { WorkspaceSwitcher } from './WorkspaceSwitcher';
 
 interface UserProfile {
   displayName: string;
@@ -24,12 +23,14 @@ export function Sidebar({ userProfile }: SidebarProps) {
 
   return (
     <div className="flex h-full flex-col">
-      {/* Header — workspace identity (Figma 2026 Sidebar_Tutorial pattern). */}
-      <div className="px-3 pb-2 pt-4">
-        <WorkspaceSwitcher
-          displayName={userProfile?.displayName ?? null}
-          email={userProfile?.email ?? null}
-        />
+      {/* Brand mark — minimal identity, no duplicate of the footer profile. */}
+      <div className="px-5 pb-3 pt-5">
+        <Link
+          href="/dashboard"
+          className="font-display text-sm font-semibold tracking-tight text-foreground"
+        >
+          Memory Palace
+        </Link>
       </div>
 
       {/* Quick actions — persistent ⌘K affordance. */}

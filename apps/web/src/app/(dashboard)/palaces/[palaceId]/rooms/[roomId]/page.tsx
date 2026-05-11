@@ -41,16 +41,16 @@ export default async function RoomPage({ params }: RoomPageProps) {
   const initialNodes = nodesResult.success ? nodesResult.data : [];
 
   return (
-    <div className="flex h-full flex-col gap-3">
-      {/*
-       * Minimal canvas chrome — single compact bar that gives the canvas
-       * maximum vertical room. Breadcrumb on the left identifies the
-       * palace/room; "Start journey" lives on the right when there's
-       * something to walk through. The room title is no longer duplicated
-       * as an h1 because the breadcrumb already terminates in it (and
-       * <title> covers the document head).
-       */}
-      <div className="flex flex-wrap items-center justify-between gap-2">
+    /*
+     * Full-bleed canvas page. Escapes the dashboard's centered `mx-auto
+     * max-w-7xl px-4 py-6` wrapper via negative margins so the canvas can
+     * own the entire main area, then sets an explicit height that subtracts
+     * the mobile chrome (top header + bottom nav + safe area). On md+ the
+     * sidebar replaces the mobile header, so we recover that space.
+     */
+    <div className="-mx-4 -my-6 flex h-[calc(100dvh-3.5rem-var(--height-bottom-nav)-env(safe-area-inset-bottom))] flex-col sm:-mx-6 md:h-dvh lg:-mx-8">
+      {/* Sticky breadcrumb bar — stays pinned even if the canvas scrolls. */}
+      <div className="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-2 border-b bg-background/95 px-4 py-2.5 backdrop-blur supports-backdrop-filter:bg-background/75 sm:px-6 lg:px-8">
         <nav
           className="flex min-w-0 items-center gap-1 text-sm text-muted-foreground"
           aria-label="Breadcrumb"
@@ -75,14 +75,10 @@ export default async function RoomPage({ params }: RoomPageProps) {
         ) : null}
       </div>
 
-      {/* Spatial canvas — error boundary ensures sidebar survives a crash.
-       * Uses dynamic viewport height (`dvh`) so iOS Safari URL-bar collapse
-       * doesn't leave the canvas with a stale fixed pixel height. The 10rem
-       * subtracted accounts for the dashboard chrome + this page's compact
-       * single-bar header (was 16rem with the full h1 stack).
-       * The inner `RoomCanvas` registers a ResizeObserver to refit viewport
-       * on container size changes (rotation, browser-chrome show/hide). */}
-      <div className="h-[calc(100dvh-10rem)] min-h-[420px] w-full">
+      {/* Canvas fills the remaining flex space — toolbar + FAB are absolute
+       * inside `RoomCanvas` so they stay pinned to the canvas bottom edge,
+       * which now always equals the viewport edge minus bottom nav. */}
+      <div className="relative min-h-0 flex-1">
         <CanvasErrorBoundary>
           <RoomCanvas roomId={roomId} initialNodes={initialNodes} palaceMode={palace.mode} />
         </CanvasErrorBoundary>
