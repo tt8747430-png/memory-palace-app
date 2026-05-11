@@ -1,12 +1,15 @@
 import Link from 'next/link';
 import { ArrowRight, BrainCircuit, Building2, DoorOpen, Flame, Sparkles } from 'lucide-react';
 import { buttonVariants, cn } from '@memory-palace/ui';
-import { Sparkline } from '@/shared/components/Sparkline';
+import { AreaChart } from '@/shared/components/AreaChart';
+import { KpiTile } from '@/shared/components/KpiTile';
 import { getDashboardStats } from '@/features/dashboard/actions/getDashboardStats';
 import { getRecentPalaces } from '@/features/dashboard/actions/getRecentPalaces';
 import { getDueNodes } from '@/features/practice/actions/getDueNodes';
 import { getPracticeStats } from '@/features/practice/actions/getPracticeStats';
 import { getUserProfile } from '@/shared/lib/userProfile';
+
+const WEEKDAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const;
 
 /**
  * Bento-grid dashboard composition. Replaces the prior flat stack of
@@ -109,28 +112,16 @@ export async function DashboardBento() {
       </section>
 
       {/* B — Streak */}
-      <section
-        aria-label="Top streak"
-        className="col-span-1 flex flex-col justify-between rounded-2xl border bg-card p-4 shadow-sm sm:col-span-2 sm:p-5"
-      >
-        <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-          <Flame
-            className={cn(
-              'h-3.5 w-3.5',
-              topStreak > 0 ? 'text-amber-500' : 'text-muted-foreground',
-            )}
-          />
-          Streak
-        </div>
-        <div className="mt-3">
-          <p className="text-3xl font-bold tabular-nums sm:text-4xl">{topStreak}</p>
-          <p className="mt-0.5 text-xs text-muted-foreground">
-            {topStreak > 0 ? 'top per-node streak' : 'practice to start a streak'}
-          </p>
-        </div>
-      </section>
+      <KpiTile
+        className="col-span-1 sm:col-span-2"
+        label="Streak"
+        icon={<Flame className="h-3.5 w-3.5" />}
+        tone={topStreak > 0 ? 'warning' : 'neutral'}
+        value={<span className="tabular-nums">{topStreak}</span>}
+        caption={topStreak > 0 ? 'top per-node streak' : 'practice to start a streak'}
+      />
 
-      {/* C — Weekly activity sparkline */}
+      {/* C — Weekly activity area chart */}
       <section
         aria-label="Weekly review activity"
         className="col-span-1 flex flex-col justify-between rounded-2xl border bg-card p-4 shadow-sm sm:col-span-2 sm:p-5"
@@ -140,17 +131,15 @@ export async function DashboardBento() {
           <span className="tabular-nums text-foreground">{totalThisWeek}</span>
         </div>
         <div className="mt-3 text-primary">
-          {weeklyActivity.length >= 2 ? (
-            <Sparkline
-              values={weeklyActivity}
-              width={160}
-              height={40}
-              className="h-10 w-full"
-              fill
-            />
-          ) : (
-            <div className="h-10 rounded-md bg-muted/40" aria-hidden />
-          )}
+          <AreaChart
+            values={weeklyActivity}
+            labels={WEEKDAY_LABELS}
+            width={240}
+            height={56}
+            className="h-14 w-full"
+            label={`Weekly attempts: ${totalThisWeek}`}
+            formatValue={(v) => `${v} ${v === 1 ? 'attempt' : 'attempts'}`}
+          />
           <p className="mt-1 text-xs text-muted-foreground">
             {totalThisWeek === 0 ? 'no activity yet' : 'attempts, last 7 days'}
           </p>
@@ -158,27 +147,30 @@ export async function DashboardBento() {
       </section>
 
       {/* D — Palaces */}
-      <CountTile
+      <KpiTile
+        className="col-span-1 sm:col-span-2"
         href="/palaces"
         label="Palaces"
+        icon={<Building2 className="h-3.5 w-3.5" />}
         value={counts.palaceCount}
-        icon={<Building2 className="h-4 w-4" />}
       />
 
       {/* E — Rooms */}
-      <CountTile
+      <KpiTile
+        className="col-span-1 sm:col-span-2"
         href="/palaces"
         label="Rooms"
+        icon={<DoorOpen className="h-3.5 w-3.5" />}
         value={counts.roomCount}
-        icon={<DoorOpen className="h-4 w-4" />}
       />
 
       {/* F — Nodes */}
-      <CountTile
+      <KpiTile
+        className="col-span-1 sm:col-span-2"
         href="/palaces"
         label="Nodes"
+        icon={<Sparkles className="h-3.5 w-3.5" />}
         value={counts.nodeCount}
-        icon={<Sparkles className="h-4 w-4" />}
       />
 
       {/* G — Recent palaces */}
@@ -241,33 +233,5 @@ export async function DashboardBento() {
         </section>
       )}
     </div>
-  );
-}
-
-function CountTile({
-  href,
-  label,
-  value,
-  icon,
-}: {
-  href: string;
-  label: string;
-  value: number;
-  icon: React.ReactNode;
-}) {
-  return (
-    <Link
-      href={href}
-      className={cn(
-        'group col-span-1 flex flex-col justify-between rounded-2xl border bg-card p-4 shadow-sm transition-all sm:col-span-2 sm:p-5',
-        'hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md motion-reduce:hover:translate-y-0',
-      )}
-    >
-      <div className="flex items-center justify-between text-xs font-medium uppercase tracking-wider text-muted-foreground">
-        <span>{label}</span>
-        <span className="text-muted-foreground/70 group-hover:text-primary">{icon}</span>
-      </div>
-      <p className="mt-3 text-3xl font-bold tabular-nums sm:text-4xl">{value}</p>
-    </Link>
   );
 }

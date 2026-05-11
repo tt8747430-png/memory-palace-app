@@ -267,3 +267,17 @@ Create this file in the repository root to define the performance budget enforce
 5. If any budget is exceeded, the job fails and blocks the merge
 
 > **Note:** The `PREVIEW_URL` environment variable must be populated by the `deploy.yml` workflow (Vercel provides this via the Vercel GitHub integration).
+
+---
+
+## Figma 2026 polish — performance posture
+
+The dashboard / practice polish from [`docs/plans/IMPLEMENTATION_APP_PLAN_FIGMA.md`](../plans/IMPLEMENTATION_APP_PLAN_FIGMA.md) is **bundle-neutral**:
+
+- Sparkline, area chart with hover tooltip, mastery rings, and arc donut are all **pure SVG with `currentColor`** — no Recharts, no D3.
+- Slide-to-confirm reuses the framer-motion already installed for `useSwipeNavigation`; no `react-swipeable` or `@use-gesture/react`.
+- Workspace switcher reuses palaces already fetched server-side in the dashboard layout — no new round-trip.
+- `getPracticeStats()` gains an additive `mastery` field derived in the same query; no extra request.
+- New animations gate via CSS `@media (prefers-reduced-motion: reduce)` or the global `MotionConfig reducedMotion="user"` — no JS `useReducedMotion()` checks.
+
+Lighthouse budgets (`lighthouse-budget.json`) remain the gate.

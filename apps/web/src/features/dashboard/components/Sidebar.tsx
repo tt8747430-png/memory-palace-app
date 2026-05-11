@@ -3,10 +3,11 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@memory-palace/ui';
-import { CommandPaletteDesktopTrigger } from '@/shared/components/CommandPaletteTrigger';
 import { navItems, isNavItemActive } from '../nav';
 import { ModeToggle } from './ModeToggle';
 import { ProfileMenu } from './ProfileMenu';
+import { QuickActionsRow } from './QuickActionsRow';
+import { WorkspaceSwitcher } from './WorkspaceSwitcher';
 
 interface UserProfile {
   displayName: string;
@@ -23,11 +24,21 @@ export function Sidebar({ userProfile }: SidebarProps) {
 
   return (
     <div className="flex h-full flex-col">
-      {/* Brand */}
-      <div className="px-6 py-5 text-lg font-bold tracking-tight">🏛️ Memory Palace</div>
+      {/* Header — workspace identity (Figma 2026 Sidebar_Tutorial pattern). */}
+      <div className="px-3 pb-2 pt-4">
+        <WorkspaceSwitcher
+          displayName={userProfile?.displayName ?? null}
+          email={userProfile?.email ?? null}
+        />
+      </div>
 
-      {/* Nav links */}
-      <nav className="flex-1 space-y-0.5 px-3" aria-label="Main navigation">
+      {/* Quick actions — persistent ⌘K affordance. */}
+      <div className="px-3 pb-3">
+        <QuickActionsRow />
+      </div>
+
+      {/* Nav links — pill-selected, soft surface. */}
+      <nav className="flex-1 space-y-1 px-3" aria-label="Main navigation">
         {navItems.map(({ href, icon: Icon, label }) => {
           const active = isNavItemActive(pathname, href);
           return (
@@ -35,23 +46,28 @@ export function Sidebar({ userProfile }: SidebarProps) {
               key={href}
               href={href}
               className={cn(
-                'flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors',
+                'flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition-colors',
                 active
-                  ? 'bg-muted font-medium text-primary'
-                  : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                  ? 'bg-muted/70 font-semibold text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:bg-muted/40 hover:text-foreground',
               )}
               aria-current={active ? 'page' : undefined}
             >
-              <Icon className="h-4 w-4 shrink-0" />
+              <Icon
+                className={cn(
+                  'h-4 w-4 shrink-0',
+                  active ? 'text-primary' : 'text-muted-foreground/70',
+                )}
+                strokeWidth={active ? 2.25 : 2}
+              />
               {label}
             </Link>
           );
         })}
       </nav>
 
-      {/* Footer: ⌘K trigger + profile menu + theme toggle */}
-      <div className="border-t px-3 py-3 space-y-2">
-        <CommandPaletteDesktopTrigger />
+      {/* Footer: profile menu + theme toggle. */}
+      <div className="border-t px-3 py-3">
         <div className="flex items-center gap-1">
           {userProfile ? (
             <ProfileMenu

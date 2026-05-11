@@ -34,12 +34,15 @@ export function EmptyState({
     <div
       {...liveRegionProps}
       className={cn(
-        'flex flex-col items-center justify-center gap-1.5 px-4 py-16 text-center',
+        'flex flex-col items-center justify-center gap-1.5 rounded-2xl border border-dashed border-border/60 bg-card/40 px-4 py-12 text-center',
         className,
       )}
     >
       {icon ? (
-        <div className="mb-3 text-5xl" aria-hidden>
+        <div
+          className="mb-3 grid h-14 w-14 place-items-center rounded-full bg-muted/60 text-3xl text-muted-foreground"
+          aria-hidden
+        >
           {icon}
         </div>
       ) : null}

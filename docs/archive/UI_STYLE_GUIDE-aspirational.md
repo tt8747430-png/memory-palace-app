@@ -1116,3 +1116,28 @@ Context menus are replaced by **long-press** interactions on mobile (500ms hold 
 ## Design Inspiration
 
 The UI patterns in this guide are inspired by [TalantulApp.com](https://talantulapp.com), a mobile-first interactive Bible study platform, adapted for the Memory Palace use case. Key patterns adopted: card-based dashboards, gamification UI, bottom navigation, and full-screen immersive game modes.
+
+---
+
+## Figma 2026 patterns we are adopting
+
+Source: 15 Figma reference folders rasterized to `/tmp/figma-png/`; full analysis in [`docs/plans/IMPLEMENTATION_APP_PLAN_FIGMA.md`](../plans/IMPLEMENTATION_APP_PLAN_FIGMA.md).
+
+- **Workspace switcher in sidebar header** (Design_2026, Sidebar_Tutorial): avatar/logo + name + email + chevron. Sets up future multi-workspace.
+- **`Quick actions ⌘K` pinned row** (Design_2026, Sidebar_Tutorial): make the palette discoverable, not just shortcut-only.
+- **Pill-selected nav + badges** (Design_2026, VibeCodedSaas): soft surface pill with `aria-current="page"`; `New` / count badges via `@memory-palace/ui` `Badge`.
+- **KPI tile = number + caption + sparkline + delta chip** (DashboardUI, VibeCodedSaas, Micro_Dashboad): canonical bento tile shape.
+- **Area chart with hover tooltip pill** (VibeCodedSaas "Chart Hover"): pure SVG, `currentColor`, no Recharts.
+- **Concentric profit rings** (FintechDesign / Kole's Redesign): map to "Mastery by node level" — `Mastered / Familiar / Learning / New`.
+- **Partial-arc donut** (Kole's "Line of Credit"): "due today / total" companion in practice stats.
+- **Horizontal stepper across the top of journey** (VibeCoding_Results): desktop alternative to the vertical card stack; mobile stays vertical.
+- **Search + quick-add grid + Create-X footer popover** (Design_2026 "Modal 1"): visual target for `CommandPalette`.
+- **Mobile bottom-tab active circular indicator** (MobileUI, Tasty!): filled circle behind the active icon, not an underline.
+- **Slide-to-confirm primitive** (SwipeAnimation_Mobile "Slide To Buy"): destructive confirms + Anki-style Easy answer on flashcards. framer-motion `drag="x"` only (consistent with `useSwipeNavigation`).
+- **Soft warm hero card over tinted gradient** (Software_Sections, Flourish): marketing rhythm between cinematic plate sections.
+- **`explore the interface »` overlap affordance** (Software_Sections Frame 1411067454): screenshot of the next section peeks above the fold with a small link cue.
+- **Dashed-border empty states** (Design_2026 "Home — Empty", MobileUI "Home — Empty State"): dashed container + centered icon + single CTA.
+
+## Anti-patterns observed
+
+- **`Beginner/ColorsThatRuin`** — the cream + multi-color treatment demonstrates how a noisy accent palette destroys hierarchy. Validates our current OLED + restrained-accent direction. Product surfaces must continue to use `primary`/`accent`/`success`/`warning`; marketing-only accents stay ESLint-gated.

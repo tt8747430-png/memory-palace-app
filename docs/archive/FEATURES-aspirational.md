@@ -556,3 +556,15 @@ Edges become visually more prominent (thicker stroke, higher opacity) as both co
 ### Mobile Behaviour
 
 Backlinks panel opens as a bottom sheet (`Sheet` with `side="bottom"`) on mobile. Node reference autocomplete is triggered by a toolbar button (since typing `[[` on mobile soft keyboards may not reliably fire). Orphan node indicators are visible on canvas nodes on mobile.
+
+---
+
+## Figma 2026 additions
+
+Tracked via [`docs/plans/IMPLEMENTATION_APP_PLAN_FIGMA.md`](../plans/IMPLEMENTATION_APP_PLAN_FIGMA.md):
+
+- **Mastery rings.** Concentric SVG rings in the practice stats panel: `Mastered / Familiar / Learning / New`. Source: `getPracticeStats()` (additive `mastery` field derived from `node_review_state.ease`).
+- **Arc donut.** "Due today / total" companion to the mastery rings.
+- **Slide-to-confirm primitive.** Replaces "Confirm delete palace" with a swipe-driven control; adds an alternative "Easy" input to `FlashcardDeck`. framer-motion `drag="x"`, no new dependency.
+- **Workspace switcher.** Sidebar header avatar + name + email + chevron. Lift point for future multi-workspace.
+- **Horizontal journey stepper.** Desktop-only alternative view of `RoomJourney` (walk order `positionY, positionX` is preserved).
