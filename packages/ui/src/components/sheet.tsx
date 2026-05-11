@@ -65,7 +65,7 @@ function SheetContent({ side = 'right', className, children, ...props }: SheetCo
         className={cn(sheetContentVariants({ side }), className)}
         {...props}
       >
-        <DialogPrimitive.Close className="absolute right-2 top-2 inline-flex min-h-touch min-w-touch items-center justify-center rounded-md opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+        <DialogPrimitive.Close className="absolute right-2 top-[calc(env(safe-area-inset-top)+0.5rem)] inline-flex min-h-touch min-w-touch items-center justify-center rounded-md opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
           <X className="h-4 w-4" />
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>
