@@ -199,17 +199,41 @@ export function FlashcardDeck({ nodes }: Props) {
 
       {flipped ? (
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-          <Button variant="outline" onClick={() => void rate('again')}>
-            Again
+          <Button
+            variant="outline"
+            size="lg"
+            onClick={() => void rate('again')}
+            className="h-14 flex-col gap-0.5 border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive active:scale-[0.97]"
+          >
+            <span className="font-semibold">Again</span>
+            <span className="text-[10px] font-normal opacity-70">&lt; 1m</span>
           </Button>
-          <Button variant="outline" onClick={() => void rate('hard')}>
-            Hard
+          <Button
+            variant="outline"
+            size="lg"
+            onClick={() => void rate('hard')}
+            className="h-14 flex-col gap-0.5 border-warning/40 text-warning-foreground hover:bg-warning/15 active:scale-[0.97]"
+          >
+            <span className="font-semibold">Hard</span>
+            <span className="text-[10px] font-normal opacity-70">~ 6m</span>
           </Button>
-          <Button variant="outline" onClick={() => void rate('good')}>
-            Good
+          <Button
+            variant="outline"
+            size="lg"
+            onClick={() => void rate('good')}
+            className="h-14 flex-col gap-0.5 border-success/40 text-success hover:bg-success/10 hover:text-success active:scale-[0.97]"
+          >
+            <span className="font-semibold">Good</span>
+            <span className="text-[10px] font-normal opacity-70">~ 10m</span>
           </Button>
-          <Button variant="primary" onClick={() => void rate('easy')}>
-            Easy
+          <Button
+            variant="primary"
+            size="lg"
+            onClick={() => void rate('easy')}
+            className="h-14 flex-col gap-0.5 active:scale-[0.97]"
+          >
+            <span className="font-semibold">Easy</span>
+            <span className="text-[10px] font-normal opacity-80">~ 4d</span>
           </Button>
         </div>
       ) : (
