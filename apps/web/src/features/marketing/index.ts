@@ -17,3 +17,5 @@ export { FoundersNote } from './components/FoundersNote';
 export { FinalCTA } from './components/FinalCTA';
 export { ScrollProgress } from './components/ScrollProgress';
 export { ComparisonRadar } from './components/ComparisonRadar';
+export { SoftCardSection } from './components/SoftCardSection';
+export { ExploreInterfaceCue } from './components/ExploreInterfaceCue';

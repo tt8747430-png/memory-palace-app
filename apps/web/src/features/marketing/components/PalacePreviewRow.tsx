@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { cn } from '@memory-palace/ui';
+import { ExploreInterfaceCue } from './ExploreInterfaceCue';
 
 /**
  * Hover-to-expand palace preview row.
@@ -90,6 +91,7 @@ export function PalacePreviewRow() {
           <h3 className="mt-3 font-heading text-3xl font-normal leading-[1.05] tracking-[-1px] text-foreground md:text-4xl">
             <em className="not-italic text-muted-foreground">Hover</em> any room
           </h3>
+          <ExploreInterfaceCue className="mt-4" />
         </header>
         <div className="flex h-[380px] gap-3">
           {slides.map((s, i) => (
