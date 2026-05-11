@@ -24,7 +24,7 @@ export function Sidebar({ userProfile }: SidebarProps) {
   return (
     <div className="flex h-full flex-col">
       {/* Brand mark — minimal identity, no duplicate of the footer profile. */}
-      <div className="px-5 pb-3 pt-5">
+      <div className="px-5 pb-3 pt-[calc(env(safe-area-inset-top)+1.25rem)]">
         <Link
           href="/dashboard"
           className="font-display text-sm font-semibold tracking-tight text-foreground"
@@ -68,7 +68,7 @@ export function Sidebar({ userProfile }: SidebarProps) {
       </nav>
 
       {/* Footer: profile menu + theme toggle. */}
-      <div className="border-t px-3 py-3">
+      <div className="border-t px-3 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
         <div className="flex items-center gap-1">
           {userProfile ? (
             <ProfileMenu
