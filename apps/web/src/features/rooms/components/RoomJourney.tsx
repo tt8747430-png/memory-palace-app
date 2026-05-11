@@ -7,6 +7,7 @@ import { ArrowLeft, ArrowRight, ChevronLeft, Eye, EyeOff, X } from 'lucide-react
 import { Button } from '@memory-palace/ui';
 import type { PalaceMode } from '@memory-palace/db';
 import { useSwipeNavigation } from '@/shared/hooks/useSwipeNavigation';
+import { JourneyStepper } from './JourneyStepper';
 
 interface JourneyNode {
   id: string;
@@ -110,32 +111,17 @@ export function RoomJourney({ palaceId, roomId, roomTitle, palaceTitle, mode, no
         </Link>
       </header>
 
-      <ol
-        className="flex flex-wrap gap-1.5 border-b px-4 py-3 sm:px-6"
-        aria-label="Journey progress"
-      >
-        {nodes.map((n, i) => (
-          <li key={n.id}>
-            <button
-              type="button"
-              aria-label={`Go to step ${i + 1}: ${n.title}`}
-              aria-current={i === index ? 'step' : undefined}
-              onClick={() => {
-                setHintRevealed(false);
-                setDirection(i > index ? 1 : -1);
-                setIndex(i);
-              }}
-              className={
-                i === index
-                  ? 'h-2 w-6 rounded-full bg-primary transition-all'
-                  : i < index
-                    ? 'h-2 w-2 rounded-full bg-primary/60 transition-all hover:bg-primary'
-                    : 'h-2 w-2 rounded-full bg-muted-foreground/30 transition-all hover:bg-muted-foreground/60'
-              }
-            />
-          </li>
-        ))}
-      </ol>
+      <div className="border-b px-4 py-3 sm:px-6">
+        <JourneyStepper
+          items={nodes.map((n) => ({ id: n.id, title: n.title }))}
+          currentIndex={index}
+          onJump={(i) => {
+            setHintRevealed(false);
+            setDirection(i > index ? 1 : -1);
+            setIndex(i);
+          }}
+        />
+      </div>
 
       <main className="flex flex-1 items-center justify-center px-4 py-10 sm:px-6">
         <m.article
