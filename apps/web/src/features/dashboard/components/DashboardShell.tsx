@@ -29,7 +29,7 @@ export function DashboardShell({ children, userProfile }: DashboardShellProps) {
           <Sidebar userProfile={userProfile} />
         </aside>
 
-        <header className="flex items-center justify-between border-b px-4 py-3 md:hidden">
+        <header className="flex items-center justify-between border-b px-4 pb-3 pt-[calc(env(safe-area-inset-top)+0.75rem)] md:hidden">
           <MobileDrawer userProfile={userProfile} />
           <h1 className="text-lg font-semibold">Memory Palace</h1>
           <div className="flex items-center gap-1">
