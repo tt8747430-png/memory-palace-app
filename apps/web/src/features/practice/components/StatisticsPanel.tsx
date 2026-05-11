@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Activity, BarChart3, Clock, Flame, Target } from 'lucide-react';
 import { cn } from '@memory-palace/ui';
+import { Sparkline } from '@/shared/components/Sparkline';
 import type { PracticeStats } from '../actions/getPracticeStats';
 
 interface Props {
@@ -64,6 +65,13 @@ export function StatisticsPanel({ stats }: Props) {
     return WEEKDAY_LABELS[d.getDay()] ?? '';
   });
 
+  // Sparkline series for the Attempts tile: most-recent score per session,
+  // reversed so the line reads oldest → newest. Empty array hides the chart.
+  const accuracyTrend = stats.recentSessions
+    .slice()
+    .reverse()
+    .map((s) => s.score);
+
   return (
     <section className="rounded-xl border bg-card p-5 shadow-sm">
       <header className="mb-4 flex items-center justify-between">
@@ -103,9 +111,20 @@ export function StatisticsPanel({ stats }: Props) {
 
       {tab === 'overview' && (
         <div className="grid gap-3 sm:grid-cols-3">
-          <Stat label="Attempts" value={stats.totalPracticed} />
+          <Stat
+            label="Attempts"
+            value={stats.totalPracticed}
+            trend={accuracyTrend}
+            trendTone="success"
+          />
           <Stat label="Top streak" value={stats.topStreak} suffix="✨" />
-          <Stat label="This week" value={totalThisWeek} />
+          <Stat
+            label="This week"
+            value={totalThisWeek}
+            trend={stats.weeklyActivity}
+            trendTone="primary"
+            trendFill
+          />
         </div>
       )}
 
@@ -197,14 +216,48 @@ export function StatisticsPanel({ stats }: Props) {
   );
 }
 
-function Stat({ label, value, suffix }: { label: string; value: number; suffix?: string }) {
+function Stat({
+  label,
+  value,
+  suffix,
+  trend,
+  trendTone = 'primary',
+  trendFill = false,
+}: {
+  label: string;
+  value: number;
+  suffix?: string;
+  /** Optional sparkline series — values flow oldest → newest. */
+  trend?: number[];
+  /** Which semantic token paints the spark line. */
+  trendTone?: 'primary' | 'success' | 'warning';
+  /** Soft area fill under the line. */
+  trendFill?: boolean;
+}) {
+  const toneClass =
+    trendTone === 'success'
+      ? 'text-success'
+      : trendTone === 'warning'
+        ? 'text-warning'
+        : 'text-primary';
   return (
-    <div className="rounded-lg border bg-background p-4">
+    <div className="relative overflow-hidden rounded-lg border bg-background p-4">
       <p className="text-xs uppercase tracking-wider text-muted-foreground">{label}</p>
       <p className="mt-1 text-2xl font-semibold tabular-nums">
         {value}
         {suffix ? <span className="ml-1 text-base">{suffix}</span> : null}
       </p>
+      {trend && trend.length >= 2 ? (
+        <div className={cn('mt-2 h-7 w-full', toneClass)} aria-hidden="true">
+          <Sparkline
+            values={trend}
+            width={120}
+            height={28}
+            fill={trendFill}
+            className="h-full w-full"
+          />
+        </div>
+      ) : null}
     </div>
   );
 }
