@@ -104,6 +104,26 @@ wrapper that gets `bg-primary/12` while active. This matches the
 `MobileUI/Home - Bottom - Focused` Figma references and is more accessible
 than the previous color-only state change.
 
+## Follow-up slices
+
+- **Slice D — Journey stepper.** `features/rooms/components/JourneyStepper.tsx`
+  replaces the inline dot row inside `RoomJourney`. Mobile keeps the dot
+  affordance (active step widens to `w-6`); md+ shows numbered pills with a
+  truncated title for orientation across longer chapters. Stepper accepts a
+  generic `{ id, title }[]` so non-room consumers can reuse it.
+- **Slice E — Marketing soft-card surfaces.** `SoftCardSection` codifies the
+  rounded-3xl card surface from Figma `Design_2026` / `Software_Sections` with
+  three tones (`card | muted | glass`). `ExploreInterfaceCue` is a pulsing
+  cursor chip from `EveryUIConcept` used as an "explore" affordance on the
+  palace preview row. Both ship as marketing-only exports.
+- **Slice G — Neutral ramp audit.** Reviewed the current `globals.css` ramp
+  against the Figma `Theming Light Mode` / `Theming Dark mode` / `Linear Colors`
+  references. The existing tokens already sit in the Linear-style cool-neutral
+  family (light: `0 0% 100%` bg, `240 4% 37%` muted-fg; dark: `240 10% 4%` bg,
+  `240 4% 16%` muted/border). No measurable drift, so the audit ships as a
+  documented no-op — adjustments will require pixel-sampled evidence per the
+  AGENTS.md rule that prohibits speculative token tuning.
+
 ## Consequences
 
 - **Bundle stays flat.** No new deps; pure-SVG primitives are tiny.
