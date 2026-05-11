@@ -40,10 +40,10 @@ export function CanvasFab({ roomId }: CanvasFabProps) {
     <div
       role="toolbar"
       aria-label="Canvas tools"
-      // Floating pill — bottom-center, above iOS safe area. Bottom nav is
-      // outside the canvas viewport (canvas page already subtracts its
-      // height), so 0.75rem of clearance is enough breathing room.
-      className="pointer-events-auto absolute bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 rounded-full border bg-card/95 p-1 shadow-lg backdrop-blur-sm md:hidden"
+      // Floating pill — bottom-center, with a comfortable gap from the
+      // dashboard bottom nav so it reads as an independent surface rather
+      // than welded to the navigation chrome.
+      className="pointer-events-auto absolute bottom-[max(1.25rem,env(safe-area-inset-bottom))] left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 rounded-full border bg-card/95 p-1 shadow-lg backdrop-blur-sm md:hidden"
     >
       {/* Primary action — add node */}
       <button

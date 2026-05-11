@@ -670,7 +670,20 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
           aria-label="Memory canvas — use Tab to navigate nodes, Enter to edit, Delete to remove"
         >
           <Background variant={BackgroundVariant.Dots} gap={20} size={1} className="opacity-40" />
-          <Controls className="flex md:flex" showInteractive={false} />
+          {/*
+           * Lift the built-in zoom/fit controls off the canvas bottom edge
+           * so they read as floating affordances instead of sitting flush
+           * with the dashboard bottom nav. Inline style is the only API
+           * React Flow exposes for repositioning the Controls panel.
+           */}
+          <Controls
+            className="flex md:flex"
+            showInteractive={false}
+            style={{
+              bottom: 'max(1rem, env(safe-area-inset-bottom))',
+              left: '1rem',
+            }}
+          />
           <MiniMap<MemoryNodeType>
             className="hidden md:block"
             nodeColor={(n) => n.data.color ?? 'hsl(var(--muted-foreground))'}
