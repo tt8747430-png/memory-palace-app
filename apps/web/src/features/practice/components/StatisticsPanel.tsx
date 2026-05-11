@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Activity, BarChart3, Clock, Flame, Target } from 'lucide-react';
 import { cn } from '@memory-palace/ui';
 import { Sparkline } from '@/shared/components/Sparkline';
+import { MasteryRings } from '@/shared/components/MasteryRings';
 import type { PracticeStats } from '../actions/getPracticeStats';
 
 interface Props {
@@ -110,21 +111,38 @@ export function StatisticsPanel({ stats }: Props) {
       </div>
 
       {tab === 'overview' && (
-        <div className="grid gap-3 sm:grid-cols-3">
-          <Stat
-            label="Attempts"
-            value={stats.totalPracticed}
-            trend={accuracyTrend}
-            trendTone="success"
-          />
-          <Stat label="Top streak" value={stats.topStreak} suffix="✨" />
-          <Stat
-            label="This week"
-            value={totalThisWeek}
-            trend={stats.weeklyActivity}
-            trendTone="primary"
-            trendFill
-          />
+        <div className="space-y-4">
+          <div className="grid gap-3 sm:grid-cols-3">
+            <Stat
+              label="Attempts"
+              value={stats.totalPracticed}
+              trend={accuracyTrend}
+              trendTone="success"
+            />
+            <Stat label="Top streak" value={stats.topStreak} suffix="✨" />
+            <Stat
+              label="This week"
+              value={totalThisWeek}
+              trend={stats.weeklyActivity}
+              trendTone="primary"
+              trendFill
+            />
+          </div>
+          {stats.mastery.total > 0 ? (
+            <div className="rounded-xl border bg-muted/20 p-4">
+              <p className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Mastery breakdown
+              </p>
+              <MasteryRings
+                mastered={stats.mastery.mastered}
+                familiar={stats.mastery.familiar}
+                learning={stats.mastery.learning}
+                fresh={stats.mastery.fresh}
+                total={stats.mastery.total}
+                size={140}
+              />
+            </div>
+          ) : null}
         </div>
       )}
 

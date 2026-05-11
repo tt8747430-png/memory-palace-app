@@ -36,6 +36,19 @@ export type RecentSession = {
   practicedAt: Date;
 };
 
+export type MasteryBreakdown = {
+  /** mastery >= 80 */
+  mastered: number;
+  /** 50 <= mastery < 80 */
+  familiar: number;
+  /** 20 <= mastery < 50 */
+  learning: number;
+  /** mastery < 20 */
+  fresh: number;
+  /** Total nodes with any review state row. */
+  total: number;
+};
+
 export type PracticeStats = {
   totalPracticed: number;
   /** Sum of streak across all reviewed nodes — proxy for daily-streak shape. */
@@ -46,6 +59,8 @@ export type PracticeStats = {
   recentSessions: RecentSession[];
   /** Count of attempts per day for the last 7 days, oldest → newest. */
   weeklyActivity: number[];
+  /** Breakdown of reviewed nodes by mastery bucket. */
+  mastery: MasteryBreakdown;
 };
 
 const WEAKEST_LIMIT = 5;
@@ -65,7 +80,7 @@ export const getPracticeStats = defineAction({
     const now = new Date();
     const weekStart = startOfDayUtc(new Date(now.getTime() - (WEEK_DAYS - 1) * 86_400_000));
 
-    const [totalRow, streakRow, weakest, recent, weeklyRows] = await Promise.all([
+    const [totalRow, streakRow, weakest, recent, weeklyRows, masteryRow] = await Promise.all([
       db
         .select({ value: count() })
         .from(practiceSessions)
@@ -117,6 +132,16 @@ export const getPracticeStats = defineAction({
           and(eq(practiceSessions.userId, user.id), gte(practiceSessions.practicedAt, weekStart)),
         )
         .groupBy(sql`date_trunc('day', ${practiceSessions.practicedAt})`),
+      db
+        .select({
+          mastered: sql<number>`COALESCE(SUM(CASE WHEN ${nodeReviewState.mastery} >= 80 THEN 1 ELSE 0 END), 0)::int`,
+          familiar: sql<number>`COALESCE(SUM(CASE WHEN ${nodeReviewState.mastery} >= 50 AND ${nodeReviewState.mastery} < 80 THEN 1 ELSE 0 END), 0)::int`,
+          learning: sql<number>`COALESCE(SUM(CASE WHEN ${nodeReviewState.mastery} >= 20 AND ${nodeReviewState.mastery} < 50 THEN 1 ELSE 0 END), 0)::int`,
+          fresh: sql<number>`COALESCE(SUM(CASE WHEN ${nodeReviewState.mastery} < 20 THEN 1 ELSE 0 END), 0)::int`,
+          total: sql<number>`COALESCE(COUNT(*), 0)::int`,
+        })
+        .from(nodeReviewState)
+        .where(eq(nodeReviewState.userId, user.id)),
     ]);
 
     const dayCounts = new Map<string, number>();
@@ -135,6 +160,13 @@ export const getPracticeStats = defineAction({
       weakestNodes: weakest,
       recentSessions: recent,
       weeklyActivity,
+      mastery: {
+        mastered: masteryRow[0]?.mastered ?? 0,
+        familiar: masteryRow[0]?.familiar ?? 0,
+        learning: masteryRow[0]?.learning ?? 0,
+        fresh: masteryRow[0]?.fresh ?? 0,
+        total: masteryRow[0]?.total ?? 0,
+      },
     };
   },
 });
