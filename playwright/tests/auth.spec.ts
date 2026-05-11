@@ -25,11 +25,11 @@ test.describe('Auth pages', () => {
     await page.goto('/signup');
 
     await expect(page).toHaveTitle(/Memory Palace/);
-    await expect(page.getByRole('heading', { name: /create account/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /begin your palace/i })).toBeVisible();
     await expect(page.getByLabel('Email')).toBeVisible();
     await expect(page.getByLabel('Password')).toBeVisible();
     await expect(page.getByRole('button', { name: /create account/i })).toBeVisible();
-    await expect(page.getByRole('link', { name: /sign in/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /sign in/i }).first()).toBeVisible();
   });
 
   test('login page sign-up link navigates to /signup', async ({ page }) => {
@@ -40,7 +40,10 @@ test.describe('Auth pages', () => {
 
   test('signup page sign-in link navigates to /login', async ({ page }) => {
     await page.goto('/signup');
-    await page.getByRole('link', { name: /sign in/i }).click();
+    await page
+      .getByRole('link', { name: /sign in/i })
+      .first()
+      .click();
     await expect(page).toHaveURL(/\/login/);
   });
 
