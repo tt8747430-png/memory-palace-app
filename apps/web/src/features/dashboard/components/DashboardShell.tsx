@@ -29,8 +29,12 @@ export function DashboardShell({ children, userProfile }: DashboardShellProps) {
           <Sidebar userProfile={userProfile} />
         </aside>
 
-        {/* Mobile top bar */}
-        <header className="flex items-center justify-between border-b border-border/60 bg-background/85 px-4 pb-3 pt-[calc(env(safe-area-inset-top)+0.75rem)] backdrop-blur supports-backdrop-filter:bg-background/70 md:hidden">
+        {/*
+         * Mobile top bar — fixed above the content (chrome, not flow).
+         * Its height (top safe-area + 3.5rem of body) is reserved on <main>
+         * via the matching `pt-[…]` value below.
+         */}
+        <header className="fixed inset-x-0 top-0 z-50 flex h-[calc(env(safe-area-inset-top)+var(--height-top-bar))] items-end justify-between border-b border-border/60 bg-background/85 px-4 pb-2.5 backdrop-blur supports-backdrop-filter:bg-background/70 md:hidden">
           <MobileDrawer userProfile={userProfile} />
           <h1 className="text-lg font-semibold tracking-tight">Memory Palace</h1>
           <div className="flex items-center gap-1">
@@ -41,12 +45,12 @@ export function DashboardShell({ children, userProfile }: DashboardShellProps) {
 
         <main
           id="main-content"
-          className="flex-1 overflow-y-auto pb-[calc(var(--height-bottom-nav)+env(safe-area-inset-bottom))] md:pb-0"
+          className="flex-1 overflow-y-auto pt-[calc(env(safe-area-inset-top)+var(--height-top-bar))] pb-[calc(var(--height-bottom-nav)+env(safe-area-inset-bottom))] md:pt-0 md:pb-0"
         >
           <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</div>
         </main>
 
-        {/* Floating pill bottom nav (mobile only) */}
+        {/* Floating pill bottom nav (mobile only) — also fixed chrome */}
         <nav
           className="pointer-events-none fixed inset-x-0 bottom-0 z-50 md:hidden"
           aria-label="Bottom navigation"

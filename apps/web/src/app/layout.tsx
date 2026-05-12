@@ -4,6 +4,7 @@ import { Geist, Geist_Mono, Space_Grotesk, Instrument_Serif, Barlow } from 'next
 import { MotionProvider } from '@/shared/components/MotionProvider';
 import { ThemeProvider } from '@/shared/components/ThemeProvider';
 import { SkipToContent } from '@/shared/components/SkipToContent';
+import { StandaloneGestureGuard } from '@/shared/components/StandaloneGestureGuard';
 import { PostHogProvider } from '@/shared/components/PostHogProvider';
 import { Toaster } from '@/shared/components/Toaster';
 import { siteUrl } from '@/shared/lib/env';
@@ -100,6 +101,7 @@ async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>)
         className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${instrumentSerif.variable} ${barlow.variable} antialiased`}
       >
         <SkipToContent />
+        <StandaloneGestureGuard />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

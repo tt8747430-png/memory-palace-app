@@ -213,9 +213,13 @@
      * (which can re-enable it with `overscroll-behavior-x: auto`).
      */
     overscroll-behavior-x: none;
-    /* Remove the 300 ms double-tap-to-zoom delay everywhere. Pinch-zoom is
-       blocked separately by the viewport meta (maximumScale: 1). */
-    touch-action: manipulation;
+    /*
+     * `pan-x pan-y` allows scrolling on both axes but disables BOTH
+     * double-tap-to-zoom AND pinch-to-zoom. `manipulation` would still
+     * permit pinch-zoom — we want the app shell to feel like a native app,
+     * not a zoomable web page. Browser zoom via the OS / Aa menu still works.
+     */
+    touch-action: pan-x pan-y;
   }
   body {
     background-color: var(--background);
