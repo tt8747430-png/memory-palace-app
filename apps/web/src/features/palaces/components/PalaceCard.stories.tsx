@@ -46,7 +46,7 @@ export const Playground: StoryObj<PalacePlaygroundArgs> = {
     description: { control: 'text' },
     mode: {
       control: { type: 'inline-radio' },
-      options: ['bible', 'general'] satisfies SelectPalace['mode'][],
+      options: ['bible', 'simple'] satisfies SelectPalace['mode'][],
     },
   },
   render: (args) => (
