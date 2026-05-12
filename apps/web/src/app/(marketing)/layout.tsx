@@ -7,7 +7,14 @@ export const metadata: Metadata = {
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative flex min-h-dvh flex-col font-display">
+    <div
+      className="relative flex min-h-dvh flex-col font-display"
+      style={{
+        paddingLeft: 'env(safe-area-inset-left)',
+        paddingRight: 'env(safe-area-inset-right)',
+        paddingBottom: 'env(safe-area-inset-bottom)',
+      }}
+    >
       <AmbientOrbs />
       <main id="main-content" className="flex-1">
         {children}

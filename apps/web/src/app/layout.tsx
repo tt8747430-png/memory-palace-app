@@ -84,6 +84,11 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
+  // Cap at 1 so iOS Safari doesn't double-tap-zoom or pinch-zoom the app shell.
+  // (pinch-zoom is still possible on images via the share/zoom UI; users who
+  // rely on browser zoom for a11y can use OS-level zoom or font-size settings.)
+  maximumScale: 1,
+  userScalable: false,
   viewportFit: 'cover',
 };
 

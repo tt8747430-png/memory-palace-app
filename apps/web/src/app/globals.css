@@ -204,6 +204,18 @@
     scroll-behavior: smooth;
 
     scroll-padding-top: 5.5rem;
+
+    /*
+     * Kill iOS Safari's "swipe-from-left-edge to go back" gesture and the
+     * horizontal rubber-band overscroll. Applied in both browser tabs and
+     * standalone PWA mode — safe because we never have horizontal scrolling
+     * at the document level, only inside opt-in containers like carousels
+     * (which can re-enable it with `overscroll-behavior-x: auto`).
+     */
+    overscroll-behavior-x: none;
+    /* Remove the 300 ms double-tap-to-zoom delay everywhere. Pinch-zoom is
+       blocked separately by the viewport meta (maximumScale: 1). */
+    touch-action: manipulation;
   }
   body {
     background-color: var(--background);
@@ -216,6 +228,38 @@
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
+    }
+  }
+
+  /*
+   * iOS PWA hardening — only applied when the app is launched in standalone
+   * (i.e. installed via "Add to Home Screen"). We intentionally do NOT apply
+   * these in regular browser tabs because killing all text selection and
+   * vertical overscroll in a browser tab is hostile to users who didn't opt-in.
+   */
+  @media (display-mode: standalone) {
+    html,
+    body {
+      /* Disable the iOS rubber-band bounce on both axes (X is already off above). */
+      overscroll-behavior: none;
+      /* Prevent text-callout/magnifying-glass on long-press inside the app shell. */
+      -webkit-touch-callout: none;
+    }
+    /* Disable text selection by default in standalone mode, but allow it in
+       inputs/textareas/content-editable surfaces and any element opted-in
+       via `.allow-select`. */
+    body {
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    input,
+    textarea,
+    [contenteditable='true'],
+    .allow-select,
+    .allow-select * {
+      -webkit-user-select: text;
+      user-select: text;
+      -webkit-touch-callout: default;
     }
   }
 }

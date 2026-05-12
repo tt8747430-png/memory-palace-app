@@ -100,7 +100,7 @@ export function CinematicNav() {
 
   return (
     <>
-      <div className="sticky top-3 z-50 mx-auto w-full max-w-5xl px-4 md:top-4">
+      <div className="sticky top-[max(env(safe-area-inset-top),0.75rem)] z-50 mx-auto w-full max-w-5xl px-[max(env(safe-area-inset-left),1rem)] md:px-4 md:top-[max(env(safe-area-inset-top),1rem)]">
         <m.header
           animate={{ scale: scrolled ? 0.98 : 1 }}
           transition={{ duration: 0.25, ease: SMOOTH_EASE }}
