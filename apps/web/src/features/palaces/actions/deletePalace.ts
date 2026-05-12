@@ -8,7 +8,7 @@ import { palaceIdSchema } from '../schemas/palace';
 
 export type DeletePalaceResult = {
   id: string;
-  /** HMAC-signed token; pass to `restorePalace` within 30s to undo. */
+
   undoToken: string;
 };
 

@@ -7,14 +7,6 @@ import { cn } from '@memory-palace/ui';
 import { SectionEyebrow } from './SectionEyebrow';
 import { BlurText } from '@/shared/components/BlurText';
 
-/**
- * Three-tier pricing with a monthly/yearly toggle.
- *
- * Middle tier is elevated with `liquid-glass-strong` and a gold border to
- * mark it as the recommended plan. The toggle persists only in local
- * state — there is no billing surface yet. CTAs link straight to signup.
- */
-
 type Plan = {
   id: string;
   name: string;
@@ -94,7 +86,7 @@ export function Pricing() {
           </h2>
         </header>
 
-        {/* Monthly/Yearly toggle */}
+        {}
         <div className="mb-10 flex items-center gap-3">
           <div
             role="tablist"

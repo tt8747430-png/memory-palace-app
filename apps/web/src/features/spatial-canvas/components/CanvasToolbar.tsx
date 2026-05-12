@@ -17,10 +17,6 @@ interface CanvasToolbarProps {
   roomId: string;
 }
 
-/**
- * Floating toolbar anchored at the bottom-centre of the canvas viewport.
- * Desktop-only (`hidden md:flex`) — replaced by `CanvasFab` on mobile.
- */
 export function CanvasToolbar({ roomId }: CanvasToolbarProps) {
   const activeTool = useCanvasStore((s) => s.activeTool);
   const setActiveTool = useCanvasStore((s) => s.setActiveTool);
@@ -44,7 +40,6 @@ export function CanvasToolbar({ roomId }: CanvasToolbarProps) {
     <div
       role="toolbar"
       aria-label="Canvas tools"
-      // Hidden on mobile — CanvasFab handles small screens
       className="absolute bottom-4 left-1/2 z-10 hidden -translate-x-1/2 items-center gap-1 rounded-lg border bg-card/90 p-1 shadow-md backdrop-blur-sm md:flex"
     >
       {TOOLS.map(({ id, label, Icon }) => (
@@ -65,10 +60,10 @@ export function CanvasToolbar({ roomId }: CanvasToolbarProps) {
         </button>
       ))}
 
-      {/* Divider */}
+      {}
       <div className="mx-0.5 h-5 w-px bg-border" />
 
-      {/* Snap-to-grid toggle — `G` key shortcut wired in RoomCanvas */}
+      {}
       <button
         type="button"
         aria-label={snapEnabled ? 'Snap to grid: on (G)' : 'Snap to grid: off (G)'}
@@ -84,7 +79,7 @@ export function CanvasToolbar({ roomId }: CanvasToolbarProps) {
         <Grid2x2 className="h-4 w-4" aria-hidden />
       </button>
 
-      {/* Fit view */}
+      {}
       <button
         type="button"
         aria-label="Fit view"
@@ -94,10 +89,10 @@ export function CanvasToolbar({ roomId }: CanvasToolbarProps) {
         <Maximize className="h-4 w-4" aria-hidden />
       </button>
 
-      {/* Divider */}
+      {}
       <div className="mx-0.5 h-5 w-px bg-border" />
 
-      {/* Add node */}
+      {}
       <button
         type="button"
         aria-label="Add node"

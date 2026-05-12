@@ -7,14 +7,6 @@ import { cn } from '@memory-palace/ui';
 import { SectionEyebrow } from './SectionEyebrow';
 import { BlurText } from '@/shared/components/BlurText';
 
-/**
- * Marketing FAQ accordion.
- *
- * Uses local single-open state — only one panel at a time. Plus/minus
- * icon morphs on toggle. Height animation handled by framer-motion via
- * `m.div` with explicit `height: auto`.
- */
-
 type Item = {
   q: string;
   a: string;

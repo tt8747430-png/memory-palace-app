@@ -7,7 +7,7 @@ export type DialogId = 'create-palace' | 'create-room';
 interface AppDialogContextValue {
   pending: DialogId | null;
   open: (id: DialogId) => void;
-  /** Called by the dialog once it has consumed the pending intent. */
+
   consume: () => void;
 }
 

@@ -55,8 +55,6 @@ import { CANVAS_EVENTS } from '@/shared/lib/canvasEvents';
 
 const SNAP_GRID: [number, number] = [20, 20];
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
 function dbNodeToFlowNode(node: SelectNode): MemoryNodeType {
   return {
     id: node.id,
@@ -71,13 +69,10 @@ function dbNodeToFlowNode(node: SelectNode): MemoryNodeType {
   };
 }
 
-// ─── Pane context menu ────────────────────────────────────────────────────────
-
 interface PaneMenu {
-  /** Window-space coordinates — used as `position: fixed` anchor. */
   clientX: number;
   clientY: number;
-  /** Canvas-space coordinates used to place a new node. */
+
   flowX: number;
   flowY: number;
 }
@@ -91,12 +86,6 @@ interface PaneContextMenuProps {
   onClose: () => void;
 }
 
-/**
- * Pane-level context menu rendered via a portal so it is never clipped by
- * `overflow: hidden` on the canvas container.
- *
- * Dismisses on Escape or any pointer-down outside the menu element.
- */
 function PaneContextMenu({
   menu,
   snapEnabled,
@@ -157,8 +146,6 @@ function PaneContextMenu({
   );
 }
 
-// ─── Inner canvas (requires ReactFlowProvider in tree) ───────────────────────
-
 interface InnerCanvasProps {
   roomId: string;
   initialNodes: SelectNode[];
@@ -176,9 +163,7 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
   const redoPositions = useCanvasStore((s) => s.redoPositions);
   const clearFuture = useCanvasStore((s) => s.clearFuture);
   const canvasSearchQuery = useCanvasStore((s) => s.canvasSearchQuery);
-  // Non-reactive store access for event handlers — avoids re-rendering
-  // InnerCanvas on every selection change (which would create new array props
-  // like panOnDrag=[1,2] on every render and trigger a React Flow render loop).
+
   const canvasStoreApi = useCanvasStoreApi();
 
   const { data: serverNodes, isLoading } = useNodesQuery(roomId, {
@@ -190,10 +175,6 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<MemoryNodeType>(flowNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
 
-  // Reconcile React Flow's local state when TanStack Query's cache identity
-  // changes (i.e. after invalidateQueries resolves with server-confirmed data).
-  // Uses React 19's "adjust state during render" pattern — no useEffect, no
-  // extra render cycle, and no viewport-snapping during active drags.
   const [prevServerNodes, setPrevServerNodes] = useState(serverNodes);
   if (prevServerNodes !== serverNodes) {
     setPrevServerNodes(serverNodes);
@@ -220,9 +201,6 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
     useRoomNodeMutations(roomId);
   const { screenToFlowPosition, fitView, getNodes } = useReactFlow();
 
-  // Refs to avoid stale closures in effects that cannot list frequently-
-  // changing values as deps (removeNode.mutate changes each render from TQ;
-  // activeTool changes on every tool switch).
   const activeToolRef = useRef(activeTool);
   const removeNodeMutateRef = useRef(removeNode.mutate);
   const duplicateNodesMutateRef = useRef(duplicateNodes.mutate);
@@ -232,10 +210,8 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
     duplicateNodesMutateRef.current = duplicateNodes.mutate;
   });
 
-  // Layer 2: Subscribe to Supabase Realtime for cross-device sync.
   useRealtimeNodes(roomId);
 
-  // Screen reader announcements for drag operations.
   const { announcerRef, announce } = useCanvasDragAnnouncer();
 
   const applyPositionSnapshot = useCallback(
@@ -254,12 +230,10 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
     [setNodes, saveBatchPositions, savePosition],
   );
 
-  // ── canvas:create-node event (fired by the command palette / C→N shortcut) ──
   useEffect(() => {
     const onCreate = () => {
       const position = getCanvasCenterFlowPos(screenToFlowPosition);
-      // Read snapEnabled imperatively to avoid stale closure (snapEnabled is not
-      // in this effect's deps — canvasStoreApi is stable and always current).
+
       const { snapEnabled: snap } = canvasStoreApi.getState();
       addNode.mutate({
         roomId,
@@ -273,7 +247,6 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
     return () => window.removeEventListener(CANVAS_EVENTS.CREATE_NODE, onCreate);
   }, [addNode, canvasStoreApi, roomId, screenToFlowPosition]);
 
-  // ── canvas:fit-view / canvas:toggle-snap (fired by the command palette) ──
   useEffect(() => {
     const onFitView = () => fitView({ padding: 0.2, duration: 300 });
     const onToggleSnap = () => toggleSnap();
@@ -285,7 +258,6 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
     };
   }, [fitView, toggleSnap]);
 
-  // ── canvas:duplicate-node / canvas:delete-node / canvas:undo / canvas:redo ──
   useEffect(() => {
     const onDuplicate = () => {
       const { selectedNodeIds } = canvasStoreApi.getState();
@@ -345,10 +317,6 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
     };
   }, [canvasStoreApi, getNodes, clearFuture, applyPositionSnapshot, undoPositions, redoPositions]);
 
-  // ── Refit viewport when the canvas container resizes ─────────────────────
-  // Triggers on device rotation, browser-chrome show/hide (iOS URL bar), and
-  // sidebar toggles. Skip while the user is actively dragging a node so we
-  // don't yank their cursor to a different flow position mid-gesture.
   const containerRef = useRef<HTMLDivElement>(null);
   const isDraggingRef = useRef(false);
   useEffect(() => {
@@ -357,7 +325,7 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
     let timeoutId: ReturnType<typeof setTimeout> | undefined;
     const observer = new ResizeObserver(() => {
       if (isDraggingRef.current) return;
-      // Debounce: rapid-fire entries during rotation animations.
+
       if (timeoutId) clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
         fitView({ padding: 0.2, duration: 200, maxZoom: 1.5 });
@@ -370,9 +338,6 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
     };
   }, [fitView]);
 
-  // ── Keyboard shortcuts: G = snap, F = fit view, Del/Backspace = delete,
-  //    Cmd+A = select all, Cmd+D = duplicate, Cmd+Z/Shift+Z = undo/redo,
-  //    E = open editor for single selected node ─────────────────────────────
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement).tagName;
@@ -380,8 +345,6 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
       const mod = e.metaKey || e.ctrlKey;
 
       if (e.key === 'g' || e.key === 'G') {
-        // Consume the event in capture phase so the global bubble-phase
-        // shortcut handler does not arm its 'g → h/p/s' prefix window.
         e.stopPropagation();
         toggleSnap();
       } else if (e.key === 'f' || e.key === 'F') {
@@ -396,14 +359,12 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
         setSelectedNodeIds(new Set());
         clearFuture();
       } else if (mod && (e.key === 'a' || e.key === 'A')) {
-        // ── Cmd/Ctrl+A — select all nodes ──────────────────────────────────
         e.preventDefault();
         const currentNodes = getNodes() as MemoryNodeType[];
         const allIds = new Set(currentNodes.map((n) => n.id));
         canvasStoreApi.getState().setSelectedNodeIds(allIds);
         setNodes((prev) => prev.map((n) => ({ ...n, selected: true })));
       } else if (mod && !e.shiftKey && (e.key === 'z' || e.key === 'Z')) {
-        // ── Cmd/Ctrl+Z — undo position change ──────────────────────────────
         e.preventDefault();
         const current = (getNodes() as MemoryNodeType[]).map((n) => ({
           id: n.id,
@@ -413,7 +374,6 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
         const snapshot = undoPositions(current);
         if (snapshot) applyPositionSnapshot(snapshot);
       } else if (mod && e.shiftKey && (e.key === 'z' || e.key === 'Z')) {
-        // ── Cmd/Ctrl+Shift+Z — redo position change ─────────────────────────
         e.preventDefault();
         const current = (getNodes() as MemoryNodeType[]).map((n) => ({
           id: n.id,
@@ -423,7 +383,6 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
         const snapshot = redoPositions(current);
         if (snapshot) applyPositionSnapshot(snapshot);
       } else if (mod && (e.key === 'd' || e.key === 'D')) {
-        // ── Cmd/Ctrl+D — duplicate selected nodes ──────────────────────────
         e.preventDefault();
         const { selectedNodeIds } = canvasStoreApi.getState();
         if (selectedNodeIds.size === 0) return;
@@ -443,7 +402,6 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
         );
         clearFuture();
       } else if ((e.key === 'e' || e.key === 'E') && !mod) {
-        // ── E — open editor for the single selected node ────────────────────
         const { selectedNodeIds, setEditingNodeId: storeSetEditingNodeId } =
           canvasStoreApi.getState();
         if (selectedNodeIds.size !== 1) return;
@@ -451,8 +409,7 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
         storeSetEditingNodeId(nodeId);
       }
     };
-    // Capture phase runs before the global document bubble-phase listener,
-    // which makes stopPropagation() effective for preventing prefix arming.
+
     document.addEventListener('keydown', onKeyDown, { capture: true });
     return () => document.removeEventListener('keydown', onKeyDown, { capture: true });
   }, [
@@ -467,7 +424,6 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
     clearFuture,
   ]);
 
-  // ── Space hold — temporarily switch to pan mode ───────────────────────────
   useEffect(() => {
     const prevToolRef = { current: activeToolRef.current };
     const onKeyDown = (e: KeyboardEvent) => {
@@ -490,7 +446,6 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
     };
   }, [setActiveTool]);
 
-  // Capture positions BEFORE a drag so we have a valid undo snapshot.
   const onNodeDragStart: OnNodeDrag<MemoryNodeType> = (_event, node) => {
     isDraggingRef.current = true;
     const snap = (getNodes() as MemoryNodeType[]).map((n) => ({
@@ -502,8 +457,6 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
     announce(`Moving ${node.data.title}`);
   };
 
-  // Single-node drag — fires only when the dragged node is NOT part of a
-  // multi-selection (React Flow v12 routes selection drags to onSelectionDragStop).
   const onNodeDragStop: OnNodeDrag<MemoryNodeType> = (_event, node) => {
     isDraggingRef.current = false;
     savePosition.mutate({
@@ -514,9 +467,6 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
     announce(`${node.data.title} placed`);
   };
 
-  // Selected-node drag — fires when dragging one or more selected nodes.
-  // For a single selected node, delegates to savePosition; for multiple, uses
-  // the atomic batch mutation to persist all positions in one transaction.
   const onSelectionDragStop = (_event: React.MouseEvent, dragged: MemoryNodeType[]) => {
     isDraggingRef.current = false;
     if (dragged.length === 0) return;
@@ -536,7 +486,6 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
     canvasStoreApi.getState().setSelectedNodeIds(new Set(selected.map((n) => n.id)));
   };
 
-  // ── Edge creation — fired when the user drags from one handle to another ──
   const onConnect: OnConnect = (connection) => {
     if (!connection.source || !connection.target) return;
     addEdgeMutation.mutate({
@@ -545,7 +494,6 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
     });
   };
 
-  // Handle edge deletions (selected edge + Delete key).
   const handleEdgesChange = (changes: EdgeChange[]) => {
     onEdgesChange(changes);
     for (const change of changes) {
@@ -555,7 +503,6 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
     }
   };
 
-  // ── Pane context menu ─────────────────────────────────────────────────────
   const [paneMenu, setPaneMenu] = useState<PaneMenu | null>(null);
 
   const onPaneContextMenu = (event: MouseEvent | React.MouseEvent) => {
@@ -581,7 +528,6 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
     setPaneMenu(null);
   };
 
-  // ── Node actions (injected into MemoryNode via context) ───────────────────
   const nodeActions = {
     onEditNode: (nodeId: string) => setEditingNodeId(nodeId),
     onDeleteNode: (nodeId: string) => {
@@ -606,13 +552,6 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
     },
   };
 
-  // Dim nodes that don't match the live search query (opacity only, no unmount).
-  // useMemo is required here for two reasons:
-  //  1. Avoids restarting CSS opacity transitions on every unrelated re-render
-  //     (browsers compare style strings byte-for-byte and restart on change).
-  //  2. Preserves node object identity during drag, which keeps React Flow's
-  //     snap-to-grid position stream intact when search is active.
-  // Must be called before the isLoading early return to satisfy rules-of-hooks.
   const displayNodes = useMemo(() => {
     if (canvasSearchQuery.trim().length === 0) return nodes;
     const q = canvasSearchQuery.toLowerCase();
@@ -670,12 +609,7 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
           aria-label="Memory canvas — use Tab to navigate nodes, Enter to edit, Delete to remove"
         >
           <Background variant={BackgroundVariant.Dots} gap={20} size={1} className="opacity-40" />
-          {/*
-           * Lift the built-in zoom/fit controls off the canvas bottom edge
-           * so they read as floating affordances instead of sitting flush
-           * with the dashboard bottom nav. Inline style is the only API
-           * React Flow exposes for repositioning the Controls panel.
-           */}
+          {}
           <Controls
             className="flex md:flex"
             showInteractive={false}
@@ -721,18 +655,14 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
   );
 }
 
-// ─── Public component ─────────────────────────────────────────────────────────
-
 interface RoomCanvasProps {
   roomId: string;
-  /** Server-side fetched nodes passed as TanStack Query initialData. */
+
   initialNodes: SelectNode[];
-  /** Parent palace mode — drives Bible-mode UI gating in the node editor. */
+
   palaceMode?: PalaceMode;
 }
 
-/** Full canvas for a room — wraps ReactFlowProvider, CanvasStoreProvider,
- * TanStack Query hooks, and the canvas error boundary in a clean public API. */
 export function RoomCanvas({ roomId, initialNodes, palaceMode = 'simple' }: RoomCanvasProps) {
   return (
     <CanvasStoreProvider>
@@ -743,5 +673,4 @@ export function RoomCanvas({ roomId, initialNodes, palaceMode = 'simple' }: Room
   );
 }
 
-// Re-export for convenience in page imports.
 export type { MemoryNodeData, MemoryNodeType } from './nodes/MemoryNode';

@@ -16,7 +16,6 @@ export const importPalaceData = defineAction({
   schema: importInputSchema,
   rateLimit: 'write',
   handler: async ({ user, input }): Promise<ImportStats> => {
-    // ── Parse and structurally validate ──────────────────────────────────────
     let parsed: unknown;
     try {
       parsed = JSON.parse(input.jsonContent);
@@ -35,8 +34,7 @@ export const importPalaceData = defineAction({
     }
 
     const exportData = result.data;
-    // Flatten entities up-front so we can bulk-insert in three statements
-    // (one per table) instead of one INSERT per entity — O(1) round-trips.
+
     const palaceValues = exportData.palaces.map((p) => ({
       id: p.id,
       userId: user.id,
@@ -69,10 +67,6 @@ export const importPalaceData = defineAction({
       ),
     );
 
-    // Insert in FK dependency order: palaces → rooms → nodes.
-    // RETURNING gives us only the rows actually written — ON CONFLICT DO NOTHING
-    // rows are silently skipped and absent from RETURNING, so re-imports
-    // correctly report 0 rather than the total count of the file.
     const stats = await getDb().transaction(async (tx) => {
       const insertedPalaces =
         palaceValues.length > 0

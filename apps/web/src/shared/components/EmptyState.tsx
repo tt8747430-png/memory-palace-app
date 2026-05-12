@@ -8,12 +8,7 @@ interface EmptyStateProps {
   action?: ReactNode;
   className?: string;
   headingLevel?: 2 | 3 | 4;
-  /**
-   * Set to true when the empty state is rendered as the result of a live data
-   * change (e.g. after a refetch returns no rows) and should be announced.
-   * For first-paint empty states, leave undefined — there's nothing to
-   * "announce" since the user hasn't done anything yet.
-   */
+
   announce?: boolean;
 }
 

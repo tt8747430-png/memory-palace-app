@@ -107,8 +107,8 @@ describe('nextIntervalDays', () => {
 
 describe('nextMastery', () => {
   it('moves toward the new score with alpha weight', () => {
-    expect(nextMastery(0, 100)).toBe(30); // 0.7*0 + 0.3*100 = 30
-    expect(nextMastery(50, 100)).toBe(65); // 0.7*50 + 0.3*100 = 65
+    expect(nextMastery(0, 100)).toBe(30);
+    expect(nextMastery(50, 100)).toBe(65);
     expect(nextMastery(100, 0)).toBe(70);
   });
 
@@ -142,7 +142,7 @@ describe('applyReview', () => {
     const next = applyReview(seeded, { score: 10, correct: false, now: NOW });
     expect(next.streak).toBe(0);
     expect(next.intervalDays).toBe(1);
-    // EF dropped
+
     expect(next.easeFactor).toBeLessThan(2.5);
   });
 

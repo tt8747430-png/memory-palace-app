@@ -4,13 +4,6 @@ import { getDb, nodes, sql, eq, and, isNull } from '@memory-palace/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
 import { batchUpdateNodePositionsSchema } from '../schemas/node';
 
-/**
- * Atomically persists XY coordinates for multiple nodes after a multi-select
- * drag. A single UPDATE … FROM (VALUES …) statement covers all rows in one
- * round-trip, then a RETURNING clause lets us verify that every requested node
- * was found and owned by the caller — if the count is short, the transaction
- * rolls back automatically via the thrown ActionError.
- */
 export const batchUpdateNodePositions = defineAction({
   name: 'batchUpdateNodePositions',
   schema: batchUpdateNodePositionsSchema,
@@ -18,7 +11,6 @@ export const batchUpdateNodePositions = defineAction({
   handler: async ({ user, input }) => {
     const { roomId, updates } = input;
 
-    // Build a typed VALUES list so Postgres knows the column types up-front.
     const rows = updates.map(
       ({ id, positionX, positionY }) =>
         sql`(${id}::uuid, ${positionX}::float8, ${positionY}::float8)`,
@@ -44,7 +36,6 @@ export const batchUpdateNodePositions = defineAction({
         )
         .returning({ id: nodes.id });
 
-      // If any node was not found or not owned, roll back the entire batch.
       if (updated.length !== updates.length) {
         throw new ActionError(
           'NOT_FOUND',

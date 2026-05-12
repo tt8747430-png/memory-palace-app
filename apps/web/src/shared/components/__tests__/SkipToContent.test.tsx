@@ -19,8 +19,7 @@ describe('SkipToContent', () => {
   it('becomes visible on focus (focus:not-sr-only class)', () => {
     render(<SkipToContent />);
     const link = screen.getByRole('link', { name: /skip to main content/i });
-    // The focus: variant class must be present in the markup so the browser
-    // can apply it on focus — we assert the class string, not the computed style.
+
     expect(link.className).toMatch(/focus:not-sr-only/);
   });
 });

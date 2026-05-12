@@ -1,22 +1,6 @@
 import Link from 'next/link';
 import type { ComponentType, SVGProps } from 'react';
 
-/**
- * Cinematic dark footer.
- *
- * Sits over the shared cinematic backdrop (orbs/aurora) so it stays in
- * key with the rest of the marketing flow. Uses `liquid-glass` for the
- * outer body + `bg-cinematic` for the inner panel — keeps the layered
- * “stacked card” silhouette of the original spec but in the dark palette.
- * Below the card, a giant `GlassText` wordmark renders through a
- * handcrafted SVG filter that paints inner-shadows on top of the source.
- *
- * Animations use the project's `animate-fade-rise*` CSS utilities (already
- * reduced-motion safe) instead of framer-motion's `whileInView` since the
- * shared `LazyMotion` configuration uses `domAnimation` which doesn't ship
- * the viewport observer.
- */
-
 function LogoIcon() {
   return (
     <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground/15 ring-1 ring-foreground/25">
@@ -127,12 +111,12 @@ function FooterCard() {
   const year = new Date().getFullYear();
   return (
     <div className="mx-auto w-full max-w-6xl">
-      {/* Outer body — dark glass shell */}
+      {}
       <div className="liquid-glass overflow-hidden rounded-[48px]">
-        {/* Inner panel — deeper navy plate so the column type pops */}
+        {}
         <div className="m-2 rounded-[40px] bg-cinematic shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] ring-1 ring-foreground/10">
           <div className="grid grid-cols-1 gap-12 p-8 md:grid-cols-2 md:p-10 lg:grid-cols-5 lg:p-12">
-            {/* Brand info */}
+            {}
             <div className="space-y-8 lg:col-span-2">
               <div className="flex items-center gap-2.5">
                 <LogoIcon />
@@ -166,7 +150,7 @@ function FooterCard() {
           </div>
         </div>
 
-        {/* Legal bar — outer body, outside the inner panel */}
+        {}
         <div className="flex flex-col items-center justify-between gap-6 px-6 py-5 text-[15px] sm:px-12 md:flex-row md:px-16 lg:px-20">
           <p className="font-body font-medium text-muted-foreground">
             © {year} Memory Palace. All rights reserved.
@@ -189,7 +173,7 @@ function FooterCard() {
 function GlassText() {
   return (
     <div className="relative flex w-full select-none items-center justify-center pt-0">
-      {/* Hidden SVG defining the glass filter referenced via `url(#glass-effect)`. */}
+      {}
       <svg className="absolute h-0 w-0" aria-hidden="true" focusable="false">
         <defs>
           <filter id="glass-effect" x="-50%" y="-50%" width="200%" height="200%">

@@ -24,17 +24,6 @@ export type DuplicatePalaceResult = {
 
 const COPY_SUFFIX = ' (copy)';
 
-/**
- * Deep-copies a palace into a new row owned by the same user.
- *
- * Copies: palace, all rooms, all nodes (with positions), and `node_tags`
- * by tag name (idempotent — existing tags are reused via UPSERT, no new
- * tags are created if a tag with the same name already exists).
- *
- * Does **not** copy: edges, review state, practice sessions. Edges depend on
- * graph identity that the user might want to redraw; review state belongs to
- * each node's individual learning history.
- */
 export const duplicatePalace = defineAction({
   name: 'duplicatePalace',
   schema: palaceIdSchema,
@@ -82,8 +71,6 @@ export const duplicatePalace = defineAction({
           )
           .returning({ id: rooms.id, position: rooms.position });
 
-        // Map by position (stable inside this batch — preserved by Postgres
-        // when VALUES is fully ordered, but we re-pair defensively).
         const sortedNew = insertedRooms.slice().sort((a, b) => a.position - b.position);
         const sortedOld = sourceRooms.slice().sort((a, b) => a.position - b.position);
         sortedOld.forEach((r, i) => {
@@ -124,7 +111,6 @@ export const duplicatePalace = defineAction({
           if (newId) nodeIdMap.set(n.id, newId);
         });
 
-        // Re-attach tags by name (idempotent — reuse existing tags).
         const sourceTagLinks = await tx
           .select({
             nodeId: nodeTags.nodeId,

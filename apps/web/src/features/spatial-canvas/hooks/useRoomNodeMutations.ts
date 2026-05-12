@@ -24,21 +24,10 @@ export type NodePatch = Partial<
   Pick<UpdateNodeInput, 'title' | 'content' | 'nodeType' | 'color' | 'verseHint' | 'bibleRef'>
 >;
 
-/**
- * Single seam for every write that mutates the room's node cache.
- *
- * Each mutation follows the same optimistic protocol:
- *   1. cancelQueries — stop in-flight reads from clobbering our optimistic value
- *   2. snapshot — capture the previous cache state for rollback
- *   3. setQueryData — write the optimistic value
- *   4. onError — restore snapshot
- *   5. onSettled — invalidateQueries so the server reconciles the truth
- */
 export function useRoomNodeMutations(roomId: string) {
   const queryClient = useQueryClient();
   const queryKey = roomNodesQueryKey(roomId);
 
-  // React Compiler auto-memoizes these closures — no useCallback needed.
   function applyOptimistic(updater: (nodes: SelectNode[]) => SelectNode[]) {
     const snapshot = queryClient.getQueryData<SelectNode[]>(queryKey);
     queryClient.setQueryData<SelectNode[]>(queryKey, (curr) => (curr ? updater(curr) : curr));
@@ -50,12 +39,10 @@ export function useRoomNodeMutations(roomId: string) {
   }
 
   function invalidate() {
-    // Notify other tabs on this device to refetch (Layer 1: BroadcastChannel).
     broadcastInvalidate(queryKey);
     return queryClient.invalidateQueries({ queryKey });
   }
 
-  // ── Single-node drag persistence ─────────────────────────────────────────
   const savePosition = useMutation({
     mutationFn: async (vars: PositionUpdate) => {
       const result = await updateNodePosition({ ...vars, roomId });
@@ -75,7 +62,6 @@ export function useRoomNodeMutations(roomId: string) {
     onSettled: invalidate,
   });
 
-  // ── Multi-select drag persistence (atomic) ───────────────────────────────
   const saveBatchPositions = useMutation({
     mutationFn: async (updates: PositionUpdate[]) => {
       const result = await batchUpdateNodePositions({ roomId, updates });
@@ -97,7 +83,6 @@ export function useRoomNodeMutations(roomId: string) {
     onSettled: invalidate,
   });
 
-  // ── Editor sheet patch (debounced caller-side) ───────────────────────────
   const patchNode = useMutation({
     mutationFn: async (vars: { id: string } & NodePatch) => {
       const { id, ...patch } = vars;
@@ -117,7 +102,6 @@ export function useRoomNodeMutations(roomId: string) {
     onSettled: invalidate,
   });
 
-  // ── Create node ──────────────────────────────────────────────────────────
   const addNode = useMutation({
     mutationFn: async (vars: CreateNodeInput) => {
       const result = await createNode(vars);
@@ -126,8 +110,7 @@ export function useRoomNodeMutations(roomId: string) {
     },
     onMutate: async (vars) => {
       await queryClient.cancelQueries({ queryKey });
-      // Optimistic placeholder — uses a temporary id that gets replaced
-      // when onSettled fires invalidateQueries with the server response.
+
       const now = new Date();
       const placeholder: SelectNode = {
         id: `optimistic-${Date.now()}`,
@@ -152,7 +135,6 @@ export function useRoomNodeMutations(roomId: string) {
     onSettled: invalidate,
   });
 
-  // ── Delete node ──────────────────────────────────────────────────────────
   const removeNode = useMutation({
     mutationFn: async (vars: { id: string }) => {
       const result = await deleteNode({ id: vars.id, roomId });
@@ -168,7 +150,6 @@ export function useRoomNodeMutations(roomId: string) {
     onSettled: invalidate,
   });
 
-  // ── Duplicate nodes (one mutation per node, offset +40/+40) ──────────────
   const duplicateNodes = useMutation({
     mutationFn: async (
       sourceNodes: {

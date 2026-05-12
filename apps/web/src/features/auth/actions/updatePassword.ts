@@ -15,9 +15,7 @@ export async function updatePassword(
   }
 
   const supabase = await createSupabaseFromCookies();
-  // The recovery session is established by /callback's exchangeCodeForSession,
-  // so the user is authenticated by the time they reach this action. The proxy
-  // bounces unauthenticated callers to /login before we get here.
+
   const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
   if (error) return { status: 'error', message: error.message };
 

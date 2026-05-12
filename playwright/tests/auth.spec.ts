@@ -1,14 +1,5 @@
 import { test, expect } from '@playwright/test';
 
-/**
- * Auth smoke tests — Phase 1C
- *
- * These tests verify that the login and signup pages render correctly
- * without requiring real Supabase user credentials. They still assume
- * NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are configured,
- * and act as the CI smoke gate that proves the build is serving valid HTML.
- */
-
 test.describe('Auth pages', () => {
   test('login page renders the sign-in form', async ({ page }) => {
     await page.goto('/login');
@@ -49,7 +40,7 @@ test.describe('Auth pages', () => {
 
   test('protected route redirects unauthenticated users to /login', async ({ page }) => {
     await page.goto('/palaces');
-    // proxy.ts redirects any protected route to /login when no Supabase session exists
+
     await expect(page).toHaveURL(/\/login/);
   });
 });

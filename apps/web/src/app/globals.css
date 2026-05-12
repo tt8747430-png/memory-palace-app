@@ -1,14 +1,8 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-/* Workspace UI package — Tailwind v4 doesn't scan node_modules-resolved
-   workspace packages by default, so any class used inside the Button,
-   Sheet, Input, Skeleton primitives would be dropped from the compiled
-   CSS. This @source directive forces Tailwind to scan the package. */
 @source "../../../../packages/ui/src/**/*.{ts,tsx}";
 
-/* next-themes (attribute="class") toggles `.dark` on <html>; this custom
-   variant lets utilities like `dark:bg-card` resolve under that selector. */
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -22,7 +16,7 @@
   --secondary-foreground: hsl(240 6% 10%);
 
   --muted: hsl(240 5% 96%);
-  /* Darkened from 46% → 37% lightness to reach ~5.8:1 contrast on white (WCAG AA). */
+
   --muted-foreground: hsl(240 4% 37%);
 
   --accent: hsl(262 83% 58%);
@@ -30,7 +24,7 @@
 
   --destructive: hsl(0 84% 60%);
   --destructive-foreground: hsl(0 0% 100%);
-  /* Separate text-safe destructive value (≥4.5:1 on white) for inline error text. */
+
   --destructive-text: hsl(0 84% 38%);
 
   --success: hsl(142 76% 36%);
@@ -54,11 +48,6 @@
 
   --radius: 0.5rem;
 
-  /* Marketing-only accent palette (Slice C / ADR 9C).
-   * These tokens are **opt-in** — only consumed by surfaces under
-   * `app/(marketing)/`. Product surfaces must use `--primary`/`--accent`.
-   * An ESLint guard (`no-restricted-syntax` on `text-gold`/`bg-gold`/…)
-   * enforces this outside the marketing route group. */
   --gold: hsl(38 60% 58%);
   --emerald: hsl(160 84% 39%);
   --rose: hsl(347 91% 61%);
@@ -93,7 +82,6 @@
 
   --card: hsl(240 10% 6%);
 
-  /* Slightly brighter accent values for dark surfaces. */
   --gold: hsl(38 70% 65%);
   --emerald: hsl(160 70% 50%);
   --rose: hsl(347 85% 67%);
@@ -132,20 +120,16 @@
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
-  /* Marketing-only accent tokens (see :root comment). */
+
   --color-gold: var(--gold);
   --color-emerald: var(--emerald);
   --color-rose: var(--rose);
   --color-cyan: var(--cyan);
   --color-amber: var(--amber);
 
-  /* Display font for marketing headlines (Slice C). */
   --font-display:
     var(--font-space-grotesk), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 
-  /* Cinematic marketing fonts: Instrument Serif (italic display headings)
-   * and Barlow (subdued body copy). Used by `font-heading` / `font-body`
-   * Tailwind utilities under `app/(marketing)/`. */
   --font-heading: var(--font-instrument-serif), ui-serif, Georgia, serif;
   --font-body: var(--font-barlow), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --color-popover-foreground: var(--popover-foreground);
@@ -163,36 +147,28 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* Safe area inset spacing for iOS notch/home indicator */
   --spacing-safe-bottom: env(safe-area-inset-bottom);
   --spacing-safe-top: env(safe-area-inset-top);
   --spacing-safe-left: env(safe-area-inset-left);
   --spacing-safe-right: env(safe-area-inset-right);
 
-  /* Component-specific heights */
   --height-bottom-nav: 4rem;
   --height-top-bar: 3.5rem;
 
-  /* Touch target size (48px per Apple HIG / Material Design).
-     Defined under --spacing-* so Tailwind v4 derives h-touch / w-touch /
-     min-h-touch / min-w-touch from a single source. */
   --spacing-touch: 48px;
 }
 
 @layer base {
   html {
-    /* Smooth in-page anchor scrolling for nav links. Disabled for
-     * prefers-reduced-motion users via the media query below. */
     scroll-behavior: smooth;
-    /* Sticky nav (~4 rem pill) + a little breathing room so anchored
-     * sections don't get tucked under the floating bar. */
+
     scroll-padding-top: 5.5rem;
   }
   body {
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-sans), system-ui, sans-serif;
-    /* Smooth out font edges on dark cinematic surfaces. */
+
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -203,14 +179,6 @@
   }
 }
 
-/* ----- Marketing-only utilities (Slice C / ADR 9C) ----------------------
- * These classes are consumed by `app/(marketing)/` surfaces. They live in
- * globals.css rather than a separate stylesheet so Tailwind's `@source`
- * scanner finds them in dev and production builds. */
-
-/* IntersectionObserver-driven reveal. The element starts off-screen-faded;
- * `useReveal()` flips `data-revealed="true"` once it enters the viewport.
- * Reduced-motion users see the final state immediately. */
 .reveal-up {
   opacity: 0;
   transform: translateY(16px);
@@ -230,8 +198,6 @@
   }
 }
 
-/* Ambient floating orbs — pure CSS, no JavaScript. Hidden for users with
- * `prefers-reduced-motion`. */
 @keyframes ambient-orb-float {
   0%,
   100% {
@@ -250,21 +216,6 @@
   }
 }
 
-/* ----- Liquid-glass surfaces (Cinematic marketing) ---------------------
- * Two variants modeled on the Apple-style "liquid glass" treatment used
- * across the cinematic hero + capabilities sections. The outer layer
- * provides the frosted fill; `::before` paints a 1.4px gradient stroke
- * that masks-out the interior so it reads as a hairline border.
- *
- * Both variants are dark-surface only — they assume the section uses a
- * black/very-dark background. Do not consume them on light surfaces. */
-/* Cinematic deep-navy canvas (Velorah-style spec). Used as the base
- * surface behind the marketing video + auth shell. Locally overrides the
- * shadcn theme tokens (foreground / muted-foreground / border / input /
- * primary) so utilities like `text-muted-foreground` and `border-border`
- * resolve against the dark plate without needing the global `.dark`
- * class. Pure CSS so it's consumable by any layout that needs a dark
- * unauthenticated bg. */
 .bg-cinematic {
   background-color: hsl(201 100% 13%);
   --background: hsl(201 100% 13%);
@@ -280,8 +231,6 @@
   color: var(--foreground);
 }
 
-/* Fade-rise sequence for hero typography + CTAs. Mirrors the spec's
- * three-stagger reveal. Reduced-motion users skip the animation. */
 @keyframes fade-rise {
   from {
     opacity: 0;
@@ -309,10 +258,6 @@
   }
 }
 
-/* Animated gradient-fill text (marketing only). Pans a multi-stop
- * gradient across an inline-block span clipped to glyphs. The gradient
- * uses our marketing accent palette so it stays on-brand. Reduced-motion
- * users see a static gradient. */
 @keyframes gradient-text-pan {
   0% {
     background-position: 0% 50%;
@@ -339,7 +284,7 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  /* Italic display text often clips on the right edge — give it room. */
+
   padding-right: 0.05em;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -422,9 +367,6 @@
   pointer-events: none;
 }
 
-/* Raised variant — for cards-on-cards (popular pricing tier, "us" side of
- * a comparison split). Slightly stronger tint, a warmer top highlight,
- * and a deeper drop shadow so it lifts off neighbouring glass plates. */
 .liquid-glass-raised {
   background: rgba(255, 255, 255, 0.025);
   background-blend-mode: luminosity;
@@ -463,12 +405,6 @@
   pointer-events: none;
 }
 
-/* ----- Cinematic CSS background -----------------------------------------
- * Pure-CSS replacement for the looping space-travel video. Three layers:
- *   1. Aurora gradient (slow conic sweep)
- *   2. Drifting nebula blobs (radial gradients translated on a long loop)
- *   3. Static starfield (multi-stop radial gradient — no animation, cheap)
- * Suppressed for `prefers-reduced-motion`. */
 @keyframes cinematic-aurora {
   0% {
     transform: rotate(0deg) scale(1.4);
@@ -535,9 +471,6 @@
   }
 }
 
-/* Marquee rails for the Daily Practice card on the landing bento grid.
- * Two opposing directions; track widths are 200% so duplicating the
- * children produces a seamless loop. */
 @keyframes marquee-left {
   from {
     transform: translateX(0);
@@ -567,8 +500,6 @@
   }
 }
 
-/* Subtle film-grain overlay for the testimonial / CTA cards on the
- * landing bento grid. Soft-light blend over a turbulence-driven SVG. */
 .noise-overlay {
   position: relative;
 }

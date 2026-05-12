@@ -22,7 +22,6 @@ export default async function FlashcardsPage({ searchParams }: PageProps) {
   const palaceId = params.palaceId?.trim() || undefined;
   const roomId = params.roomId?.trim() || undefined;
 
-  // No scope picked → show palace/room picker so the user can choose what to drill.
   if (!palaceId && !roomId) {
     const palacesResult = await getPalaces();
     const palaces = palacesResult.success ? palacesResult.data : [];
@@ -85,12 +84,9 @@ export default async function FlashcardsPage({ searchParams }: PageProps) {
     );
   }
 
-  // Scope chosen → fetch deck.
   const dueResult = await getDueNodes({ palaceId, roomId, limit: DECK_LIMIT });
   const cards = dueResult.success ? dueResult.data : [];
 
-  // FlashcardDeck is a self-contained full-bleed surface with its own
-  // exit affordance — render it raw, no wrapper padding or back-link chrome.
   return <FlashcardDeck nodes={cards} />;
 }
 

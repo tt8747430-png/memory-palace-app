@@ -1,12 +1,3 @@
-// Apply a single hand-authored SQL migration via the postgres driver.
-//
-// Usage: tsx scripts/apply-migration.mjs <migration-file>
-// Reads DATABASE_URL/DIRECT_DATABASE_URL from apps/web/.env.local.
-//
-// Hand-authored migrations (0002+) aren't tracked by drizzle's _journal.json,
-// so drizzle-kit migrate skips them. This script is the official path until
-// we move to a tracked-migrations workflow.
-
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { config } from 'dotenv';

@@ -66,7 +66,7 @@ const BIBLE_REF_MAX = 120;
 
 interface NodeEditorSheetProps {
   roomId: string;
-  /** Parent palace mode — 'bible' surfaces verse-hint + reference fields. */
+
   palaceMode?: PalaceMode;
 }
 
@@ -79,16 +79,6 @@ interface EditorState {
   bibleRef: string;
 }
 
-/**
- * Right-side sheet for editing a node's title, content, type, and color.
- *
- * Design choices:
- *   - One coalesced debounced PATCH (500ms) instead of one mutation per field.
- *     Rapid keystrokes across multiple fields fold into a single round-trip.
- *   - NodeForm is keyed on the editing node's id so React resets all local
- *     state automatically when the user switches nodes — no derived-state dance.
- *   - On close, any pending debounce is flushed so we never drop edits.
- */
 export function NodeEditorSheet({ roomId, palaceMode = 'simple' }: NodeEditorSheetProps) {
   const editingNodeId = useCanvasStore((s) => s.editingNodeId);
   const setEditingNodeId = useCanvasStore((s) => s.setEditingNodeId);
@@ -102,10 +92,6 @@ export function NodeEditorSheet({ roomId, palaceMode = 'simple' }: NodeEditorShe
 
   const close = () => setEditingNodeId(null);
 
-  // On mobile, the sheet takes the full dynamic viewport (`100dvh`) so iOS
-  // Safari's URL bar collapse doesn't push the form sticky-footer offscreen,
-  // and `pb-[env(safe-area-inset-bottom)]` keeps action buttons clear of the
-  // home-indicator. On desktop it slides in from the right.
   const sheetContentClass = isMobile
     ? 'flex h-[100dvh] flex-col rounded-t-2xl overflow-y-auto pb-[env(safe-area-inset-bottom)]'
     : 'flex w-full max-w-sm flex-col';
@@ -121,7 +107,6 @@ export function NodeEditorSheet({ roomId, palaceMode = 'simple' }: NodeEditorShe
         </SheetHeader>
 
         {editingNode && (
-          // key resets all NodeForm state automatically when the user switches nodes.
           <NodeForm
             key={editingNode.id}
             node={editingNode}
@@ -144,8 +129,6 @@ const FIELD_TO_PATCH: Record<keyof EditorState, (v: string) => Partial<NodePatch
   bibleRef: (v) => ({ bibleRef: v === '' ? null : v }),
 };
 
-// ─── Inner form — state initialised once from props, reset via key ────────────
-
 interface NodeFormProps {
   node: SelectNode;
   roomId: string;
@@ -166,10 +149,6 @@ function NodeForm({ node, roomId, palaceMode, onClose }: NodeFormProps) {
     bibleRef: node.bibleRef ?? '',
   });
 
-  // Accumulate field changes so that rapid edits across different fields are
-  // all coalesced into a single PATCH. Without this, useDebouncedCallback
-  // would forward only the most recent call's arguments, silently dropping
-  // earlier field changes made within the same debounce window.
   const pendingPatch = useRef<NodePatch>({});
 
   const flush = useDebouncedCallback(() => {
@@ -194,7 +173,7 @@ function NodeForm({ node, roomId, palaceMode, onClose }: NodeFormProps) {
       setConfirmDelete(true);
       return;
     }
-    // Flush any pending edits before deleting, then close.
+
     flush.cancel();
     removeNode.mutate({ id: node.id });
     onClose();
@@ -355,8 +334,6 @@ function NodeForm({ node, roomId, palaceMode, onClose }: NodeFormProps) {
   );
 }
 
-// ─── Tags field ───────────────────────────────────────────────────────────────
-
 const nodeTagsQueryKey = (nodeId: string) => ['nodes', nodeId, 'tags'] as const;
 
 function TagsField({ nodeId }: { nodeId: string }) {
@@ -405,7 +382,7 @@ function TagsField({ nodeId }: { nodeId: string }) {
     <div className="space-y-2">
       <Label>Tags</Label>
 
-      {/* Existing tags */}
+      {}
       <div className="flex flex-wrap gap-1.5">
         {isLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
         {tags.map((tag) => (
@@ -430,7 +407,7 @@ function TagsField({ nodeId }: { nodeId: string }) {
         ))}
       </div>
 
-      {/* Add tag input */}
+      {}
       <div className="flex items-center gap-2">
         <Input
           type="text"

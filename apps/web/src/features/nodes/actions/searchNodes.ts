@@ -15,10 +15,6 @@ import {
 import { defineAction } from '@/shared/lib/action';
 import { searchNodesSchema } from '../schemas/node';
 
-// websearch_to_tsquery accepts AND/OR/-negation syntax and is forgiving of
-// user input — safer than to_tsquery, more expressive than plainto_tsquery.
-// The expression must match the GIN index `idx_nodes_fts` exactly to remain
-// index-eligible.
 const FTS_VECTOR = sql`to_tsvector('english', coalesce(${nodes.title}, '') || ' ' || coalesce(${nodes.content}, ''))`;
 
 export const searchNodes = defineAction({
@@ -41,8 +37,6 @@ export const searchNodes = defineAction({
 
     const db = getDb();
 
-    // Always join rooms so we can return palaceId for navigation.
-    // Filtering deleted rooms prevents soft-deleted rooms from leaking nodes.
     return db
       .select({
         ...getTableColumns(nodes),

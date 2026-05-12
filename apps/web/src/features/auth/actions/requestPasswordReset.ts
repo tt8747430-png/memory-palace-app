@@ -17,10 +17,7 @@ export async function requestPasswordReset(
   }
 
   const supabase = await createSupabaseFromCookies();
-  // Intentionally ignore the result. Supabase does not reveal whether the
-  // address exists, but rate-limit / SMTP errors would — surfacing them here
-  // would let an attacker fingerprint registered emails. Always return the
-  // same response. The action itself is rate-limited by IP at the edge.
+
   await supabase.auth.resetPasswordForEmail(parsed.data.email, {
     redirectTo: await buildCallbackUrl('/update-password'),
   });

@@ -3,13 +3,13 @@ import { Skeleton } from '@memory-palace/ui';
 export default function PalacesLoading() {
   return (
     <div className="space-y-8 py-2">
-      {/* Page header */}
+      {}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-2">
           <Skeleton className="h-8 w-28" />
           <Skeleton className="h-4 w-56" />
         </div>
-        {/* Action buttons placeholder */}
+        {}
         <div className="flex items-center gap-2">
           <Skeleton className="h-9 w-24 rounded-md" />
           <Skeleton className="h-9 w-24 rounded-md" />
@@ -17,7 +17,7 @@ export default function PalacesLoading() {
         </div>
       </div>
 
-      {/* Palace grid */}
+      {}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 6 }).map((_, i) => (
           <div key={i} className="space-y-3 rounded-lg border bg-card px-5 py-5">

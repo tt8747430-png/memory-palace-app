@@ -47,9 +47,7 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
           }
         });
         observer.observe({ type: 'longtask', buffered: true });
-      } catch {
-        // Not supported in all browsers — silently ignore.
-      }
+      } catch {}
     }
   }, []);
 

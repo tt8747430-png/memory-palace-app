@@ -37,29 +37,28 @@ export type RecentSession = {
 };
 
 export type MasteryBreakdown = {
-  /** mastery >= 80 */
   mastered: number;
-  /** 50 <= mastery < 80 */
+
   familiar: number;
-  /** 20 <= mastery < 50 */
+
   learning: number;
-  /** mastery < 20 */
+
   fresh: number;
-  /** Total nodes with any review state row. */
+
   total: number;
 };
 
 export type PracticeStats = {
   totalPracticed: number;
-  /** Sum of streak across all reviewed nodes — proxy for daily-streak shape. */
+
   totalStreak: number;
-  /** Top streak across nodes (used in StreakCounter). */
+
   topStreak: number;
   weakestNodes: WeakestNode[];
   recentSessions: RecentSession[];
-  /** Count of attempts per day for the last 7 days, oldest → newest. */
+
   weeklyActivity: number[];
-  /** Breakdown of reviewed nodes by mastery bucket. */
+
   mastery: MasteryBreakdown;
 };
 

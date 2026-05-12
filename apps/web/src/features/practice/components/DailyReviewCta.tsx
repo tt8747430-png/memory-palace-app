@@ -3,10 +3,6 @@ import { BrainCircuit, ArrowRight } from 'lucide-react';
 import { buttonVariants, cn } from '@memory-palace/ui';
 import { getDueNodes } from '../actions/getDueNodes';
 
-/**
- * Dashboard CTA — pulls a single due node so the card reflects whether there
- * is anything to review right now. Lives next to `StatsBar` on the dashboard.
- */
 export async function DailyReviewCta() {
   const result = await getDueNodes({ limit: 1 });
   const hasDue = result.success && result.data.length > 0;

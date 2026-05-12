@@ -63,7 +63,7 @@ export default function AboutPage() {
         <CinematicNav />
 
         <main className="mx-auto w-full max-w-3xl flex-1 px-4 pt-32 pb-16 md:px-6 md:pt-40 md:pb-24">
-          {/* Method of Loci hero */}
+          {}
           <section>
             <p className="mb-4 font-body text-sm text-white/70">{'// The technique'}</p>
             <h1 className="font-heading text-5xl italic leading-[0.9] tracking-[-2px] text-white md:text-6xl lg:text-7xl">
@@ -87,7 +87,7 @@ export default function AboutPage() {
 
           <div aria-hidden="true" className="my-16 h-px bg-white/10" />
 
-          {/* Feature overview */}
+          {}
           <section>
             <p className="mb-4 font-body text-sm text-white/70">{'// What it does'}</p>
             <h2 className="font-heading text-4xl italic leading-[0.9] tracking-[-1.5px] text-white md:text-5xl">
@@ -109,7 +109,7 @@ export default function AboutPage() {
 
           <div aria-hidden="true" className="my-16 h-px bg-white/10" />
 
-          {/* Project background + tech */}
+          {}
           <section>
             <p className="mb-4 font-body text-sm text-white/70">{'// The project'}</p>
             <h2 className="font-heading text-4xl italic leading-[0.9] tracking-[-1.5px] text-white md:text-5xl">

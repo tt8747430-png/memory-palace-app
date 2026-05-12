@@ -8,16 +8,12 @@ describe('canvasStore', () => {
     store = createCanvasStore();
   });
 
-  // ── Factory isolation ────────────────────────────────────────────────────
-
   it('creates independent instances — mutations on one do not affect another', () => {
     const storeA = createCanvasStore();
     const storeB = createCanvasStore();
     storeA.getState().setActiveTool('pan');
     expect(storeB.getState().activeTool).toBe('pointer');
   });
-
-  // ── Initial state ─────────────────────────────────────────────────────────
 
   it('starts with pointer as active tool', () => {
     expect(store.getState().activeTool).toBe('pointer');
@@ -31,8 +27,6 @@ describe('canvasStore', () => {
     expect(store.getState().editingNodeId).toBeNull();
   });
 
-  // ── activeTool ───────────────────────────────────────────────────────────
-
   it('setActiveTool switches to pan', () => {
     store.getState().setActiveTool('pan');
     expect(store.getState().activeTool).toBe('pan');
@@ -43,8 +37,6 @@ describe('canvasStore', () => {
     store.getState().setActiveTool('pointer');
     expect(store.getState().activeTool).toBe('pointer');
   });
-
-  // ── selectedNodeIds ──────────────────────────────────────────────────────
 
   it('setSelectedNodeIds stores the provided set', () => {
     store.getState().setSelectedNodeIds(new Set(['n1', 'n2']));
@@ -64,8 +56,6 @@ describe('canvasStore', () => {
     expect(store.getState().selectedNodeIds.size).toBe(0);
   });
 
-  // ── editingNodeId ────────────────────────────────────────────────────────
-
   it('setEditingNodeId stores the given id', () => {
     store.getState().setEditingNodeId('node-abc');
     expect(store.getState().editingNodeId).toBe('node-abc');
@@ -76,8 +66,6 @@ describe('canvasStore', () => {
     store.getState().setEditingNodeId(null);
     expect(store.getState().editingNodeId).toBeNull();
   });
-
-  // ── snapEnabled ───────────────────────────────────────────────────────────
 
   it('starts with snap disabled', () => {
     expect(store.getState().snapEnabled).toBe(false);

@@ -19,7 +19,7 @@ export default async function SettingsPage() {
         <p className="mt-1 text-sm text-muted-foreground">Manage your profile and preferences.</p>
       </div>
 
-      {/* ── Profile ── */}
+      {}
       <section className="space-y-4">
         <h2 className="text-base font-semibold">Profile</h2>
         <Card className="max-w-lg">

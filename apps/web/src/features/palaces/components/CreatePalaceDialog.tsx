@@ -20,22 +20,14 @@ import { useAppDialog } from '@/shared/components/AppDialogContext';
 import { createPalace } from '../actions/createPalace';
 
 export function CreatePalaceDialog() {
-  // Dialog is controlled entirely via AppDialogContext — the trigger button
-  // calls openDialog('create-palace'), which sets pending; closing calls
-  // consume(), which clears it. No router.replace or useEffect cascade needed.
   const { pending, open: openDialog, consume } = useAppDialog();
   const isOpen = pending === 'create-palace';
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, startTransition] = useTransition();
 
-  // Handle cross-page navigation: commandActions encodes the intent as
-  // ?action=create-palace in the URL rather than calling openDialog before this
-  // component is mounted. We read it once on mount with window.location.search
-  // (avoids useSearchParams Suspense boundary) and strip it with replaceState
-  // (not router.replace, which would trigger an RSC re-fetch).
   const initRef = useRef(false);
   useEffect(() => {
-    if (initRef.current) return; // Strict Mode guard: only fire once
+    if (initRef.current) return;
     initRef.current = true;
     const params = new URLSearchParams(window.location.search);
     if (params.get('action') === 'create-palace') {

@@ -4,14 +4,10 @@ import { getDb, nodes, rooms, palaces, and, asc, eq, isNull } from '@memory-pala
 import { ActionError, defineAction } from '@/shared/lib/action';
 import { getRoomNodesSchema } from '../schemas/node';
 
-/** Returns all non-deleted nodes for a room, ordered by creation time.
- * Intended for the canvas view — no cursor pagination here.
- * Hard cap of 500 nodes per room keeps response sizes bounded. */
 export const getRoomNodes = defineAction({
   name: 'getRoomNodes',
   schema: getRoomNodesSchema,
   handler: async ({ user, input }) => {
-    // Verify the room belongs to the user via palace ownership.
     const [room] = await getDb()
       .select({ id: rooms.id })
       .from(rooms)

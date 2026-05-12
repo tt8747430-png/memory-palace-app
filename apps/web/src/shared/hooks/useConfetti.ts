@@ -2,7 +2,6 @@
 
 import { useCallback } from 'react';
 
-// Dynamically imported — never included in the initial client bundle.
 async function fireConfetti() {
   const confetti = (await import('canvas-confetti')).default;
   confetti({

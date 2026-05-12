@@ -9,26 +9,10 @@ import { useAppDialog } from '../components/AppDialogContext';
 import { CANVAS_EVENTS } from '../lib/canvasEvents';
 import { findChordAction } from '../lib/commandActions';
 
-/**
- * Duration of the prefix-key window in ms.  1 second is long enough for
- * intentional two-key chords while short enough to avoid stale prefix arms.
- */
 const PREFIX_TIMEOUT_MS = 1_000;
 
 const PREFIX_KEYS = new Set(['g', 'c', 't']);
 
-/**
- * Registers all application-wide keyboard shortcuts.
- *
- * Sequential shortcuts (e.g. "g then h") use a prefix-key state-machine:
- *   1. A "prefix" key (g, c, t) arms a 1-second window.
- *   2. The next keystroke within that window resolves to a chord action.
- *
- * Cmd/Ctrl+K is handled separately because it must work even inside inputs.
- *
- * This hook must be rendered inside both CommandPaletteProvider and
- * ShortcutsOverlayProvider.
- */
 export function useGlobalShortcuts() {
   const router = useRouter();
   const pathname = usePathname();
@@ -89,7 +73,7 @@ export function useGlobalShortcuts() {
           resolvedTheme,
           openOverlay,
           openDialog,
-          // Sign-out has no chord, so this branch is unreachable from the hook.
+
           signOut: () => {},
           dispatchCanvas: (name) => window.dispatchEvent(new CustomEvent(name)),
         });
@@ -115,5 +99,4 @@ export function useGlobalShortcuts() {
   }, [router, pathname, setTheme, resolvedTheme, openPalette, openOverlay, openDialog]);
 }
 
-// Re-export for tests that previously imported via this path.
 export { CANVAS_EVENTS };

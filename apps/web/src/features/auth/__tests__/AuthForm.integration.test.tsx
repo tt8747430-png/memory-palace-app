@@ -1,9 +1,3 @@
-/**
- * Integration test for the auth forms — uses the REAL `@memory-palace/ui`
- * primitives. The other AuthForm tests mock `@memory-palace/ui` to avoid
- * Radix portal complexity, which means they don't notice when the real
- * Button, Input, or Label drops children/attributes. This file fills that gap.
- */
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';

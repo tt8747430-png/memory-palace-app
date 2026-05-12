@@ -2,12 +2,6 @@
 
 import { useSyncExternalStore } from 'react';
 
-/**
- * Returns the current online/offline status of the browser.
- *
- * Uses `useSyncExternalStore` for tear-free reads — the value is consistent
- * across the render tree even during concurrent rendering.
- */
 export function useOnlineStatus(): boolean {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }
@@ -25,7 +19,6 @@ function getSnapshot(): boolean {
   return navigator.onLine;
 }
 
-/** Server always assumes online — the banner is client-only. */
 function getServerSnapshot(): boolean {
   return true;
 }

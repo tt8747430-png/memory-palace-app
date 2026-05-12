@@ -2,14 +2,6 @@ import { Star } from 'lucide-react';
 import { SectionEyebrow } from './SectionEyebrow';
 import { BlurText } from '@/shared/components/BlurText';
 
-/**
- * "Wall of Love" testimonials.
- *
- * Pattern from LanX: staggered grid of glass quote cards with 5 gold
- * stars + author + role. Seeded with method-of-loci / learning quotes —
- * swap in real customer voices when available.
- */
-
 type Quote = {
   body: string;
   author: string;

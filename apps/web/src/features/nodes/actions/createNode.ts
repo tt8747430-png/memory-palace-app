@@ -11,8 +11,6 @@ export const createNode = defineAction({
   handler: async ({ user, input }) => {
     const db = getDb();
 
-    // Transaction ensures atomicity — no TOCTOU gap between the room
-    // ownership check and the node insert.
     const node = await db.transaction(async (tx) => {
       const [room] = await tx
         .select({ id: rooms.id })

@@ -12,8 +12,6 @@ import type { DueNodeWithMeta } from '../actions/getDueNodes';
 
 type Quality = 'again' | 'hard' | 'good' | 'easy';
 
-// Anki labels → SM-2 quality (recordPractice maps score+correct to q via srs.ts):
-//   again → q 0–1, hard → q 3, good → q 4, easy → q 5
 const QUALITY_TO_SCORE: Record<Quality, { score: number; correct: boolean }> = {
   again: { score: 0, correct: false },
   hard: { score: 50, correct: true },
@@ -25,15 +23,6 @@ interface Props {
   nodes: DueNodeWithMeta[];
 }
 
-/**
- * Anki-style flashcard deck. Front shows the prompt; tap / Space flips to
- * the answer; after flip the user rates Again/Hard/Good/Easy and the deck
- * advances. Swipe left/right also navigates (after flip, swipe right
- * counts as "good"; left counts as "again" — see onDragEnd thresholds).
- *
- * Bible-mode nodes surface their `bibleRef` chip on the prompt side and
- * `verseHint` on the answer side when present.
- */
 export function FlashcardDeck({ nodes }: Props) {
   const router = useRouter();
   const [index, setIndex] = useState(0);
@@ -49,8 +38,6 @@ export function FlashcardDeck({ nodes }: Props) {
     setIndex((i) => Math.max(i - 1, 0));
   };
 
-  // Swipe navigates the deck. After flip, the same swipe submits a default
-  // rating (right = good, left = again) so the gesture has practical value.
   const swipe = useSwipeNavigation({
     onPrev: () => {
       if (flipped) void rate('again');
@@ -142,13 +129,8 @@ export function FlashcardDeck({ nodes }: Props) {
   const progress = nodes.length > 0 ? ((index + 1) / nodes.length) * 100 : 0;
 
   return (
-    /*
-     * Full-bleed deck. Escapes the dashboard wrapper's `mx-auto max-w-7xl
-     * px-4 py-6` and sizes to viewport so the rating row is always pinned
-     * to the bottom — no scroll-to-rate on mobile.
-     */
     <div className="-mx-4 -my-6 flex h-[calc(100dvh-3.5rem-3rem-var(--height-bottom-nav)-env(safe-area-inset-top)-env(safe-area-inset-bottom))] flex-col bg-background sm:-mx-6 md:h-dvh lg:-mx-8">
-      {/* Sticky header — counter, scope, exit affordance, linear progress. */}
+      {}
       <header className="sticky top-0 z-20 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/75">
         <div className="flex items-center justify-between gap-3 px-4 py-2.5 text-xs sm:px-6">
           <span className="tabular-nums text-muted-foreground">
@@ -180,7 +162,7 @@ export function FlashcardDeck({ nodes }: Props) {
         </div>
       </header>
 
-      {/* Scrollable card area — fills remaining flex space. */}
+      {}
       <main className="flex flex-1 items-start justify-center overflow-y-auto px-4 py-6 sm:items-center sm:px-6 sm:py-10">
         <m.article
           key={current.id}
@@ -230,7 +212,7 @@ export function FlashcardDeck({ nodes }: Props) {
         </m.article>
       </main>
 
-      {/* Sticky footer — primary action surface. Pinned above bottom nav on mobile. */}
+      {}
       <footer className="sticky bottom-0 z-20 border-t bg-background/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur supports-backdrop-filter:bg-background/75 sm:px-6">
         {flipped ? (
           <div className="grid grid-cols-4 gap-2">

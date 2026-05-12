@@ -5,21 +5,12 @@ import { Search, X } from 'lucide-react';
 import { cn } from '@memory-palace/ui';
 import { useCanvasStore } from '../store/CanvasStoreContext';
 
-/**
- * Live canvas search overlay — toggled by Cmd/Ctrl+F or the `/` key.
- *
- * While the query is non-empty, RoomCanvas dims nodes whose title and content
- * don't match. Clearing the input (or pressing Escape) exits search mode.
- *
- * Desktop-only (`hidden md:flex`) — positioned top-right of the canvas.
- */
 export function CanvasSearch() {
   const [visible, setVisible] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const query = useCanvasStore((s) => s.canvasSearchQuery);
   const setQuery = useCanvasStore((s) => s.setCanvasSearchQuery);
 
-  // useCallback so `close` is stable and can be listed as a dep below.
   const close = useCallback(() => {
     setVisible(false);
     setQuery('');
@@ -29,7 +20,6 @@ export function CanvasSearch() {
     if (visible) inputRef.current?.focus();
   }, [visible]);
 
-  // Toggle with Cmd/Ctrl+F or `/` (outside inputs).
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement).tagName;

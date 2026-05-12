@@ -14,14 +14,14 @@ type Mode = 'multiple-choice' | 'typed-recall' | 'flashcard';
 
 interface Props {
   nodes: DueNodeWithMeta[];
-  /** Default mode; the user can switch per question. */
+
   initialMode?: Mode;
 }
 
 interface Question {
   node: DueNodeWithMeta;
   mode: Mode;
-  /** Multiple-choice options (correct answer included), shuffled. */
+
   options: string[];
 }
 
@@ -31,7 +31,6 @@ const MODES: ReadonlyArray<{ value: Mode; label: string }> = [
   { value: 'flashcard', label: 'Flashcard' },
 ];
 
-/** Fisher-Yates — only used over arrays of length ≤ 4. */
 function shuffle<T>(items: T[]): T[] {
   const out = items.slice();
   for (let i = out.length - 1; i > 0; i -= 1) {
@@ -54,7 +53,6 @@ export function QuizSession({ nodes, initialMode = 'multiple-choice' }: Props) {
 
   const current = nodes[index];
 
-  // Prefetch distractors for the current question so multiple-choice has data.
   useEffect(() => {
     if (!current) return;
     if (distractorsByNode[current.id]) return;
@@ -72,7 +70,7 @@ export function QuizSession({ nodes, initialMode = 'multiple-choice' }: Props) {
   const question: Question | null = useMemo(() => {
     if (!current) return null;
     const distractors = distractorsByNode[current.id] ?? [];
-    // Fall back to typed-recall when there aren't enough siblings.
+
     const effectiveMode: Mode =
       mode === 'multiple-choice' && distractors.length < 1 ? 'typed-recall' : mode;
     const options =
@@ -83,7 +81,6 @@ export function QuizSession({ nodes, initialMode = 'multiple-choice' }: Props) {
   }, [current, distractorsByNode, mode]);
 
   function deriveScore(correct: boolean, selfRated?: number): number {
-    // Flashcard self-rating uses 1–5 → maps to 20-step buckets.
     if (typeof selfRated === 'number') {
       return Math.max(0, Math.min(100, selfRated * 20));
     }
@@ -102,7 +99,6 @@ export function QuizSession({ nodes, initialMode = 'multiple-choice' }: Props) {
       mode: question.mode,
     });
     if (!result.success && result.error.code === 'NOT_FOUND') {
-      // Node deleted mid-quiz — drop it silently and move on.
       advance();
       return;
     }
@@ -206,12 +202,7 @@ export function QuizSession({ nodes, initialMode = 'multiple-choice' }: Props) {
         ) : null}
       </div>
 
-      {/*
-       * Action surface — sticky to the bottom on mobile so the user can
-       * answer without scrolling. Pinned above the dashboard bottom nav
-       * via env(safe-area-inset-bottom). Static on md+ where there's no
-       * bottom nav and content fits comfortably.
-       */}
+      {}
       <div className="sticky bottom-0 -mx-4 space-y-3 border-t bg-background/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur supports-backdrop-filter:bg-background/75 sm:-mx-6 sm:px-6 md:static md:mx-0 md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none">
         {question.mode === 'multiple-choice' ? (
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">

@@ -41,7 +41,6 @@ export function ImportDialog() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Client-side size guard — mirrors the 10 MB Zod limit for instant feedback.
     if (file.size > 10 * 1024 * 1024) {
       setState({ status: 'error', message: 'File must be 10 MB or smaller.' });
       return;

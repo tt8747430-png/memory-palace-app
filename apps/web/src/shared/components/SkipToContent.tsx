@@ -1,12 +1,3 @@
-/**
- * SkipToContent — accessibility skip navigation link.
- *
- * Visually hidden by default; revealed on keyboard focus so users who navigate
- * by keyboard can bypass the sidebar/nav and jump directly to the page's main
- * content region. The target element must have `id="main-content"`.
- *
- * Pattern: https://www.w3.org/TR/WCAG20-TECHS/G1.html
- */
 export function SkipToContent() {
   return (
     <a

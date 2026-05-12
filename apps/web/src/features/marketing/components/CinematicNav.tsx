@@ -6,11 +6,6 @@ import { AnimatePresence, m } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { cn } from '@memory-palace/ui';
 
-/**
- * Inline brand mark used in the cinematic nav. Tiny SVG version of the
- * `_brand-icon.tsx` palette so we don't ship the full og-image variant in
- * the client bundle. Uses `currentColor` so it inherits the wordmark hue.
- */
 function BrandMark({ className }: { className?: string }) {
   return (
     <svg
@@ -45,15 +40,6 @@ const links: NavLink[] = [
 
 const SMOOTH_EASE = [0.25, 0.1, 0.25, 1] as const;
 
-/**
- * Sticky floating pill nav.
- *
- * Mounted in a `sticky top-3 z-50` shell so it follows scroll. The inner
- * `liquid-glass` pill shrinks slightly + gains a stronger shadow once the
- * viewport has been scrolled past ~80 px. Mobile collapses to a hamburger
- * that opens a full-screen centered sheet — backdrop-tap, ESC key, and
- * link-tap all dismiss. Items stagger in for a more deliberate feel.
- */
 export function CinematicNav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -66,9 +52,6 @@ export function CinematicNav() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Active-section tracking. IntersectionObserver with a top-anchored
-  // root margin so a section is considered "active" once its top crosses
-  // ~30% of the viewport. Falls back silently in non-IO environments.
   useEffect(() => {
     if (typeof IntersectionObserver === 'undefined') return;
     const ids = links.map((l) => l.href.replace('#', ''));
@@ -84,8 +67,7 @@ export function CinematicNav() {
           if (e.isIntersecting) visible.set(e.target.id, e.intersectionRatio);
           else visible.delete(e.target.id);
         }
-        // Pick the section with the largest visible ratio; ties broken by
-        // document order (Map insertion order suffices since we set fresh).
+
         let best: string | null = null;
         let bestRatio = 0;
         for (const [id, ratio] of visible) {
@@ -102,7 +84,6 @@ export function CinematicNav() {
     return () => io.disconnect();
   }, []);
 
-  // Lock body scroll + close on Escape while sheet is open.
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
@@ -157,7 +138,7 @@ export function CinematicNav() {
                   )}
                 >
                   {link.label}
-                  {/* Active dot — soft glow indicator beneath the label. */}
+                  {}
                   <span
                     aria-hidden="true"
                     className={cn(
@@ -165,7 +146,7 @@ export function CinematicNav() {
                       isActive ? 'opacity-100 shadow-[0_0_8px_rgba(255,255,255,0.6)]' : 'opacity-0',
                     )}
                   />
-                  {/* Hover underline — suppressed when the link is active. */}
+                  {}
                   <span
                     className={cn(
                       'pointer-events-none absolute -bottom-1 left-0 h-px w-full origin-left bg-foreground transition-transform duration-300 ease-out',
@@ -209,7 +190,7 @@ export function CinematicNav() {
         </m.header>
       </div>
 
-      {/* Full-screen mobile sheet — centered, with backdrop. */}
+      {}
       <AnimatePresence>
         {open ? (
           <m.div

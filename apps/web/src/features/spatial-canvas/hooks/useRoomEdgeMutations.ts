@@ -6,12 +6,6 @@ import { createEdge, deleteEdge } from '@/features/nodes';
 import { broadcastInvalidate } from '@/shared/lib/cross-tab-sync';
 import { roomEdgesQueryKey } from './useEdgesQuery';
 
-/**
- * Single seam for edge writes.
- *
- * createEdge: optimistic insert → confirm from server
- * deleteEdge: optimistic remove → confirm from server
- */
 export function useRoomEdgeMutations(roomId: string) {
   const queryClient = useQueryClient();
   const queryKey = roomEdgesQueryKey(roomId);

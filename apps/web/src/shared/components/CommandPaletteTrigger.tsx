@@ -13,8 +13,6 @@ function readIsMac(): boolean {
   return /mac/i.test(platform);
 }
 
-/** Mobile search icon — taps open the command palette.
- *  Render inside the mobile header, hidden on `md+` via `md:hidden`. */
 export function CommandPaletteTrigger() {
   const { openPalette } = useCommandPalette();
 
@@ -31,14 +29,9 @@ export function CommandPaletteTrigger() {
   );
 }
 
-/** Desktop search hint shown in the sidebar footer.
- *  Tapping it opens the command palette, same as Cmd+K. */
 export function CommandPaletteDesktopTrigger() {
   const { openPalette } = useCommandPalette();
 
-  // Server snapshot is `false` (Ctrl+K) — matches first client render to avoid
-  // hydration mismatch. After hydration the client snapshot reads `navigator`
-  // and re-renders with the correct hint.
   const isMac = useSyncExternalStore(noopSubscribe, readIsMac, () => false);
 
   return (

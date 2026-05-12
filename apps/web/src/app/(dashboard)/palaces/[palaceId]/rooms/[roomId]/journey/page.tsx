@@ -34,8 +34,7 @@ export default async function RoomJourneyPage({ params }: JourneyPageProps) {
   if (!palaceResult.success || !roomResult.success) notFound();
 
   const allNodes = nodesResult.success ? nodesResult.data : [];
-  // Walk order: top-to-bottom, left-to-right by canvas position. The viewer
-  // works on a stable snapshot — node moves while reading don't reorder.
+
   const journeyNodes = allNodes
     .slice()
     .sort((a, b) => a.positionY - b.positionY || a.positionX - b.positionX)

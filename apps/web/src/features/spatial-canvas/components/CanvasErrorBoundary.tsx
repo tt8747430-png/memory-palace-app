@@ -7,7 +7,7 @@ import { Button } from '@memory-palace/ui';
 
 interface Props {
   children: ReactNode;
-  /** Optional slot for a custom fallback — defaults to the built-in error card. */
+
   fallback?: (reset: () => void) => ReactNode;
 }
 
@@ -16,9 +16,6 @@ interface State {
   error: Error | null;
 }
 
-/** Class-based error boundary that isolates the canvas subtree.
- * A crash inside <ReactFlow> does not unmount the sidebar, nav, or room header.
- * The "Try again" button resets React's error boundary so the canvas remounts. */
 export class CanvasErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -30,7 +27,6 @@ export class CanvasErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    // Forward to PostHog — no-ops when key is absent (local dev).
     posthog.captureException(error, { extra: { componentStack: info.componentStack } });
     console.error('[CanvasErrorBoundary]', error, info.componentStack);
   }

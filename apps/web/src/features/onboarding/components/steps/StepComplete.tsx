@@ -11,7 +11,6 @@ export function StepComplete() {
   const fire = useConfetti();
   const fired = useRef(false);
 
-  // Guard prevents double-fire in React Strict Mode (dev) and on re-mounts.
   useEffect(() => {
     if (fired.current) return;
     fired.current = true;

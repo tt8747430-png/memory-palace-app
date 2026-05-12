@@ -4,14 +4,6 @@ import { m } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { cn } from '@memory-palace/ui';
 
-/**
- * Word-by-word blur-in reveal driven by IntersectionObserver.
- *
- * Adapted from the backgroundgallery reference. Plays once on first
- * intersection. Honoured by global `MotionConfig reducedMotion="user"` —
- * users with the reduced-motion preference see the final state instantly
- * via framer-motion's built-in reducer.
- */
 export function BlurText({
   text,
   as: Tag = 'span',
@@ -25,11 +17,11 @@ export function BlurText({
   text: string;
   as?: 'span' | 'h1' | 'h2' | 'h3' | 'p';
   className?: string;
-  /** Per-word stagger in ms. */
+
   perWordDelay?: number;
-  /** Duration of each keyframe step (in seconds). */
+
   stepDuration?: number;
-  /** Initial delay (in seconds) before the first word animates. */
+
   startDelay?: number;
   rootMargin?: string;
   threshold?: number;

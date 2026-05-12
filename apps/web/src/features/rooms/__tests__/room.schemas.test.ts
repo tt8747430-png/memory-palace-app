@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { createRoomSchema, updateRoomSchema, roomIdSchema, getRoomsSchema } from '../schemas/room';
 
-// Valid v4 UUIDs (version bit = 4, variant bits = 8/9/a/b as required by RFC 4122).
 const PALACE_ID = '550e8400-e29b-41d4-a716-446655440000';
 const ROOM_ID = '6ba7b810-9dad-41d1-80b4-00c04fd430c8';
 

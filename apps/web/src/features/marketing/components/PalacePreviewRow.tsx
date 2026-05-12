@@ -4,20 +4,6 @@ import { useEffect, useState } from 'react';
 import { cn } from '@memory-palace/ui';
 import { ExploreInterfaceCue } from './ExploreInterfaceCue';
 
-/**
- * Hover-to-expand palace preview row.
- *
- * Five horizontal cards in a flex row. The hovered/focused card grows
- * to `flex-[3]`; siblings collapse to `flex-[1]`. Adapted from the
- * backgroundgallery VideoCards reference but rendered with our own
- * gradient-and-label placeholders so it ships without external assets.
- * Drop in real `<video>` or `<img>` children later by replacing the
- * inner `<PalaceCard>` body.
- *
- * Below 768 px the row collapses to a stacked column of fixed-height
- * cards (no hover affordance on touch surfaces).
- */
-
 type PalaceSlide = {
   id: string;
   title: string;
@@ -132,9 +118,9 @@ function PalaceCard({
         className,
       )}
     >
-      {/* Subtle inner light to fake a focal point */}
+      {}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_30%_30%,rgba(255,255,255,0.12),transparent_70%)]" />
-      {/* Bottom-up label fade so collapsed cards stay clean */}
+      {}
       <div className="absolute inset-x-0 bottom-0 flex items-end gap-3 bg-linear-to-t from-black/60 via-black/30 to-transparent p-5">
         <div className="min-w-0 flex-1">
           <div className="font-heading text-2xl italic leading-none tracking-tight text-foreground md:text-3xl">

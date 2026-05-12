@@ -13,11 +13,6 @@ function readIsMac(): boolean {
   return /mac/i.test(platform);
 }
 
-/**
- * Persistent "Quick actions ⌘K" row pinned to the top of the sidebar
- * (Figma 2026 "Design_2026" + "Sidebar_Tutorial" pattern). Discoverable
- * affordance for the command palette — replaces the hidden-only shortcut.
- */
 export function QuickActionsRow() {
   const { openPalette } = useCommandPalette();
   const isMac = useSyncExternalStore(noopSubscribe, readIsMac, () => false);

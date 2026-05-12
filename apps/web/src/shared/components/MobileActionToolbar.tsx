@@ -15,14 +15,6 @@ interface Props {
   className?: string;
 }
 
-/**
- * Generic md:hidden FAB for list-page primary actions. Mirrors CanvasFab's UX
- * (radial expand, Esc to close, safe-area-inset aware) without depending on
- * canvas state, so the same primitive can sit on /palaces, /palaces/[id], and
- * any future list page.
- *
- * Mounted by client wrappers — never imports feature-specific hooks itself.
- */
 export function MobileActionToolbar({ actions, className }: Props) {
   const [open, setOpen] = useState(false);
 
@@ -35,7 +27,6 @@ export function MobileActionToolbar({ actions, className }: Props) {
     return () => document.removeEventListener('keydown', onKey);
   }, [open]);
 
-  // Single-action shortcut: tap fires immediately, no menu.
   if (actions.length === 1) {
     const only = actions[0]!;
     return (

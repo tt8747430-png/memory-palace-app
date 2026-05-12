@@ -2,11 +2,6 @@ import Link from 'next/link';
 import { BlurText } from '@/shared/components/BlurText';
 import { GradientText } from '@/shared/components/GradientText';
 
-/**
- * Final CTA pre-footer. Captures users who scrolled past every earlier
- * CTA without converting. Big heading, two CTAs side-by-side, avatar
- * stack + count below for social proof.
- */
 export function FinalCTA() {
   return (
     <section className="relative w-full px-4 py-20 sm:px-6 md:px-10 md:py-28 lg:px-14">
@@ -42,7 +37,7 @@ export function FinalCTA() {
           </Link>
         </div>
 
-        {/* Avatar stack + count (decorative placeholders) */}
+        {}
         <div className="mt-12 flex items-center gap-4">
           <div className="flex -space-x-2">
             {['K', 'A', 'M', 'T', 'P'].map((letter, i) => {

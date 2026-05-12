@@ -13,14 +13,6 @@ const stats: Stat[] = [
 
 const trustWords = ['Method', 'Cathedral', 'Atlas', 'Lineage', 'Recall'];
 
-/**
- * Cinematic landing hero.
- *
- * Sits inside a parent that already paints the cinematic backdrop
- * (`<CinematicBackground />` with aurora/nebula/star orbs). The hero
- * itself stays transparent so its content layers cleanly over the
- * shared orb field — no per-section background.
- */
 export function CinematicHero() {
   return (
     <section className="relative flex min-h-dvh flex-col text-foreground">
@@ -52,7 +44,7 @@ export function CinematicHero() {
             Begin Journey
           </Link>
 
-          {/* Stat trio — three liquid-glass cards, icon → italic-serif value → label */}
+          {}
           <div className="animate-fade-rise-delay-2 mt-14 grid w-full max-w-3xl grid-cols-1 gap-3 sm:grid-cols-3">
             {stats.map(({ icon: Icon, value, label }) => (
               <div
@@ -69,7 +61,7 @@ export function CinematicHero() {
           </div>
         </div>
 
-        {/* Italic-wordmark trust row — concept words from the product, purely typographic */}
+        {}
         <div className="animate-fade-rise-delay-2 flex flex-col items-center gap-4 px-6 pb-12">
           <span className="liquid-glass rounded-full px-3.5 py-1 font-body text-xs text-muted-foreground">
             Five primitives, one continuous loop

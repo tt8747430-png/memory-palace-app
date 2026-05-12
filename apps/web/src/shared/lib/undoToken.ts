@@ -1,29 +1,14 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
 
-/**
- * HMAC-signed short-lived tokens for soft-delete undo flows.
- *
- * - Format: `<base64url(payloadJson)>.<base64url(signature)>`
- * - Signature: HMAC-SHA256 over the payload using `UNDO_TOKEN_SECRET`
- *   (falls back to the Supabase publishable key — the secret never leaves
- *   the server, but rotating either key invalidates outstanding tokens,
- *   which is fine for a 30-second TTL).
- * - TTL is encoded inside the payload (`exp`), not in the signature, so we
- *   can verify and reject expired tokens without server-side storage.
- *
- * This is intentionally **not** a JWT library — we don't need full JWS
- * tooling for a 30-second client-held nonce.
- */
-
 const DEFAULT_TTL_MS = 30_000;
 
 interface UndoPayload<TKind extends string> {
   kind: TKind;
-  /** Resource identifier (e.g. palace id). */
+
   id: string;
-  /** Owner user id (verified against the request user on restore). */
+
   userId: string;
-  /** Expiry — wall-clock ms since epoch. */
+
   exp: number;
 }
 
@@ -64,10 +49,6 @@ export function signUndoToken<TKind extends string>(args: {
   return `${encoded}.${signature}`;
 }
 
-/**
- * Returns the decoded payload when the token is valid (signature matches and
- * `exp` is in the future), `null` otherwise. Constant-time signature compare.
- */
 export function verifyUndoToken<TKind extends string>(
   token: string,
   expectedKind: TKind,

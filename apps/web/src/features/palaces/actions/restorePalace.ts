@@ -12,14 +12,6 @@ const restorePalaceSchema = z.object({
 
 export type RestorePalaceResult = { id: string };
 
-/**
- * Restores a soft-deleted palace within the undo token's TTL window (30 s).
- *
- * The token carries the palace id and owner id; we verify both against the
- * request user before clearing `deleted_at`. Idempotent — re-using the token
- * after the row has already been restored returns NOT_FOUND because the
- * `isNotNull(deletedAt)` predicate filters it out.
- */
 export const restorePalace = defineAction({
   name: 'restorePalace',
   schema: restorePalaceSchema,

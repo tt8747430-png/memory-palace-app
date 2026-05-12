@@ -9,14 +9,6 @@ export type ExploreInterfaceCueProps = {
   className?: string;
 };
 
-/**
- * Decorative "explore the interface" cue from the Figma EveryUIConcept /
- * VibeCodedSaas references — a floating chip with a soft cursor glyph and a
- * pulsing dot that nudges users to keep scrolling / hover the preview.
- *
- * Pure decoration: pointer-events-none, aria-hidden. Pulse honors
- * prefers-reduced-motion via the global MotionConfig.
- */
 export function ExploreInterfaceCue({
   label = 'Explore the interface',
   className,

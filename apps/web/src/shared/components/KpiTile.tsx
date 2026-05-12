@@ -6,34 +6,32 @@ import { cn } from '@memory-palace/ui';
 export type KpiTileTone = 'neutral' | 'success' | 'warning' | 'primary';
 
 export interface KpiTileDelta {
-  /** Numeric delta. Sign drives icon when `direction` is omitted. */
   value: number;
-  /** Optional explicit direction override. */
+
   direction?: 'up' | 'down' | 'flat';
-  /** Optional unit (e.g. `%`, `pts`). Defaults to `%` when omitted. */
+
   unit?: string;
-  /** Inverts the tone semantics — useful when "down is good" (e.g. fewer overdue nodes). */
+
   invertTone?: boolean;
 }
 
 interface KpiTileProps {
-  /** Short caption (uppercase eyebrow). */
   label: ReactNode;
-  /** Headline value. Should render as text for screen readers. */
+
   value: ReactNode;
-  /** Optional secondary line beneath the value. */
+
   caption?: ReactNode;
-  /** Optional inline visual to the right of the value (e.g. icon, sparkline). */
+
   spark?: ReactNode;
-  /** Optional inline icon shown next to the label. */
+
   icon?: ReactNode;
-  /** Optional delta chip. */
+
   delta?: KpiTileDelta;
-  /** Optional href — turns the entire tile into a link. */
+
   href?: string;
-  /** Visual tone. */
+
   tone?: KpiTileTone;
-  /** Grid span helpers (Tailwind classes). */
+
   className?: string;
 }
 
@@ -44,12 +42,6 @@ const TONE_RING: Record<KpiTileTone, string> = {
   primary: 'text-primary',
 };
 
-/**
- * Canonical dashboard KPI tile (Figma 2026 pattern).
- * Composition only — no fetching, no global state. Renders a single
- * `Card`-shaped surface with: eyebrow label · headline value · optional
- * caption · optional sparkline · optional delta chip.
- */
 export function KpiTile({
   label,
   value,

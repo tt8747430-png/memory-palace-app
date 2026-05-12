@@ -24,18 +24,14 @@ interface CreateRoomDialogProps {
 }
 
 export function CreateRoomDialog({ palaceId, nextPosition = 0 }: CreateRoomDialogProps) {
-  // Dialog is controlled entirely via AppDialogContext — no local open state.
-  // Closing calls consume() which clears pending.
   const { pending, open: openDialog, consume } = useAppDialog();
   const isOpen = pending === 'create-room';
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, startTransition] = useTransition();
 
-  // Handle cross-page navigation: reads ?action=create-room from the URL once
-  // on mount and strips it with replaceState (not router.replace).
   const initRef = useRef(false);
   useEffect(() => {
-    if (initRef.current) return; // Strict Mode guard: only fire once
+    if (initRef.current) return;
     initRef.current = true;
     const params = new URLSearchParams(window.location.search);
     if (params.get('action') === 'create-room') {

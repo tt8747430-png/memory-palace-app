@@ -1,11 +1,3 @@
-/**
- * Decorative floating orbs for the marketing surfaces only.
- *
- * Pure CSS — no JavaScript, no LCP impact. Animation is driven by the
- * `.ambient-orb` keyframe in `globals.css`, which is suppressed for users
- * with `prefers-reduced-motion`. The container is `aria-hidden`,
- * `pointer-events: none`, and pinned behind all content (`-z-10`).
- */
 export function AmbientOrbs() {
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">

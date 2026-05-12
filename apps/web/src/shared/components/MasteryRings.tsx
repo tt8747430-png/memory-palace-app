@@ -5,7 +5,7 @@ export type MasteryRingsProps = {
   familiar: number;
   learning: number;
   fresh: number;
-  /** Optional total override; defaults to sum. */
+
   total?: number;
   size?: number;
   className?: string;
@@ -18,18 +18,11 @@ const GAP = 2;
 type Ring = {
   key: 'mastered' | 'familiar' | 'learning' | 'fresh';
   label: string;
-  /** Tailwind text color class. */
+
   toneClass: string;
   value: number;
 };
 
-/**
- * Concentric SVG rings showing mastery distribution.
- *
- * Each ring's arc length is proportional to its share of total reviewed nodes.
- * Pure SVG, no chart library. Uses `currentColor` per ring via Tailwind tint
- * classes so dark/light/high-contrast themes work automatically.
- */
 export function MasteryRings({
   mastered,
   familiar,

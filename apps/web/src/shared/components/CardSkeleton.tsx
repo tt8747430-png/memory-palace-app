@@ -1,7 +1,6 @@
 import { cn, Skeleton } from '@memory-palace/ui';
 
 interface CardSkeletonProps {
-  /** Number of skeleton cards to render. Defaults to 3. */
   count?: number;
   className?: string;
 }

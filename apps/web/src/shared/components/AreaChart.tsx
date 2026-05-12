@@ -4,30 +4,23 @@ import { useId, useState } from 'react';
 import { cn } from '@memory-palace/ui';
 
 interface AreaChartProps {
-  /** Raw numeric series — rendered oldest → newest, left → right. */
   values: number[];
-  /** Optional per-point label for the hover tooltip (e.g. day-of-week). */
+
   labels?: readonly string[];
-  /** Width in CSS px (the SVG itself uses an internal viewBox). */
+
   width?: number;
-  /** Height in CSS px. */
+
   height?: number;
-  /** Stroke width in viewBox units. */
+
   strokeWidth?: number;
-  /** Accessible label. */
+
   label?: string;
-  /** Tailwind classes — `text-*` colors propagate via `currentColor`. */
+
   className?: string;
-  /** Optional unit suffix used in the tooltip pill (singular/plural). */
+
   valueUnit?: { singular: string; plural: string };
 }
 
-/**
- * Pure-SVG area chart with a hover tooltip pill (Figma 2026 pattern,
- * mirrors VibeCodedSaas "Chart Hover" frame). Tooltip + marker render
- * inside the SVG — no portal, no Recharts, no D3. Honors reduced motion
- * via the global `MotionConfig`; no JS `useReducedMotion()` check.
- */
 export function AreaChart({
   values,
   labels,
@@ -137,7 +130,7 @@ export function AreaChart({
             strokeWidth={0.6}
             vectorEffect="non-scaling-stroke"
           />
-          {/* Tooltip pill, position-aware so it doesn't fall off the edges. */}
+          {}
           <TooltipPill
             x={hoverPoint[0]}
             y={hoverPoint[1]}
@@ -172,7 +165,6 @@ interface TooltipPillProps {
 }
 
 function TooltipPill({ x, y, text, W }: TooltipPillProps) {
-  // Rough text-width estimate so the pill stays inside the viewBox.
   const charW = 1.6;
   const padX = 2;
   const padY = 1.2;

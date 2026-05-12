@@ -3,21 +3,12 @@ import tseslint from 'typescript-eslint';
 import boundaries from 'eslint-plugin-boundaries';
 import prettierConfig from 'eslint-config-prettier';
 
-/** Base config for non-Next.js packages (TypeScript + Prettier) */
 export const baseConfig = tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
   prettierConfig,
 );
 
-/**
- * Returns the boundary rules config with optional extra cross-feature allow
- * rules appended. Use this instead of `boundaryRules` when a feature needs a
- * deliberately-scoped exception (e.g. spatial-canvas → nodes).
- *
- * @param {Array<{from: unknown, allow: unknown}>} extraRules
- * @returns {import('eslint').Linter.Config[]}
- */
 export function makeBoundaryRules(extraRules = []) {
   return [
     {
@@ -48,5 +39,4 @@ export function makeBoundaryRules(extraRules = []) {
   ];
 }
 
-/** @type {import('eslint').Linter.Config[]} */
 export const boundaryRules = makeBoundaryRules();

@@ -1,11 +1,3 @@
-/**
- * Shared className tokens for the cinematic-dark onboarding wizard.
- *
- * The wizard renders inside `liquid-glass` panels on the cinematic /join
- * page, so its inputs/labels/buttons need explicit dark overrides. Mirrors
- * the auth feature's `authStyles` (cross-feature import is forbidden by
- * the boundaries lint rule) so the two surfaces stay visually identical.
- */
 export const onboardingLabelClass = 'font-body text-sm font-medium text-white';
 
 export const onboardingInputClass = [
@@ -18,7 +10,6 @@ export const onboardingMutedTextClass = 'font-body text-white/60';
 
 export const onboardingLinkClass = 'text-white underline underline-offset-4 hover:text-white';
 
-/* Glass-pill submit — matches the marketing "Begin Journey" CTA. */
 export const onboardingSubmitButtonClass = [
   'liquid-glass w-full h-12 rounded-full bg-transparent text-base text-white',
   'transition-transform hover:scale-[1.02] active:scale-[0.98]',

@@ -11,7 +11,6 @@ export const deleteEdge = defineAction({
   handler: async ({ user, input }) => {
     const db = getDb();
 
-    // Verify the edge exists and its source node belongs to the user in this room.
     const [edge] = await db
       .select({ id: edges.id })
       .from(edges)

@@ -8,17 +8,12 @@ import { setRoomOrder } from '../actions/setRoomOrder';
 
 interface Props {
   palaceId: string;
-  /** Full list of room IDs in current display order. */
+
   orderedIds: string[];
-  /** Index of the room these controls belong to. */
+
   index: number;
 }
 
-/**
- * Up / down chevrons that swap the current room with its neighbour and
- * persist via `setRoomOrder`. Disabled at the boundaries. The action
- * `revalidatePath`s the palace page so the new order shows on refresh.
- */
 export function RoomReorderControls({ palaceId, orderedIds, index }: Props) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();

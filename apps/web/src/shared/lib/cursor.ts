@@ -1,11 +1,3 @@
-/**
- * Opaque cursor utilities for keyset (cursor) pagination.
- *
- * Cursors encode { createdAt, id } as base64url JSON — stable under URL transport,
- * opaque to callers. Use `encodeCursor` after a DB fetch and `decodeCursor` when
- * a client passes a cursor back.
- */
-
 type CursorPayload = { createdAt: string; id: string };
 
 export function encodeCursor(cursor: { createdAt: Date; id: string }): string {
@@ -13,7 +5,6 @@ export function encodeCursor(cursor: { createdAt: Date; id: string }): string {
   return Buffer.from(JSON.stringify(payload)).toString('base64url');
 }
 
-/** Returns null if the cursor is malformed or tampered — callers must handle this. */
 export function decodeCursor(encoded: string): { createdAt: Date; id: string } | null {
   try {
     const raw = Buffer.from(encoded, 'base64url').toString('utf-8');

@@ -11,21 +11,11 @@ export type JourneyStepperProps = {
   items: ReadonlyArray<JourneyStepperItem>;
   currentIndex: number;
   onJump: (index: number) => void;
-  /** Optional label used by screen readers; defaults to "Journey progress". */
+
   label?: string;
   className?: string;
 };
 
-/**
- * Horizontal stepper for the room journey viewer.
- *
- * Mobile (< md): compact dot row — the previous default. The active step is
- * a longer pill so swipe progress remains glanceable inside a 360px viewport.
- *
- * Desktop (md+): numbered pills with a truncated title beside each number.
- * The active pill is filled with `primary`; completed steps get a muted check
- * affordance, upcoming steps a hollow border.
- */
 export function JourneyStepper({
   items,
   currentIndex,
@@ -52,14 +42,13 @@ export function JourneyStepper({
               aria-current={isActive ? 'step' : undefined}
               onClick={() => onJump(i)}
               className={cn(
-                // mobile (dot) styles
                 'h-2 rounded-full transition-all',
                 isActive
                   ? 'w-6 bg-primary'
                   : isCompleted
                     ? 'w-2 bg-primary/60'
                     : 'w-2 bg-muted-foreground/30',
-                // hide the dot at md+, show the pill instead
+
                 'md:hidden',
               )}
             />

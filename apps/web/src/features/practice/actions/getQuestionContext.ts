@@ -7,19 +7,11 @@ import { ActionError, defineAction } from '@/shared/lib/action';
 const schema = z.object({ nodeId: z.string().uuid('Invalid node ID') }).strict();
 
 export type QuestionContext = {
-  /** Up to 3 sibling node titles, randomly sampled, deduped, no empties. */
   distractors: string[];
 };
 
 const SAMPLE_LIMIT = 3;
 
-/**
- * Returns sibling-node titles for use as multiple-choice distractors.
- *
- * Self-contained inside the practice feature to keep cross-feature boundaries
- * clean. The query samples randomly so repeat quizzes feel different even for
- * the same correct answer.
- */
 export const getQuestionContext = defineAction({
   name: 'getQuestionContext',
   schema,

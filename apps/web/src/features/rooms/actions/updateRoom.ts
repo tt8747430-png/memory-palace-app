@@ -12,8 +12,6 @@ export const updateRoom = defineAction({
   handler: async ({ user, input }) => {
     const { id, palaceId, ...patch } = input;
 
-    // Single-statement ownership check + mutation — no TOCTOU gap.
-    // The subquery verifies the room's palace is owned by the caller.
     const [updated] = await getDb()
       .update(rooms)
       .set(patch)

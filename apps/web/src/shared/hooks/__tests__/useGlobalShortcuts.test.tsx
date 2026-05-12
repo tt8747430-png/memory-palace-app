@@ -6,8 +6,6 @@ import { ShortcutsOverlayProvider } from '@/shared/components/ShortcutsOverlayCo
 import { AppDialogProvider } from '@/shared/components/AppDialogContext';
 import type { ReactNode } from 'react';
 
-// ── Mocks ─────────────────────────────────────────────────────────────────────
-
 const mockPush = vi.fn();
 vi.mock('next/navigation', () => ({
   useRouter: vi.fn(() => ({ push: mockPush })),
@@ -18,8 +16,6 @@ const mockSetTheme = vi.fn();
 vi.mock('next-themes', () => ({
   useTheme: () => ({ resolvedTheme: 'light', setTheme: mockSetTheme }),
 }));
-
-// ── Helpers ────────────────────────────────────────────────────────────────────
 
 function wrapper({ children }: { children: ReactNode }) {
   return (
@@ -34,8 +30,6 @@ function wrapper({ children }: { children: ReactNode }) {
 function keydown(key: string, extra?: Partial<KeyboardEventInit>) {
   document.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, ...extra }));
 }
-
-// ── Tests ──────────────────────────────────────────────────────────────────────
 
 describe('useGlobalShortcuts', () => {
   beforeEach(() => {
@@ -73,8 +67,7 @@ describe('useGlobalShortcuts', () => {
 
   it('navigates to /palaces?action=create-palace on c → p (cross-page)', () => {
     renderHook(() => useGlobalShortcuts(), { wrapper });
-    // pathname is mocked as '/' so we are not on /palaces — should navigate
-    // with the intent encoded in the URL instead of calling openDialog early.
+
     keydown('c');
     keydown('p');
     expect(mockPush).toHaveBeenCalledWith('/palaces?action=create-palace');
@@ -90,7 +83,7 @@ describe('useGlobalShortcuts', () => {
   it('does not navigate when sequence is broken by a wrong second key', () => {
     renderHook(() => useGlobalShortcuts(), { wrapper });
     keydown('g');
-    keydown('z'); // not a valid second key
+    keydown('z');
     expect(mockPush).not.toHaveBeenCalled();
   });
 

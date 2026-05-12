@@ -11,7 +11,6 @@ export const createEdge = defineAction({
   handler: async ({ user, input }) => {
     const db = getDb();
 
-    // Verify both nodes belong to the given room AND to the authenticated user.
     const owned = await db
       .select({ id: nodes.id })
       .from(nodes)
@@ -44,7 +43,6 @@ export const createEdge = defineAction({
       });
 
     if (!created) {
-      // onConflictDoNothing — edge already exists. Fetch and return it.
       const [existing] = await db
         .select({
           id: edges.id,

@@ -3,14 +3,6 @@ import { SectionEyebrow } from './SectionEyebrow';
 import { ComparisonRadar } from './ComparisonRadar';
 import { BlurText } from '@/shared/components/BlurText';
 
-/**
- * Two-column comparison: Memory Palace vs generic flashcards.
- *
- * Mirrors the LanX "Why we stand out" split but in our voice. Each row is
- * a check/cross plus a single line of copy. Mobile collapses to two
- * stacked cards.
- */
-
 const usPoints = [
   'Spatial encoding — every fact has a place',
   'SM-2 scheduling tuned per node',
@@ -79,11 +71,7 @@ export function Comparison() {
           </article>
         </div>
 
-        {/*
-         * Radar visualisation — distills the two bullet lists above into a
-         * single shape comparison so the reader sees the gap before they
-         * read it. Pure SVG, no client JS.
-         */}
+        {}
         <ComparisonRadar className="mt-12 md:mt-16" />
       </div>
     </section>

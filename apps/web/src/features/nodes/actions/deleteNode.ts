@@ -25,9 +25,6 @@ export const deleteNode = defineAction({
       .returning({ id: nodes.id });
     if (!deleted) throw new ActionError('NOT_FOUND', 'Node not found.');
 
-    // No revalidatePath — the canvas owns its state through TanStack Query's
-    // optimistic cache + invalidateQueries, consistent with updateNode and
-    // updateNodePosition.
     return { id: deleted.id };
   },
 });

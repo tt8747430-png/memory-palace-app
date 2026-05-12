@@ -7,10 +7,6 @@ interface Props {
   due: DueNodeWithMeta[];
 }
 
-/**
- * Renders the list of due nodes with mastery badges and links to start a quiz.
- * Server component — renders deterministically from the action result.
- */
 export function PracticePicker({ due }: Props) {
   if (due.length === 0) {
     return (

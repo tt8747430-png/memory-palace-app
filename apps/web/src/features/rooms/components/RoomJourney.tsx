@@ -23,21 +23,11 @@ interface Props {
   roomId: string;
   roomTitle: string;
   palaceTitle: string;
-  /** Parent palace mode — drives chapter/verse labelling and verse-hint reveal. */
+
   mode: PalaceMode;
   nodes: JourneyNode[];
 }
 
-/**
- * Sequential viewer over a room's nodes, ordered server-side by
- * (positionY, positionX). Keyboard: Arrow keys / space / Esc.
- *
- * UX:
- *   - Horizontal swipe (touch + mouse) advances or retreats one node.
- *   - In Bible mode, header reads "Chapter N — {room}" and the card shows
- *     a verse-N badge, optional reference chip, and a tap-to-reveal verse hint.
- *   - Animations honour `prefers-reduced-motion` globally via MotionConfig.
- */
 export function RoomJourney({ palaceId, roomId, roomTitle, palaceTitle, mode, nodes }: Props) {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1);
@@ -95,15 +85,8 @@ export function RoomJourney({ palaceId, roomId, roomTitle, palaceTitle, mode, no
   const progress = total > 0 ? ((index + 1) / total) * 100 : 0;
 
   return (
-    /*
-     * Full-bleed journey viewer. Escapes the dashboard wrapper's centered
-     * `mx-auto max-w-7xl px-4 py-6` padding via negative margins, then sets
-     * an explicit viewport-aware height (mobile subtracts the bottom nav +
-     * iOS safe area; md+ uses the full dvh because the sidebar replaces
-     * the mobile header).
-     */
     <div className="-mx-4 -my-6 flex h-[calc(100dvh-3.5rem-3rem-var(--height-bottom-nav)-env(safe-area-inset-top)-env(safe-area-inset-bottom))] flex-col bg-background sm:-mx-6 md:h-dvh lg:-mx-8">
-      {/* Sticky header — breadcrumb-style identity + exit affordance + linear progress. */}
+      {}
       <header className="sticky top-0 z-20 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/75">
         <div className="flex items-center justify-between gap-3 px-4 py-2.5 sm:px-6">
           <div className="min-w-0">
@@ -146,7 +129,7 @@ export function RoomJourney({ palaceId, roomId, roomTitle, palaceTitle, mode, no
         </div>
       </header>
 
-      {/* Scrollable card area — fills remaining flex space; long content scrolls inside. */}
+      {}
       <main className="flex flex-1 items-start justify-center overflow-y-auto px-4 py-6 sm:items-center sm:px-6 sm:py-10">
         <m.article
           key={current.id}
@@ -209,7 +192,7 @@ export function RoomJourney({ palaceId, roomId, roomTitle, palaceTitle, mode, no
         </m.article>
       </main>
 
-      {/* Sticky footer — large touch targets on mobile, swipe hint on desktop. */}
+      {}
       <footer className="flex items-center justify-between gap-3 border-t bg-background/95 px-4 py-3 backdrop-blur supports-backdrop-filter:bg-background/75 sm:px-6">
         <Button
           variant="outline"

@@ -4,19 +4,11 @@ import { env } from './env';
 
 type Bucket = 'write' | 'search';
 
-/**
- * Rate limit buckets:
- * - write: 30 requests / 10 s  — create/update/delete mutations
- * - search: 60 requests / 10 s — FTS queries (expensive but read-only)
- */
 const BUCKETS: Record<Bucket, { limit: number; window: Duration }> = {
   write: { limit: 30, window: '10 s' },
   search: { limit: 60, window: '10 s' },
 };
 
-// Persist Redis and Ratelimit instances across Next.js HMR reloads in
-// development. Without this, each hot-reload re-executes the module and
-// creates new connections while old ones leak.
 const globalForRatelimit = globalThis as unknown as {
   __mpRedis?: Redis;
   __mpLimiters?: Map<Bucket, Ratelimit>;
@@ -58,11 +50,6 @@ function getLimiter(bucket: Bucket): Ratelimit | null {
   return limiter;
 }
 
-/**
- * Check rate limit for a user + bucket.
- * Returns `{ success: true }` as a no-op when Upstash is not configured —
- * this branch is unreachable in production (see getRedis).
- */
 export async function checkRateLimit(
   userId: string,
   bucket: Bucket,

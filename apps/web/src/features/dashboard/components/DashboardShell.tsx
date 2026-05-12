@@ -21,7 +21,7 @@ export function DashboardShell({ children, userProfile }: DashboardShellProps) {
   return (
     <AppCommandProvider>
       <div className="flex h-dvh flex-col md:flex-row">
-        {/* Desktop sidebar */}
+        {}
         <aside
           className="hidden md:flex md:w-64 md:flex-col md:border-r"
           aria-label="Main navigation"
@@ -38,7 +38,7 @@ export function DashboardShell({ children, userProfile }: DashboardShellProps) {
           </div>
         </header>
 
-        {/* Main content */}
+        {}
         <main
           id="main-content"
           className="flex-1 overflow-y-auto pb-[calc(var(--height-bottom-nav)+env(safe-area-inset-bottom))] md:pb-0"
@@ -46,7 +46,7 @@ export function DashboardShell({ children, userProfile }: DashboardShellProps) {
           <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</div>
         </main>
 
-        {/* Mobile bottom nav */}
+        {}
         <nav
           className="fixed inset-x-0 bottom-0 z-50 border-t bg-background pb-safe-bottom md:hidden"
           aria-label="Bottom navigation"

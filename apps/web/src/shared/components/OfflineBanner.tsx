@@ -3,10 +3,6 @@
 import { WifiOff } from 'lucide-react';
 import { useOnlineStatus } from '@/shared/hooks/useOnlineStatus';
 
-/**
- * Renders a subtle banner when the browser is offline.
- * Placed inside the canvas viewport so it doesn't shift the layout.
- */
 export function OfflineBanner() {
   const isOnline = useOnlineStatus();
 

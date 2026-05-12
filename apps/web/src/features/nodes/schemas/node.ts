@@ -36,7 +36,7 @@ export const createNodeSchema = z.object({
   positionX: z.number().finite('positionX must be finite').optional().default(0),
   positionY: z.number().finite('positionY must be finite').optional().default(0),
   color: z.string().max(COLOR_MAX).optional(),
-  /** Bible-mode optional fields — silently ignored in Simple-mode UI. */
+
   verseHint: z.string().max(VERSE_HINT_MAX).optional(),
   bibleRef: z.string().max(BIBLE_REF_MAX).optional(),
 });
@@ -78,8 +78,6 @@ export const batchUpdateNodePositionsSchema = z.object({
     .max(100, 'Cannot batch-update more than 100 nodes at once'),
 });
 
-// ─── Edge schemas ─────────────────────────────────────────────────────────────
-
 export const getRoomEdgesSchema = z.object({
   roomId: z.string().uuid('Invalid room ID'),
 });
@@ -95,8 +93,6 @@ export const deleteEdgeSchema = z.object({
   id: z.string().uuid('Invalid edge ID'),
   roomId: z.string().uuid('Invalid room ID'),
 });
-
-// ─── Tag schemas ──────────────────────────────────────────────────────────────
 
 export const getNodeTagsSchema = z.object({
   nodeId: z.string().uuid('Invalid node ID'),

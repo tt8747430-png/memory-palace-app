@@ -1,12 +1,3 @@
-/**
- * Synaptic Palace — shared brand SVG.
- *
- * Rendered by @vercel/og / Satori inside ImageResponse, so:
- *   - all SVG props must be camelCase (strokeWidth, not stroke-width)
- *   - no imports other than types
- *   - no hooks
- */
-
 interface BrandIconProps {
   size: number;
 }
@@ -20,7 +11,7 @@ export function BrandIcon({ size }: BrandIconProps) {
       viewBox="0 0 24 24"
       fill="none"
     >
-      {/* ── Side column lines ── */}
+      {}
       <path
         d="M4,5 L4.5,19"
         stroke="#818cf8"
@@ -36,7 +27,7 @@ export function BrandIcon({ size }: BrandIconProps) {
         strokeLinecap="round"
       />
 
-      {/* ── Top-arch edge lines (palace crown) ── */}
+      {}
       <path
         d="M4,5 L8.5,2.5"
         stroke="#a78bfa"
@@ -66,7 +57,7 @@ export function BrandIcon({ size }: BrandIconProps) {
         strokeLinecap="round"
       />
 
-      {/* ── Spoke lines: every node → central hub ── */}
+      {}
       <path
         d="M4,5 L12,12"
         stroke="#818cf8"
@@ -117,18 +108,18 @@ export function BrandIcon({ size }: BrandIconProps) {
         strokeLinecap="round"
       />
 
-      {/* ── Arch nodes (palace crown) ── */}
+      {}
       <circle cx="4" cy="5" r="1.45" fill="#7c3aed" />
       <circle cx="8.5" cy="2.5" r="1.15" fill="#a78bfa" />
       <circle cx="12" cy="1.8" r="1.55" fill="#8b5cf6" />
       <circle cx="15.5" cy="2.5" r="1.15" fill="#a78bfa" />
       <circle cx="20" cy="5" r="1.45" fill="#7c3aed" />
 
-      {/* ── Base anchor nodes ── */}
+      {}
       <circle cx="4.5" cy="19" r="1.55" fill="#2563eb" />
       <circle cx="19.5" cy="19" r="1.55" fill="#2563eb" />
 
-      {/* ── Central hub: 4-ring glow ── */}
+      {}
       <circle cx="12" cy="12" r="4.4" fill="#312e81" fillOpacity="0.45" />
       <circle cx="12" cy="12" r="3.1" fill="#312e81" />
       <circle cx="12" cy="12" r="2.1" fill="#4338ca" />

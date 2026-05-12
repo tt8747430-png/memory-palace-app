@@ -3,22 +3,10 @@
 import { useEffect, useRef } from 'react';
 
 const FADE_MS = 500;
-const FADE_OUT_LEAD = 0.55; // seconds before `ended` when fade-out starts
+const FADE_OUT_LEAD = 0.55;
 
 type Props = Omit<React.VideoHTMLAttributes<HTMLVideoElement>, 'style'> & { src: string };
 
-/**
- * Ambient looping background video with a seamless fade-out near the
- * end and fade-in on restart. Eliminates the visible "snap" at loop
- * boundaries that breaks immersion for cinematic backdrops.
- *
- * Adapted from the cosmic-canvas reference. Use as a decorative layer
- * behind orbs — render at low opacity and `mix-blend-mode: screen` for
- * best results. Positioning is the caller's responsibility via
- * `className`; opacity is managed internally by the fade loop.
- * Respect `prefers-reduced-motion`: skip mounting this component
- * entirely on the caller side when motion is reduced.
- */
 export function FadingVideo({ src, ...rest }: Props) {
   const ref = useRef<HTMLVideoElement>(null);
   const rafRef = useRef<number | null>(null);

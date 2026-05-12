@@ -1,24 +1,12 @@
 import { test, expect, devices } from '@playwright/test';
 
-/**
- * Dashboard layout smoke tests — Phase 2A
- *
- * These tests verify the responsive shell renders correctly.
- * Auth-gated tests that need a real user session are marked with
- * `test.fixme()` until the auth fixture is implemented (Phase 3B).
- */
-
 test.describe('Dashboard layout', () => {
   test('unauthenticated visit to a protected route redirects to /login', async ({ page }) => {
-    // `/` is the public marketing landing page since the (marketing) route group
-    // shipped — use a dashboard route to verify the proxy redirect still works.
     await page.goto('/dashboard');
     await expect(page).toHaveURL(/\/login/);
   });
 
   test.describe('authenticated shell', () => {
-    // TODO: Replace with auth fixture when available (Phase 3B)
-    // These tests require a logged-in user session to see the dashboard shell.
     test.fixme('desktop: renders sidebar and hides bottom nav', async ({ page }) => {
       await page.goto('/');
       const sidebar = page.locator('aside[aria-label="Main navigation"]');

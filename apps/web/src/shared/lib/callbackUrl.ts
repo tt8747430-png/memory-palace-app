@@ -1,13 +1,6 @@
 import { headers } from 'next/headers';
 import { env } from './env';
 
-/**
- * Build an absolute URL pointing at our `/callback` route. Supabase email
- * links (sign-up confirmation, password reset) need an absolute URL it can
- * embed in the email body. Prefer `NEXT_PUBLIC_SITE_URL` over forwarded
- * headers — Host header injection on a misconfigured edge would otherwise
- * let an attacker steer the magic-link domain.
- */
 export async function buildCallbackUrl(next: string = '/'): Promise<string> {
   const encodedNext = encodeURIComponent(next);
 

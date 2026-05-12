@@ -2,7 +2,6 @@
 
 import { createContext, useContext, type ReactNode } from 'react';
 
-/** Shape of a search result including palaceId for navigation. */
 export interface SearchResult {
   id: string;
   title: string;

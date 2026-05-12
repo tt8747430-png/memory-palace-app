@@ -45,20 +45,11 @@ function formatRelative(date: Date | string): string {
   return `${days}d ago`;
 }
 
-/**
- * Practice statistics dashboard widget. Lives in the practice feature (not
- * dashboard) because it imports `getPracticeStats` from this domain — the
- * boundaries plugin forbids dashboard → practice cross-feature imports.
- *
- * Charts are intentionally rendered with raw Tailwind cells (no Recharts
- * dependency) — see ADR 9B.
- */
 export function StatisticsPanel({ stats }: Props) {
   const [tab, setTab] = useState<Tab>('overview');
   const maxWeekly = Math.max(...stats.weeklyActivity, 0);
   const totalThisWeek = stats.weeklyActivity.reduce((a, b) => a + b, 0);
 
-  // Resolve weekday labels for the 7-day strip — oldest → newest, ending today.
   const today = new Date();
   const weeklyLabels = Array.from({ length: 7 }, (_, i) => {
     const d = new Date(today);
@@ -66,8 +57,6 @@ export function StatisticsPanel({ stats }: Props) {
     return WEEKDAY_LABELS[d.getDay()] ?? '';
   });
 
-  // Sparkline series for the Attempts tile: most-recent score per session,
-  // reversed so the line reads oldest → newest. Empty array hides the chart.
   const accuracyTrend = stats.recentSessions
     .slice()
     .reverse()
@@ -249,11 +238,11 @@ function Stat({
   label: string;
   value: number;
   suffix?: string;
-  /** Optional sparkline series — values flow oldest → newest. */
+
   trend?: number[];
-  /** Which semantic token paints the spark line. */
+
   trendTone?: 'primary' | 'success' | 'warning';
-  /** Soft area fill under the line. */
+
   trendFill?: boolean;
 }) {
   const toneClass =

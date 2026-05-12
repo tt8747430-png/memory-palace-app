@@ -11,19 +11,6 @@ import { getUserProfile } from '@/shared/lib/userProfile';
 
 const WEEKDAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const;
 
-/**
- * Bento-grid dashboard composition. Replaces the prior flat stack of
- * WelcomeBanner + StreakCounter + DailyReviewCta + StatsBar + RecentPalaces
- * with a single 6-column responsive grid that fetches every section in
- * parallel (one server round-trip cost instead of five).
- *
- * Tile palette:
- *  A — Welcome hero (col-span 4, row-span 2): greeting + due-count + CTA
- *  B — Streak (col-span 2): flame, top per-node streak
- *  C — Activity sparkline (col-span 2): 7-day attempts in primary tone
- *  D/E/F — Palaces / Rooms / Nodes counts (col-span 2 each)
- *  G — Recent palaces (col-span 6): 2x2 grid of latest 4 palaces
- */
 export async function DashboardBento() {
   const [profile, stats, due, recent, practice] = await Promise.all([
     getUserProfile(),
@@ -46,7 +33,7 @@ export async function DashboardBento() {
 
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-6 sm:gap-4">
-      {/* A — Welcome hero */}
+      {}
       <section
         aria-labelledby="dashboard-hero-heading"
         className={cn(
@@ -111,7 +98,7 @@ export async function DashboardBento() {
         </div>
       </section>
 
-      {/* B — Streak */}
+      {}
       <KpiTile
         className="col-span-1 sm:col-span-2"
         label="Streak"
@@ -121,7 +108,7 @@ export async function DashboardBento() {
         caption={topStreak > 0 ? 'top per-node streak' : 'practice to start a streak'}
       />
 
-      {/* C — Weekly activity area chart */}
+      {}
       <section
         aria-label="Weekly review activity"
         className="col-span-1 flex flex-col justify-between rounded-2xl border bg-card p-4 shadow-sm sm:col-span-2 sm:p-5"
@@ -146,7 +133,7 @@ export async function DashboardBento() {
         </div>
       </section>
 
-      {/* D — Palaces */}
+      {}
       <KpiTile
         className="col-span-1 sm:col-span-2"
         href="/palaces"
@@ -155,7 +142,7 @@ export async function DashboardBento() {
         value={counts.palaceCount}
       />
 
-      {/* E — Rooms */}
+      {}
       <KpiTile
         className="col-span-1 sm:col-span-2"
         href="/palaces"
@@ -164,7 +151,7 @@ export async function DashboardBento() {
         value={counts.roomCount}
       />
 
-      {/* F — Nodes */}
+      {}
       <KpiTile
         className="col-span-1 sm:col-span-2"
         href="/palaces"
@@ -173,7 +160,7 @@ export async function DashboardBento() {
         value={counts.nodeCount}
       />
 
-      {/* G — Recent palaces */}
+      {}
       {recentPalaces.length > 0 ? (
         <section
           aria-labelledby="recent-palaces-heading"

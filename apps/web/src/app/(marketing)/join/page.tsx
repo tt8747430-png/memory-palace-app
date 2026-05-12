@@ -30,11 +30,10 @@ export default function JoinPage() {
             </p>
           </div>
 
-          {/* Wizard renders inside a frosted glass panel that matches the
-              cinematic auth shell. */}
+          {}
           <div className="liquid-glass w-full rounded-3xl text-foreground shadow-2xl">
             <div className="px-6 py-8 md:px-10 md:py-10">
-              {/* Suspense is required because OnboardingWizard uses useSearchParams() */}
+              {}
               <Suspense>
                 <OnboardingWizard />
               </Suspense>

@@ -3,19 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
 
-/**
- * Top-of-viewport scroll progress indicator. Fixed strip beneath the
- * sticky nav showing how far through the page the user has scrolled —
- * gives the long marketing scroll a sense of arc.
- *
- * Implementation notes:
- *  - Single rAF-throttled scroll listener, no framer-motion (the bar is a
- *    plain CSS transform — cheap to update every frame).
- *  - Honors `prefers-reduced-motion` by hiding the transition duration so
- *    the bar still updates but doesn't animate.
- *  - z-50 sits at the same layer as the floating nav pill, but the bar is
- *    1px tall and pointer-events-none so it never intercepts clicks.
- */
 export function ScrollProgress() {
   const [progress, setProgress] = useState(0);
   const reduced = useReducedMotion() ?? false;

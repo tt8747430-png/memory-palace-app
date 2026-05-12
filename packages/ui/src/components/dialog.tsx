@@ -44,25 +44,23 @@ export function DialogContent({
       <DialogPrimitive.Content
         ref={ref}
         className={cn(
-          // Mobile (default): bottom sheet — full width, pinned bottom,
-          // rounded top corners, respects iOS safe area, slides up.
           'fixed inset-x-0 bottom-0 z-50 w-full max-h-[92dvh] overflow-y-auto',
           'rounded-t-2xl border-x-0 border-b-0 border-t bg-background pb-[max(1.5rem,env(safe-area-inset-bottom))] pl-6 pr-6 pt-6 shadow-2xl',
           'data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom',
-          // sm+ (desktop): centered modal — overrides every mobile rule above.
+
           'sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-h-[85dvh] sm:w-full sm:max-w-lg sm:-translate-x-1/2 sm:-translate-y-1/2',
           'sm:rounded-lg sm:border sm:pb-6',
           'sm:data-[state=closed]:slide-out-to-left-1/2 sm:data-[state=closed]:slide-out-to-top-[48%]',
           'sm:data-[state=open]:slide-in-from-left-1/2 sm:data-[state=open]:slide-in-from-top-[48%]',
           'sm:data-[state=closed]:zoom-out-95 sm:data-[state=open]:zoom-in-95',
-          // shared animation tokens
+
           'data-[state=open]:animate-in data-[state=closed]:animate-out',
           'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
           className,
         )}
         {...props}
       >
-        {/* Mobile drag handle — purely visual affordance. */}
+        {}
         <div
           aria-hidden
           className="mx-auto -mt-2 mb-4 h-1.5 w-10 rounded-full bg-muted-foreground/30 sm:hidden"

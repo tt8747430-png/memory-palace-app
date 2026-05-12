@@ -18,7 +18,7 @@ export default function OgImage() {
         fontFamily: 'sans-serif',
       }}
     >
-      {/* Left — wordmark + tagline */}
+      {}
       <div
         style={{
           display: 'flex',
@@ -27,7 +27,7 @@ export default function OgImage() {
           maxWidth: 640,
         }}
       >
-        {/* App name */}
+        {}
         <div
           style={{
             fontSize: 72,
@@ -40,7 +40,7 @@ export default function OgImage() {
           Memory Palace
         </div>
 
-        {/* Accent underline */}
+        {}
         <div
           style={{
             width: 80,
@@ -52,7 +52,7 @@ export default function OgImage() {
           }}
         />
 
-        {/* Tagline */}
+        {}
         <div
           style={{
             fontSize: 28,
@@ -66,7 +66,7 @@ export default function OgImage() {
         </div>
       </div>
 
-      {/* Right — large decorative M node-network */}
+      {}
       <div
         style={{
           display: 'flex',
@@ -82,11 +82,11 @@ export default function OgImage() {
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          {/* Soft glow rings behind the center hub */}
+          {}
           <circle cx="12" cy="11" r="7" fill="#312e81" fillOpacity="0.35" />
           <circle cx="12" cy="11" r="5" fill="#312e81" fillOpacity="0.35" />
 
-          {/* Edges */}
+          {}
           <path
             d="M3,20 L3,4"
             stroke="#6366f1"
@@ -116,15 +116,15 @@ export default function OgImage() {
             strokeOpacity="0.7"
           />
 
-          {/* Bottom anchor nodes */}
+          {}
           <circle cx="3" cy="20" r="2" fill="#3b82f6" />
           <circle cx="21" cy="20" r="2" fill="#3b82f6" />
 
-          {/* Top corner nodes */}
+          {}
           <circle cx="3" cy="4" r="2" fill="#8b5cf6" />
           <circle cx="21" cy="4" r="2" fill="#8b5cf6" />
 
-          {/* Center hub */}
+          {}
           <circle cx="12" cy="11" r="3.8" fill="#312e81" />
           <circle cx="12" cy="11" r="2.6" fill="#6366f1" />
           <circle cx="12" cy="11" r="1.3" fill="#c7d2fe" />

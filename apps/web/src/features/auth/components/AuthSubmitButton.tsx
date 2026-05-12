@@ -9,8 +9,6 @@ interface AuthSubmitButtonProps {
   pendingLabel: string;
 }
 
-/** Reads the enclosing form's pending state via useFormStatus.
- * Must be rendered as a direct child of a <form> element. */
 export function AuthSubmitButton({ idleLabel, pendingLabel }: AuthSubmitButtonProps) {
   const { pending } = useFormStatus();
   return (

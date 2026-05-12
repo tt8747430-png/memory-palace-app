@@ -12,7 +12,6 @@ export const deleteRoom = defineAction({
   handler: async ({ user, input }) => {
     const { id, palaceId } = input;
 
-    // Single-statement ownership check + soft-delete — no TOCTOU gap.
     const [deleted] = await getDb()
       .update(rooms)
       .set({ deletedAt: new Date() })

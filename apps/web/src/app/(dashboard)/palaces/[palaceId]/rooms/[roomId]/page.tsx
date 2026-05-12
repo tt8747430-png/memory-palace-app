@@ -41,15 +41,8 @@ export default async function RoomPage({ params }: RoomPageProps) {
   const initialNodes = nodesResult.success ? nodesResult.data : [];
 
   return (
-    /*
-     * Full-bleed canvas page. Escapes the dashboard's centered `mx-auto
-     * max-w-7xl px-4 py-6` wrapper via negative margins so the canvas can
-     * own the entire main area, then sets an explicit height that subtracts
-     * the mobile chrome (top header + bottom nav + safe area). On md+ the
-     * sidebar replaces the mobile header, so we recover that space.
-     */
     <div className="-mx-4 -my-6 flex h-[calc(100dvh-3.5rem-3rem-var(--height-bottom-nav)-env(safe-area-inset-top)-env(safe-area-inset-bottom))] flex-col sm:-mx-6 md:h-dvh lg:-mx-8">
-      {/* Sticky breadcrumb bar — stays pinned even if the canvas scrolls. */}
+      {}
       <div className="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-2 border-b bg-background/95 px-4 py-2.5 backdrop-blur supports-backdrop-filter:bg-background/75 sm:px-6 lg:px-8">
         <nav
           className="flex min-w-0 items-center gap-1 text-sm text-muted-foreground"
@@ -75,9 +68,7 @@ export default async function RoomPage({ params }: RoomPageProps) {
         ) : null}
       </div>
 
-      {/* Canvas fills the remaining flex space — toolbar + FAB are absolute
-       * inside `RoomCanvas` so they stay pinned to the canvas bottom edge,
-       * which now always equals the viewport edge minus bottom nav. */}
+      {}
       <div className="relative min-h-0 flex-1">
         <CanvasErrorBoundary>
           <RoomCanvas roomId={roomId} initialNodes={initialNodes} palaceMode={palace.mode} />

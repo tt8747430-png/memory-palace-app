@@ -10,8 +10,6 @@ import { CardSkeleton } from '@/shared/components/CardSkeleton';
 import { EmptyStateCreateButton } from '@/shared/components/EmptyStateCreateButton';
 import { MobileCreateFab } from '@/shared/components/MobileCreateFab';
 
-// cache() deduplicates calls with the same palaceId within a single request,
-// so generateMetadata and RoomGrid share one DB round-trip, not two.
 const getCachedPalace = cache((palaceId: string) => getPalaceById({ id: palaceId }));
 
 interface PalacePageProps {
@@ -41,7 +39,7 @@ async function RoomGrid({ palaceId }: { palaceId: string }) {
 
   return (
     <>
-      {/* Breadcrumb */}
+      {}
       <nav
         className="flex items-center gap-1 text-sm text-muted-foreground"
         aria-label="Breadcrumb"
@@ -53,7 +51,7 @@ async function RoomGrid({ palaceId }: { palaceId: string }) {
         <span className="font-medium text-foreground">{palace.title}</span>
       </nav>
 
-      {/* Header */}
+      {}
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold">{palace.title}</h1>
@@ -64,7 +62,7 @@ async function RoomGrid({ palaceId }: { palaceId: string }) {
         <CreateRoomDialog palaceId={palaceId} nextPosition={nextPosition} />
       </div>
 
-      {/* Rooms */}
+      {}
       <section>
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
           Rooms ({rooms.length})

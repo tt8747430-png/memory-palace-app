@@ -41,8 +41,6 @@ import {
 
 const GROUP_ORDER: readonly ActionGroup[] = ['Navigate', 'Create', 'Canvas', 'Tools'];
 
-/** Full-screen command palette rendered as a Dialog.
- *  Open via Cmd/Ctrl+K or via `useCommandPalette().openPalette()`. */
 export function CommandPalette() {
   const { open, setOpen, closePalette } = useCommandPalette();
   const router = useRouter();
@@ -59,9 +57,6 @@ export function CommandPalette() {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const searchAbortRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Debounced search: fires 200 ms after the deferred query settles.
-  // setState is only called inside the async callback — not synchronously in the
-  // effect body — to satisfy the react-hooks/set-state-in-effect rule.
   useEffect(() => {
     if (!searchFn || deferredQuery.trim().length === 0) return;
     if (searchAbortRef.current !== null) clearTimeout(searchAbortRef.current);
@@ -75,8 +70,6 @@ export function CommandPalette() {
     };
   }, [deferredQuery, searchFn]);
 
-  // Derive visible results — empty array when query is blank so stale results
-  // never flash after the input is cleared (avoids a setState-in-effect reset).
   const visibleResults = deferredQuery.trim().length > 0 ? searchResults : [];
 
   const handleOpenChange = (next: boolean) => {
@@ -120,15 +113,12 @@ export function CommandPalette() {
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         className={[
-          // Override the global mobile bottom-sheet: anchor near top, breathe
-          // on both sides, cap height so the on-screen keyboard fits below.
           'inset-x-3 bottom-auto top-[max(env(safe-area-inset-top),1rem)] w-auto max-h-[80dvh]',
           'overflow-hidden rounded-2xl border bg-background p-0 shadow-2xl',
           'data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top',
-          // Hide the inherited drag-handle and Close button — cmdk dialogs
-          // don't need a redundant X (Esc + outside click already close).
+
           '[&>div[aria-hidden]:first-child]:hidden [&>button]:hidden',
-          // Desktop: centered, larger, scale-in.
+
           'sm:inset-x-auto sm:top-[12dvh] sm:left-1/2 sm:max-h-[70dvh] sm:w-full sm:max-w-xl sm:-translate-x-1/2 sm:translate-y-0 sm:rounded-xl',
           'sm:data-[state=closed]:slide-out-to-top-[40%] sm:data-[state=open]:slide-in-from-top-[40%]',
           'sm:data-[state=closed]:zoom-out-95 sm:data-[state=open]:zoom-in-95',
@@ -154,7 +144,7 @@ export function CommandPalette() {
               No results found.
             </CommandEmpty>
 
-            {/* Node search results — shown only when query is non-empty */}
+            {}
             {hasQuery && visibleResults.length > 0 && (
               <>
                 <CommandGroup heading="Nodes">
@@ -204,5 +194,4 @@ export function CommandPalette() {
   );
 }
 
-// Re-export so external imports continue to compile.
 export { CANVAS_EVENTS };

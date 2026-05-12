@@ -56,14 +56,12 @@ export function OnboardingWizard() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Seed initial step from the URL synchronously — no mount effect needed.
   const [state, dispatch] = useReducer(reducer, undefined, () => ({
     step: readStepFromParams(searchParams),
     palaceId: null,
     roomId: null,
   }));
 
-  // Reflect step changes in the URL so browser back/forward works.
   useEffect(() => {
     router.replace(`/join?step=${state.step}`, { scroll: false });
   }, [state.step, router]);

@@ -8,8 +8,6 @@ export const getRoomEdges = defineAction({
   name: 'getRoomEdges',
   schema: getRoomEdgesSchema,
   handler: async ({ user, input }) => {
-    // Fetch all edges where both endpoints belong to nodes in this room
-    // that are owned by the authenticated user (via the denormalised userId).
     return getDb()
       .select({
         id: edges.id,

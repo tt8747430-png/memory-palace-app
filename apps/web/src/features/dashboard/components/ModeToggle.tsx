@@ -18,10 +18,7 @@ type ThemeKey = keyof typeof NEXT_THEME;
 export function ModeToggle() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  // Canonical hydration gate from next-themes: theme is only known on the
-  // client, so the first render must match SSR exactly. The set-state-in-effect
-  // lint rule does not apply here — there is no external system to subscribe
-  // to, and the state flips exactly once after hydration completes.
+
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setMounted(true), []);
 

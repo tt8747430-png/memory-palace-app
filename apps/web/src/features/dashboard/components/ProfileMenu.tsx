@@ -76,7 +76,7 @@ export function ProfileMenu({ displayName, email, avatarUrl }: ProfileMenuProps)
       </PopoverTrigger>
 
       <PopoverContent side="top" align="start" sideOffset={8} className="w-64">
-        {/* Identity header */}
+        {}
         <div className="flex items-center gap-3 px-4 py-3">
           <Avatar displayName={displayName} avatarUrl={avatarUrl} size="md" />
           <div className="min-w-0">
@@ -89,7 +89,7 @@ export function ProfileMenu({ displayName, email, avatarUrl }: ProfileMenuProps)
 
         <Separator />
 
-        {/* Actions */}
+        {}
         <div className="p-1.5">
           <MenuRow href="/settings" icon={Settings} label="Profile settings" />
         </div>

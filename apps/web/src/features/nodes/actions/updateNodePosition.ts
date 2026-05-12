@@ -4,8 +4,6 @@ import { getDb, nodes, and, eq, isNull } from '@memory-palace/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
 import { updateNodePositionSchema } from '../schemas/node';
 
-/** Persists final XY after a drag-drop. No revalidatePath — the canvas is
- * the authoritative view of positions and updates optimistically via Zustand. */
 export const updateNodePosition = defineAction({
   name: 'updateNodePosition',
   schema: updateNodePositionSchema,

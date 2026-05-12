@@ -11,7 +11,6 @@ export const addNodeTag = defineAction({
   handler: async ({ user, input }) => {
     const db = getDb();
 
-    // Verify node ownership.
     const [node] = await db
       .select({ id: nodes.id })
       .from(nodes)
@@ -26,18 +25,16 @@ export const addNodeTag = defineAction({
       .limit(1);
     if (!node) throw new ActionError('NOT_FOUND', 'Node not found.');
 
-    // Upsert the tag (unique on userId + name).
     const [tag] = await db
       .insert(tags)
       .values({ userId: user.id, name: input.tagName.trim().toLowerCase() })
       .onConflictDoUpdate({
         target: [tags.userId, tags.name],
-        set: { name: tags.name }, // no-op update — just returns the existing row
+        set: { name: tags.name },
       })
       .returning({ id: tags.id, name: tags.name });
     if (!tag) throw new ActionError('INTERNAL_ERROR', 'Tag upsert returned no row.');
 
-    // Link tag to node (idempotent).
     await db.insert(nodeTags).values({ nodeId: input.nodeId, tagId: tag.id }).onConflictDoNothing();
 
     return tag;

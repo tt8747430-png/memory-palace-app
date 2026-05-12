@@ -1,8 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-// Each test gets a fresh module import via vi.resetModules + dynamic import.
-// This prevents the module-level `channel` singleton from leaking between tests.
-
 describe('cross-tab-sync', () => {
   let mockInstance: {
     postMessage: ReturnType<typeof vi.fn>;
@@ -21,7 +18,6 @@ describe('cross-tab-sync', () => {
       close: vi.fn(),
     };
 
-    // Use a proper class constructor mock
     class MockBroadcastChannel {
       postMessage = mockInstance.postMessage;
       addEventListener = mockInstance.addEventListener;
@@ -34,7 +30,7 @@ describe('cross-tab-sync', () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
-    // Clear the globalThis singleton so the next test starts fresh.
+
     delete (globalThis as Record<string, unknown>).__mpBroadcastChannel;
   });
 
@@ -60,7 +56,6 @@ describe('cross-tab-sync', () => {
     expect(mockInstance.addEventListener).toHaveBeenCalledOnce();
     const [, handler] = mockInstance.addEventListener.mock.calls[0];
 
-    // Simulate a message event
     handler({
       data: { type: 'invalidate', queryKey: ['rooms', 'abc', 'nodes'] },
     });
@@ -103,7 +98,6 @@ describe('cross-tab-sync without BroadcastChannel', () => {
   it('broadcastInvalidate is a no-op when BroadcastChannel is unavailable', async () => {
     const { broadcastInvalidate } = await import('@/shared/lib/cross-tab-sync');
 
-    // Should not throw
     expect(() => broadcastInvalidate(['test'])).not.toThrow();
   });
 

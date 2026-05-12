@@ -6,19 +6,6 @@ import { Circle } from 'lucide-react';
 import { m } from 'framer-motion';
 import { CinematicBackground } from './CinematicBackground';
 
-/**
- * Aurora-inspired two-column auth shell.
- *
- * - Left pane (lg+ only) holds the brand mark, headline, sub-copy, and an
- *   optional step indicator (used by signup). Sits over the existing
- *   `CinematicBackground` aurora/nebula/stars layer instead of a hardcoded
- *   video URL — same dark, full-bleed feel without an external dependency.
- * - Right pane fills mobile and pairs with the left pane on lg+. Owns the
- *   form area; pages drop their existing form components inside.
- *
- * Reduced-motion is honoured globally via `MotionConfig` in the root
- * layout, so we don't need a local `useReducedMotion()` guard.
- */
 export type AuthStep = {
   number: number;
   text: string;
@@ -26,22 +13,20 @@ export type AuthStep = {
 };
 
 type AuthShellProps = {
-  /** Left-pane heading (italic display). */
   brandTitle: string;
-  /** Left-pane sub-copy. */
+
   brandSubtitle: string;
-  /** Optional step indicator in the left pane (used by signup). */
+
   steps?: AuthStep[];
 
-  /** Right-pane heading. */
   title: string;
-  /** Right-pane sub-copy. */
+
   subtitle: string;
-  /** Optional kicker rendered above `title`. */
+
   kicker?: string;
 
   children: ReactNode;
-  /** Cross-link line below the form (e.g. "New here? Start a palace"). */
+
   footer?: ReactNode;
 };
 
@@ -93,7 +78,7 @@ export function AuthShell({
 }: AuthShellProps) {
   return (
     <main className="flex min-h-dvh w-full lg:h-full">
-      {/* Left pane (lg+) — brand mark + cinematic backdrop. */}
+      {}
       <aside className="relative hidden h-full w-[52%] flex-col items-center justify-end overflow-hidden rounded-3xl px-12 pb-32 shadow-2xl lg:flex">
         <CinematicBackground />
 
@@ -132,7 +117,7 @@ export function AuthShell({
         </m.div>
       </aside>
 
-      {/* Right pane — form. */}
+      {}
       <section className="flex flex-1 flex-col items-center justify-center overflow-y-auto px-4 py-12 sm:px-12 lg:overflow-hidden lg:py-6 lg:px-16 xl:px-24">
         <m.div
           initial={{ opacity: 0 }}
@@ -140,7 +125,7 @@ export function AuthShell({
           transition={{ duration: 0.8, ease: 'easeOut' }}
           className="w-full max-w-md space-y-8 sm:space-y-10 lg:space-y-6"
         >
-          {/* Mobile-only brand mark — left pane is hidden below lg. */}
+          {}
           <Link
             href="/"
             className="flex items-center gap-2 text-white lg:hidden"

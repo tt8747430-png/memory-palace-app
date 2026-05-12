@@ -3,18 +3,15 @@ import { z } from 'zod';
 const schema = z.object({
   NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string().min(1),
-  // Public site URL for absolute redirects (e.g. Supabase email confirmations).
-  // When unset, server actions fall back to the request's forwarded host.
+
   NEXT_PUBLIC_SITE_URL: z.string().url().optional(),
-  // When absent, rate limiting is a no-op locally; production presence is
-  // enforced at first use, see shared/lib/ratelimit.ts.
+
   UPSTASH_REDIS_REST_URL: z.string().url().optional(),
   UPSTASH_REDIS_REST_TOKEN: z.string().min(1).optional(),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
-  // Vercel system variable — only available in deployed environments.
+
   VERCEL_URL: z.string().min(1).optional(),
-  // PostHog — public project API key (safe to expose in the browser).
-  // When absent (local dev without .env.local), PostHog init is a no-op.
+
   NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN: z.string().min(1).optional(),
   NEXT_PUBLIC_POSTHOG_HOST: z.string().url().optional(),
 });
@@ -31,8 +28,6 @@ export const env = schema.parse({
   NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
 });
 
-// Canonical public URL — prefer the explicit env var, fall back to the
-// Vercel-injected deployment URL, then localhost for local dev.
 export const siteUrl =
   env.NEXT_PUBLIC_SITE_URL ??
   (env.VERCEL_URL ? `https://${env.VERCEL_URL}` : 'http://localhost:3000');

@@ -5,7 +5,7 @@ import { useOnlineStatus } from '@/shared/hooks/useOnlineStatus';
 describe('useOnlineStatus', () => {
   it('returns the current online status', () => {
     const { result } = renderHook(() => useOnlineStatus());
-    // In test environment, navigator.onLine defaults to true
+
     expect(result.current).toBe(true);
   });
 

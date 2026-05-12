@@ -4,7 +4,7 @@ import { BlurText } from '@/shared/components/BlurText';
 function MapIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      {/* Material "map" — feels like a palace floor-plan */}
+      {}
       <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" />
     </svg>
   );
@@ -13,7 +13,7 @@ function MapIcon({ className }: { className?: string }) {
 function NetworkIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      {/* Material "hub" — connected nodes */}
+      {}
       <path d="M21 11h-2.06c-.41-2.46-2.47-4.5-4.94-4.94V4h-2v2.06c-2.47.44-4.53 2.48-4.94 4.94H5v2h2.06c.41 2.46 2.47 4.5 4.94 4.94V20h2v-2.06c2.47-.44 4.53-2.48 4.94-4.94H21v-2zm-9 5a4 4 0 110-8 4 4 0 010 8z" />
       <circle cx="12" cy="12" r="2" />
     </svg>

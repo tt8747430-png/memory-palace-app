@@ -11,7 +11,6 @@ export const removeNodeTag = defineAction({
   handler: async ({ user, input }) => {
     const db = getDb();
 
-    // Ownership: verify the node belongs to the user before unlinking the tag.
     const [nodeRow] = await db
       .select({ id: nodes.id })
       .from(nodes)

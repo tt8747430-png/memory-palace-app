@@ -27,18 +27,6 @@ export type DuplicateRoomResult = {
   title: string;
 };
 
-/**
- * Deep-copies a room within the same palace.
- *
- * Copies: room (positioned immediately after the source, sibling positions
- * shifted), all nodes (with positions + verse fields), node→tag links by
- * tag name (idempotent), and intra-room edges (source/target re-mapped).
- *
- * Does **not** copy: cross-room edges, review state, practice sessions —
- * those belong to a node's individual learning history. The duplicate's
- * `prev_room_id` / `next_room_id` linked-list pointers are intentionally
- * left null so the user can re-thread the chapter sequence manually.
- */
 export const duplicateRoom = defineAction({
   name: 'duplicateRoom',
   schema: roomIdSchema,
@@ -65,8 +53,6 @@ export const duplicateRoom = defineAction({
     const sourceRoom = source.rooms;
 
     const created = await db.transaction(async (tx) => {
-      // Shift downstream sibling positions by 1 to make room for the copy
-      // immediately after the source. Single SQL UPDATE — no per-row loop.
       await tx
         .update(rooms)
         .set({ position: sql`${rooms.position} + 1` })
@@ -118,7 +104,6 @@ export const duplicateRoom = defineAction({
           if (newId) nodeIdMap.set(n.id, newId);
         });
 
-        // Re-attach tags by name — idempotent via ON CONFLICT DO NOTHING.
         const sourceTagLinks = await tx
           .select({ nodeId: nodeTags.nodeId, tagName: tags.name })
           .from(nodeTags)
@@ -151,9 +136,6 @@ export const duplicateRoom = defineAction({
           }
         }
 
-        // Copy intra-room edges only — cross-room edges aren't preserved
-        // because the user might want to re-link manually. Both endpoints
-        // must be in the source room for the edge to be carried forward.
         const sourceNodeIds = sourceNodes.map((n) => n.id);
         const sourceEdges = await tx
           .select()

@@ -8,7 +8,6 @@ export const getRooms = defineAction({
   name: 'getRooms',
   schema: getRoomsSchema,
   handler: async ({ user, input }) => {
-    // Single JOIN verifies palace ownership and fetches rooms in one round-trip.
     return getDb()
       .select({
         id: rooms.id,

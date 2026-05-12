@@ -14,7 +14,7 @@ export function PalaceCard({ palace }: PalaceCardProps) {
     <Card
       className={[
         'group relative flex flex-col overflow-hidden rounded-3xl',
-        // iOS-style stacked depth: outer drop shadow + inset top highlight.
+
         'shadow-[0_1px_0_inset_rgba(255,255,255,0.5),_0_1px_2px_rgba(0,0,0,0.04),_0_8px_24px_-8px_rgba(0,0,0,0.08)]',
         'dark:shadow-[0_1px_0_inset_rgba(255,255,255,0.06),_0_1px_2px_rgba(0,0,0,0.4),_0_12px_32px_-12px_rgba(0,0,0,0.6)]',
         'transition-all duration-300 ease-out',

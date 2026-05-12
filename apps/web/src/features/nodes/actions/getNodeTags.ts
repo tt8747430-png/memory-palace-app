@@ -8,7 +8,6 @@ export const getNodeTags = defineAction({
   name: 'getNodeTags',
   schema: getNodeTagsSchema,
   handler: async ({ user, input }) => {
-    // Join to nodes to verify ownership.
     return getDb()
       .select({ id: tags.id, name: tags.name })
       .from(nodeTags)

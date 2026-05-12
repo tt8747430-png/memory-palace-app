@@ -1,11 +1,3 @@
-/**
- * Applies Phase 3B RLS policies + auth.users → public.users sync trigger.
- * Uses DIRECT_DATABASE_URL (port 5432, not Supavisor) because this script
- * runs outside of Drizzle migrations and needs DDL permissions.
- *
- * Run once: node packages/db/scripts/apply-rls.mjs
- */
-
 import { config } from 'dotenv';
 import postgres from 'postgres';
 import { fileURLToPath } from 'url';
@@ -22,7 +14,6 @@ const sql = postgres(url, { ssl: 'require', max: 1 });
 async function main() {
   console.log('Applying RLS policies and auth sync trigger...\n');
 
-  // ── 1. auth.users → public.users sync trigger ──────────────────────────────
   await sql`
     CREATE OR REPLACE FUNCTION public.handle_new_auth_user()
     RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER
@@ -48,7 +39,6 @@ async function main() {
   `;
   console.log('✅ auth.users → public.users sync trigger created');
 
-  // Backfill any pre-existing auth users
   await sql`
     INSERT INTO public.users (id, display_name, avatar_url)
     SELECT
@@ -60,7 +50,6 @@ async function main() {
   `;
   console.log('✅ Backfilled existing auth users');
 
-  // ── 2. Enable RLS on all tables ────────────────────────────────────────────
   for (const table of [
     'users',
     'palaces',
@@ -76,10 +65,8 @@ async function main() {
   }
   console.log('✅ RLS enabled on all tables');
 
-  // Drop existing policies so the script is idempotent
   const drop = async (table, name) => sql`DROP POLICY IF EXISTS ${sql(name)} ON ${sql(table)}`;
 
-  // ── 3. users policies ──────────────────────────────────────────────────────
   await drop('users', 'users_select_own');
   await drop('users', 'users_update_own');
   await sql`
@@ -92,7 +79,6 @@ async function main() {
   `;
   console.log('✅ users policies');
 
-  // ── 4. palaces policies ────────────────────────────────────────────────────
   await drop('palaces', 'palaces_all_own');
   await sql`
     CREATE POLICY palaces_all_own ON palaces
@@ -100,7 +86,6 @@ async function main() {
   `;
   console.log('✅ palaces policies');
 
-  // ── 5. rooms policies ──────────────────────────────────────────────────────
   await drop('rooms', 'rooms_all_own');
   await sql`
     CREATE POLICY rooms_all_own ON rooms
@@ -113,8 +98,6 @@ async function main() {
   `;
   console.log('✅ rooms policies');
 
-  // ── 6. nodes policies ─────────────────────────────────────────────────────
-  // Denormalised user_id on nodes — O(1) check, no join needed.
   await drop('nodes', 'nodes_all_own');
   await sql`
     CREATE POLICY nodes_all_own ON nodes
@@ -122,8 +105,6 @@ async function main() {
   `;
   console.log('✅ nodes policies');
 
-  // ── 7. edges policies ─────────────────────────────────────────────────────
-  // Source node's user_id — one indexed lookup, no redundant double check.
   await drop('edges', 'edges_all_own');
   await sql`
     CREATE POLICY edges_all_own ON edges
@@ -136,7 +117,6 @@ async function main() {
   `;
   console.log('✅ edges policies');
 
-  // ── 8. tags policies ──────────────────────────────────────────────────────
   await drop('tags', 'tags_all_own');
   await sql`
     CREATE POLICY tags_all_own ON tags
@@ -144,7 +124,6 @@ async function main() {
   `;
   console.log('✅ tags policies');
 
-  // ── 9. node_tags policies ─────────────────────────────────────────────────
   await drop('node_tags', 'node_tags_all_own');
   await sql`
     CREATE POLICY node_tags_all_own ON node_tags
@@ -157,8 +136,6 @@ async function main() {
   `;
   console.log('✅ node_tags policies');
 
-  // ── 10. practice_sessions policies (Phase 9A) ─────────────────────────────
-  // Denormalised user_id — O(1) check, mirrors the nodes pattern.
   await drop('practice_sessions', 'practice_sessions_all_own');
   await sql`
     CREATE POLICY practice_sessions_all_own ON practice_sessions
@@ -166,7 +143,6 @@ async function main() {
   `;
   console.log('✅ practice_sessions policies');
 
-  // ── 11. node_review_state policies (Phase 9A) ─────────────────────────────
   await drop('node_review_state', 'node_review_state_all_own');
   await sql`
     CREATE POLICY node_review_state_all_own ON node_review_state

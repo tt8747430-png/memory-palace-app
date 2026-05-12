@@ -4,7 +4,6 @@ import { z } from 'zod';
 import { createSupabaseFromCookies } from '@/shared/lib/supabase';
 import { buildCallbackUrl } from '@/shared/lib/callbackUrl';
 
-// Cannot use defineAction — the user is unauthenticated at this step.
 const schema = z.object({
   email: z.string().trim().toLowerCase().email('Enter a valid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
@@ -35,7 +34,6 @@ export async function createWizardAccount(
 
   if (error) return { status: 'error', message: error.message };
 
-  // Supabase returned a session — email confirmation is disabled for this project.
   if (data.session) return { status: 'ok' };
 
   return { status: 'check-email', message: 'Check your email to confirm, then return here.' };

@@ -1,10 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { createSupabaseForResponse } from '@/shared/lib/supabase';
 
-// Resolves `next` against the request origin and returns a same-origin pathname,
-// or `/` for anything that escapes (protocol-relative `//evil.com`, full URLs,
-// path traversal, malformed input). Returning a pathname rather than a URL keeps
-// callers from accidentally re-using a host they didn't validate.
 function resolveSafeNext(rawNext: string | null, origin: string): string {
   if (!rawNext) return '/';
   try {
@@ -31,9 +27,6 @@ export async function GET(request: NextRequest) {
   const params = new URL(request.url).searchParams;
   const origin = new URL(request.url).origin;
 
-  // Supabase sends users here with ?error=...&error_code=...&error_description=...
-  // when the OAuth/OTP step itself fails (expired link, denied consent, etc.).
-  // Surface Supabase's own description rather than treating it as "missing code".
   const supabaseError = params.get('error_code') ?? params.get('error');
   if (supabaseError) {
     const description = params.get('error_description');

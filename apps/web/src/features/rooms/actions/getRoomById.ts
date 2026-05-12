@@ -8,7 +8,6 @@ export const getRoomById = defineAction({
   name: 'getRoomById',
   schema: roomIdSchema,
   handler: async ({ user, input }) => {
-    // Join to palace to enforce ownership without a separate check.
     const [row] = await getDb()
       .select({
         id: rooms.id,

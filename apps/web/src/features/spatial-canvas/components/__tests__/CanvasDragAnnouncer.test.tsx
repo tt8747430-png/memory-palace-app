@@ -2,7 +2,6 @@ import { render, screen, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { CanvasDragAnnouncer, useCanvasDragAnnouncer } from '../CanvasDragAnnouncer';
 
-// Thin wrapper that exposes the hook's outputs for testing.
 function AnnouncerHarness({ onReady }: { onReady: (announce: (msg: string) => void) => void }) {
   const { announcerRef, announce } = useCanvasDragAnnouncer();
   onReady(announce);

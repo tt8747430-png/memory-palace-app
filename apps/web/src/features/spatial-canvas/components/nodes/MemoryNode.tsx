@@ -30,8 +30,6 @@ export interface MemoryNodeData extends Record<string, unknown> {
   color: string | null;
 }
 
-/** The full React Flow node type for MemoryNode — used as the generic param
- * for NodeProps so TypeScript knows the exact shape of `data`. */
 export type MemoryNodeType = Node<MemoryNodeData, 'memoryNode'>;
 
 const TYPE_ICONS: Record<NodeType, React.ReactNode> = {
@@ -40,7 +38,6 @@ const TYPE_ICONS: Record<NodeType, React.ReactNode> = {
   link: <Link className="h-3 w-3 shrink-0" aria-hidden />,
 };
 
-/** Returns true if `url` looks like an absolute http(s) URL. */
 function isHttpUrl(url: string | null | undefined): url is string {
   if (!url) return false;
   try {
@@ -51,15 +48,6 @@ function isHttpUrl(url: string | null | undefined): url is string {
   }
 }
 
-/**
- * Custom React Flow node rendered as a compact card.
- *
- * - **NodeToolbar**: edit/duplicate/delete actions appear above the node when selected.
- * - **ContextMenu**: right-click opens an action menu.
- * - **Touch targets**: minimum 60×60px on mobile per the UI style guide.
- * - **Type-specific rendering**: image nodes show a thumbnail; link nodes show
- *   a clickable URL.
- */
 const NODE_VARIANTS = {
   initial: { scale: 0, opacity: 0 },
   visible: { scale: 1, opacity: 1 },
@@ -81,16 +69,13 @@ export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
       onDeleteNode(id);
       return;
     }
-    // Triggers the `exiting` variant; deletion fires from onAnimationComplete
-    // when the transition reaches its target. Idempotent under rapid clicks —
-    // setting the same state value produces no new animation cycle.
+
     setIsExiting(true);
   }, [id, onDeleteNode, shouldReduceMotion]);
 
   return (
     <>
-      {/* NodeToolbar renders via a React Flow portal — appears above the node
-          when selected, without affecting the node's own DOM layout. */}
+      {}
       <NodeToolbar position={Position.Top} isVisible={selected}>
         <div className="flex items-center gap-1 rounded-lg border bg-popover p-1 shadow-lg">
           <button
@@ -120,15 +105,14 @@ export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
         </div>
       </NodeToolbar>
 
-      {/* Top connection handle */}
+      {}
       <Handle
         type="target"
         position={Position.Top}
         className="h-2! w-2! border-border! bg-muted! opacity-0 group-hover:opacity-100"
       />
 
-      {/* Node card wrapped with ContextMenu. stopPropagation prevents the
-          pane context menu from opening when right-clicking a node. */}
+      {}
       <ContextMenu>
         <ContextMenuTrigger asChild>
           <m.div
@@ -146,7 +130,7 @@ export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
             }}
             className={cn(
               'group relative rounded-lg border bg-card px-3 py-2 shadow-sm',
-              // Minimum 60×60px touch target on mobile; compact on desktop
+
               'min-h-[60px] min-w-[60px] md:min-w-[120px] md:max-w-[280px]',
               'transition-shadow duration-150 motion-reduce:transition-none',
               selected
@@ -161,7 +145,7 @@ export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
               </p>
             </div>
 
-            {/* Image preview — shown when content is a valid http(s) URL */}
+            {}
             {hasImagePreview && (
               <div className="mt-2 overflow-hidden rounded-md">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -177,7 +161,7 @@ export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
               </div>
             )}
 
-            {/* Link — shown when content is a valid http(s) URL */}
+            {}
             {hasLinkContent && (
               <a
                 href={data.content!}
@@ -191,7 +175,7 @@ export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
               </a>
             )}
 
-            {/* Text content — only shown for text type with content */}
+            {}
             {data.nodeType === 'text' && data.content && (
               <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
                 {data.content}
@@ -220,7 +204,7 @@ export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
         </ContextMenuContent>
       </ContextMenu>
 
-      {/* Bottom connection handle */}
+      {}
       <Handle
         type="source"
         position={Position.Bottom}

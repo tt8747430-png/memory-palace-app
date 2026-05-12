@@ -23,30 +23,23 @@ export type DueNodeWithMeta = {
   id: string;
   title: string;
   content: string | null;
-  /** Optional Bible-mode hint — surfaced in flashcards/journey when palace.mode === 'bible'. */
+
   verseHint: string | null;
   bibleRef: string | null;
   roomId: string;
   palaceId: string;
   palaceTitle: string;
-  /** Parent palace mode — drives whether verse-hint UI renders. */
+
   palaceMode: 'bible' | 'simple';
   roomTitle: string;
   mastery: number;
   streak: number;
   practiceCount: number;
   nextReview: Date | null;
-  /** True when this node has never been practiced — always counted as due. */
+
   neverPracticed: boolean;
 };
 
-/**
- * Returns nodes whose `nextReview` is past (or never set), oldest-due first.
- *
- * Uses a LEFT JOIN to `node_review_state` so unpracticed nodes surface in the
- * queue too. Ordering is `(next_review nulls first, created_at)` to mix new
- * material with overdue reviews fairly.
- */
 export const getDueNodes = defineAction({
   name: 'getDueNodes',
   schema: getDueNodesSchema,
@@ -63,7 +56,6 @@ export const getDueNodes = defineAction({
     if (input?.roomId) conditions.push(eq(nodes.roomId, input.roomId));
     if (input?.palaceId) conditions.push(eq(rooms.palaceId, input.palaceId));
 
-    // Due predicate: never-practiced (no review row) OR nextReview <= now.
     const duePredicate = or(
       isNull(nodeReviewState.nodeId),
       and(isNotNull(nodeReviewState.nextReview), lte(nodeReviewState.nextReview, now)),
@@ -96,7 +88,6 @@ export const getDueNodes = defineAction({
       )
       .where(and(...conditions))
       .orderBy(
-        // nulls first means never-practiced come first; then oldest due.
         sql`${nodeReviewState.nextReview} ASC NULLS FIRST`,
         asc(nodes.createdAt),
         asc(nodes.id),

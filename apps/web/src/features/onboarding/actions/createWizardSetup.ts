@@ -16,8 +16,6 @@ export interface WizardSetupResult {
   roomId: string;
 }
 
-// Creates the first palace and a default room in a single DB transaction.
-// The room is needed so the wizard node step has a valid roomId immediately.
 export const createWizardSetup = defineAction({
   name: 'createWizardSetup',
   schema,

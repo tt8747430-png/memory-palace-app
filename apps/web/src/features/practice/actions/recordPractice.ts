@@ -25,18 +25,6 @@ export type RecordPracticeResult = {
   easeFactor: number;
 };
 
-/**
- * Records a single practice attempt and recomputes the SM-2 review state.
- *
- * Two writes inside one transaction:
- *   1. INSERT into `practice_sessions` (append-only history).
- *   2. UPSERT into `node_review_state` with the SM-2 reducer applied to the
- *      existing row (or a fresh `initialReviewState()` for first-time nodes).
- *
- * Ownership is verified by joining nodes → rooms → palaces with `userId`
- * before any write happens. RLS enforces the same on the database side, but
- * the explicit check produces a clean `NOT_FOUND` error envelope.
- */
 export const recordPractice = defineAction({
   name: 'recordPractice',
   schema: recordPracticeSchema,

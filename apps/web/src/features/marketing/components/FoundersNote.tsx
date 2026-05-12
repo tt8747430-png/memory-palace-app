@@ -1,10 +1,5 @@
 import { SectionEyebrow } from './SectionEyebrow';
 
-/**
- * Single italic pull-quote, mid-scroll. Modeled on the LanX "Founders
- * Note" section — humanises the brand without an entire about page
- * detour.
- */
 export function FoundersNote() {
   return (
     <section className="relative w-full px-4 py-16 sm:px-6 md:px-10 md:py-24 lg:px-14">

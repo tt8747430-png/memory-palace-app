@@ -1,8 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { exportDataSchemaV1, importInputSchema } from '../schemas/dataTransfer';
 
-// ─── Test fixtures ────────────────────────────────────────────────────────────
-
 const validNode = {
   id: '550e8400-e29b-41d4-a716-446655440001',
   title: 'Test Node',
@@ -35,8 +33,6 @@ const validExport = {
   exportedAt: '2024-06-01T12:00:00.000Z',
   palaces: [validPalace],
 };
-
-// ─── exportDataSchemaV1 ───────────────────────────────────────────────────────
 
 describe('exportDataSchemaV1', () => {
   it('accepts a complete valid export payload', () => {
@@ -177,8 +173,6 @@ describe('exportDataSchemaV1', () => {
   });
 });
 
-// ─── importInputSchema ────────────────────────────────────────────────────────
-
 describe('importInputSchema', () => {
   it('accepts a valid JSON string', () => {
     const result = importInputSchema.safeParse({ jsonContent: JSON.stringify(validExport) });
@@ -192,7 +186,6 @@ describe('importInputSchema', () => {
   });
 
   it('rejects a string that exceeds the 10 MB limit', () => {
-    // 10 MB + 1 byte
     const oversized = 'x'.repeat(10 * 1024 * 1024 + 1);
     const result = importInputSchema.safeParse({ jsonContent: oversized });
     expect(result.success).toBe(false);

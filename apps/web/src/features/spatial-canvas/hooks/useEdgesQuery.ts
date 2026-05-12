@@ -8,7 +8,6 @@ export const roomEdgesQueryKey = (roomId: string) => ['rooms', roomId, 'edges'] 
 
 type Options = Omit<UseQueryOptions<SelectEdge[], Error>, 'queryKey' | 'queryFn'>;
 
-/** Fetches all persisted edges for a room and caches them with TanStack Query. */
 export function useEdgesQuery(roomId: string, options?: Options) {
   return useQuery<SelectEdge[], Error>({
     queryKey: roomEdgesQueryKey(roomId),

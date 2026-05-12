@@ -57,8 +57,6 @@ describe('useRoomNodeMutations', () => {
     mockUpdateNode.mockReset();
   });
 
-  // ── Optimistic single-node position save ───────────────────────────────────
-
   it('savePosition optimistically updates the cache before the server responds', async () => {
     let resolveServer: (v: unknown) => void = () => {};
     mockUpdateNodePosition.mockImplementation(() => new Promise((res) => (resolveServer = res)));
@@ -69,7 +67,6 @@ describe('useRoomNodeMutations', () => {
       result.current.savePosition.mutate({ id: NODE_A, positionX: 250, positionY: 400 });
     });
 
-    // Cache reflects the optimistic value before the server has resolved.
     await waitFor(() => {
       const cache = client.getQueryData<SelectNode[]>(roomNodesQueryKey(ROOM_ID));
       expect(cache?.find((n) => n.id === NODE_A)).toMatchObject({
@@ -77,7 +74,7 @@ describe('useRoomNodeMutations', () => {
         positionY: 400,
       });
     });
-    // Other nodes are untouched.
+
     expect(
       client.getQueryData<SelectNode[]>(roomNodesQueryKey(ROOM_ID))?.find((n) => n.id === NODE_B),
     ).toMatchObject({ positionX: 100, positionY: 100 });
@@ -102,8 +99,6 @@ describe('useRoomNodeMutations', () => {
     const after = client.getQueryData<SelectNode[]>(roomNodesQueryKey(ROOM_ID));
     expect(after?.find((n) => n.id === NODE_A)).toMatchObject({ positionX: 5, positionY: 5 });
   });
-
-  // ── Batch save (multi-select drag) ─────────────────────────────────────────
 
   it('saveBatchPositions applies all updates atomically on the optimistic cache', async () => {
     mockBatchUpdateNodePositions.mockResolvedValue({ success: true, data: { updatedCount: 2 } });
@@ -142,8 +137,6 @@ describe('useRoomNodeMutations', () => {
     expect(data?.find((n) => n.id === NODE_B)).toMatchObject({ positionX: 2, positionY: 2 });
   });
 
-  // ── Editor sheet patches ───────────────────────────────────────────────────
-
   it('patchNode optimistically merges the patch and rolls back on error', async () => {
     mockUpdateNode.mockResolvedValueOnce({
       success: true,
@@ -164,7 +157,6 @@ describe('useRoomNodeMutations', () => {
 
     await waitFor(() => expect(result.current.patchNode.isSuccess).toBe(true));
 
-    // Rollback path
     mockUpdateNode.mockResolvedValueOnce({
       success: false,
       error: { code: 'VALIDATION_FAILED', message: 'nope' },

@@ -25,8 +25,6 @@ function getInitials(name: string): string {
     .join('');
 }
 
-/** Shared avatar component — renders an image with initials fallback.
- * Handles broken URLs gracefully via an onError fallback. */
 export function Avatar({ displayName, avatarUrl, size = 'md', className }: AvatarProps) {
   const [imgError, setImgError] = useState(false);
   const sizeClass = SIZE_CLASSES[size];

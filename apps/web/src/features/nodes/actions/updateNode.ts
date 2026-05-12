@@ -11,7 +11,6 @@ export const updateNode = defineAction({
   handler: async ({ user, input }) => {
     const { id, roomId, ...patch } = input;
 
-    // Ownership: nodes.userId is denormalized — one condition is sufficient.
     const [updated] = await getDb()
       .update(nodes)
       .set(patch)
@@ -32,9 +31,6 @@ export const updateNode = defineAction({
       });
     if (!updated) throw new ActionError('NOT_FOUND', 'Node not found.');
 
-    // No revalidatePath — the canvas owns its state through TanStack Query's
-    // optimistic cache + invalidateQueries. An RSC re-render would race against
-    // the already-confirmed optimistic value and serve stale initialNodes.
     return updated;
   },
 });

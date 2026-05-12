@@ -14,9 +14,7 @@ const geistSans = Geist({
   subsets: ['latin'],
   display: 'swap',
 });
-// Mono is exposed for future <code>/<pre> usage; it is never rendered on the
-// initial paint, so disabling preload silences the "preloaded but not used"
-// console warning and saves the round-trip on the critical path.
+
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
@@ -24,10 +22,6 @@ const geistMono = Geist_Mono({
   preload: false,
 });
 
-// Space Grotesk powers the marketing display headlines — exposed via
-// `--font-space-grotesk` and consumed by the `--font-display` token in
-// globals.css. Loaded once at the root so dashboard and marketing share the
-// same network round-trip when the user crosses surfaces.
 const spaceGrotesk = Space_Grotesk({
   variable: '--font-space-grotesk',
   subsets: ['latin'],
@@ -35,9 +29,6 @@ const spaceGrotesk = Space_Grotesk({
   preload: false,
 });
 
-// Cinematic marketing typography (ADR-9D follow-up): Instrument Serif (italic
-// display) and Barlow (body). Loaded once at the root so the entire marketing
-// surface picks them up via `--font-heading` / `--font-body` tokens.
 const instrumentSerif = Instrument_Serif({
   variable: '--font-instrument-serif',
   subsets: ['latin'],
@@ -81,7 +72,7 @@ export const metadata: Metadata = {
     ],
     apple: '/apple-icon',
   },
-  // Authenticated routes are not crawlable — keep them private.
+
   robots: { index: false, follow: false },
   appleWebApp: {
     capable: true,
@@ -97,9 +88,6 @@ export const viewport: Viewport = {
 };
 
 async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  // x-nonce is injected by proxy.ts for every pass-through request so that
-  // Script components can forward it to browser-side <script> tags, satisfying
-  // the per-request nonce-based CSP.
   const nonce = (await headers()).get('x-nonce') ?? '';
   return (
     <html lang="en" suppressHydrationWarning nonce={nonce}>

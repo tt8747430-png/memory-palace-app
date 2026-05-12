@@ -1,6 +1,3 @@
-// Server-only module — imported from the dashboard layout (a Server Component).
-// No 'use server' needed; this is not a client-callable action.
-
 import { getDb, users, eq } from '@memory-palace/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
 
@@ -12,7 +9,6 @@ export type UserProfile = {
   email: string | null;
 };
 
-/** Shared server action — fetches the current user's profile row. */
 export const getUserProfile = defineAction({
   name: 'getUserProfile',
   handler: async ({ user }): Promise<UserProfile> => {

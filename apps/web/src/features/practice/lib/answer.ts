@@ -1,4 +1,3 @@
-/** Diacritic-folded, case-insensitive whitespace-collapsed comparison. */
 export function normalizeAnswer(input: string): string {
   return input
     .normalize('NFD')

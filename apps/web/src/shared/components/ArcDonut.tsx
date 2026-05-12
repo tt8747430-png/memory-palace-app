@@ -8,16 +8,10 @@ export type ArcDonutProps = {
   label?: string;
   caption?: string;
   className?: string;
-  /** Tailwind text color class for the foreground arc. */
+
   toneClass?: string;
 };
 
-/**
- * Three-quarter circle donut (240° sweep) — companion to MasteryRings.
- *
- * Designed for "due today / total" or "today's progress" tiles. Pure SVG,
- * `currentColor` strokes, no chart library.
- */
 export function ArcDonut({
   value,
   total,
@@ -29,7 +23,7 @@ export function ArcDonut({
   toneClass = 'text-primary',
 }: ArcDonutProps) {
   const fraction = total <= 0 ? 0 : Math.min(value / total, 1);
-  // 240° sweep starting from -210° (bottom-left), ending at +30° (bottom-right)
+
   const radius = 42;
   const arcLength = 2 * Math.PI * radius * (240 / 360);
   const dashFilled = arcLength * fraction;
@@ -43,7 +37,6 @@ export function ArcDonut({
   const [sx, sy] = polar(startAngle);
   const [ex, ey] = polar(endAngle);
 
-  // 240° > 180° so large-arc-flag = 1
   const pathD = `M ${sx} ${sy} A ${radius} ${radius} 0 1 1 ${ex} ${ey}`;
 
   return (

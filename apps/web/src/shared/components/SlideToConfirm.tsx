@@ -6,14 +6,13 @@ import { ChevronRight } from 'lucide-react';
 import { cn } from '@memory-palace/ui';
 
 export type SlideToConfirmProps = {
-  /** Triggered when the user fully slides the thumb. */
   onConfirm: () => void;
-  /** Idle label, e.g. "Slide to delete". */
+
   label: string;
-  /** Optional label shown after confirm. */
+
   confirmedLabel?: string;
   className?: string;
-  /** Visual tone for the track + thumb. */
+
   tone?: 'destructive' | 'primary';
   disabled?: boolean;
 };
@@ -22,8 +21,6 @@ const TRACK_HEIGHT = 56;
 const THUMB_SIZE = 48;
 const COMPLETE_RATIO = 0.92;
 
-// Note: TRACK_HEIGHT/THUMB_SIZE are referenced as Tailwind classes (h-14, h-12 w-12).
-// They are also used in handleDragEnd to compute the drag travel.
 void TRACK_HEIGHT;
 
 const TONE_TRACK: Record<NonNullable<SlideToConfirmProps['tone']>, string> = {
@@ -36,13 +33,6 @@ const TONE_THUMB: Record<NonNullable<SlideToConfirmProps['tone']>, string> = {
   primary: 'bg-primary text-primary-foreground',
 };
 
-/**
- * Slide-to-confirm primitive — iOS-style draggable thumb that requires a
- * deliberate horizontal swipe to trigger destructive or high-stakes actions.
- *
- * Built on the framer-motion that ships with the app already (no extra deps).
- * Honors prefers-reduced-motion via the global MotionConfig.
- */
 export function SlideToConfirm({
   onConfirm,
   label,

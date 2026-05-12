@@ -1,10 +1,5 @@
 import { cn } from '@memory-palace/ui';
 
-/**
- * Small uppercase tag pill used at the top of each marketing section to
- * establish reading rhythm. Mirrors the `BENEFITS` / `PRICING & PLANS` /
- * `WALL OF LOVE` eyebrows on landerx.framer.website.
- */
 type SectionEyebrowProps = {
   children: React.ReactNode;
   className?: string;

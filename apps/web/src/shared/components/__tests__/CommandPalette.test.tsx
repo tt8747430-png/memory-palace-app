@@ -5,8 +5,6 @@ import { ShortcutsOverlayProvider } from '../ShortcutsOverlayContext';
 import { AppDialogProvider } from '../AppDialogContext';
 import { CommandPalette } from '../CommandPalette';
 
-// ── Mocks ─────────────────────────────────────────────────────────────────────
-
 vi.mock('next/navigation', () => ({
   useRouter: vi.fn(() => ({ push: vi.fn() })),
   usePathname: vi.fn(() => '/'),
@@ -19,8 +17,6 @@ vi.mock('next-themes', () => ({
 vi.mock('@/shared/lib/signOut', () => ({
   signOut: vi.fn().mockResolvedValue(undefined),
 }));
-
-// ── Helpers ────────────────────────────────────────────────────────────────────
 
 function Wrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -36,8 +32,6 @@ function OpenButton() {
   const { openPalette } = useCommandPalette();
   return <button onClick={openPalette}>Open</button>;
 }
-
-// ── Tests ──────────────────────────────────────────────────────────────────────
 
 describe('CommandPaletteContext', () => {
   it('throws when used outside provider', () => {

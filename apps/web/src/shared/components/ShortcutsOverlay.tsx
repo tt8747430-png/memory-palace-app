@@ -15,8 +15,6 @@ interface ShortcutRow {
   description: string;
 }
 
-/** Build a row from a `COMMAND_ACTIONS` entry by id, so a keystroke or
- *  description change in one place updates the overlay automatically. */
 function rowFromAction(id: string): ShortcutRow {
   const a = getAction(id);
   if (!a.keys) throw new Error(`Action "${id}" is missing overlay keys`);
@@ -32,9 +30,6 @@ const SECTIONS: ShortcutSection[] = [
   {
     heading: 'Global',
     rows: [
-      // Cmd+K and Esc are not in the action map — palette open is hook-internal,
-      // Esc is handled by Radix Dialog. Theme toggle and the overlay opener come
-      // from the action map.
       { keys: ['⌘', 'K'], description: 'Open command palette' },
       rowFromAction('show-shortcuts'),
       rowFromAction('toggle-theme'),
@@ -60,7 +55,7 @@ const SECTIONS: ShortcutSection[] = [
       rowFromAction('canvas-toggle-snap'),
       rowFromAction('canvas-fit-view'),
       rowFromAction('canvas-delete-node'),
-      // Doc-only: handled inside React Flow, not via the action map.
+
       { keys: ['Space'], description: 'Switch to pan tool (hold)' },
       { keys: ['⌘', 'A'], description: 'Select all nodes' },
       rowFromAction('canvas-undo'),
@@ -79,7 +74,6 @@ function KbdKey({ label }: { label: string }) {
   );
 }
 
-/** Modal overlay listing all keyboard shortcuts. Press `?` to open. Desktop only. */
 export function ShortcutsOverlay() {
   const { overlayOpen, setOverlayOpen } = useShortcutsOverlay();
 

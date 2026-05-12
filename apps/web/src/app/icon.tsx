@@ -1,9 +1,6 @@
 import { ImageResponse } from 'next/og';
 import { BrandIcon } from './_brand-icon';
 
-// Next.js only guarantees `id` is forwarded as a prop from generateImageMetadata;
-// `size` is used for HTTP headers / <link> attributes but is not reliably passed
-// to the component. Keep a module-level map and look up by id instead.
 const iconSizes = {
   sm: { width: 32, height: 32 },
   md: { width: 192, height: 192 },

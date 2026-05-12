@@ -1,10 +1,3 @@
-/**
- * Seed script — Memory Palace App
- * Run: pnpm --filter @memory-palace/db seed
- *
- * Inserts a single dev user with one palace, two rooms, and three nodes.
- * Safe to run multiple times — uses INSERT ... ON CONFLICT DO NOTHING.
- */
 import { getDb } from './client';
 import { nodeTags, nodes, palaces, rooms, tags, users } from './schema';
 

@@ -21,17 +21,6 @@ import {
 import type { LucideIcon } from 'lucide-react';
 import { BlurText } from '@/shared/components/BlurText';
 
-/**
- * Landing bento grid.
- *
- * Adapted from the "personal portfolio" bento spec into the Memory Palace
- * cinematic dark palette. Layout, sizing and rhythm follow the spec; the
- * `#0a0a0a` / `#324444` panels become `bg-cinematic` + `liquid-glass` so the
- * section keeps the orb backdrop bleeding through, and content is rewritten
- * to fit our domain (Method of Loci timeline / learner testimonial / daily
- * practice marquee / CTA).
- */
-
 const ICON_PROPS = { strokeWidth: 1.5 } as const;
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
@@ -147,7 +136,7 @@ const MARQUEE_ROW_2: LucideIcon[] = [
 
 function MarqueeRow({ icons, direction }: { icons: LucideIcon[]; direction: 'left' | 'right' }) {
   const animClass = direction === 'left' ? 'animate-marquee-left' : 'animate-marquee-right';
-  // duplicate the icon list so the loop seamlessly wraps at 50% translation
+
   const doubled = [...icons, ...icons];
   return (
     <div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
@@ -208,7 +197,7 @@ export function Features() {
   return (
     <section className="relative w-full px-4 py-12 sm:px-6 sm:py-16 md:px-10 lg:px-14 lg:py-20">
       <div className="relative z-10 mx-auto w-full max-w-7xl">
-        {/* Header row */}
+        {}
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div className="max-w-3xl">
             <h2 className="font-heading text-[28px] font-normal leading-[1.15] tracking-tight text-foreground sm:text-3xl md:text-4xl lg:text-[44px]">
@@ -228,20 +217,20 @@ export function Features() {
           </Link>
         </div>
 
-        {/* Bento grid */}
+        {}
         <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
-          {/* Column 1 */}
+          {}
           <div className="md:row-span-2">
             <BackgroundCard />
           </div>
 
-          {/* Column 2 */}
+          {}
           <div className="flex flex-col gap-4 md:gap-5">
             <LearnerVoiceCard />
             <StatCard />
           </div>
 
-          {/* Column 3 */}
+          {}
           <div className="flex flex-col gap-4 md:col-span-2 md:gap-5 lg:col-span-1">
             <DailyPracticeCard />
             <BeginJourneyCard />

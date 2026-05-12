@@ -9,12 +9,11 @@ export const PRACTICE_MODES = ['multiple-choice', 'typed-recall', 'flashcard'] a
 
 export const getDueNodesSchema = z
   .object({
-    /** Optional palace scope; when omitted, the queue spans all the user's palaces. */
     palaceId: z.string().uuid('Invalid palace ID').optional(),
-    /** Optional room scope (overrides palaceId). */
+
     roomId: z.string().uuid('Invalid room ID').optional(),
     limit: z.number().int().min(1).max(DUE_LIMIT_MAX).optional().default(DUE_LIMIT_DEFAULT),
-    /** Opaque cursor from a previous page (see `shared/lib/cursor.ts`). */
+
     cursor: z.string().optional(),
   })
   .strict();

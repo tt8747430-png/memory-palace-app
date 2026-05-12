@@ -11,12 +11,6 @@ interface CanvasFabProps {
   roomId: string;
 }
 
-/**
- * Mobile-only canvas toolbar (`md:hidden`). Mirrors `CanvasToolbar`'s
- * affordance — a single pill-shaped floating bar with all primary actions
- * visible at once — sized with larger touch targets and pinned safely
- * above the dashboard bottom-nav + iOS safe-area inset.
- */
 export function CanvasFab({ roomId }: CanvasFabProps) {
   const activeTool = useCanvasStore((s) => s.activeTool);
   const setActiveTool = useCanvasStore((s) => s.setActiveTool);
@@ -40,12 +34,9 @@ export function CanvasFab({ roomId }: CanvasFabProps) {
     <div
       role="toolbar"
       aria-label="Canvas tools"
-      // Floating pill — bottom-center, with a comfortable gap from the
-      // dashboard bottom nav so it reads as an independent surface rather
-      // than welded to the navigation chrome.
       className="pointer-events-auto absolute bottom-[max(1.25rem,env(safe-area-inset-bottom))] left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 rounded-full border bg-card/95 p-1 shadow-lg backdrop-blur-sm md:hidden"
     >
-      {/* Primary action — add node */}
+      {}
       <button
         type="button"
         aria-label="Add node"

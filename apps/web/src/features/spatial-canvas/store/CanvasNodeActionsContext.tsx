@@ -3,11 +3,10 @@
 import { createContext, useContext, type ReactNode } from 'react';
 
 export interface CanvasNodeActions {
-  /** Open the node editor sheet for the given node ID. */
   onEditNode: (nodeId: string) => void;
-  /** Delete the given node (optimistic, with rollback). */
+
   onDeleteNode: (nodeId: string) => void;
-  /** Duplicate the given node at a +40/+40 offset. */
+
   onDuplicateNode: (nodeId: string) => void;
 }
 
@@ -24,8 +23,6 @@ export function CanvasNodeActionsProvider({ value, children }: CanvasNodeActions
   );
 }
 
-/** Consume the canvas node actions injected by InnerCanvas.
- * Must be called inside <CanvasNodeActionsProvider>. */
 export function useCanvasNodeActions(): CanvasNodeActions {
   const ctx = useContext(CanvasNodeActionsContext);
   if (!ctx) {

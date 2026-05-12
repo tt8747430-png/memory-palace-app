@@ -3,15 +3,13 @@ import { getCurrentUser, createSupabaseFromCookies } from '@/shared/lib/supabase
 import { checkRateLimit } from '@/shared/lib/ratelimit';
 import { env } from '@/shared/lib/env';
 
-const MAX_BYTES = 5 * 1024 * 1024; // 5 MB
+const MAX_BYTES = 5 * 1024 * 1024;
 
-// Magic-byte signatures for allowed image types.
-// SVG is excluded — inline SVG can carry arbitrary JavaScript.
 function detectMime(buf: Uint8Array): string | null {
   if (buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff) return 'image/jpeg';
   if (buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4e && buf[3] === 0x47) return 'image/png';
   if (buf[0] === 0x47 && buf[1] === 0x49 && buf[2] === 0x46 && buf[3] === 0x38) return 'image/gif';
-  // WebP: "RIFF????WEBP" — bytes 0–3 are RIFF, bytes 8–11 are WEBP
+
   if (
     buf[0] === 0x52 &&
     buf[1] === 0x49 &&

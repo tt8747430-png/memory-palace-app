@@ -1,30 +1,21 @@
 import { cn } from '@memory-palace/ui';
 
 interface SparklineProps {
-  /** Raw numeric series — rendered oldest → newest, left → right. */
   values: number[];
-  /** Width in px. SVG uses internal viewBox so this is just the rendered size. */
+
   width?: number;
-  /** Height in px. */
+
   height?: number;
-  /** Stroke width in user units (post viewBox). */
+
   strokeWidth?: number;
-  /** Tailwind classes — `text-*` colors propagate via `currentColor`. */
+
   className?: string;
-  /** Add a soft fill under the line. */
+
   fill?: boolean;
-  /** Accessible label (defaults to a generic description). */
+
   label?: string;
 }
 
-/**
- * Tiny inline sparkline. Pure SVG, no chart library — every visual
- * property comes from `currentColor`, so `text-emerald-500` on the
- * parent recolours the entire line + fill.
- *
- * Renders an empty box when `values` is empty or all-equal so callers
- * can drop it in without conditional branching.
- */
 export function Sparkline({
   values,
   width = 96,
@@ -48,8 +39,6 @@ export function Sparkline({
   const min = Math.min(...values);
   const range = max - min || 1;
 
-  // viewBox = 100 wide × 24 tall — scale-invariant. 2 px padding so the
-  // 1.5 px stroke isn't clipped at the top/bottom.
   const W = 100;
   const H = 24;
   const PAD = 2;

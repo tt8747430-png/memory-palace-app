@@ -2,16 +2,6 @@
 
 import { useEffect, useRef } from 'react';
 
-/**
- * Subtle canvas-rendered starfield. 200 sub-pixel stars with random
- * twinkle (opacity drift) and slow downward drift; when a star scrolls
- * off the bottom, it re-spawns at the top. Layers cleanly under the
- * existing aurora/nebula orbs in `<CinematicBackground />`.
- *
- * Mounts as `pointer-events: none` and `aria-hidden`. Honours
- * `prefers-reduced-motion` by skipping the animation loop entirely
- * (stars render once and stay static).
- */
 export function Starfield({ className }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 

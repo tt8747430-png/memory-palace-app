@@ -21,7 +21,6 @@ import { isOnRoomPage, palaceIdFromPath } from './routes';
 
 export type CommandGroup = 'Navigate' | 'Create' | 'Canvas' | 'Tools';
 
-/** Where the action is valid. The shortcut hook and palette both filter by this. */
 export type CommandScope = 'always' | 'on-room' | 'on-palace';
 
 export interface CommandRunContext {
@@ -40,28 +39,27 @@ type DisplayCtx = Pick<CommandRunContext, 'resolvedTheme'>;
 export interface CommandAction {
   id: string;
   group: CommandGroup;
-  /** Palette label (static). For theme-dependent labels, also provide `getLabel`. */
+
   label: string;
-  /** Shortcuts-overlay description. Falls back to `label` when omitted. */
+
   description?: string;
-  /** Palette icon (static). For theme-dependent icons, also provide `getIcon`. */
+
   icon: LucideIcon;
-  /** Optional dynamic label override evaluated at render time. */
+
   getLabel?: (ctx: DisplayCtx) => string;
-  /** Optional dynamic icon override evaluated at render time. */
+
   getIcon?: (ctx: DisplayCtx) => LucideIcon;
-  /** Lower-cased prefix-key chord, e.g. ['g','h']. Empty for non-chord actions. */
+
   chord: readonly string[];
-  /** Display tokens for the overlay (one `<kbd>` per entry), e.g. ['G','H'] or ['⌘','D']. */
+
   keys?: readonly string[];
-  /** Display string for cmdk's shortcut column (e.g. 'G H', '⌘D'). Empty hides the hint. */
+
   shortcutHint?: string;
   scope: CommandScope;
   run: (ctx: CommandRunContext) => void;
 }
 
 export const COMMAND_ACTIONS: readonly CommandAction[] = [
-  // ── Navigate ───────────────────────────────────────────────────────────
   {
     id: 'go-home',
     group: 'Navigate',
@@ -96,7 +94,6 @@ export const COMMAND_ACTIONS: readonly CommandAction[] = [
     run: ({ router }) => router.push('/settings'),
   },
 
-  // ── Create ─────────────────────────────────────────────────────────────
   {
     id: 'create-palace',
     group: 'Create',
@@ -109,13 +106,8 @@ export const COMMAND_ACTIONS: readonly CommandAction[] = [
     scope: 'always',
     run: ({ router, pathname, openDialog }) => {
       if (pathname === '/palaces') {
-        // Already on the page — open via context immediately, no navigation needed.
         openDialog('create-palace');
       } else {
-        // Cross-page: encode the intent in the URL. CreatePalaceDialog reads it
-        // on mount via window.location.search and strips it with replaceState.
-        // This avoids setting pending before the dialog component is mounted,
-        // which was the source of the Strict Mode ghost-dialog flicker.
         router.push('/palaces?action=create-palace');
       }
     },
@@ -131,8 +123,6 @@ export const COMMAND_ACTIONS: readonly CommandAction[] = [
     shortcutHint: 'C R',
     scope: 'on-palace',
     run: ({ pathname, openDialog }) => {
-      // scope: 'on-palace' guarantees palaceIdFromPath returns a value here.
-      // The router.push was dead code — we are already on the palace page.
       const id = palaceIdFromPath(pathname);
       if (id) openDialog('create-room');
     },
@@ -150,7 +140,6 @@ export const COMMAND_ACTIONS: readonly CommandAction[] = [
     run: ({ dispatchCanvas }) => dispatchCanvas(CANVAS_EVENTS.CREATE_NODE),
   },
 
-  // ── Canvas ─────────────────────────────────────────────────────────────
   {
     id: 'canvas-fit-view',
     group: 'Canvas',
@@ -224,7 +213,6 @@ export const COMMAND_ACTIONS: readonly CommandAction[] = [
     run: ({ dispatchCanvas }) => dispatchCanvas(CANVAS_EVENTS.DELETE_NODE),
   },
 
-  // ── Tools ──────────────────────────────────────────────────────────────
   {
     id: 'toggle-theme',
     group: 'Tools',
@@ -282,7 +270,6 @@ export function scopeMatches(scope: CommandScope, pathname: string): boolean {
   }
 }
 
-/** Find a chord-bound action whose chord matches the given combo and is in scope. */
 export function findChordAction(combo: string, pathname: string): CommandAction | undefined {
   return COMMAND_ACTIONS.find(
     (a) => a.chord.length > 0 && a.chord.join('') === combo && scopeMatches(a.scope, pathname),

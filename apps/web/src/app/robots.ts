@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: ['/', '/about', '/join'],
-        // Authenticated routes are private — no crawling
+
         disallow: ['/palaces', '/settings', '/api/'],
       },
     ],

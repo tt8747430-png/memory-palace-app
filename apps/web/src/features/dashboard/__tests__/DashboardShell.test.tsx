@@ -2,27 +2,19 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { DashboardShell } from '../components/DashboardShell';
 
-// Mock next/navigation (used by Sidebar, BottomNav, and useGlobalShortcuts via AppCommandProvider)
 vi.mock('next/navigation', () => ({
   usePathname: vi.fn(() => '/'),
   useRouter: vi.fn(() => ({ push: vi.fn() })),
 }));
 
-// next-themes hydrates async and triggers a mount-state update inside
-// ModeToggle. Stub it so the shell renders deterministically in JSDOM.
 vi.mock('next-themes', () => ({
   useTheme: () => ({ theme: 'system', setTheme: vi.fn() }),
 }));
 
-// signOut calls createSupabaseFromCookies which validates env vars at import
-// time — stub the whole module so JSDOM tests don't need real Supabase creds.
 vi.mock('@/shared/lib/signOut', () => ({
   signOut: vi.fn(),
 }));
 
-// Mock @memory-palace/ui Sheet components (Radix Dialog needs a real DOM portal).
-// `cn` is re-exported as the real implementation so child components that style
-// themselves (Sidebar, BottomNav) keep producing real classNames for assertions.
 vi.mock('@memory-palace/ui', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@memory-palace/ui')>();
   return {

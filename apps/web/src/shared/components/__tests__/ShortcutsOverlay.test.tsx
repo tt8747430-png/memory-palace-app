@@ -3,8 +3,6 @@ import { describe, it, expect, vi } from 'vitest';
 import { ShortcutsOverlayProvider, useShortcutsOverlay } from '../ShortcutsOverlayContext';
 import { ShortcutsOverlay } from '../ShortcutsOverlay';
 
-// ── Helper ─────────────────────────────────────────────────────────────────────
-
 function OpenButton() {
   const { openOverlay } = useShortcutsOverlay();
   return <button onClick={openOverlay}>Open shortcuts</button>;
@@ -13,8 +11,6 @@ function OpenButton() {
 function Wrapper({ children }: { children: React.ReactNode }) {
   return <ShortcutsOverlayProvider>{children}</ShortcutsOverlayProvider>;
 }
-
-// ── Tests ──────────────────────────────────────────────────────────────────────
 
 describe('ShortcutsOverlay', () => {
   it('is closed by default', () => {
@@ -70,7 +66,7 @@ describe('ShortcutsOverlay', () => {
       </Wrapper>,
     );
     fireEvent.click(screen.getByRole('button', { name: 'Open shortcuts' }));
-    // Multiple shortcuts use the ⌘ modifier — assert at least one badge is rendered
+
     expect(screen.getAllByText('⌘').length).toBeGreaterThanOrEqual(1);
   });
 

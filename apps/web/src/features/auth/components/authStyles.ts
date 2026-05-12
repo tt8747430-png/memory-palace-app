@@ -1,11 +1,3 @@
-/**
- * Shared className tokens for the cinematic-dark auth surface.
- *
- * Forms render directly on the dark `liquid-glass` panel inside AuthShell,
- * so we can't rely on the default light `bg-background`/`text-foreground`
- * shadcn defaults — every input/label/link/button gets a per-instance dark
- * override sourced from this module.
- */
 export const authLabelClass = 'text-sm font-medium text-white';
 
 export const authInputClass = [

@@ -48,7 +48,7 @@ export function ProfileForm({ displayName, avatarUrl, email }: ProfileFormProps)
 
   return (
     <form action={formAction} className="space-y-6">
-      {/* Avatar + email read-only row */}
+      {}
       <div className="flex items-center gap-4 rounded-lg border bg-muted/30 p-4">
         <Avatar
           displayName={displayName}

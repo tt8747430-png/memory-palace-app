@@ -2,8 +2,7 @@ export { getDb } from './client';
 export * from './schema';
 export * from './relations';
 export * from './types';
-// Re-export drizzle-orm query helpers so all workspace packages share
-// one virtual-store resolution and avoid structural-type mismatches.
+
 export {
   and,
   asc,

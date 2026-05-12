@@ -23,7 +23,7 @@ export function Sidebar({ userProfile }: SidebarProps) {
 
   return (
     <div className="flex h-full flex-col">
-      {/* Brand mark — minimal identity, no duplicate of the footer profile. */}
+      {}
       <div className="px-5 pb-3 pt-[calc(env(safe-area-inset-top)+1.25rem)]">
         <Link
           href="/dashboard"
@@ -33,12 +33,12 @@ export function Sidebar({ userProfile }: SidebarProps) {
         </Link>
       </div>
 
-      {/* Quick actions — persistent ⌘K affordance. */}
+      {}
       <div className="px-3 pb-3">
         <QuickActionsRow />
       </div>
 
-      {/* Nav links — pill-selected, soft surface. */}
+      {}
       <nav className="flex-1 space-y-1 px-3" aria-label="Main navigation">
         {navItems.map(({ href, icon: Icon, label }) => {
           const active = isNavItemActive(pathname, href);
@@ -67,7 +67,7 @@ export function Sidebar({ userProfile }: SidebarProps) {
         })}
       </nav>
 
-      {/* Footer: profile menu + theme toggle. */}
+      {}
       <div className="border-t px-3 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
         <div className="flex items-center gap-1">
           {userProfile ? (

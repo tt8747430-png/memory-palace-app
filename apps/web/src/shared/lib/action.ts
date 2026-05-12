@@ -7,23 +7,12 @@ import type { ActionResponse, ErrorCode } from '@/shared/types';
 type RateLimitBucket = 'write' | 'search';
 
 interface DefineActionConfig<TInput, TOutput> {
-  /**
-   * Optional Zod schema for input validation. When omitted, the action
-   * receives `undefined` for `input` (used for parameter-less reads/mutations).
-   */
   schema?: ZodType<TInput>;
-  /**
-   * Optional rate limit bucket. Reads typically omit this; mutations and
-   * search-style reads should set it.
-   */
+
   rateLimit?: RateLimitBucket;
-  /**
-   * The handler runs only after auth, rate-limit, and validation succeed.
-   * Throw `new ActionError(code, message)` to short-circuit with a typed
-   * failure; throw anything else to fall through to INTERNAL_ERROR.
-   */
+
   handler: (ctx: { user: User; input: TInput }) => Promise<TOutput>;
-  /** Used in console.error logs and INTERNAL_ERROR fallbacks. */
+
   name: string;
 }
 
@@ -37,11 +26,6 @@ export class ActionError extends Error {
   }
 }
 
-/**
- * Build a server action with auth, rate-limiting, validation, and error
- * envelope handling applied uniformly. The returned function is callable
- * either with raw input (when a schema is provided) or with no arguments.
- */
 export function defineAction<TInput, TOutput>(
   config: DefineActionConfig<TInput, TOutput>,
 ): (input?: unknown) => Promise<ActionResponse<TOutput>> {

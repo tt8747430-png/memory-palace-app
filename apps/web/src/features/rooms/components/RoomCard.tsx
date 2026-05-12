@@ -9,7 +9,7 @@ import { DuplicateRoomButton } from './DuplicateRoomButton';
 
 interface RoomCardProps {
   room: SelectRoom;
-  /** Optional reorder controls slot (rendered before the title in the header). */
+
   reorderControls?: ReactNode;
 }
 

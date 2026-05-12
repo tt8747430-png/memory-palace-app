@@ -9,7 +9,6 @@ import type {
 } from '@/features/palaces/schemas/dataTransfer';
 
 export async function GET() {
-  // ── Auth ──────────────────────────────────────────────────────────────────
   const user = await getCurrentUser();
 
   if (!user) {
@@ -21,7 +20,6 @@ export async function GET() {
     return NextResponse.json({ error: 'Too many requests. Please slow down.' }, { status: 429 });
   }
 
-  // ── Fetch all non-deleted data for this user ───────────────────────────────
   const db = getDb();
 
   const [userPalaces, userRooms, userNodes] = await Promise.all([
@@ -66,9 +64,6 @@ export async function GET() {
       .orderBy(asc(nodes.createdAt)),
   ]);
 
-  // ── Build nested structure ─────────────────────────────────────────────────
-
-  // Group nodes by roomId
   const nodesByRoomId = new Map<string, (typeof userNodes)[number][]>();
   for (const node of userNodes) {
     const existing = nodesByRoomId.get(node.roomId) ?? [];
@@ -76,7 +71,6 @@ export async function GET() {
     nodesByRoomId.set(node.roomId, existing);
   }
 
-  // Group rooms by palaceId
   const roomsByPalaceId = new Map<string, (typeof userRooms)[number][]>();
   for (const room of userRooms) {
     const existing = roomsByPalaceId.get(room.palaceId) ?? [];
@@ -119,8 +113,7 @@ export async function GET() {
     palaces: exportedPalaces,
   };
 
-  // ── Stream JSON as a file download ─────────────────────────────────────────
-  const dateSlug = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  const dateSlug = new Date().toISOString().split('T')[0];
   const filename = `memory-palace-export-${dateSlug}.json`;
 
   return new NextResponse(JSON.stringify(exportPayload, null, 2), {
@@ -128,7 +121,7 @@ export async function GET() {
     headers: {
       'Content-Type': 'application/json',
       'Content-Disposition': `attachment; filename="${filename}"`,
-      // Prevent caches from serving stale exports belonging to another user.
+
       'Cache-Control': 'no-store',
     },
   });
