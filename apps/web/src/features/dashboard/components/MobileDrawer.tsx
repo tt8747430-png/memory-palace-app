@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import {
   Button,
   Sheet,
@@ -22,8 +23,9 @@ interface MobileDrawerProps {
 }
 
 export function MobileDrawer({ userProfile }: MobileDrawerProps) {
+  const [open, setOpen] = useState(false);
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button
           variant="ghost"
@@ -34,12 +36,15 @@ export function MobileDrawer({ userProfile }: MobileDrawerProps) {
           <Menu className="h-5 w-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-72 p-0">
+      <SheetContent
+        side="left"
+        className="w-[18rem] max-w-[85vw] border-r border-sidebar-border bg-sidebar p-0"
+      >
         <SheetTitle className="sr-only">Navigation menu</SheetTitle>
         <SheetDescription className="sr-only">
           Main navigation links for Memory Palace
         </SheetDescription>
-        <Sidebar userProfile={userProfile} />
+        <Sidebar userProfile={userProfile} onNavigate={() => setOpen(false)} />
       </SheetContent>
     </Sheet>
   );

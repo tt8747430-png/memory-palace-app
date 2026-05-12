@@ -21,24 +21,24 @@ export function DashboardShell({ children, userProfile }: DashboardShellProps) {
   return (
     <AppCommandProvider>
       <div className="flex h-dvh flex-col md:flex-row">
-        {}
+        {/* Desktop sidebar */}
         <aside
-          className="hidden md:flex md:w-64 md:flex-col md:border-r"
+          className="hidden md:flex md:w-64 md:flex-col md:border-r md:border-sidebar-border md:bg-sidebar"
           aria-label="Main navigation"
         >
           <Sidebar userProfile={userProfile} />
         </aside>
 
-        <header className="flex items-center justify-between border-b px-4 pb-3 pt-[calc(env(safe-area-inset-top)+0.75rem)] md:hidden">
+        {/* Mobile top bar */}
+        <header className="flex items-center justify-between border-b border-border/60 bg-background/85 px-4 pb-3 pt-[calc(env(safe-area-inset-top)+0.75rem)] backdrop-blur supports-backdrop-filter:bg-background/70 md:hidden">
           <MobileDrawer userProfile={userProfile} />
-          <h1 className="text-lg font-semibold">Memory Palace</h1>
+          <h1 className="text-lg font-semibold tracking-tight">Memory Palace</h1>
           <div className="flex items-center gap-1">
             <CommandPaletteTrigger />
             <ModeToggle />
           </div>
         </header>
 
-        {}
         <main
           id="main-content"
           className="flex-1 overflow-y-auto pb-[calc(var(--height-bottom-nav)+env(safe-area-inset-bottom))] md:pb-0"
@@ -46,12 +46,14 @@ export function DashboardShell({ children, userProfile }: DashboardShellProps) {
           <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</div>
         </main>
 
-        {}
+        {/* Floating pill bottom nav (mobile only) */}
         <nav
-          className="fixed inset-x-0 bottom-0 z-50 border-t bg-background pb-safe-bottom md:hidden"
+          className="pointer-events-none fixed inset-x-0 bottom-0 z-50 md:hidden"
           aria-label="Bottom navigation"
         >
-          <BottomNav />
+          <div className="pointer-events-auto">
+            <BottomNav />
+          </div>
         </nav>
       </div>
     </AppCommandProvider>

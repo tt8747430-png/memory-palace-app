@@ -3,12 +3,11 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { m } from 'framer-motion';
 import { ArrowLeft, ArrowRight, RotateCcw, X } from 'lucide-react';
-import { Button, cn, toast } from '@memory-palace/ui';
-import { useSwipeNavigation } from '@/shared/hooks/useSwipeNavigation';
+import { Button, toast } from '@memory-palace/ui';
 import { recordPractice } from '../actions/recordPractice';
 import type { DueNodeWithMeta } from '../actions/getDueNodes';
+import { SwipeableFlashcard } from './SwipeableFlashcard';
 
 type Quality = 'again' | 'hard' | 'good' | 'easy';
 
@@ -37,17 +36,6 @@ export function FlashcardDeck({ nodes }: Props) {
     setFlipped(false);
     setIndex((i) => Math.max(i - 1, 0));
   };
-
-  const swipe = useSwipeNavigation({
-    onPrev: () => {
-      if (flipped) void rate('again');
-      else back();
-    },
-    onNext: () => {
-      if (flipped) void rate('good');
-      else advance();
-    },
-  });
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -130,7 +118,6 @@ export function FlashcardDeck({ nodes }: Props) {
 
   return (
     <div className="-mx-4 -my-6 flex h-[calc(100dvh-3.5rem-3rem-var(--height-bottom-nav)-env(safe-area-inset-top)-env(safe-area-inset-bottom))] flex-col bg-background sm:-mx-6 md:h-dvh lg:-mx-8">
-      {}
       <header className="sticky top-0 z-20 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/75">
         <div className="flex items-center justify-between gap-3 px-4 py-2.5 text-xs sm:px-6">
           <span className="tabular-nums text-muted-foreground">
@@ -162,24 +149,14 @@ export function FlashcardDeck({ nodes }: Props) {
         </div>
       </header>
 
-      {}
       <main className="flex flex-1 items-start justify-center overflow-y-auto px-4 py-6 sm:items-center sm:px-6 sm:py-10">
-        <m.article
-          key={current.id}
-          drag={swipe.drag}
-          dragConstraints={swipe.dragConstraints}
-          dragElastic={swipe.dragElastic}
-          onDragEnd={swipe.onDragEnd}
-          className={cn(
-            'flex w-full max-w-2xl cursor-pointer touch-pan-y select-none flex-col justify-center rounded-2xl border bg-card p-6 shadow-sm active:cursor-grabbing sm:p-8',
-            'min-h-56 sm:min-h-64',
-          )}
-          onClick={() => setFlipped((f) => !f)}
-          role="button"
-          aria-label={flipped ? 'Show prompt side' : 'Reveal answer'}
-          tabIndex={0}
-        >
-          {!flipped ? (
+        <SwipeableFlashcard
+          cardKey={current.id}
+          flipped={flipped}
+          onToggleFlip={() => setFlipped((f) => !f)}
+          onSwipeLeft={() => (flipped ? void rate('again') : back())}
+          onSwipeRight={() => (flipped ? void rate('good') : advance())}
+          front={
             <>
               <p className="text-xs uppercase tracking-wider text-muted-foreground">
                 {isBible ? 'Verse prompt' : 'Prompt'}
@@ -190,9 +167,10 @@ export function FlashcardDeck({ nodes }: Props) {
                   {current.bibleRef}
                 </p>
               ) : null}
-              <p className="mt-6 text-xs text-muted-foreground">Tap card or press Space to flip.</p>
+              <p className="mt-6 text-xs text-muted-foreground">Tap to flip · swipe to rate</p>
             </>
-          ) : (
+          }
+          back={
             <>
               <p className="text-xs uppercase tracking-wider text-muted-foreground">
                 {isBible ? 'Verse text' : 'Answer'}
@@ -208,11 +186,10 @@ export function FlashcardDeck({ nodes }: Props) {
                 </p>
               ) : null}
             </>
-          )}
-        </m.article>
+          }
+        />
       </main>
 
-      {}
       <footer className="sticky bottom-0 z-20 border-t bg-background/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur supports-backdrop-filter:bg-background/75 sm:px-6">
         {flipped ? (
           <div className="grid grid-cols-4 gap-2">
@@ -220,7 +197,7 @@ export function FlashcardDeck({ nodes }: Props) {
               variant="outline"
               size="lg"
               onClick={() => void rate('again')}
-              className="h-14 flex-col gap-0.5 border-destructive/30 px-1 text-destructive hover:bg-destructive/10 hover:text-destructive active:scale-[0.97]"
+              className="h-14 flex-col gap-0.5 border-destructive/30 px-1 text-destructive hover:bg-destructive-soft hover:text-destructive active:scale-[0.97]"
             >
               <span className="text-sm font-semibold">Again</span>
               <span className="text-[10px] font-normal opacity-70">&lt; 1m</span>
@@ -229,7 +206,7 @@ export function FlashcardDeck({ nodes }: Props) {
               variant="outline"
               size="lg"
               onClick={() => void rate('hard')}
-              className="h-14 flex-col gap-0.5 border-warning/40 px-1 text-warning-foreground hover:bg-warning/15 active:scale-[0.97]"
+              className="h-14 flex-col gap-0.5 border-warning/40 px-1 text-warning-foreground hover:bg-warning-soft active:scale-[0.97]"
             >
               <span className="text-sm font-semibold">Hard</span>
               <span className="text-[10px] font-normal opacity-70">~ 6m</span>
@@ -238,7 +215,7 @@ export function FlashcardDeck({ nodes }: Props) {
               variant="outline"
               size="lg"
               onClick={() => void rate('good')}
-              className="h-14 flex-col gap-0.5 border-success/40 px-1 text-success hover:bg-success/10 hover:text-success active:scale-[0.97]"
+              className="h-14 flex-col gap-0.5 border-success/40 px-1 text-success hover:bg-success-soft hover:text-success active:scale-[0.97]"
             >
               <span className="text-sm font-semibold">Good</span>
               <span className="text-[10px] font-normal opacity-70">~ 10m</span>
