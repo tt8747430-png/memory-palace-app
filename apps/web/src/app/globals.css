@@ -243,19 +243,14 @@
    */
   @media (display-mode: standalone) {
     /*
-     * App-shell lock. The document itself MUST NOT scroll in standalone mode —
-     * otherwise iOS Safari periodically drags the body up by ~100 px when a
-     * gesture starts on an inner scroll container, leaving a stuck white gap
-     * below the page and the fixed bottom nav floating mid-screen.
-     * Only the inner `<main>` (which has its own `overflow-y-auto`) is scrollable.
+     * Disable iOS rubber-band overscroll on both axes. We deliberately do NOT
+     * `position: fixed` the document — the dashboard already constrains body
+     * height via `h-dvh` on its shell wrapper (so body has nowhere to scroll
+     * and the inner <main> handles scrolling), and the marketing pages need
+     * the document itself to scroll. Fixing the html broke the latter.
      */
     html,
     body {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
       overscroll-behavior: none;
       /* Prevent text-callout/magnifying-glass on long-press inside the app shell. */
       -webkit-touch-callout: none;

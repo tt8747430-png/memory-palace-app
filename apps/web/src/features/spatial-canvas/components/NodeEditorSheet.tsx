@@ -92,13 +92,13 @@ export function NodeEditorSheet({ roomId, palaceMode = 'simple' }: NodeEditorShe
 
   const close = () => setEditingNodeId(null);
 
-  // On mobile the sheet fills the screen as a bottom-sheet. We pin its height
-  // to dvh so it shrinks when the iOS keyboard opens (combined with
-  // `interactiveWidget: 'resizes-content'` in the root viewport meta) and pad
-  // BOTH safe-area edges so the title clears the Dynamic Island and the
-  // submit/close affordance clears the home indicator.
+  // On mobile the sheet fills the screen as a bottom-sheet. Height is dvh so
+  // it shrinks above the iOS keyboard (combined with `interactiveWidget:
+  // 'resizes-content'` in the root viewport meta). Safe-area top/bottom
+  // padding is already applied by the Sheet primitive's `side="bottom"`
+  // variant — don't add it here or it will double-up.
   const sheetContentClass = isMobile
-    ? 'flex h-[100dvh] flex-col rounded-t-2xl overflow-y-auto pt-[max(env(safe-area-inset-top),1.5rem)] pb-[max(env(safe-area-inset-bottom),1.5rem)]'
+    ? 'flex h-[100dvh] flex-col rounded-t-2xl overflow-y-auto'
     : 'flex w-full max-w-sm flex-col';
 
   return (
@@ -320,7 +320,7 @@ function NodeForm({ node, roomId, palaceMode, onClose }: NodeFormProps) {
         </div>
       </div>
 
-      <div className="sticky bottom-0 flex gap-2 border-t bg-background pt-4 pb-[env(safe-area-inset-bottom)]">
+      <div className="sticky bottom-0 flex gap-2 border-t bg-background pt-4">
         <Button
           variant="destructive"
           onClick={handleDelete}
