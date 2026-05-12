@@ -92,8 +92,13 @@ export function NodeEditorSheet({ roomId, palaceMode = 'simple' }: NodeEditorShe
 
   const close = () => setEditingNodeId(null);
 
+  // On mobile the sheet fills the screen as a bottom-sheet. We pin its height
+  // to dvh so it shrinks when the iOS keyboard opens (combined with
+  // `interactiveWidget: 'resizes-content'` in the root viewport meta) and pad
+  // BOTH safe-area edges so the title clears the Dynamic Island and the
+  // submit/close affordance clears the home indicator.
   const sheetContentClass = isMobile
-    ? 'flex h-[100dvh] flex-col rounded-t-2xl overflow-y-auto pb-[env(safe-area-inset-bottom)]'
+    ? 'flex h-[100dvh] flex-col rounded-t-2xl overflow-y-auto pt-[max(env(safe-area-inset-top),1.5rem)] pb-[max(env(safe-area-inset-bottom),1.5rem)]'
     : 'flex w-full max-w-sm flex-col';
 
   return (

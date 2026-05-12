@@ -91,6 +91,12 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: 'cover',
+  // Shrink the layout viewport when the on-screen keyboard opens so `dvh`
+  // units and fixed-bottom sheets/dialogs resize to fit above the keyboard
+  // — this is what stops the iOS keyboard from covering input fields.
+  // (Safari iOS 17+, Chrome 108+. Older browsers fall back to overlay
+  // behavior, which we partially compensate for via dvh in shell layouts.)
+  interactiveWidget: 'resizes-content',
 };
 
 async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

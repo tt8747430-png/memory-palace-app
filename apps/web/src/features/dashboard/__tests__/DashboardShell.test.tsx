@@ -86,12 +86,12 @@ describe('DashboardShell', () => {
     expect(bottomNav.className).toMatch(/md:hidden/);
   });
 
-  it('main content has safe-area bottom padding on mobile', () => {
+  it('main content reserves space for the fixed mobile top bar', () => {
     render(<DashboardShell>Content</DashboardShell>);
     const main = screen.getByRole('main');
     expect(main.className).toMatch(
-      /pb-\[calc\(var\(--height-bottom-nav\)\+env\(safe-area-inset-bottom\)\)\]/,
+      /pt-\[calc\(env\(safe-area-inset-top\)\+var\(--height-top-bar\)\)\]/,
     );
-    expect(main.className).toMatch(/md:pb-0/);
+    expect(main.className).toMatch(/md:pt-0/);
   });
 });
