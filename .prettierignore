@@ -27,7 +27,3 @@ supabase/.branches
 test-results
 playwright-report
 blob-report
-
-# Example/reference apps (contain minified bundles with non-CSS extensions)
-docs/exampe_app
-
