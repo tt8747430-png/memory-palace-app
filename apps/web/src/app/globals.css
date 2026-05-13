@@ -193,7 +193,7 @@
   --spacing-safe-left: env(safe-area-inset-left);
   --spacing-safe-right: env(safe-area-inset-right);
 
-  --height-bottom-nav: 4rem;
+  --height-bottom-nav: 7.5rem; /* FAB row (4.25rem) + tab bar (3.25rem) */
   --height-top-bar: 3.5rem;
 
   --spacing-touch: 48px;

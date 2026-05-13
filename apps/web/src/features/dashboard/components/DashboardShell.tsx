@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react';
 import { Sidebar } from './Sidebar';
 import { BottomNav } from './BottomNav';
+import { MobileFAB } from './MobileFAB';
 import { MobileDrawer } from './MobileDrawer';
 import { ModeToggle } from './ModeToggle';
 import { AppCommandProvider } from '@/shared/components/AppCommandProvider';
@@ -58,12 +59,13 @@ export function DashboardShell({ children, userProfile }: DashboardShellProps) {
           <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</div>
         </main>
 
-        {/* Floating pill bottom nav (mobile only) — also fixed chrome */}
+        {/* Bottom navigation + FAB (mobile only) — fixed chrome */}
         <nav
           className="pointer-events-none fixed inset-x-0 bottom-0 z-50 md:hidden"
           aria-label="Bottom navigation"
         >
           <div className="pointer-events-auto">
+            <MobileFAB />
             <BottomNav />
           </div>
         </nav>
