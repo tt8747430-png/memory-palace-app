@@ -1,7 +1,10 @@
-import type { ComponentPropsWithoutRef, HTMLAttributes, Ref } from 'react';
+'use client';
+
+import { type ComponentPropsWithoutRef, type HTMLAttributes, type Ref, useRef } from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { X } from 'lucide-react';
 import { cn } from '../lib/cn';
+import { useDragToDismiss } from '../lib/useDragToDismiss';
 
 export const Dialog = DialogPrimitive.Root;
 export const DialogTrigger = DialogPrimitive.Trigger;
@@ -38,18 +41,28 @@ export function DialogContent({
 }: ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
   ref?: Ref<HTMLDivElement>;
 }) {
+  // On the mobile bottom-sheet variant, allow swipe-down to dismiss. We
+  // trigger close by clicking a hidden Radix close button so we don't fight
+  // Radix's internal state.
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const drag = useDragToDismiss(() => closeRef.current?.click());
+
   return (
     <DialogPortal>
       <DialogOverlay />
       <DialogPrimitive.Content
-        ref={ref}
+        ref={(node) => {
+          drag.ref.current = node;
+          if (typeof ref === 'function') ref(node);
+          else if (ref) (ref as { current: HTMLDivElement | null }).current = node;
+        }}
         className={cn(
           'fixed inset-x-0 bottom-0 z-50 w-full max-h-[92dvh] overflow-y-auto',
-          'rounded-t-2xl border-x-0 border-b-0 border-t bg-background pb-[max(1.5rem,env(safe-area-inset-bottom))] pl-6 pr-6 pt-6 shadow-2xl',
+          'rounded-t-2xl border-x-0 border-b-0 border-t bg-background pb-[max(1.5rem,env(safe-area-inset-bottom))] pl-6 pr-6 pt-3 shadow-2xl',
           'data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom',
 
           'sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-h-[85dvh] sm:w-full sm:max-w-lg sm:-translate-x-1/2 sm:-translate-y-1/2',
-          'sm:rounded-lg sm:border sm:pb-6',
+          'sm:rounded-lg sm:border sm:pb-6 sm:pt-6',
           'sm:data-[state=closed]:slide-out-to-left-1/2 sm:data-[state=closed]:slide-out-to-top-[48%]',
           'sm:data-[state=open]:slide-in-from-left-1/2 sm:data-[state=open]:slide-in-from-top-[48%]',
           'sm:data-[state=closed]:zoom-out-95 sm:data-[state=open]:zoom-in-95',
@@ -60,11 +73,17 @@ export function DialogContent({
         )}
         {...props}
       >
-        {}
+        {/* Drag-to-dismiss grab handle (mobile only) */}
         <div
           aria-hidden
-          className="mx-auto -mt-2 mb-4 h-1.5 w-10 rounded-full bg-muted-foreground/30 sm:hidden"
-        />
+          onPointerDown={drag.onPointerDown}
+          onPointerMove={drag.onPointerMove}
+          onPointerUp={drag.onPointerUp}
+          onPointerCancel={drag.onPointerUp}
+          className="mx-auto mb-3 flex h-6 w-full max-w-[80%] cursor-grab touch-none items-center justify-center sm:hidden"
+        >
+          <span className="h-1.5 w-10 rounded-full bg-muted-foreground/30" />
+        </div>
         {children}
         <DialogPrimitive.Close
           className={cn(
@@ -77,6 +96,8 @@ export function DialogContent({
           <X className="h-4 w-4" />
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>
+        {/* Hidden close target invoked by the drag handle on threshold. */}
+        <DialogPrimitive.Close ref={closeRef} className="hidden" tabIndex={-1} aria-hidden />
       </DialogPrimitive.Content>
     </DialogPortal>
   );

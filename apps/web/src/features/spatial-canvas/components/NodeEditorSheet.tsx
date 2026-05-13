@@ -92,13 +92,13 @@ export function NodeEditorSheet({ roomId, palaceMode = 'simple' }: NodeEditorShe
 
   const close = () => setEditingNodeId(null);
 
-  // On mobile the sheet fills the screen as a bottom-sheet. Height is dvh so
-  // it shrinks above the iOS keyboard (combined with `interactiveWidget:
-  // 'resizes-content'` in the root viewport meta). Safe-area top/bottom
-  // padding is already applied by the Sheet primitive's `side="bottom"`
-  // variant — don't add it here or it will double-up.
+  // On mobile the sheet is a bottom-sheet that leaves ~8 dvh of the page
+  // visible above so the user has a visual hint they can swipe down to dismiss.
+  // Height resizes above the iOS keyboard via the root viewport's
+  // `interactiveWidget: 'resizes-content'`. Top padding clears the drag handle
+  // owned by the Sheet primitive; bottom safe-area is also owned by the primitive.
   const sheetContentClass = isMobile
-    ? 'flex h-[100dvh] flex-col rounded-t-2xl overflow-y-auto'
+    ? 'flex h-[92dvh] flex-col rounded-t-2xl overflow-y-auto pt-4'
     : 'flex w-full max-w-sm flex-col';
 
   return (

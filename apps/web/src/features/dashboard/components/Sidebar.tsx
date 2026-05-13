@@ -64,7 +64,7 @@ export function Sidebar({ userProfile, onNavigate }: SidebarProps) {
         ))}
       </nav>
 
-      {/* Footer: pinned utility links + theme toggle */}
+      {/* Footer: pinned utility links + theme row */}
       <div className="border-t border-sidebar-border px-3 pt-2 pb-[calc(env(safe-area-inset-bottom)+0.5rem)]">
         <div className="space-y-0.5">
           {sidebarFooterItems.map((item) => (
@@ -76,7 +76,14 @@ export function Sidebar({ userProfile, onNavigate }: SidebarProps) {
             />
           ))}
         </div>
-        <div className="mt-2 flex items-center justify-end">
+        {/*
+         * Theme row — its own line below Settings, mirroring the link layout
+         * (icon + label on the left, control on the right). Visually parallel
+         * to a SidebarLink so it reads as a peer setting rather than an
+         * orphan icon button floating in the corner.
+         */}
+        <div className="mt-1 flex items-center justify-between rounded-md px-3 py-2 text-sm text-sidebar-foreground/80">
+          <span>Theme</span>
           <ModeToggle />
         </div>
       </div>

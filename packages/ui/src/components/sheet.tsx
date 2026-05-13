@@ -5,6 +5,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { X } from 'lucide-react';
 import { cn } from '../lib/cn';
+import { useDragToDismiss } from '../lib/useDragToDismiss';
 
 const Sheet = DialogPrimitive.Root;
 
@@ -61,19 +62,40 @@ interface SheetContentProps
     VariantProps<typeof sheetContentVariants> {}
 
 function SheetContent({ side = 'right', className, children, ...props }: SheetContentProps) {
+  // Drag-to-dismiss only on the bottom variant (the only one that's a "sheet"
+  // in the iOS sense — left/right/top are app-shell drawers).
+  const closeRef = React.useRef<HTMLButtonElement>(null);
+  const drag = useDragToDismiss(() => closeRef.current?.click());
+  const isBottom = side === 'bottom';
   return (
     <SheetPortal>
       <SheetOverlay />
       <DialogPrimitive.Content
+        ref={isBottom ? drag.ref : undefined}
         data-slot="sheet-content"
         className={cn(sheetContentVariants({ side }), className)}
         {...props}
       >
+        {isBottom ? (
+          <div
+            aria-hidden
+            onPointerDown={drag.onPointerDown}
+            onPointerMove={drag.onPointerMove}
+            onPointerUp={drag.onPointerUp}
+            onPointerCancel={drag.onPointerUp}
+            className="absolute inset-x-0 top-0 mx-auto flex h-6 w-full max-w-[80%] cursor-grab touch-none items-center justify-center"
+          >
+            <span className="mt-2 h-1.5 w-10 rounded-full bg-muted-foreground/30" />
+          </div>
+        ) : null}
         <DialogPrimitive.Close className="absolute right-2 top-[calc(env(safe-area-inset-top)+0.5rem)] inline-flex min-h-touch min-w-touch items-center justify-center rounded-md opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
           <X className="h-4 w-4" />
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>
         {children}
+        {isBottom ? (
+          <DialogPrimitive.Close ref={closeRef} className="hidden" tabIndex={-1} aria-hidden />
+        ) : null}
       </DialogPrimitive.Content>
     </SheetPortal>
   );
