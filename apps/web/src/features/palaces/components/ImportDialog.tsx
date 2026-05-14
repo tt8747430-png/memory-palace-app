@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@memory-palace/ui';
+} from '@/ui';
 import { importPalaceData } from '../actions/importPalaceData';
 import type { ImportStats } from '../actions/importPalaceData';
 

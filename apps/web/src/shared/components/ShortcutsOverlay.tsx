@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from '@memory-palace/ui';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/ui';
 import { useShortcutsOverlay } from './ShortcutsOverlayContext';
 import { getAction } from '@/shared/lib/commandActions';
 

@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
-import { Skeleton } from '@memory-palace/ui';
+import { Skeleton } from '@/ui';
 import { getPalaceById } from '@/features/palaces';
 import { getRoomById } from '@/features/rooms';
 import { getDueNodes, PracticePicker } from '@/features/practice';

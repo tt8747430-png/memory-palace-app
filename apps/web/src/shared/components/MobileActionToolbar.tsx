@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type ElementType } from 'react';
 import { Plus, X } from 'lucide-react';
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 
 export interface MobileAction {
   label: string;

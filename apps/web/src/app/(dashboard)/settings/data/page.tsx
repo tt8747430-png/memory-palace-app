@@ -1,4 +1,4 @@
-import { Alert, AlertDescription, AlertTitle } from '@memory-palace/ui';
+import { Alert, AlertDescription, AlertTitle } from '@/ui';
 import { SettingsSection } from '@/features/settings';
 import { ExportButton, ImportDialog } from '@/features/palaces';
 

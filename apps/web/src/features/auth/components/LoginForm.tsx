@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useActionState } from 'react';
-import { Alert, Input, Label, PasswordInput } from '@memory-palace/ui';
+import { Alert, Input, Label, PasswordInput } from '@/ui';
 import { signIn } from '../actions/signIn';
 import { initialAuthFormState } from '../actions/types';
 import { AuthSubmitButton } from './AuthSubmitButton';

@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
-import { Button, Input, Label } from '@memory-palace/ui';
+import { Button, Input, Label } from '@/ui';
 import { createWizardSetup } from '../../actions/createWizardSetup';
 import type { ActionResponse } from '@/shared/types';
 import type { WizardSetupResult } from '../../actions/createWizardSetup';

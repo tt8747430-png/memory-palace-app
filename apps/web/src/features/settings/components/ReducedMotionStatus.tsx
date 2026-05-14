@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from 'react';
 import { CheckCircle2, Circle } from 'lucide-react';
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 
 function subscribe(callback: () => void): () => void {
   if (typeof window === 'undefined' || !window.matchMedia) return () => {};

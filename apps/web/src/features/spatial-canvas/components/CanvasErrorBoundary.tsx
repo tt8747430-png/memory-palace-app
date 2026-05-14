@@ -3,7 +3,7 @@
 import { Component, type ReactNode, type ErrorInfo } from 'react';
 import posthog from 'posthog-js';
 import { AlertTriangle, RotateCcw } from 'lucide-react';
-import { Button } from '@memory-palace/ui';
+import { Button } from '@/ui';
 
 interface Props {
   children: ReactNode;

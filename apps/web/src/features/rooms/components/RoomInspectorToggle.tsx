@@ -1,7 +1,7 @@
 'use client';
 
 import { PanelRightClose, PanelRightOpen } from 'lucide-react';
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 import { useRoomInspector } from '../useRoomInspector';
 
 export function RoomInspectorToggle() {

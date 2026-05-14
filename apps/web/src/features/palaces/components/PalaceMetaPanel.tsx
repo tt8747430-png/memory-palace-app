@@ -1,5 +1,5 @@
 import { Clock, DoorOpen, BrainCircuit, Calendar, Sparkles } from 'lucide-react';
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 import type { PalaceMeta } from '../actions/getPalaceMeta';
 
 interface Props {

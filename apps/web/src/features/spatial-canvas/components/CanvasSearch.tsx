@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Search, X } from 'lucide-react';
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 import { useCanvasStore } from '../store/CanvasStoreContext';
 
 export function CanvasSearch() {

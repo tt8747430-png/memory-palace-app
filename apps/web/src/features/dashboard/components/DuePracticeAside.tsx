@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { ArrowRight, CheckCircle2, Sparkles } from 'lucide-react';
-import { buttonVariants, cn } from '@memory-palace/ui';
+import { buttonVariants, cn } from '@/ui';
 
 export type DuePracticeItem = {
   id: string;

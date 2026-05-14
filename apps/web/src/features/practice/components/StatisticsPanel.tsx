@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Activity, BarChart3, Clock, Flame, Target } from 'lucide-react';
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 import { Sparkline } from '@/shared/components/Sparkline';
 import { MasteryRings } from '@/shared/components/MasteryRings';
 import type { PracticeStats } from '../actions/getPracticeStats';

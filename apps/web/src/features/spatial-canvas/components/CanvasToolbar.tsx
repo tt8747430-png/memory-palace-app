@@ -2,7 +2,7 @@
 
 import { Plus, MousePointer2, Hand, Grid2x2, Maximize } from 'lucide-react';
 import { useReactFlow } from '@xyflow/react';
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 import { useCanvasStore } from '../store/CanvasStoreContext';
 import type { CanvasTool } from '../store/canvasStore';
 import { useRoomNodeMutations } from '../hooks/useRoomNodeMutations';

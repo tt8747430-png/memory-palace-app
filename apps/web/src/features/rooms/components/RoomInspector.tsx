@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from 'react';
 import { Activity, Info, X } from 'lucide-react';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, cn } from '@memory-palace/ui';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, cn } from '@/ui';
 import { useRoomInspector, type InspectorTab } from '../useRoomInspector';
 
 const LG_QUERY = '(min-width: 1024px)';

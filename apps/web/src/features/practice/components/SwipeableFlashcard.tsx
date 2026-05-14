@@ -2,7 +2,7 @@
 
 import { useState, type ReactNode } from 'react';
 import { m, useMotionValue, useTransform, type PanInfo } from 'framer-motion';
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 
 /**
  * Tinder-style swipe + iOS-style 3D-flip flashcard primitive.

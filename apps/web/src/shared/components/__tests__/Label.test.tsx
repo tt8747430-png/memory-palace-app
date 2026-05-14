@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import { Label } from '@memory-palace/ui';
+import { Label } from '@/ui';
 
 describe('Label', () => {
   it('renders a <label> element', () => {

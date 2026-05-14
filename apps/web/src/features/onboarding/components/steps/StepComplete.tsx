@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@memory-palace/ui';
+import { Button } from '@/ui';
 import { useConfetti } from '@/shared/hooks/useConfetti';
 import { onboardingMutedTextClass, onboardingSubmitButtonClass } from '../onboardingStyles';
 

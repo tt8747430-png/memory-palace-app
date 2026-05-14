@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Building2, ChevronRight, Download, PlayCircle, Upload } from 'lucide-react';
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 
 const ACTIONS = [
   {

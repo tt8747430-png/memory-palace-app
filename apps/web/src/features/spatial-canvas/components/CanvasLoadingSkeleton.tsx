@@ -1,4 +1,4 @@
-import { Skeleton } from '@memory-palace/ui';
+import { Skeleton } from '@/ui';
 
 export function CanvasLoadingSkeleton() {
   return (

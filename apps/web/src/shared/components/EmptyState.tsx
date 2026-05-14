@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 
 interface EmptyStateProps {
   icon?: ReactNode;

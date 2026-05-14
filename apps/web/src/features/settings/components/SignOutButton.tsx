@@ -1,5 +1,5 @@
 import { LogOut } from 'lucide-react';
-import { Button } from '@memory-palace/ui';
+import { Button } from '@/ui';
 import { signOut } from '@/shared/lib/signOut';
 
 export function SignOutButton() {

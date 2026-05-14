@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { BrainCircuit, ArrowRight } from 'lucide-react';
-import { buttonVariants, cn } from '@memory-palace/ui';
+import { buttonVariants, cn } from '@/ui';
 import { getDueNodes } from '../actions/getDueNodes';
 
 export async function DailyReviewCta() {

@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react';
 import { LazyMotion, MotionConfig, domAnimation, m, useMotionValue, animate } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 
 export type SlideToConfirmProps = {
   onConfirm: () => void;

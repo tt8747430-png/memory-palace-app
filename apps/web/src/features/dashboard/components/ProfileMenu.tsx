@@ -3,7 +3,7 @@
 import { useTransition } from 'react';
 import Link from 'next/link';
 import { Settings, LogOut, ChevronsUpDown } from 'lucide-react';
-import { Popover, PopoverTrigger, PopoverContent, Separator, cn } from '@memory-palace/ui';
+import { Popover, PopoverTrigger, PopoverContent, Separator, cn } from '@/ui';
 import { signOut } from '@/shared/lib/signOut';
 import { Avatar } from '@/shared/components/Avatar';
 

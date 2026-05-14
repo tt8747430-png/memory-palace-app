@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Monitor, Moon, Sun, type LucideIcon } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 
 type ThemeKey = 'light' | 'dark' | 'system';
 

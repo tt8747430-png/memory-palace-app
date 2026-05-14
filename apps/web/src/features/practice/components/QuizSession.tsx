@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Check, X, Loader2 } from 'lucide-react';
-import { Button, Input, cn } from '@memory-palace/ui';
+import { Button, Input, cn } from '@/ui';
 import { recordPractice } from '../actions/recordPractice';
 import { getQuestionContext } from '../actions/getQuestionContext';
 import { answerMatches } from '../lib/answer';

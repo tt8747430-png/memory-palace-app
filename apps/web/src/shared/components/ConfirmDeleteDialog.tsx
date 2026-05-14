@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@memory-palace/ui';
+} from '@/ui';
 
 interface ConfirmDeleteDialogProps {
   trigger: React.ReactNode;

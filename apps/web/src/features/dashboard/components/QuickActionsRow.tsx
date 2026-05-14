@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from 'react';
 import { Search } from 'lucide-react';
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 import { useCommandPalette } from '@/shared/components/CommandPaletteContext';
 
 const noopSubscribe = () => () => {};

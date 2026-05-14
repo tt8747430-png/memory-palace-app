@@ -1,4 +1,4 @@
-import { Toaster as SonnerToaster } from '@memory-palace/ui';
+import { Toaster as SonnerToaster } from '@/ui';
 
 export function Toaster() {
   return (

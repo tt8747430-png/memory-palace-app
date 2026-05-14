@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { Skeleton } from '@memory-palace/ui';
+import { Skeleton } from '@/ui';
 import {
   DashboardOverview,
   getDashboardStats,

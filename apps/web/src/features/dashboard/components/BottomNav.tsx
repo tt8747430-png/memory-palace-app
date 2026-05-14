@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { m } from 'framer-motion';
 import { Plus } from 'lucide-react';
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 import { navItems, isNavItemActive } from '../nav';
 import { useFABAction } from '../useFABAction';
 

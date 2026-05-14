@@ -1,5 +1,5 @@
 import { Download } from 'lucide-react';
-import { buttonVariants, cn } from '@memory-palace/ui';
+import { buttonVariants, cn } from '@/ui';
 
 export function ExportButton() {
   return (

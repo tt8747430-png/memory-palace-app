@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { ChevronRight, Footprints, Layers, Sparkles, Zap } from 'lucide-react';
-import { Skeleton } from '@memory-palace/ui';
+import { Skeleton } from '@/ui';
 import { getPalaces } from '@/features/palaces';
 import { DailyReviewCta } from '@/features/practice';
 

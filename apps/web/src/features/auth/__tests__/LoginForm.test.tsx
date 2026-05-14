@@ -10,7 +10,7 @@ vi.mock('../actions/signIn', () => ({
   signIn: (prev: AuthFormState, formData: FormData) => mockSignIn(prev, formData),
 }));
 
-vi.mock('@memory-palace/ui', () => ({
+vi.mock('@/ui', () => ({
   Alert: ({ children, ...rest }: React.HTMLAttributes<HTMLDivElement>) => (
     <div role="alert" {...rest}>
       {children}

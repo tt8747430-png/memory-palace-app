@@ -15,7 +15,7 @@ import {
   Label,
   Textarea,
   Alert,
-} from '@memory-palace/ui';
+} from '@/ui';
 import { useAppDialog } from '@/shared/components/AppDialogContext';
 import { createPalace } from '../actions/createPalace';
 

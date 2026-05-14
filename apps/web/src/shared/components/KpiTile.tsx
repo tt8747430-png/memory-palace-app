@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { ArrowDownRight, ArrowRight, ArrowUpRight, Minus } from 'lucide-react';
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 
 export type KpiTileTone = 'neutral' | 'success' | 'warning' | 'primary';
 

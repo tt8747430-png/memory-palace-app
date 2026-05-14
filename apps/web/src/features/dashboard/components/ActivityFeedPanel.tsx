@@ -1,5 +1,5 @@
 import { Activity } from 'lucide-react';
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 import {
   describeEvent,
   eventIcon,

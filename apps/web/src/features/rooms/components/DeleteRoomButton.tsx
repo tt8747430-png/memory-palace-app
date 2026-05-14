@@ -1,7 +1,7 @@
 'use client';
 
 import { Trash2 } from 'lucide-react';
-import { Button } from '@memory-palace/ui';
+import { Button } from '@/ui';
 import { ConfirmDeleteDialog } from '@/shared/components/ConfirmDeleteDialog';
 import { deleteRoom } from '../actions/deleteRoom';
 

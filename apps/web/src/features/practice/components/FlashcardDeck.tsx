@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, ArrowRight, RotateCcw, X } from 'lucide-react';
-import { Button, toast } from '@memory-palace/ui';
+import { Button, toast } from '@/ui';
 import { recordPractice } from '../actions/recordPractice';
 import type { DueNodeWithMeta } from '../actions/getDueNodes';
 import { SwipeableFlashcard } from './SwipeableFlashcard';

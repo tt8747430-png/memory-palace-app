@@ -1,7 +1,7 @@
 'use client';
 
 import { type ReactNode } from 'react';
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 import { Sidebar } from './Sidebar';
 import { BottomNav } from './BottomNav';
 import { MobileDrawer } from './MobileDrawer';

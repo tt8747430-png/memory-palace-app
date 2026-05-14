@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 import { useReveal } from '@/shared/hooks/useReveal';
 
 interface RevealProps {

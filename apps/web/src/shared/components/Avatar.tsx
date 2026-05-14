@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 
 const SIZE_CLASSES = {
   sm: 'h-7 w-7 text-[0.625rem]',

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Moon, Sun, Monitor } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { Button } from '@memory-palace/ui';
+import { Button } from '@/ui';
 
 const NEXT_THEME = { light: 'dark', dark: 'system', system: 'light' } as const;
 const ICON = { light: Sun, dark: Moon, system: Monitor } as const;

@@ -1,4 +1,4 @@
-import { Alert } from '@memory-palace/ui';
+import { Alert } from '@/ui';
 import { AuthShell, LoginForm } from '@/features/auth';
 
 type LoginPageProps = {

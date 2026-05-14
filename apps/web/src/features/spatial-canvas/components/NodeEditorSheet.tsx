@@ -23,8 +23,8 @@ import {
   Select,
   Textarea,
   Label,
-} from '@memory-palace/ui';
-import { cn } from '@memory-palace/ui';
+} from '@/ui';
+import { cn } from '@/ui';
 import { useCanvasStore } from '../store/CanvasStoreContext';
 import { useNodesQuery } from '../hooks/useNodesQuery';
 import { useRoomNodeMutations, type NodePatch } from '../hooks/useRoomNodeMutations';

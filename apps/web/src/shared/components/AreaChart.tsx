@@ -1,7 +1,7 @@
 'use client';
 
 import { useId, useState } from 'react';
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 
 interface AreaChartProps {
   values: number[];

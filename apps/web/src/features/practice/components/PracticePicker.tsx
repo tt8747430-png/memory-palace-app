@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Button } from '@memory-palace/ui';
+import { Button } from '@/ui';
 import { ChevronRight, Flame } from 'lucide-react';
 import type { DueNodeWithMeta } from '../actions/getDueNodes';
 

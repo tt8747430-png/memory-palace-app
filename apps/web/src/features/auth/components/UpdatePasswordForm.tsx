@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
-import { Alert, Label, PasswordInput } from '@memory-palace/ui';
+import { Alert, Label, PasswordInput } from '@/ui';
 import { updatePassword } from '../actions/updatePassword';
 import { initialAuthFormState } from '../actions/types';
 import { AuthSubmitButton } from './AuthSubmitButton';

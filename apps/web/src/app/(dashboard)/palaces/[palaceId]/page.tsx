@@ -14,7 +14,7 @@ import { EmptyState } from '@/shared/components/EmptyState';
 import { CardSkeleton } from '@/shared/components/CardSkeleton';
 import { EmptyStateCreateButton } from '@/shared/components/EmptyStateCreateButton';
 import { MobileCreateFab } from '@/shared/components/MobileCreateFab';
-import { Skeleton } from '@memory-palace/ui';
+import { Skeleton } from '@/ui';
 
 const getCachedPalace = cache((palaceId: string) => getPalaceById({ id: palaceId }));
 

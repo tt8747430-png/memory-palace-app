@@ -14,7 +14,7 @@ import {
   Input,
   Label,
   Alert,
-} from '@memory-palace/ui';
+} from '@/ui';
 import { useAppDialog } from '@/shared/components/AppDialogContext';
 import { createRoom } from '../actions/createRoom';
 

@@ -9,7 +9,6 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
-  transpilePackages: ['@memory-palace/ui'],
   async headers() {
     const origin = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
     return [

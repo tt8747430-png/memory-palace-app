@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { Button, cn } from '@memory-palace/ui';
+import { Button, cn } from '@/ui';
 import { updateWizardTheme } from '../../actions/updateWizardTheme';
 import { onboardingMutedTextClass, onboardingSubmitButtonClass } from '../onboardingStyles';
 

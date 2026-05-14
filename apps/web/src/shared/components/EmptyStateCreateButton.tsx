@@ -1,7 +1,7 @@
 'use client';
 
 import { type ReactNode } from 'react';
-import { Button } from '@memory-palace/ui';
+import { Button } from '@/ui';
 import { useAppDialog, type DialogId } from './AppDialogContext';
 
 interface EmptyStateCreateButtonProps {

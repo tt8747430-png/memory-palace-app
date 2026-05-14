@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { ArrowRight, Building2 } from 'lucide-react';
-import { buttonVariants, cn } from '@memory-palace/ui';
+import { buttonVariants, cn } from '@/ui';
 import type { RecentPalace } from '../actions/getRecentPalaces';
 import { formatRelative } from '../activity';
 

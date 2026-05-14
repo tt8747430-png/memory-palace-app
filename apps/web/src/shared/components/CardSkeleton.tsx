@@ -1,4 +1,4 @@
-import { cn, Skeleton } from '@memory-palace/ui';
+import { cn, Skeleton } from '@/ui';
 
 interface CardSkeletonProps {
   count?: number;

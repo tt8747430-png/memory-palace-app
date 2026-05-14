@@ -2,7 +2,7 @@
 
 import { useState, useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { Alert, Button, Input, Label } from '@memory-palace/ui';
+import { Alert, Button, Input, Label } from '@/ui';
 import { Avatar } from '@/shared/components/Avatar';
 import { updateProfile } from '../actions/updateProfile';
 

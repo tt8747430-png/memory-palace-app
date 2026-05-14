@@ -25,7 +25,7 @@ import {
   DialogTitle,
   DialogDescription,
   CommandShortcut,
-} from '@memory-palace/ui';
+} from '@/ui';
 import { useCommandPalette } from './CommandPaletteContext';
 import { useShortcutsOverlay } from './ShortcutsOverlayContext';
 import { useAppDialog } from './AppDialogContext';

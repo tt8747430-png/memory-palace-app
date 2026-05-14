@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { ArrowRight, Plus } from 'lucide-react';
-import { buttonVariants, cn } from '@memory-palace/ui';
+import { buttonVariants, cn } from '@/ui';
 
 interface Props {
   displayName: string;

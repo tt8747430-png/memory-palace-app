@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 
 export type JourneyStepperItem = {
   id: string;

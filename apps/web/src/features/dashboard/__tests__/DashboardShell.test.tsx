@@ -15,8 +15,8 @@ vi.mock('@/shared/lib/signOut', () => ({
   signOut: vi.fn(),
 }));
 
-vi.mock('@memory-palace/ui', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@memory-palace/ui')>();
+vi.mock('@/ui', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/ui')>();
   return {
     ...actual,
     Sheet: ({ children }: { children: React.ReactNode }) => (

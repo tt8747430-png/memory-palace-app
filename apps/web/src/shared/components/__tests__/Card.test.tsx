@@ -1,13 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from '@memory-palace/ui';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/ui';
 
 describe('Card', () => {
   it('renders a div container with card styling classes', () => {

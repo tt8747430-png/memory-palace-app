@@ -17,7 +17,7 @@ import {
   Textarea,
   Alert,
   cn,
-} from '@memory-palace/ui';
+} from '@/ui';
 import { updatePalace } from '../actions/updatePalace';
 
 interface EditPalaceDialogProps {

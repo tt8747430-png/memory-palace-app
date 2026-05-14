@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
-import { Button, Input, Label, Textarea } from '@memory-palace/ui';
+import { Button, Input, Label, Textarea } from '@/ui';
 import { createWizardNode } from '../../actions/createWizardNode';
 import type { ActionResponse } from '@/shared/types';
 import {

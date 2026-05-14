@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@memory-palace/ui';
+import { Button } from '@/ui';
 
 export default function GlobalError({
   error,

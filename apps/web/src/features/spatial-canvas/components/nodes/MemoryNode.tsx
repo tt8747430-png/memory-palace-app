@@ -13,14 +13,14 @@ import {
   Pencil,
   Trash2,
 } from 'lucide-react';
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuSeparator,
   ContextMenuTrigger,
-} from '@memory-palace/ui';
+} from '@/ui';
 import { useCanvasNodeActions } from '../../store/CanvasNodeActionsContext';
 
 export interface MemoryNodeData extends Record<string, unknown> {

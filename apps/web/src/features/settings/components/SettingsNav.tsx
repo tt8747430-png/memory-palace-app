@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Database, KeyRound, SlidersHorizontal, UserCircle, type LucideIcon } from 'lucide-react';
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 
 type Section = {
   href: string;

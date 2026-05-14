@@ -1,14 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  Button,
-  Sheet,
-  SheetContent,
-  SheetTitle,
-  SheetDescription,
-  SheetTrigger,
-} from '@memory-palace/ui';
+import { Button, Sheet, SheetContent, SheetTitle, SheetDescription, SheetTrigger } from '@/ui';
 import { Menu } from 'lucide-react';
 import { Sidebar } from './Sidebar';
 

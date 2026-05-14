@@ -4,9 +4,11 @@ Next.js 16 + React 19 (React Compiler on) memory-palace SPA. Turborepo + pnpm wo
 
 ## Workspace layout
 
-- `apps/web` — the only app. Path alias `@/*` → `apps/web/src/*`. Database (Drizzle schema, client, seed) lives at `apps/web/src/db/`; drizzle-kit config + scripts live at the app root (`apps/web/drizzle.config.ts`, scripts `db:generate`, `db:push`, `db:studio`, `db:seed`).
-- `packages/ui` (`@memory-palace/ui`) — shadcn-style primitives only. App-specific components live under `apps/web/src/shared/components` or feature folders.
-- `packages/eslint-config`, `packages/typescript-config` — shared configs (extend `@memory-palace/typescript-config/nextjs.json`).
+- `apps/web` — the only app. Path alias `@/*` → `apps/web/src/*`. No `packages/` workspace anymore; everything lives inside `apps/web/`.
+- `apps/web/src/db/` (`@/db`) — Drizzle schema, relations, types, client, seed. Re-exports drizzle-orm operators via the barrel.
+- `apps/web/src/ui/` (`@/ui`) — shadcn-style primitives (Radix wrappers + `cn()`). App-specific components live under `apps/web/src/shared/components` or feature folders.
+- `apps/web/drizzle.config.ts` — drizzle-kit config; scripts at the app root: `db:generate`, `db:push`, `db:migrate`, `db:studio`, `db:seed`.
+- `apps/web/eslint.config.mjs` + `apps/web/tsconfig.json` own all lint/ts settings inline — no shared config packages.
 - Tests: unit/integration co-located in `__tests__/` (vitest, jsdom); e2e in `playwright/tests` (run against a built `next start`).
 
 ## Feature-folder convention (strict)
@@ -50,7 +52,7 @@ Server-side Supabase: `createSupabaseForProxy` / `getCurrentUser` in `@/shared/l
 - `PageTransition` is enter-only (no `AnimatePresence` — breaks App Router RSC). Reduced motion is global via `MotionProvider`; do not use `useReducedMotion()` locally.
 - Every RSC route must have a `loading.tsx`.
 - Full-bleed dashboard pages have a fixed height formula due to `DashboardShell`'s `py-6` wrapper — see `/memories/repo/dashboard-full-bleed-height.md` before writing one.
-- shadcn primitives live in `@memory-palace/ui`; use `cn()` from there. Tailwind v4 (`@tailwindcss/postcss`), no `tailwind.config`.
+- shadcn primitives live in `@/ui`; use `cn()` from there. Tailwind v4 (`@tailwindcss/postcss`), no `tailwind.config`. ESLint relaxes `jsx-a11y/heading-has-content`, `jsx-a11y/label-has-associated-control`, and `react-hooks/immutability` for `src/ui/**` because shadcn primitives wrap Radix and consumers supply the content/labels/ref composition.
 
 ## Page layout vocabulary (Tailwind UI–style)
 

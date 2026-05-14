@@ -1,7 +1,7 @@
 'use client';
 
 import { Copy, Trash2 } from 'lucide-react';
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 import { useCanvasStore } from '../store/CanvasStoreContext';
 import { useRoomNodeMutations } from '../hooks/useRoomNodeMutations';
 

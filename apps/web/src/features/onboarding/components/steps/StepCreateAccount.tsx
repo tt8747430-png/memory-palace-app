@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
-import { Button, Input, Label, PasswordInput } from '@memory-palace/ui';
+import { Button, Input, Label, PasswordInput } from '@/ui';
 import { createWizardAccount, type WizardAccountState } from '../../actions/createWizardAccount';
 import {
   onboardingInputClass,

@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
-import { Skeleton } from '@memory-palace/ui';
+import { Skeleton } from '@/ui';
 import { getDueNodes, PracticePicker } from '@/features/practice';
 
 export const dynamic = 'force-dynamic';

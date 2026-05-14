@@ -15,7 +15,7 @@ import {
   Input,
   Label,
   Alert,
-} from '@memory-palace/ui';
+} from '@/ui';
 import { updateRoom } from '../actions/updateRoom';
 
 interface EditRoomDialogProps {

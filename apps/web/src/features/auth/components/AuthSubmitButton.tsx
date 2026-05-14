@@ -1,7 +1,7 @@
 'use client';
 
 import { useFormStatus } from 'react-dom';
-import { Button } from '@memory-palace/ui';
+import { Button } from '@/ui';
 import { authSubmitButtonClass } from './authStyles';
 
 interface AuthSubmitButtonProps {

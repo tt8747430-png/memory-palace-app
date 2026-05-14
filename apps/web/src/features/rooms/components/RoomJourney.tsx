@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { m } from 'framer-motion';
 import { ArrowLeft, ArrowRight, ChevronLeft, Eye, EyeOff, X } from 'lucide-react';
-import { Button } from '@memory-palace/ui';
+import { Button } from '@/ui';
 import type { PalaceMode } from '@/db';
 import { useSwipeNavigation } from '@/shared/hooks/useSwipeNavigation';
 import { JourneyStepper } from './JourneyStepper';

@@ -2,7 +2,7 @@
 
 import { m } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { cn } from '@memory-palace/ui';
+import { cn } from '@/ui';
 
 export function BlurText({
   text,
