@@ -65,7 +65,6 @@ export function Sidebar({ userProfile, onNavigate, forceExpanded }: SidebarProps
 
       <div className="mx-3 my-3 h-px bg-sidebar-border" aria-hidden />
 
-      {/* Primary nav — grouped by section */}
       <nav className="flex-1 overflow-y-auto px-3" aria-label="Main navigation">
         {sidebarGroups.map((group, idx) => (
           <div key={group.title ?? idx} className={cn(idx > 0 && 'mt-4')}>

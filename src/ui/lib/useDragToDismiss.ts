@@ -29,7 +29,7 @@ export function useDragToDismiss(onDismiss: () => void) {
     if (!start.current) return;
     const dy = Math.max(0, event.clientY - start.current.y);
     const dt = Math.max(1, performance.now() - start.current.t);
-    const velocity = dy / dt; // px / ms
+    const velocity = dy / dt;
     start.current = null;
     if (dy > 100 || velocity > 0.6) {
       onDismiss();

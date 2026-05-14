@@ -2,12 +2,6 @@
 
 import { useSyncExternalStore } from 'react';
 
-/**
- * Room inspector open/close + selected tab. Mirrors useSidebarCollapsed — a
- * single external store keeps the toggle in sync between the page header and
- * the inspector panel without prop drilling.
- */
-
 const OPEN_KEY = 'mp:room-inspector-open';
 const TAB_KEY = 'mp:room-inspector-tab';
 const EVENT = 'mp:room-inspector-change';
@@ -53,9 +47,7 @@ function getServerTab(): InspectorTab {
 function write(key: string, value: string): void {
   try {
     window.localStorage.setItem(key, value);
-  } catch {
-    // Ignore storage failures (Safari private mode, quota).
-  }
+  } catch {}
   window.dispatchEvent(new Event(EVENT));
 }
 

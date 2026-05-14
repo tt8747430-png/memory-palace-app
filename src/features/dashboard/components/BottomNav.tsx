@@ -16,7 +16,6 @@ export function BottomNav() {
   return (
     <div className="flex w-full flex-col border-t border-border/50 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80">
       <div className="relative flex h-15 items-stretch px-1">
-        {/* Left pair */}
         <div className="flex flex-1 items-stretch">
           {navItems.slice(0, 2).map((item) => (
             <TabLink key={item.href} item={item} active={isNavItemActive(pathname, item.href)} />
@@ -46,7 +45,7 @@ export function BottomNav() {
           ))}
         </div>
       </div>
-      {/* iOS safe area spacer */}
+
       <div className="h-[env(safe-area-inset-bottom)]" />
     </div>
   );

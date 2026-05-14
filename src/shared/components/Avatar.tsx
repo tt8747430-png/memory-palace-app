@@ -32,7 +32,6 @@ export function Avatar({ displayName, avatarUrl, size = 'md', className }: Avata
 
   if (avatarUrl && !imgError) {
     return (
-      // eslint-disable-next-line @next/next/no-img-element
       <img
         src={avatarUrl}
         alt={`${displayName} avatar`}

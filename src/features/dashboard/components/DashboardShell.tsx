@@ -27,7 +27,6 @@ export function DashboardShell({ children, userProfile }: DashboardShellProps) {
   return (
     <AppCommandProvider>
       <div className="flex h-dvh flex-col md:flex-row">
-        {/* Desktop sidebar — width follows the persisted collapse state. */}
         <aside
           className={cn(
             'hidden md:flex md:flex-col md:border-r md:border-sidebar-border md:bg-sidebar',

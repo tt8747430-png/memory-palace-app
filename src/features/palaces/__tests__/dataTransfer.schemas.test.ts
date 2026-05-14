@@ -62,7 +62,6 @@ describe('exportDataSchemaV1', () => {
   });
 
   it('rejects a missing version field', () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { version: _, ...noVersion } = validExport;
     const result = exportDataSchemaV1.safeParse(noVersion);
     expect(result.success).toBe(false);

@@ -34,15 +34,12 @@ function SheetOverlay({
 }
 
 const sheetContentVariants = cva(
-  // Base padding deliberately omits `pb`/`pt` so the per-side variants below
-  // can apply safe-area-aware values without fighting the `p-6` shorthand.
   'fixed z-50 gap-4 bg-background px-6 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500 data-[state=open]:animate-in data-[state=closed]:animate-out',
   {
     variants: {
       side: {
-        // Reserve room for the iOS status bar / Dynamic Island.
         top: 'inset-x-0 top-0 border-b pt-[max(env(safe-area-inset-top),1.5rem)] pb-6 data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top',
-        // Reserve room for the home indicator.
+
         bottom:
           'inset-x-0 bottom-0 border-t pt-6 pb-[max(env(safe-area-inset-bottom),1.5rem)] data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom',
         left: 'inset-y-0 left-0 h-full w-3/4 border-r py-6 data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm',
@@ -62,8 +59,6 @@ interface SheetContentProps
     VariantProps<typeof sheetContentVariants> {}
 
 function SheetContent({ side = 'right', className, children, ...props }: SheetContentProps) {
-  // Drag-to-dismiss only on the bottom variant (the only one that's a "sheet"
-  // in the iOS sense — left/right/top are app-shell drawers).
   const closeRef = React.useRef<HTMLButtonElement>(null);
   const drag = useDragToDismiss(() => closeRef.current?.click());
   const isBottom = side === 'bottom';

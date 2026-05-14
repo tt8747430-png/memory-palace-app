@@ -41,9 +41,6 @@ export function DialogContent({
 }: ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
   ref?: Ref<HTMLDivElement>;
 }) {
-  // On the mobile bottom-sheet variant, allow swipe-down to dismiss. We
-  // trigger close by clicking a hidden Radix close button so we don't fight
-  // Radix's internal state.
   const closeRef = useRef<HTMLButtonElement>(null);
   const drag = useDragToDismiss(() => closeRef.current?.click());
 
@@ -73,7 +70,6 @@ export function DialogContent({
         )}
         {...props}
       >
-        {/* Drag-to-dismiss grab handle (mobile only) */}
         <div
           aria-hidden
           onPointerDown={drag.onPointerDown}
@@ -96,7 +92,7 @@ export function DialogContent({
           <X className="h-4 w-4" />
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>
-        {/* Hidden close target invoked by the drag handle on threshold. */}
+
         <DialogPrimitive.Close ref={closeRef} className="hidden" tabIndex={-1} aria-hidden />
       </DialogPrimitive.Content>
     </DialogPortal>

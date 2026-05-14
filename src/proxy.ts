@@ -47,8 +47,6 @@ export async function proxy(request: NextRequest) {
     return r;
   }
 
-  // Authenticated users may continue an in-progress signup/onboarding wizard
-  // (steps 2–5) after email verification, but should not see step 1.
   if (user && seg === 'signup') {
     const step = parseInt(request.nextUrl.searchParams.get('step') ?? '1', 10);
     if (Number.isNaN(step) || step <= 1) {

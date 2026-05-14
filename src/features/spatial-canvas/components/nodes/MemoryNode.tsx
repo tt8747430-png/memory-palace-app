@@ -148,7 +148,6 @@ export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
             {}
             {hasImagePreview && (
               <div className="mt-2 overflow-hidden rounded-md">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={data.content!}
                   alt={data.title}

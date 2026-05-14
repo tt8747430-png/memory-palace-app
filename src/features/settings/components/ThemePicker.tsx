@@ -16,7 +16,7 @@ const OPTIONS: Array<{ key: ThemeKey; label: string; Icon: LucideIcon; hint: str
 export function ThemePicker() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  // eslint-disable-next-line react-hooks/set-state-in-effect
+
   useEffect(() => setMounted(true), []);
 
   const current: ThemeKey =

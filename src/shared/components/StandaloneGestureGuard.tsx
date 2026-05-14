@@ -29,7 +29,7 @@ export function StandaloneGestureGuard(): null {
     }
 
     window.addEventListener('touchstart', onTouchStart, { passive: false });
-    // Block pinch-zoom — these are webkit-only events.
+
     document.addEventListener('gesturestart', preventDefault as EventListener);
     document.addEventListener('gesturechange', preventDefault as EventListener);
     document.addEventListener('gestureend', preventDefault as EventListener);

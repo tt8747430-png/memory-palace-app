@@ -92,11 +92,6 @@ export function NodeEditorSheet({ roomId, palaceMode = 'simple' }: NodeEditorShe
 
   const close = () => setEditingNodeId(null);
 
-  // On mobile the sheet is a bottom-sheet that leaves ~8 dvh of the page
-  // visible above so the user has a visual hint they can swipe down to dismiss.
-  // Height resizes above the iOS keyboard via the root viewport's
-  // `interactiveWidget: 'resizes-content'`. Top padding clears the drag handle
-  // owned by the Sheet primitive; bottom safe-area is also owned by the primitive.
   const sheetContentClass = isMobile
     ? 'flex h-[92dvh] flex-col rounded-t-2xl overflow-y-auto pt-4'
     : 'flex w-full max-w-sm flex-col';
@@ -226,7 +221,6 @@ function NodeForm({ node, roomId, palaceMode, onClose }: NodeFormProps) {
           )}
           {form.nodeType === 'image' && form.content && isHttpUrl(form.content) && (
             <div className="mt-2 overflow-hidden rounded-md border">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={form.content}
                 alt="Preview"
