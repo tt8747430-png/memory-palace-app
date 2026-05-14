@@ -7,7 +7,6 @@ import { getRooms, RoomCard, CreateRoomDialog, RoomReorderControls } from '@/fea
 import { EmptyState } from '@/shared/components/EmptyState';
 import { CardSkeleton } from '@/shared/components/CardSkeleton';
 import { EmptyStateCreateButton } from '@/shared/components/EmptyStateCreateButton';
-import { MobileCreateFab } from '@/shared/components/MobileCreateFab';
 import { Skeleton } from '@/ui';
 
 const getCachedPalace = cache((palaceId: string) => getPalaceById({ id: palaceId }));
@@ -82,8 +81,6 @@ async function PalaceDetail({ palaceId }: { palaceId: string }) {
           </div>
         )}
       </section>
-
-      <MobileCreateFab dialogId="create-room" label="Add room" />
     </div>
   );
 }

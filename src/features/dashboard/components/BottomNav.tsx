@@ -1,49 +1,20 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { m } from 'framer-motion';
-import { Plus } from 'lucide-react';
 import { cn } from '@/ui';
 import { navItems, isNavItemActive } from '../nav';
-import { useFABAction } from '../useFABAction';
 
 export function BottomNav() {
   const pathname = usePathname();
-  const router = useRouter();
-  const { label, href } = useFABAction(pathname);
 
   return (
     <div className="flex w-full flex-col border-t border-border/50 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80">
-      <div className="relative flex h-15 items-stretch px-1">
-        <div className="flex flex-1 items-stretch">
-          {navItems.slice(0, 2).map((item) => (
-            <TabLink key={item.href} item={item} active={isNavItemActive(pathname, item.href)} />
-          ))}
-        </div>
-
-        <div className="relative w-14 shrink-0">
-          <button
-            type="button"
-            onClick={() => router.push(href)}
-            aria-label={label}
-            className={cn(
-              'absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/3',
-              'flex h-14 w-14 items-center justify-center rounded-full',
-              'bg-primary text-primary-foreground shadow-lg shadow-primary/25',
-              'transition-transform duration-100 active:scale-95',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-            )}
-          >
-            <Plus className="h-6 w-6" strokeWidth={2.5} aria-hidden />
-          </button>
-        </div>
-
-        <div className="flex flex-1 items-stretch">
-          {navItems.slice(2, 4).map((item) => (
-            <TabLink key={item.href} item={item} active={isNavItemActive(pathname, item.href)} />
-          ))}
-        </div>
+      <div className="flex h-15 items-stretch px-1">
+        {navItems.map((item) => (
+          <TabLink key={item.href} item={item} active={isNavItemActive(pathname, item.href)} />
+        ))}
       </div>
 
       <div className="h-[env(safe-area-inset-bottom)]" />
