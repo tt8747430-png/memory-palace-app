@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 import { Monitor, Moon, Sun, type LucideIcon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { cn } from '@/ui';
@@ -15,9 +15,11 @@ const OPTIONS: Array<{ key: ThemeKey; label: string; Icon: LucideIcon; hint: str
 
 export function ThemePicker() {
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   const current: ThemeKey =
     theme === 'light' || theme === 'dark' || theme === 'system' ? theme : 'system';
