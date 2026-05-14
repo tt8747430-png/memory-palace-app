@@ -11,10 +11,6 @@ export { DashboardOverview } from './components/DashboardOverview';
 export { DashboardHeader } from './components/DashboardHeader';
 export { DashboardKpiRow } from './components/DashboardKpiRow';
 export { RecentPalacesPanel } from './components/RecentPalacesPanel';
-export { ActivityFeedPanel } from './components/ActivityFeedPanel';
-export { DuePracticeAside } from './components/DuePracticeAside';
-export { StreakGoalAside } from './components/StreakGoalAside';
-export { QuickLaunchAside } from './components/QuickLaunchAside';
 export {
   describeEvent,
   eventIcon,

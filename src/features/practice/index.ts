@@ -7,10 +7,7 @@ export type { PracticeStats, WeakestNode, RecentSession } from './actions/getPra
 export { getQuestionContext } from './actions/getQuestionContext';
 export type { QuestionContext } from './actions/getQuestionContext';
 
-export { QuizSession } from './components/QuizSession';
 export { PracticePicker } from './components/PracticePicker';
-export { DailyReviewCta } from './components/DailyReviewCta';
-export { StatisticsPanel } from './components/StatisticsPanel';
 export { FlashcardDeck } from './components/FlashcardDeck';
 
 export { getDueNodesSchema, recordPracticeSchema, PRACTICE_MODES } from './schemas/practice';

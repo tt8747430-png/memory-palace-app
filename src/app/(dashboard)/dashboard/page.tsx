@@ -1,13 +1,7 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { Skeleton } from '@/ui';
-import {
-  DashboardOverview,
-  getDashboardStats,
-  getRecentPalaces,
-  sortByRecency,
-  type ActivityEvent,
-} from '@/features/dashboard';
+import { DashboardOverview, getDashboardStats, getRecentPalaces } from '@/features/dashboard';
 import { getDueNodes, getPracticeStats } from '@/features/practice';
 import { getUserProfile } from '@/shared/lib/userProfile';
 
@@ -16,7 +10,6 @@ export const metadata: Metadata = {
 };
 
 const DUE_LIMIT = 5;
-const ACTIVITY_LIMIT = 6;
 
 async function DashboardData() {
   const [profileResult, statsResult, recentResult, dueResult, practiceResult] = await Promise.all([
@@ -36,37 +29,15 @@ async function DashboardData() {
     ? statsResult.data
     : { palaceCount: 0, roomCount: 0, nodeCount: 0 };
   const recentPalaces = recentResult.success ? recentResult.data : [];
-  const dueNodes = dueResult.success
-    ? dueResult.data.map((n) => ({
-        id: n.id,
-        title: n.title,
-        roomTitle: n.roomTitle,
-        palaceTitle: n.palaceTitle,
-      }))
-    : [];
+  const dueCount = dueResult.success ? dueResult.data.length : 0;
   const practice = practiceResult.success ? practiceResult.data : null;
-
-  const events: ActivityEvent[] = practice
-    ? sortByRecency(
-        practice.recentSessions.map<ActivityEvent>((s) => ({
-          kind: 'practice',
-          id: s.id,
-          at: s.practicedAt,
-          nodeTitle: s.nodeTitle,
-          mode: s.mode,
-          correct: s.correct,
-          score: s.score,
-        })),
-      ).slice(0, ACTIVITY_LIMIT)
-    : [];
 
   return (
     <DashboardOverview
       displayName={displayName}
       stats={stats}
       recentPalaces={recentPalaces}
-      dueNodes={dueNodes}
-      events={events}
+      dueCount={dueCount}
       topStreak={practice?.topStreak ?? 0}
       weeklyActivity={practice?.weeklyActivity ?? Array.from({ length: 7 }, () => 0)}
       mastery={{
@@ -96,17 +67,7 @@ function DashboardSkeleton() {
           <Skeleton key={i} className="h-28 rounded-2xl" />
         ))}
       </div>
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="space-y-6 lg:col-span-2">
-          <Skeleton className="h-64 rounded-2xl" />
-          <Skeleton className="h-48 rounded-2xl" />
-        </div>
-        <div className="space-y-6">
-          <Skeleton className="h-48 rounded-2xl" />
-          <Skeleton className="h-48 rounded-2xl" />
-          <Skeleton className="h-48 rounded-2xl" />
-        </div>
-      </div>
+      <Skeleton className="h-64 rounded-2xl" />
     </div>
   );
 }

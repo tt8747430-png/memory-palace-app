@@ -101,25 +101,34 @@ export function Sidebar({ userProfile, onNavigate, forceExpanded }: SidebarProps
           collapsed && 'px-2',
         )}
       >
-        <ul className="space-y-0.5">
-          {sidebarFooterItems.map((item) => (
-            <li key={item.href}>
+        {collapsed ? (
+          <ul className="space-y-0.5">
+            {sidebarFooterItems.map((item) => (
+              <li key={item.href}>
+                <SidebarLink
+                  item={item}
+                  active={isNavItemActive(pathname, item.href)}
+                  collapsed={true}
+                  onNavigate={onNavigate}
+                />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="flex items-center gap-1 rounded-lg">
+            {sidebarFooterItems.map((item) => (
               <SidebarLink
+                key={item.href}
                 item={item}
                 active={isNavItemActive(pathname, item.href)}
-                collapsed={collapsed}
+                collapsed={false}
                 onNavigate={onNavigate}
+                className="flex-1"
               />
-            </li>
-          ))}
-        </ul>
-
-        {!collapsed ? (
-          <div className="mt-1 flex items-center justify-between rounded-md px-3 py-2 text-sm text-sidebar-foreground/80">
-            <span>Theme</span>
+            ))}
             <ModeToggle />
           </div>
-        ) : null}
+        )}
 
         {!forceExpanded ? (
           <button
@@ -155,9 +164,16 @@ interface SidebarLinkProps {
   active: boolean;
   collapsed: boolean;
   onNavigate?: () => void;
+  className?: string;
 }
 
-function SidebarLink({ item, active, collapsed, onNavigate }: SidebarLinkProps): ReactNode {
+function SidebarLink({
+  item,
+  active,
+  collapsed,
+  onNavigate,
+  className,
+}: SidebarLinkProps): ReactNode {
   const { href, icon: Icon, label, badge } = item;
   return (
     <Link
@@ -172,6 +188,7 @@ function SidebarLink({ item, active, collapsed, onNavigate }: SidebarLinkProps):
         active
           ? 'bg-sidebar-accent font-semibold text-sidebar-accent-foreground'
           : 'text-muted-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground',
+        className,
       )}
     >
       {active && !collapsed ? (

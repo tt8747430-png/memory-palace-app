@@ -1,4 +1,4 @@
-import { Home, Building2, Settings, Brain, Gamepad2, type LucideIcon } from 'lucide-react';
+import { Home, Building2, Settings, Layers, type LucideIcon } from 'lucide-react';
 
 export type NavItem = {
   href: string;
@@ -15,7 +15,7 @@ export type NavGroup = {
 export const navItems: readonly NavItem[] = [
   { href: '/dashboard', icon: Home, label: 'Home' },
   { href: '/palaces', icon: Building2, label: 'Palaces' },
-  { href: '/practice', icon: Brain, label: 'Practice' },
+  { href: '/practice', icon: Layers, label: 'Practice' },
   { href: '/settings', icon: Settings, label: 'Settings' },
 ];
 
@@ -29,10 +29,7 @@ export const sidebarGroups: readonly NavGroup[] = [
   },
   {
     title: 'Learn',
-    items: [
-      { href: '/practice', icon: Brain, label: 'Practice' },
-      { href: '/games', icon: Gamepad2, label: 'Games' },
-    ],
+    items: [{ href: '/practice', icon: Layers, label: 'Practice' }],
   },
 ];
 
