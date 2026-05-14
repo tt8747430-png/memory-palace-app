@@ -246,8 +246,8 @@
      * Disable iOS rubber-band overscroll on both axes. We deliberately do NOT
      * `position: fixed` the document — the dashboard already constrains body
      * height via `h-dvh` on its shell wrapper (so body has nowhere to scroll
-     * and the inner <main> handles scrolling), and the marketing pages need
-     * the document itself to scroll. Fixing the html broke the latter.
+     * and the inner <main> handles scrolling), and standalone public pages
+     * like /signup need the document itself to scroll.
      */
     html,
     body {

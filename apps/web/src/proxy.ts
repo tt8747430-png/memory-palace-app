@@ -2,15 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { createSupabaseForProxy } from '@/shared/lib/supabase';
 import { buildCsp } from '@/shared/lib/csp';
 
-const PUBLIC_SEGMENTS = new Set([
-  '',
-  'login',
-  'signup',
-  'about',
-  'join',
-  'callback',
-  'forgot-password',
-]);
+const PUBLIC_SEGMENTS = new Set(['login', 'signup', 'callback', 'forgot-password']);
 
 function firstSegment(pathname: string): string {
   const i = pathname.indexOf('/', 1);
@@ -49,19 +41,27 @@ export async function proxy(request: NextRequest) {
     return r;
   }
 
-  if (user && (seg === 'login' || seg === 'signup' || seg === '')) {
+  if (user && (seg === 'login' || seg === '')) {
     const r = redirectTo(request, supabaseResponse, '/dashboard');
     r.headers.set('Content-Security-Policy', csp);
     return r;
   }
 
-  if (user && seg === 'join') {
+  // Authenticated users may continue an in-progress signup/onboarding wizard
+  // (steps 2–5) after email verification, but should not see step 1.
+  if (user && seg === 'signup') {
     const step = parseInt(request.nextUrl.searchParams.get('step') ?? '1', 10);
     if (Number.isNaN(step) || step <= 1) {
       const r = redirectTo(request, supabaseResponse, '/dashboard');
       r.headers.set('Content-Security-Policy', csp);
       return r;
     }
+  }
+
+  if (!user && seg === '') {
+    const r = redirectTo(request, supabaseResponse, '/login');
+    r.headers.set('Content-Security-Policy', csp);
+    return r;
   }
 
   const response = NextResponse.next({ request });

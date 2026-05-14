@@ -62,8 +62,6 @@ jobs:
       - name: Build web app
         run: pnpm turbo build --filter=@memory-palace/web
         env:
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM: ${{ github.repository_owner }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
 
@@ -90,9 +88,6 @@ jobs:
 
       - name: Lint
         run: pnpm turbo lint
-        env:
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM: ${{ github.repository_owner }}
 
       - name: Check formatting
         run: pnpm format:check
@@ -120,9 +115,6 @@ jobs:
 
       - name: Type check
         run: pnpm turbo typecheck
-        env:
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM: ${{ github.repository_owner }}
 
   dependency-audit:
     name: Dependency Security Audit
@@ -197,9 +189,6 @@ jobs:
 
       - name: Run unit & component tests with coverage
         run: pnpm turbo test:unit -- --coverage
-        env:
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM: ${{ github.repository_owner }}
 
   integration-tests:
     name: Integration Tests (Server Actions + DB)
@@ -244,8 +233,6 @@ jobs:
       - name: Run integration tests
         run: pnpm turbo test:integration
         env:
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM: ${{ github.repository_owner }}
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/memory_palace_test
 
   e2e-tests:
@@ -276,8 +263,6 @@ jobs:
       - name: Build web app
         run: pnpm turbo build --filter=@memory-palace/web
         env:
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM: ${{ github.repository_owner }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
 

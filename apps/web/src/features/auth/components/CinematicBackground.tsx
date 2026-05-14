@@ -33,7 +33,6 @@ export function CinematicBackground({
           <div className="cinematic-aurora" />
           <div className="cinematic-nebula" />
           <div className="cinematic-stars" />
-          {}
           <div
             className="absolute inset-0"
             style={{
@@ -41,7 +40,6 @@ export function CinematicBackground({
                 'radial-gradient(ellipse 80% 60% at 50% 50%, transparent 0%, rgba(0,0,0,0.5) 100%)',
             }}
           />
-          {}
           <div
             className="absolute inset-0 opacity-[0.07] mix-blend-overlay"
             style={{

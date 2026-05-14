@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
-import { Alert, Input, Label } from '@memory-palace/ui';
+import { Alert, Label, PasswordInput } from '@memory-palace/ui';
 import { updatePassword } from '../actions/updatePassword';
 import { initialAuthFormState } from '../actions/types';
 import { AuthSubmitButton } from './AuthSubmitButton';
@@ -16,10 +16,9 @@ export function UpdatePasswordForm() {
         <Label htmlFor="new-password" className={authLabelClass}>
           New password
         </Label>
-        <Input
+        <PasswordInput
           id="new-password"
           name="password"
-          type="password"
           placeholder="••••••••"
           required
           autoComplete="new-password"

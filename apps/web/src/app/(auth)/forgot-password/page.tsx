@@ -1,6 +1,5 @@
 import Link from 'next/link';
-import { ForgotPasswordForm } from '@/features/auth/components/ForgotPasswordForm';
-import { AuthShell } from '@/features/marketing';
+import { AuthShell, ForgotPasswordForm } from '@/features/auth';
 
 function ForgotPasswordPage() {
   return (

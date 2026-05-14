@@ -29,7 +29,7 @@ export async function createWizardAccount(
   const supabase = await createSupabaseFromCookies();
   const { data, error } = await supabase.auth.signUp({
     ...parsed.data,
-    options: { emailRedirectTo: await buildCallbackUrl('/join?step=2') },
+    options: { emailRedirectTo: await buildCallbackUrl('/signup?step=2') },
   });
 
   if (error) return { status: 'error', message: error.message };

@@ -5,7 +5,9 @@
       "Bash(pnpm --filter @memory-palace/web exec tsc --noEmit)",
       "Bash(echo \"EXIT=$?\")",
       "Bash(echo \"LINT=$?\")",
-      "Bash(pnpm --filter @memory-palace/web exec next lint)"
+      "Bash(pnpm --filter @memory-palace/web exec next lint)",
+      "Bash(pnpm --filter @memory-palace/web test:unit -- --run features/auth)",
+      "Bash(echo \"TESTS=$?\")"
     ]
   },
   "enabledPlugins": {

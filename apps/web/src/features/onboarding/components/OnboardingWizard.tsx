@@ -63,7 +63,7 @@ export function OnboardingWizard() {
   }));
 
   useEffect(() => {
-    router.replace(`/join?step=${state.step}`, { scroll: false });
+    router.replace(`/signup?step=${state.step}`, { scroll: false });
   }, [state.step, router]);
 
   const canGoBack = state.step > 1 && state.step < TOTAL_STEPS;

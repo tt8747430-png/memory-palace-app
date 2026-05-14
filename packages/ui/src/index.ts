@@ -1,6 +1,7 @@
 export { Alert, AlertTitle, AlertDescription, alertVariants } from './components/alert';
 export { Button, buttonVariants } from './components/button';
 export { Input } from './components/input';
+export { PasswordInput, type PasswordInputProps } from './components/password-input';
 export { Skeleton } from './components/skeleton';
 export {
   Sheet,

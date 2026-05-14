@@ -78,7 +78,6 @@ export function AuthShell({
 }: AuthShellProps) {
   return (
     <main className="flex min-h-dvh w-full lg:h-full">
-      {}
       <aside className="relative hidden h-full w-[52%] flex-col items-center justify-end overflow-hidden rounded-3xl px-12 pb-32 shadow-2xl lg:flex">
         <CinematicBackground />
 
@@ -117,7 +116,6 @@ export function AuthShell({
         </m.div>
       </aside>
 
-      {}
       <section className="flex flex-1 flex-col items-center justify-center overflow-y-auto px-4 py-12 sm:px-12 lg:overflow-hidden lg:py-6 lg:px-16 xl:px-24">
         <m.div
           initial={{ opacity: 0 }}
@@ -125,9 +123,8 @@ export function AuthShell({
           transition={{ duration: 0.8, ease: 'easeOut' }}
           className="w-full max-w-md space-y-8 sm:space-y-10 lg:space-y-6"
         >
-          {}
           <Link
-            href="/"
+            href="/login"
             className="flex items-center gap-2 text-white lg:hidden"
             aria-label="Memory Palace home"
           >

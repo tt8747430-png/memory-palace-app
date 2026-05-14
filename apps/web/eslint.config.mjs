@@ -31,9 +31,6 @@ const eslintConfig = defineConfig([
   {
     files: ['src/**/*.{ts,tsx}'],
     ignores: [
-      'src/app/(marketing)/**',
-      'src/features/marketing/**',
-
       'src/app/_brand-icon.tsx',
       'src/app/opengraph-image.tsx',
       'src/app/icon.tsx',
@@ -46,7 +43,7 @@ const eslintConfig = defineConfig([
           selector:
             'Literal[value=/\\b(?:text|bg|border|from|to|via|ring|fill|stroke)-(?:gold|emerald|rose|cyan|amber)(?!-)(?:\\/[0-9]+)?\\b/]',
           message:
-            'Accent palette tokens (gold/emerald/rose/cyan/amber) are marketing-only — use semantic tokens (primary/accent/success/warning) instead. See ADR 9C.',
+            'Accent palette tokens (gold/emerald/rose/cyan/amber) are not part of the semantic palette — use primary/accent/success/warning instead. See ADR 9C.',
         },
       ],
     },

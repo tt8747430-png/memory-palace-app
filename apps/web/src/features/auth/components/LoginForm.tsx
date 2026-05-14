@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useActionState } from 'react';
-import { Alert, Input, Label } from '@memory-palace/ui';
+import { Alert, Input, Label, PasswordInput } from '@memory-palace/ui';
 import { signIn } from '../actions/signIn';
 import { initialAuthFormState } from '../actions/types';
 import { AuthSubmitButton } from './AuthSubmitButton';
@@ -39,10 +39,9 @@ export function LoginForm() {
             Forgot?
           </Link>
         </div>
-        <Input
+        <PasswordInput
           id="password"
           name="password"
-          type="password"
           placeholder="••••••••"
           required
           autoComplete="current-password"

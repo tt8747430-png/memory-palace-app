@@ -26,6 +26,18 @@ vi.mock('@memory-palace/ui', () => ({
     return <button {...rest}>{children}</button>;
   },
   Input: (props: React.InputHTMLAttributes<HTMLInputElement>) => <input {...props} />,
+  PasswordInput: ({
+    showLabel,
+    hideLabel,
+    ...props
+  }: React.InputHTMLAttributes<HTMLInputElement> & {
+    showLabel?: string;
+    hideLabel?: string;
+  }) => {
+    void showLabel;
+    void hideLabel;
+    return <input type="password" {...props} />;
+  },
   Label: ({ children, ...props }: React.LabelHTMLAttributes<HTMLLabelElement>) => (
     <label {...props}>{children}</label>
   ),

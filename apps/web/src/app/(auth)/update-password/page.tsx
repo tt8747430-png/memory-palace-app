@@ -1,5 +1,4 @@
-import { UpdatePasswordForm } from '@/features/auth/components/UpdatePasswordForm';
-import { AuthShell } from '@/features/marketing';
+import { AuthShell, UpdatePasswordForm } from '@/features/auth';
 
 function UpdatePasswordPage() {
   return (

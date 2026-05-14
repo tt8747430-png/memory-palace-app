@@ -2,35 +2,22 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { LoginForm } from '../components/LoginForm';
-import { SignupForm } from '../components/SignupForm';
 import type { AuthFormState } from '../actions/types';
 
 const mockSignIn = vi.fn<(prev: AuthFormState, formData: FormData) => Promise<AuthFormState>>();
-const mockSignUp = vi.fn<(prev: AuthFormState, formData: FormData) => Promise<AuthFormState>>();
 
 vi.mock('../actions/signIn', () => ({
   signIn: (prev: AuthFormState, formData: FormData) => mockSignIn(prev, formData),
-}));
-vi.mock('../actions/signUp', () => ({
-  signUp: (prev: AuthFormState, formData: FormData) => mockSignUp(prev, formData),
 }));
 
 describe('Auth forms (real UI primitives)', () => {
   beforeEach(() => {
     mockSignIn.mockReset();
-    mockSignUp.mockReset();
   });
 
   it('LoginForm fields are accessible via label text', () => {
     mockSignIn.mockResolvedValue({ status: 'idle' });
     render(<LoginForm />);
-    expect(screen.getByLabelText('Email')).toBeInTheDocument();
-    expect(screen.getByLabelText('Password')).toBeInTheDocument();
-  });
-
-  it('SignupForm fields are accessible via label text', () => {
-    mockSignUp.mockResolvedValue({ status: 'idle' });
-    render(<SignupForm />);
     expect(screen.getByLabelText('Email')).toBeInTheDocument();
     expect(screen.getByLabelText('Password')).toBeInTheDocument();
   });
@@ -41,14 +28,6 @@ describe('Auth forms (real UI primitives)', () => {
     const button = screen.getByRole('button', { name: 'Sign In' });
     expect(button).toBeInTheDocument();
     expect(button.textContent).toBe('Sign In');
-  });
-
-  it('SignupForm submit button renders the "Create Account" label', () => {
-    mockSignUp.mockResolvedValue({ status: 'idle' });
-    render(<SignupForm />);
-    const button = screen.getByRole('button', { name: 'Create Account' });
-    expect(button).toBeInTheDocument();
-    expect(button.textContent).toBe('Create Account');
   });
 
   it('LoginForm submit button reaches the action when clicked', async () => {

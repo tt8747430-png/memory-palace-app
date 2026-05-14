@@ -23,7 +23,7 @@ features/palaces/
   index.ts       # barrel — re-export actions, schemas, components used by app/
 ```
 
-App routes in `apps/web/src/app/(dashboard|auth|marketing)/**` import only from feature `index.ts` barrels, never deep paths. Cross-feature shared code goes under `apps/web/src/shared/{lib,components,hooks}`.
+App routes in `apps/web/src/app/(dashboard|auth)/**` import only from feature `index.ts` barrels, never deep paths. Cross-feature shared code goes under `apps/web/src/shared/{lib,components,hooks}`. There is no marketing route group or `features/marketing` — unauthenticated `/` is redirected to `/login` by `proxy.ts`.
 
 ## Server actions — always use `defineAction`
 
@@ -37,7 +37,11 @@ Use `getDb()` from `@memory-palace/db` and import operators (`eq`, `and`, `desc`
 
 ## Auth & middleware
 
-There is no `middleware.ts`. Next.js 16 uses `apps/web/src/proxy.ts` (the `proxy` export). A CI guardrail (`scripts/ci/check-guardrails.mjs`) fails the build if `middleware.ts` is ever added. The proxy handles Supabase session refresh, route gating (see `PUBLIC_SEGMENTS`), and injects the CSP from `@/shared/lib/csp`.
+There is no `middleware.ts`. Next.js 16 uses `apps/web/src/proxy.ts` (the `proxy` export). A CI guardrail (`scripts/ci/check-guardrails.mjs`) fails the build if `middleware.ts` is ever added. The proxy handles Supabase session refresh, route gating (see `PUBLIC_SEGMENTS` — currently `login`, `signup`, `callback`, `forgot-password`), and injects the CSP from `@/shared/lib/csp`. Unauthenticated `/` is redirected to `/login`; there is no public landing page.
+
+`/signup` is the single signup entry and hosts the full `OnboardingWizard` (5 steps: create account → name palace → choose theme → add node → complete). Authenticated users hitting `/signup` are redirected to `/dashboard` unless `?step=2..5` is set (so the email-verification round-trip can resume the wizard). The simple email/password `SignupForm` and `signUp` action no longer exist — onboarding owns signup.
+
+`AuthShell` (split-screen auth layout with cinematic background, used by `/login`, `/forgot-password`, `/update-password`) lives in `@/features/auth` along with `CinematicBackground` and `Starfield`. The `/signup` page consumes `CinematicBackground` directly (no AuthShell — it uses the full-bleed wizard layout).
 
 Server-side Supabase: `createSupabaseForProxy` / `getCurrentUser` in `@/shared/lib/supabase`. Browser client: `@/shared/lib/supabase-browser`.
 

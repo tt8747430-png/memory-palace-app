@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
-import { Button, Input, Label } from '@memory-palace/ui';
+import { Button, Input, Label, PasswordInput } from '@memory-palace/ui';
 import { createWizardAccount, type WizardAccountState } from '../../actions/createWizardAccount';
 import {
   onboardingInputClass,
@@ -69,10 +69,9 @@ export function StepCreateAccount({ onSuccess }: StepCreateAccountProps) {
           <Label htmlFor="wizard-password" className={onboardingLabelClass}>
             Password
           </Label>
-          <Input
+          <PasswordInput
             id="wizard-password"
             name="password"
-            type="password"
             autoComplete="new-password"
             placeholder="At least 8 characters"
             required
