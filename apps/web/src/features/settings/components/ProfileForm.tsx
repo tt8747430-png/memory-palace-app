@@ -36,7 +36,7 @@ async function profileFormAction(
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" size="md" disabled={pending}>
+    <Button type="submit" size="md" disabled={pending} className="w-full sm:w-auto">
       {pending ? 'Saving…' : 'Save Changes'}
     </Button>
   );

@@ -44,9 +44,9 @@ const MODES: ReadonlyArray<GameMode> = [
 
 export default function GamesPage() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 pb-(--height-bottom-nav) sm:space-y-8 md:pb-0">
       <header>
-        <h1 className="text-2xl font-bold md:text-3xl">Games</h1>
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Games</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Pick a mode. Each game can be scoped to a single room, a palace, or your full review
           queue.
@@ -55,7 +55,7 @@ export default function GamesPage() {
 
       <DailyReviewCta />
 
-      <section className="grid gap-3 md:grid-cols-3">
+      <section className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
         {MODES.map((mode) => {
           const Icon = mode.icon;
           return (
@@ -115,7 +115,7 @@ async function PalaceList() {
   }
 
   return (
-    <ul className="mt-4 grid gap-3 md:grid-cols-2">
+    <ul className="mt-4 grid gap-3 sm:grid-cols-2">
       {palaces.map((p) => (
         <li
           key={p.id}
@@ -129,9 +129,9 @@ async function PalaceList() {
           </div>
           <Link
             href={`/palaces/${p.id}`}
-            className="inline-flex shrink-0 items-center gap-1 rounded-md border px-3 py-1.5 text-xs hover:bg-muted"
+            className="inline-flex min-h-touch shrink-0 items-center gap-1.5 rounded-md border px-3 py-2 text-xs font-medium hover:bg-muted"
           >
-            <Footprints className="h-3 w-3" /> Open
+            <Footprints className="h-3.5 w-3.5" /> Open
           </Link>
         </li>
       ))}

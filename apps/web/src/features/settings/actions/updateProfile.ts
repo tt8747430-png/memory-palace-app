@@ -19,7 +19,7 @@ export const updateProfile = defineAction({
       .where(eq(users.id, user.id))
       .returning({ id: users.id, displayName: users.displayName, avatarUrl: users.avatarUrl });
     if (!updated) throw new ActionError('NOT_FOUND', 'User profile not found.');
-    revalidatePath('/settings');
+    revalidatePath('/settings/profile');
     revalidatePath('/');
     return updated;
   },

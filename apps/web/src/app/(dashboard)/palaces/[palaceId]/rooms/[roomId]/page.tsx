@@ -3,9 +3,15 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronRight, Footprints } from 'lucide-react';
 import { getPalaceById } from '@/features/palaces';
-import { getRoomById } from '@/features/rooms';
+import {
+  getRoomById,
+  getRoomRecentActivity,
+  RoomInspector,
+  RoomInspectorToggle,
+} from '@/features/rooms';
 import { getRoomNodes } from '@/features/nodes';
 import { RoomCanvas, CanvasErrorBoundary } from '@/features/spatial-canvas';
+import { describeEvent, formatRelative, type ActivityEvent } from '@/features/dashboard';
 
 const getCachedPalace = cache((palaceId: string) => getPalaceById({ id: palaceId }));
 const getCachedRoom = cache((roomId: string, palaceId: string) =>
@@ -28,10 +34,11 @@ export async function generateMetadata({ params }: RoomPageProps) {
 export default async function RoomPage({ params }: RoomPageProps) {
   const { palaceId, roomId } = await params;
 
-  const [palaceResult, roomResult, nodesResult] = await Promise.all([
+  const [palaceResult, roomResult, nodesResult, activityResult] = await Promise.all([
     getCachedPalace(palaceId),
     getCachedRoom(roomId, palaceId),
     getRoomNodes({ roomId }),
+    getRoomRecentActivity({ id: roomId, palaceId }),
   ]);
 
   if (!palaceResult.success || !roomResult.success) notFound();
@@ -39,6 +46,25 @@ export default async function RoomPage({ params }: RoomPageProps) {
   const palace = palaceResult.data;
   const room = roomResult.data;
   const initialNodes = nodesResult.success ? nodesResult.data : [];
+
+  const activityRows = activityResult.success
+    ? activityResult.data.map((r) => {
+        const event: ActivityEvent = {
+          kind: 'practice',
+          id: r.id,
+          at: r.practicedAt,
+          nodeTitle: r.nodeTitle,
+          mode: r.mode,
+          correct: r.correct,
+          score: r.score,
+        };
+        return {
+          id: r.id,
+          description: describeEvent(event),
+          timestamp: formatRelative(r.practicedAt),
+        };
+      })
+    : [];
 
   return (
     <div className="-mx-4 -my-6 flex h-[calc(100dvh-3.5rem-3rem-var(--height-bottom-nav)-env(safe-area-inset-top)-env(safe-area-inset-bottom))] flex-col sm:-mx-6 md:h-dvh lg:-mx-8">
@@ -58,21 +84,36 @@ export default async function RoomPage({ params }: RoomPageProps) {
           <ChevronRight className="h-3.5 w-3.5 shrink-0" />
           <h1 className="truncate font-semibold text-foreground">{room.title}</h1>
         </nav>
-        {initialNodes.length > 0 ? (
-          <Link
-            href={`/palaces/${palaceId}/rooms/${roomId}/journey`}
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-md border bg-background px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted"
-          >
-            <Footprints className="h-4 w-4" /> Start journey
-          </Link>
-        ) : null}
+        <div className="flex shrink-0 items-center gap-2">
+          {initialNodes.length > 0 ? (
+            <Link
+              href={`/palaces/${palaceId}/rooms/${roomId}/journey`}
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-md border bg-background px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted"
+            >
+              <Footprints className="h-4 w-4" /> Start journey
+            </Link>
+          ) : null}
+          <RoomInspectorToggle />
+        </div>
       </div>
 
       {}
-      <div className="relative min-h-0 flex-1">
-        <CanvasErrorBoundary>
-          <RoomCanvas roomId={roomId} initialNodes={initialNodes} palaceMode={palace.mode} />
-        </CanvasErrorBoundary>
+      <div className="flex min-h-0 flex-1">
+        <div className="relative min-h-0 flex-1">
+          <CanvasErrorBoundary>
+            <RoomCanvas roomId={roomId} initialNodes={initialNodes} palaceMode={palace.mode} />
+          </CanvasErrorBoundary>
+        </div>
+        <RoomInspector
+          room={{
+            title: room.title,
+            nodeCount: initialNodes.length,
+            createdAt: room.createdAt,
+            updatedAt: room.updatedAt,
+          }}
+          palace={{ title: palace.title, mode: palace.mode }}
+          activityRows={activityRows}
+        />
       </div>
     </div>
   );

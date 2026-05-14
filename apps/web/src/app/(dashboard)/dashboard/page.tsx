@@ -1,35 +1,120 @@
 import { Suspense } from 'react';
 import { Skeleton } from '@memory-palace/ui';
-import { DashboardBento } from './_components/DashboardBento';
-import { StatisticsPanelSection } from './_components/StatisticsPanelSection';
+import {
+  DashboardOverview,
+  getDashboardStats,
+  getRecentPalaces,
+  sortByRecency,
+  type ActivityEvent,
+} from '@/features/dashboard';
+import { getDueNodes, getPracticeStats } from '@/features/practice';
+import { getUserProfile } from '@/shared/lib/userProfile';
 
 export const metadata = {
   title: 'Home',
   description: 'Your Memory Palace dashboard — stats, recent palaces, and quick actions.',
 };
 
-export default function DashboardPage() {
+const DUE_LIMIT = 5;
+const ACTIVITY_LIMIT = 6;
+
+async function DashboardData() {
+  const [profileResult, statsResult, recentResult, dueResult, practiceResult] = await Promise.all([
+    getUserProfile(),
+    getDashboardStats(),
+    getRecentPalaces(),
+    getDueNodes({ limit: DUE_LIMIT }),
+    getPracticeStats(),
+  ]);
+
+  const displayName =
+    profileResult.success && profileResult.data.displayName.trim()
+      ? profileResult.data.displayName.trim()
+      : 'there';
+
+  const stats = statsResult.success
+    ? statsResult.data
+    : { palaceCount: 0, roomCount: 0, nodeCount: 0 };
+  const recentPalaces = recentResult.success ? recentResult.data : [];
+  const dueNodes = dueResult.success
+    ? dueResult.data.map((n) => ({
+        id: n.id,
+        title: n.title,
+        roomTitle: n.roomTitle,
+        palaceTitle: n.palaceTitle,
+      }))
+    : [];
+  const practice = practiceResult.success ? practiceResult.data : null;
+
+  const events: ActivityEvent[] = practice
+    ? sortByRecency(
+        practice.recentSessions.map<ActivityEvent>((s) => ({
+          kind: 'practice',
+          id: s.id,
+          at: s.practicedAt,
+          nodeTitle: s.nodeTitle,
+          mode: s.mode,
+          correct: s.correct,
+          score: s.score,
+        })),
+      ).slice(0, ACTIVITY_LIMIT)
+    : [];
+
+  return (
+    <DashboardOverview
+      displayName={displayName}
+      stats={stats}
+      recentPalaces={recentPalaces}
+      dueNodes={dueNodes}
+      events={events}
+      topStreak={practice?.topStreak ?? 0}
+      weeklyActivity={practice?.weeklyActivity ?? Array.from({ length: 7 }, () => 0)}
+      mastery={{
+        mastered: practice?.mastery.mastered ?? 0,
+        total: practice?.mastery.total ?? 0,
+      }}
+    />
+  );
+}
+
+function DashboardSkeleton() {
   return (
     <div className="space-y-6 sm:space-y-8">
-      <Suspense
-        fallback={
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-6 sm:gap-4">
-            <Skeleton className="col-span-2 h-56 rounded-2xl sm:col-span-4 sm:row-span-2 sm:h-full" />
-            <Skeleton className="col-span-1 h-28 rounded-2xl sm:col-span-2" />
-            <Skeleton className="col-span-1 h-28 rounded-2xl sm:col-span-2" />
-            <Skeleton className="col-span-1 h-24 rounded-2xl sm:col-span-2" />
-            <Skeleton className="col-span-1 h-24 rounded-2xl sm:col-span-2" />
-            <Skeleton className="col-span-2 h-24 rounded-2xl sm:col-span-2" />
-            <Skeleton className="col-span-2 h-40 rounded-2xl sm:col-span-6" />
-          </div>
-        }
-      >
-        <DashboardBento />
-      </Suspense>
-
-      <Suspense fallback={<Skeleton className="h-64 rounded-xl" />}>
-        <StatisticsPanelSection />
-      </Suspense>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div className="space-y-2">
+          <Skeleton className="h-3 w-32 rounded" />
+          <Skeleton className="h-8 w-64 rounded" />
+          <Skeleton className="h-4 w-72 rounded" />
+        </div>
+        <div className="flex gap-2">
+          <Skeleton className="h-10 w-28 rounded-md" />
+          <Skeleton className="h-10 w-28 rounded-md" />
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Skeleton key={i} className="h-28 rounded-2xl" />
+        ))}
+      </div>
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="space-y-6 lg:col-span-2">
+          <Skeleton className="h-64 rounded-2xl" />
+          <Skeleton className="h-48 rounded-2xl" />
+        </div>
+        <div className="space-y-6">
+          <Skeleton className="h-48 rounded-2xl" />
+          <Skeleton className="h-48 rounded-2xl" />
+          <Skeleton className="h-48 rounded-2xl" />
+        </div>
+      </div>
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<DashboardSkeleton />}>
+      <DashboardData />
+    </Suspense>
   );
 }

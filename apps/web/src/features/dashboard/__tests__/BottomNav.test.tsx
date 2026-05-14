@@ -5,6 +5,7 @@ import { navItems } from '../nav';
 
 vi.mock('next/navigation', () => ({
   usePathname: vi.fn(() => '/dashboard'),
+  useRouter: vi.fn(() => ({ push: vi.fn() })),
 }));
 
 describe('BottomNav', () => {
@@ -44,5 +45,11 @@ describe('BottomNav', () => {
         item.href,
       );
     }
+  });
+
+  it('renders a center FAB button with a context-aware label', () => {
+    render(<BottomNav />);
+    // On /dashboard the FAB action is "New Palace"
+    expect(screen.getByRole('button', { name: /new palace/i })).toBeInTheDocument();
   });
 });

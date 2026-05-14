@@ -148,12 +148,12 @@ export function QuizSession({ nodes, initialMode = 'multiple-choice' }: Props) {
   }
 
   return (
-    <div className="space-y-4 pb-[max(1rem,env(safe-area-inset-bottom))] md:pb-0">
-      <header className="flex items-center justify-between text-xs text-muted-foreground">
-        <span>
+    <div className="space-y-4 pb-(--height-bottom-nav) md:pb-0">
+      <header className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
+        <span className="shrink-0 tabular-nums">
           Question {index + 1} of {nodes.length}
         </span>
-        <span>
+        <span className="min-w-0 truncate text-right">
           {current.palaceTitle} · {current.roomTitle}
         </span>
       </header>
@@ -167,10 +167,11 @@ export function QuizSession({ nodes, initialMode = 'multiple-choice' }: Props) {
             aria-checked={mode === m.value}
             onClick={() => setMode(m.value)}
             className={cn(
-              'rounded-full border px-3 py-1 text-xs transition-colors',
+              'inline-flex min-h-9 items-center rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
               mode === m.value
                 ? 'border-primary bg-primary text-primary-foreground'
-                : 'hover:bg-muted',
+                : 'border-border/60 hover:bg-muted',
             )}
           >
             {m.label}
@@ -203,7 +204,7 @@ export function QuizSession({ nodes, initialMode = 'multiple-choice' }: Props) {
       </div>
 
       {}
-      <div className="sticky bottom-0 -mx-4 space-y-3 border-t bg-background/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur supports-backdrop-filter:bg-background/75 sm:-mx-6 sm:px-6 md:static md:mx-0 md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none">
+      <div className="sticky bottom-(--height-bottom-nav) -mx-4 space-y-3 border-t bg-background/95 px-4 pt-3 pb-3 backdrop-blur supports-backdrop-filter:bg-background/75 sm:-mx-6 sm:px-6 md:static md:mx-0 md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none">
         {question.mode === 'multiple-choice' ? (
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {question.options.map((option, i) => {

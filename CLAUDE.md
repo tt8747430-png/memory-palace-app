@@ -49,6 +49,45 @@ Server-side Supabase: `createSupabaseForProxy` / `getCurrentUser` in `@/shared/l
 - Full-bleed dashboard pages have a fixed height formula due to `DashboardShell`'s `py-6` wrapper — see `/memories/repo/dashboard-full-bleed-height.md` before writing one.
 - shadcn primitives live in `@memory-palace/ui`; use `cn()` from there. Tailwind v4 (`@tailwindcss/postcss`), no `tailwind.config`.
 
+## Page layout vocabulary (Tailwind UI–style)
+
+The dashboard, palace detail, and settings screens follow a consistent stat-row + main/aside grammar so adding a new screen has a clear template:
+
+- **Header strip**: page title (`<h1 class="text-2xl sm:text-3xl font-bold tracking-tight">`), one-line subtitle, right-aligned action buttons. On palace detail, a breadcrumb sits above the title.
+- **KPI row** (dashboard only): `grid-cols-2 sm:grid-cols-4` of `KpiTile`s. Use it for at-a-glance totals; do not mix in CTAs.
+- **Main + aside grid**: `grid gap-6 lg:grid-cols-3` with main spanning `lg:col-span-2` and a single `<aside class="space-y-6">` column. Stacks vertically below `lg:` automatically.
+- **Panel**: `rounded-2xl border bg-card shadow-sm` with a sectioned header (`<header class="border-b px-5 py-3">` + `<h2 class="text-sm font-semibold tracking-tight">`). Lists inside use `divide-y`.
+- **Activity feed**: `ActivityFeedPanel` from `@/features/dashboard` is the canonical timeline component. Shape items as `ActivityEvent` from `features/dashboard/activity.ts` (covers practice + node/room/palace creation). Use `describeEvent`, `formatRelative`, `eventIcon`, and `eventTone` from the same module — do not re-implement these formatters.
+
+## Dashboard home composition
+
+`app/(dashboard)/dashboard/page.tsx` does all cross-feature fetching (feature boundaries forbid `features/dashboard → features/practice`) and passes pure data into `DashboardOverview`. The presentational tree is: `DashboardHeader` → `DashboardKpiRow` → main column (`RecentPalacesPanel`, `ActivityFeedPanel`) + aside (`DuePracticeAside`, `StreakGoalAside`, `QuickLaunchAside`). Add new panels under `features/dashboard/components/` and re-export from the barrel.
+
+## Palace detail composition
+
+`PalaceDetailHeader` accepts a `primaryAction` slot so the page (not the feature) supplies cross-feature buttons like `CreateRoomDialog` — this respects the `features/palaces → features/rooms` boundary block. The right column is `PalaceMetaPanel` (definition list of counts, mastery %, dates). Per-palace activity uses `getPalaceRecentActivity` and renders through the shared `ActivityFeedPanel`.
+
+## Room inspector
+
+The room page (`/palaces/[id]/rooms/[id]`) stays full-bleed and now hosts `RoomInspector` on the right. State lives in `useRoomInspector` (`useSyncExternalStore` + `localStorage` keys `mp:room-inspector-open` / `mp:room-inspector-tab`, mirroring `useSidebarCollapsed`). The header toggle is `RoomInspectorToggle`. Desktop renders an inline `<aside class="lg:w-80">` that animates to `lg:w-0` when closed; mobile uses a `Sheet`. Activity data comes from `getRoomRecentActivity` and is formatted with the same `describeEvent` + `formatRelative` helpers used by the dashboard.
+
+## Settings section layout
+
+Settings is a sectioned tabs nav: `app/(dashboard)/settings/layout.tsx` renders `SettingsNav` (left rail `lg:`, horizontal scroll pills below) next to the active section route. The index `/settings` redirects to `/settings/profile`. Section routes: `profile`, `preferences`, `account`, `data`. Wrap each section's panels in `SettingsSection` (card with bordered header) for visual rhythm. New sections must:
+
+1. Add a route under `app/(dashboard)/settings/<slug>/page.tsx`.
+2. Add an entry to `SETTINGS_SECTIONS` in `features/settings/components/SettingsNav.tsx`.
+3. Server actions go through `defineAction` and call `revalidatePath('/settings/<slug>')`.
+
+## Dashboard shell (sidebar + bottom nav)
+
+- Nav config is the single source of truth: `features/dashboard/nav.ts` exports `navItems` (4 tabs: Home/Palaces/Practice/Settings — drives mobile `BottomNav`), `sidebarGroups` (grouped desktop nav: Workspace, Learn), and `sidebarFooterItems`.
+- Desktop `Sidebar` supports a collapsible icon rail. Persisted state lives in `useSidebarCollapsed` (`useSyncExternalStore` + `localStorage` key `mp:sidebar-collapsed` + custom event for cross-component sync). `DashboardShell`'s `<aside>` width (`md:w-16` ↔ `md:w-64`) reads from the same hook. Pass `forceExpanded` to `Sidebar` when rendering inside `MobileDrawer` (sheet always shows full content).
+- Mobile `BottomNav` is a single pill bar (no separate FAB row) with a raised center FAB. Layout: 2 tabs | center FAB column (`w-14`) | 2 tabs. Active tab indicator uses Framer Motion `layoutId="bottom-nav-pill"` for shared-element transition. FAB action is context-aware via `useFABAction` (palace → New Room, room → New Memory, else New Palace) and uses the `?action=...` URL-param pattern.
+- All tab links and the FAB satisfy the 48px touch target: `min-w-touch min-h-touch` on tabs, `h-14 w-14` on the FAB.
+- CSS vars (in `apps/web/src/app/globals.css`): `--height-bottom-nav: 5.5rem`, `--height-top-bar: 3.5rem`, `--spacing-touch: 48px`. Pages that need their last element tappable above the bar must add their own bottom padding — the shell intentionally does not. Use the Tailwind v4 canonical form `pb-(--height-bottom-nav) md:pb-0` (NOT `pb-[var(--height-bottom-nav)]` — IDE will flag it). Same pattern applies to sticky footers that must clear the bottom nav: `sticky bottom-(--height-bottom-nav) md:static md:bottom-auto` (see [apps/web/src/features/practice/components/QuizSession.tsx](apps/web/src/features/practice/components/QuizSession.tsx)).
+- There is no standalone `MobileFAB` component. The FAB is embedded in `BottomNav`.
+
 ## Commands
 
 ```bash

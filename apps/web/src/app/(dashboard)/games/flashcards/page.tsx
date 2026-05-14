@@ -26,10 +26,10 @@ export default async function FlashcardsPage({ searchParams }: PageProps) {
     const palacesResult = await getPalaces();
     const palaces = palacesResult.success ? palacesResult.data : [];
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 pb-(--height-bottom-nav) md:pb-0">
         <BackToGames />
         <header>
-          <h1 className="text-2xl font-bold md:text-3xl">Flashcards</h1>
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Flashcards</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Pick a scope. Cards cycle through your due-for-review queue with Anki-style ratings.
           </p>
@@ -38,15 +38,15 @@ export default async function FlashcardsPage({ searchParams }: PageProps) {
         <section className="space-y-3">
           <Link
             href="/games/flashcards?all=1"
-            className="flex items-center justify-between rounded-lg border bg-card p-4 hover:bg-muted/40"
+            className="flex min-h-touch items-center justify-between gap-3 rounded-lg border bg-card p-4 hover:bg-muted/40"
           >
-            <div>
+            <div className="min-w-0">
               <p className="font-medium">All palaces</p>
               <p className="text-xs text-muted-foreground">
                 Up to {DECK_LIMIT} due cards across every palace.
               </p>
             </div>
-            <span className="text-xs text-primary">Start →</span>
+            <span className="shrink-0 text-xs font-medium text-primary">Start →</span>
           </Link>
 
           {palaces.length === 0 ? (
@@ -58,7 +58,7 @@ export default async function FlashcardsPage({ searchParams }: PageProps) {
               to start populating decks.
             </p>
           ) : (
-            <ul className="grid gap-2 md:grid-cols-2">
+            <ul className="grid gap-2 sm:grid-cols-2">
               {palaces.map((p) => (
                 <li
                   key={p.id}
@@ -105,12 +105,12 @@ async function RoomLinks({ palaceId }: { palaceId: string }) {
   const result = await getRooms({ palaceId });
   if (!result.success || result.data.length === 0) return null;
   return (
-    <ul className="mt-2 flex flex-wrap gap-1">
+    <ul className="mt-2 flex flex-wrap gap-1.5">
       {result.data.slice(0, 6).map((room) => (
         <li key={room.id}>
           <Link
             href={`/games/flashcards?roomId=${room.id}`}
-            className="inline-flex rounded-full border px-2 py-0.5 text-xs hover:bg-muted"
+            className="inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium hover:bg-muted"
           >
             {room.title}
           </Link>

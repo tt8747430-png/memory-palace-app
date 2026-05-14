@@ -11,6 +11,8 @@ interface ProfileMenuProps {
   displayName: string;
   email?: string | null;
   avatarUrl: string | null;
+  /** Render only the avatar — used by the collapsed sidebar rail. */
+  compact?: boolean;
 }
 
 function MenuRow({
@@ -50,7 +52,7 @@ function MenuRow({
   );
 }
 
-export function ProfileMenu({ displayName, email, avatarUrl }: ProfileMenuProps) {
+export function ProfileMenu({ displayName, email, avatarUrl, compact }: ProfileMenuProps) {
   const [pending, startTransition] = useTransition();
 
   function handleSignOut() {
@@ -65,13 +67,23 @@ export function ProfileMenu({ displayName, email, avatarUrl }: ProfileMenuProps)
         <button
           type="button"
           aria-label="Open profile menu"
-          className="flex min-w-0 flex-1 items-center gap-2.5 rounded-lg px-2 py-1.5 transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          title={compact ? displayName : undefined}
+          className={cn(
+            'flex items-center rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+            compact
+              ? 'h-10 w-10 justify-center hover:bg-muted'
+              : 'min-w-0 flex-1 gap-2.5 px-2 py-1.5 hover:bg-muted',
+          )}
         >
           <Avatar displayName={displayName} avatarUrl={avatarUrl} size="sm" />
-          <span className="min-w-0 flex-1 truncate text-left text-sm font-medium leading-none">
-            {displayName}
-          </span>
-          <ChevronsUpDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+          {!compact ? (
+            <>
+              <span className="min-w-0 flex-1 truncate text-left text-sm font-medium leading-none">
+                {displayName}
+              </span>
+              <ChevronsUpDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+            </>
+          ) : null}
         </button>
       </PopoverTrigger>
 

@@ -13,6 +13,8 @@ export {
   gte,
   ilike,
   inArray,
+  max,
+  min,
   isNotNull,
   isNull,
   lt,

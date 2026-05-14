@@ -44,7 +44,7 @@ export function MobileDrawer({ userProfile }: MobileDrawerProps) {
         <SheetDescription className="sr-only">
           Main navigation links for Memory Palace
         </SheetDescription>
-        <Sidebar userProfile={userProfile} onNavigate={() => setOpen(false)} />
+        <Sidebar userProfile={userProfile} onNavigate={() => setOpen(false)} forceExpanded />
       </SheetContent>
     </Sheet>
   );

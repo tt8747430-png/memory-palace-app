@@ -1,5 +1,14 @@
 {
-    "enabledPlugins": {
-        "typescript-lsp@claude-plugins-official": true
-    }
+  "permissions": {
+    "allow": [
+      "Bash(pnpm --filter @memory-palace/web test:unit -- activity)",
+      "Bash(pnpm --filter @memory-palace/web exec tsc --noEmit)",
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(echo \"LINT=$?\")",
+      "Bash(pnpm --filter @memory-palace/web exec next lint)"
+    ]
+  },
+  "enabledPlugins": {
+    "typescript-lsp@claude-plugins-official": true
+  }
 }

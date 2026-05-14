@@ -1,6 +1,10 @@
 export { createPalace } from './actions/createPalace';
 export { getPalaces } from './actions/getPalaces';
 export { getPalaceById } from './actions/getPalaceById';
+export { getPalaceMeta } from './actions/getPalaceMeta';
+export type { PalaceMeta } from './actions/getPalaceMeta';
+export { getPalaceRecentActivity } from './actions/getPalaceRecentActivity';
+export type { PalaceActivityRow } from './actions/getPalaceRecentActivity';
 export { updatePalace } from './actions/updatePalace';
 export { deletePalace } from './actions/deletePalace';
 export type { DeletePalaceResult } from './actions/deletePalace';
@@ -21,6 +25,8 @@ export type {
   ImportInput,
 } from './schemas/dataTransfer';
 export { PalaceCard } from './components/PalaceCard';
+export { PalaceDetailHeader } from './components/PalaceDetailHeader';
+export { PalaceMetaPanel } from './components/PalaceMetaPanel';
 export { CreatePalaceDialog } from './components/CreatePalaceDialog';
 export { EditPalaceDialog } from './components/EditPalaceDialog';
 export { DeletePalaceButton } from './components/DeletePalaceButton';

@@ -26,10 +26,10 @@ export default async function QuizPage({ searchParams }: PageProps) {
     const palacesResult = await getPalaces();
     const palaces = palacesResult.success ? palacesResult.data : [];
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 pb-(--height-bottom-nav) md:pb-0">
         <BackToGames />
         <header>
-          <h1 className="text-2xl font-bold md:text-3xl">Quiz</h1>
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Quiz</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Choose a palace (or a single room) and we&apos;ll build a quiz from your due nodes.
           </p>
@@ -44,7 +44,7 @@ export default async function QuizPage({ searchParams }: PageProps) {
             to start a quiz.
           </p>
         ) : (
-          <ul className="grid gap-3 md:grid-cols-2">
+          <ul className="grid gap-3 sm:grid-cols-2">
             {palaces.map((p) => (
               <li key={p.id} className="rounded-lg border bg-card p-4">
                 <p className="font-medium">{p.title}</p>
@@ -71,7 +71,7 @@ export default async function QuizPage({ searchParams }: PageProps) {
 
   if (queue.length === 0) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-4 pb-(--height-bottom-nav) md:pb-0">
         <BackToGames />
         <div className="rounded-lg border bg-card p-8 text-center">
           <h1 className="text-lg font-semibold">Nothing to quiz right now</h1>
@@ -91,7 +91,7 @@ export default async function QuizPage({ searchParams }: PageProps) {
           {queue[0]?.palaceTitle}
           {roomId ? ` · ${queue[0]?.roomTitle}` : ''}
         </p>
-        <h1 className="mt-1 text-2xl font-bold md:text-3xl">
+        <h1 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">
           {queue.length} {queue.length === 1 ? 'question' : 'questions'} ready
         </h1>
       </header>
@@ -115,12 +115,12 @@ async function RoomLinks({ palaceId }: { palaceId: string }) {
   const result = await getRooms({ palaceId });
   if (!result.success || result.data.length === 0) return null;
   return (
-    <ul className="mt-2 flex flex-wrap gap-1">
+    <ul className="mt-2 flex flex-wrap gap-1.5">
       {result.data.slice(0, 6).map((room) => (
         <li key={room.id}>
           <Link
             href={`/games/quiz?roomId=${room.id}`}
-            className="inline-flex rounded-full border px-2 py-0.5 text-xs hover:bg-muted"
+            className="inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium hover:bg-muted"
           >
             {room.title}
           </Link>

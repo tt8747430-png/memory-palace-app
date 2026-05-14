@@ -12,9 +12,9 @@ export const metadata = {
 
 export default function PracticePage() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-(--height-bottom-nav) md:pb-0">
       <header>
-        <h1 className="text-2xl font-bold md:text-3xl">Practice</h1>
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Practice</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Spaced repetition keeps memory fresh. Pick a node to start a quiz.
         </p>
