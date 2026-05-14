@@ -4,6 +4,7 @@ import { CommandPaletteProvider, useCommandPalette } from '../CommandPaletteCont
 import { ShortcutsOverlayProvider } from '../ShortcutsOverlayContext';
 import { AppDialogProvider } from '../AppDialogContext';
 import { CommandPalette } from '../CommandPalette';
+import { ReactNode } from 'react';
 
 vi.mock('next/navigation', () => ({
   useRouter: vi.fn(() => ({ push: vi.fn() })),
@@ -18,7 +19,7 @@ vi.mock('@/shared/lib/signOut', () => ({
   signOut: vi.fn().mockResolvedValue(undefined),
 }));
 
-function Wrapper({ children }: { children: React.ReactNode }) {
+function Wrapper({ children }: { children: ReactNode }) {
   return (
     <ShortcutsOverlayProvider>
       <AppDialogProvider>

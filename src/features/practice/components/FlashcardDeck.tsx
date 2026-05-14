@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, ArrowRight, RotateCcw, X } from 'lucide-react';
 import { Button, toast } from '@/ui';
-import { recordPractice } from '../actions/recordPractice';
-import type { DueNodeWithMeta } from '../actions/getDueNodes';
+import { recordPractice } from '@/features/practice';
+import type { DueNodeWithMeta } from '@/features/practice';
 import { SwipeableFlashcard } from './SwipeableFlashcard';
 
 type Quality = 'again' | 'hard' | 'good' | 'easy';

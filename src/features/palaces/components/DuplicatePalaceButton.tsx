@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Copy } from 'lucide-react';
 import { Button, toast } from '@/ui';
-import { duplicatePalace } from '../actions/duplicatePalace';
+import { duplicatePalace } from '@/features/palaces';
 
 interface DuplicatePalaceButtonProps {
   id: string;

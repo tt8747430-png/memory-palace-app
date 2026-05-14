@@ -1,7 +1,7 @@
 import type { ComponentPropsWithoutRef, HTMLAttributes, Ref } from 'react';
 import { Command as CommandPrimitive } from 'cmdk';
 import { Search } from 'lucide-react';
-import { cn } from '../lib/cn';
+import { cn } from '@/ui';
 
 export function Command({
   className,
@@ -50,7 +50,7 @@ export function CommandList({
   return (
     <CommandPrimitive.List
       ref={ref}
-      className={cn('max-h-[300px] overflow-y-auto overflow-x-hidden', className)}
+      className={cn('max-h-75 overflow-y-auto overflow-x-hidden', className)}
       {...props}
     />
   );
@@ -68,8 +68,8 @@ export function CommandGroup({
       ref={ref}
       className={cn(
         'overflow-hidden p-1 text-foreground',
-        '[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5',
-        '[&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground',
+        '**:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:py-1.5',
+        '**:[[cmdk-group-heading]]:text-xs **:[[cmdk-group-heading]]:font-medium **:[[cmdk-group-heading]]:text-muted-foreground',
         className,
       )}
       {...props}

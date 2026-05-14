@@ -1,35 +1,35 @@
 import { z } from 'zod';
 
 const exportNodeSchema = z.object({
-  id: z.string().uuid(),
+  id: z.uuid(),
   title: z.string().min(1).max(200),
   content: z.string().nullable(),
   nodeType: z.enum(['text', 'image', 'link']),
-  positionX: z.number().finite(),
-  positionY: z.number().finite(),
+  positionX: z.number(),
+  positionY: z.number(),
   color: z.string().nullable(),
-  createdAt: z.string().datetime(),
+  createdAt: z.iso.datetime(),
 });
 
 const exportRoomSchema = z.object({
-  id: z.string().uuid(),
+  id: z.uuid(),
   title: z.string().min(1).max(200),
   position: z.number().int().min(0),
-  createdAt: z.string().datetime(),
+  createdAt: z.iso.datetime(),
   nodes: z.array(exportNodeSchema),
 });
 
 const exportPalaceSchema = z.object({
-  id: z.string().uuid(),
+  id: z.uuid(),
   title: z.string().min(1).max(100),
   description: z.string().max(500).nullable(),
-  createdAt: z.string().datetime(),
+  createdAt: z.iso.datetime(),
   rooms: z.array(exportRoomSchema),
 });
 
 export const exportDataSchemaV1 = z.object({
   version: z.literal('1'),
-  exportedAt: z.string().datetime(),
+  exportedAt: z.iso.datetime(),
   palaces: z.array(exportPalaceSchema),
 });
 

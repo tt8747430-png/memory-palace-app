@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import type { SelectPalace } from '@/db';
 import { EditPalaceDialog } from './EditPalaceDialog';
-import { DeletePalaceButton } from './DeletePalaceButton';
+import { DeletePalaceButton } from '@/features/palaces';
 import { DuplicatePalaceButton } from './DuplicatePalaceButton';
 
 interface Props {

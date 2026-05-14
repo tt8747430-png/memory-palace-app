@@ -2,13 +2,14 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { ShortcutsOverlayProvider, useShortcutsOverlay } from '../ShortcutsOverlayContext';
 import { ShortcutsOverlay } from '../ShortcutsOverlay';
+import { ReactNode } from 'react';
 
 function OpenButton() {
   const { openOverlay } = useShortcutsOverlay();
   return <button onClick={openOverlay}>Open shortcuts</button>;
 }
 
-function Wrapper({ children }: { children: React.ReactNode }) {
+function Wrapper({ children }: { children: ReactNode }) {
   return <ShortcutsOverlayProvider>{children}</ShortcutsOverlayProvider>;
 }
 

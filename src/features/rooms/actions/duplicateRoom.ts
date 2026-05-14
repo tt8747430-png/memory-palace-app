@@ -17,6 +17,7 @@ import {
   sql,
 } from '@/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
+import { reattachNodeTags } from '@/shared/lib/reattachNodeTags';
 import { roomIdSchema } from '../schemas/room';
 
 const COPY_SUFFIX = ' (copy)';
@@ -115,26 +116,7 @@ export const duplicateRoom = defineAction({
             ),
           );
 
-        if (sourceTagLinks.length > 0) {
-          const tagNames = Array.from(new Set(sourceTagLinks.map((t) => t.tagName)));
-          const existingTags = await tx
-            .select({ id: tags.id, name: tags.name })
-            .from(tags)
-            .where(and(eq(tags.userId, user.id), inArray(tags.name, tagNames)));
-          const tagByName = new Map(existingTags.map((t) => [t.name, t.id]));
-
-          const links = sourceTagLinks
-            .map((link) => {
-              const newNodeId = nodeIdMap.get(link.nodeId);
-              const tagId = tagByName.get(link.tagName);
-              if (!newNodeId || !tagId) return null;
-              return { nodeId: newNodeId, tagId };
-            })
-            .filter((x): x is { nodeId: string; tagId: string } => x !== null);
-          if (links.length > 0) {
-            await tx.insert(nodeTags).values(links).onConflictDoNothing();
-          }
-        }
+        await reattachNodeTags(tx, sourceTagLinks, nodeIdMap, user.id);
 
         const sourceNodeIds = sourceNodes.map((n) => n.id);
         const sourceEdges = await tx

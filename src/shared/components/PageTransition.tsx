@@ -2,8 +2,9 @@
 
 import { usePathname } from 'next/navigation';
 import { m } from 'framer-motion';
+import { ReactNode } from 'react';
 
-export function PageTransition({ children }: { children: React.ReactNode }) {
+export function PageTransition({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   return (
     <m.div

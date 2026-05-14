@@ -2,7 +2,7 @@
 
 import { Copy, Trash2 } from 'lucide-react';
 import { cn } from '@/ui';
-import { useCanvasStore } from '../store/CanvasStoreContext';
+import { useCanvasStore } from '@/features/spatial-canvas';
 import { useRoomNodeMutations } from '../hooks/useRoomNodeMutations';
 
 interface SelectionToolbarProps {

@@ -1,34 +1,16 @@
 'use client';
 
 import { Plus, MousePointer2, Hand, Grid2x2, Maximize } from 'lucide-react';
-import { useReactFlow } from '@xyflow/react';
 import { cn } from '@/ui';
-import { useCanvasStore } from '../store/CanvasStoreContext';
-import { useRoomNodeMutations } from '../hooks/useRoomNodeMutations';
-import { getCanvasCenterFlowPos, snapPosition } from '../lib/canvasUtils';
+import { useCanvasToolActions } from '../hooks/useCanvasToolActions';
 
 interface CanvasFabProps {
   roomId: string;
 }
 
 export function CanvasFab({ roomId }: CanvasFabProps) {
-  const activeTool = useCanvasStore((s) => s.activeTool);
-  const setActiveTool = useCanvasStore((s) => s.setActiveTool);
-  const snapEnabled = useCanvasStore((s) => s.snapEnabled);
-  const toggleSnap = useCanvasStore((s) => s.toggleSnap);
-  const { addNode } = useRoomNodeMutations(roomId);
-  const { screenToFlowPosition, fitView } = useReactFlow();
-
-  const handleAddNode = () => {
-    const position = getCanvasCenterFlowPos(screenToFlowPosition);
-    addNode.mutate({
-      roomId,
-      title: 'New Node',
-      nodeType: 'text',
-      positionX: snapPosition(position.x, 20, snapEnabled),
-      positionY: snapPosition(position.y, 20, snapEnabled),
-    });
-  };
+  const { activeTool, setActiveTool, snapEnabled, toggleSnap, handleAddNode, fitView } =
+    useCanvasToolActions(roomId);
 
   return (
     <div

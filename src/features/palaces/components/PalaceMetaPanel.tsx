@@ -1,6 +1,6 @@
 import { Clock, DoorOpen, BrainCircuit, Calendar, Sparkles } from 'lucide-react';
 import { cn } from '@/ui';
-import type { PalaceMeta } from '../actions/getPalaceMeta';
+import type { PalaceMeta } from '@/features/palaces';
 
 interface Props {
   meta: PalaceMeta;

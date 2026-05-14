@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { Skeleton } from './skeleton';
+import { Skeleton } from '@/ui';
 
 type SkeletonPlaygroundArgs = {
   width: number;

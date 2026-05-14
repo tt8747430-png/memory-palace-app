@@ -1,10 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { CardSkeleton } from '../CardSkeleton';
+import { ComponentProps } from 'react';
 
 vi.mock('@/ui', () => ({
   cn: (...args: string[]) => args.filter(Boolean).join(' '),
-  Skeleton: ({ className, ...props }: React.ComponentProps<'div'>) => (
+  Skeleton: ({ className, ...props }: ComponentProps<'div'>) => (
     <div data-testid="skeleton" className={className} {...props} />
   ),
 }));

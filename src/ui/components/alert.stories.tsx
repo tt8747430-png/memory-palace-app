@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { CheckCircle2, Info, AlertTriangle, XCircle } from 'lucide-react';
-import { Alert, AlertTitle, AlertDescription } from './alert';
+import { Alert, AlertTitle, AlertDescription } from '@/ui';
 
 type AlertPlaygroundArgs = {
   variant: 'default' | 'info' | 'success' | 'warning' | 'destructive';

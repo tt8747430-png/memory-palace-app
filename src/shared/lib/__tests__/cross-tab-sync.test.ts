@@ -18,14 +18,10 @@ describe('cross-tab-sync', () => {
       close: vi.fn(),
     };
 
-    class MockBroadcastChannel {
-      postMessage = mockInstance.postMessage;
-      addEventListener = mockInstance.addEventListener;
-      removeEventListener = mockInstance.removeEventListener;
-      close = mockInstance.close;
-    }
-
-    vi.stubGlobal('BroadcastChannel', MockBroadcastChannel);
+    vi.stubGlobal(
+      'BroadcastChannel',
+      vi.fn().mockImplementation(() => mockInstance),
+    );
   });
 
   afterEach(() => {

@@ -1,12 +1,12 @@
 'use client';
 
-import { createContext, useContext, useState } from 'react';
+import { createContext, ReactNode, useContext, useState } from 'react';
 import { useStore } from 'zustand';
 import { createCanvasStore, type CanvasState, type CanvasStore } from './canvasStore';
 
 const CanvasStoreContext = createContext<CanvasStore | null>(null);
 
-export function CanvasStoreProvider({ children }: { children: React.ReactNode }) {
+export function CanvasStoreProvider({ children }: { children: ReactNode }) {
   const [store] = useState(() => createCanvasStore());
 
   return <CanvasStoreContext.Provider value={store}>{children}</CanvasStoreContext.Provider>;

@@ -3,7 +3,7 @@
 import { Trash2 } from 'lucide-react';
 import { Button } from '@/ui';
 import { ConfirmDeleteDialog } from '@/shared/components/ConfirmDeleteDialog';
-import { deleteRoom } from '../actions/deleteRoom';
+import { deleteRoom } from '@/features/rooms';
 
 interface DeleteRoomButtonProps {
   id: string;

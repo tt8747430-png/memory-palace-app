@@ -5,7 +5,7 @@ import { createSupabaseFromCookies } from '@/shared/lib/supabase';
 import { buildCallbackUrl } from '@/shared/lib/callbackUrl';
 
 const schema = z.object({
-  email: z.string().trim().toLowerCase().email('Enter a valid email address'),
+  email: z.email({ error: 'Enter a valid email address' }).trim().toLowerCase(),
   password: z.string().min(8, 'Password must be at least 8 characters'),
 });
 

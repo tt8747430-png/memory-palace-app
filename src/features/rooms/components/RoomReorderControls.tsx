@@ -4,7 +4,7 @@ import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronUp, ChevronDown, Loader2 } from 'lucide-react';
 import { Button, toast } from '@/ui';
-import { setRoomOrder } from '../actions/setRoomOrder';
+import { setRoomOrder } from '@/features/rooms';
 
 interface Props {
   palaceId: string;

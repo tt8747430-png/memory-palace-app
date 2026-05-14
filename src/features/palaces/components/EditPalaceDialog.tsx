@@ -18,7 +18,7 @@ import {
   Alert,
   cn,
 } from '@/ui';
-import { updatePalace } from '../actions/updatePalace';
+import { updatePalace } from '@/features/palaces';
 
 interface EditPalaceDialogProps {
   palace: SelectPalace;

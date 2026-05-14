@@ -5,7 +5,7 @@ import { getDb, palaces, eq, and } from '@/db';
 import { defineAction } from '@/shared/lib/action';
 
 const schema = z.object({
-  palaceId: z.string().uuid(),
+  palaceId: z.uuid(),
   color: z.string().max(32).optional(),
   icon: z.string().max(10).optional(),
 });

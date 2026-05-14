@@ -23,13 +23,13 @@ export function useRealtimeNodes(roomId: string): void {
           filter: `room_id=eq.${roomId}`,
         },
         () => {
-          queryClient.invalidateQueries({ queryKey });
+          void queryClient.invalidateQueries({ queryKey });
         },
       )
       .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      void supabase.removeChannel(channel);
     };
   }, [roomId, queryClient]);
 }

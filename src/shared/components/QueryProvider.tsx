@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { useCrossTabSync } from '@/shared/hooks/useCrossTabSync';
@@ -22,7 +22,7 @@ function CrossTabSyncMount() {
   return null;
 }
 
-export function QueryProvider({ children }: { children: React.ReactNode }) {
+export function QueryProvider({ children }: { children: ReactNode }) {
   const [client] = useState(() => makeQueryClient());
 
   return (

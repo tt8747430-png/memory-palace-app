@@ -11,7 +11,7 @@ export const createNode = defineAction({
   handler: async ({ user, input }) => {
     const db = getDb();
 
-    const node = await db.transaction(async (tx) => {
+    return db.transaction(async (tx) => {
       const [room] = await tx
         .select({ id: rooms.id })
         .from(rooms)
@@ -54,7 +54,5 @@ export const createNode = defineAction({
       if (!created) throw new ActionError('INTERNAL_ERROR', 'Insert returned no row.');
       return created;
     });
-
-    return node;
   },
 });

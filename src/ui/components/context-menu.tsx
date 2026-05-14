@@ -1,7 +1,7 @@
 import type { ComponentPropsWithoutRef, HTMLAttributes, Ref } from 'react';
 import * as ContextMenuPrimitive from '@radix-ui/react-context-menu';
 import { Check, ChevronRight, Circle } from 'lucide-react';
-import { cn } from '../lib/cn';
+import { cn } from '@/ui';
 
 export const ContextMenu = ContextMenuPrimitive.Root;
 export const ContextMenuTrigger = ContextMenuPrimitive.Trigger;
@@ -49,7 +49,7 @@ export function ContextMenuSubContent({
     <ContextMenuPrimitive.SubContent
       ref={ref}
       className={cn(
-        'z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md',
+        'z-50 min-w-32 overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md',
         'data-[state=open]:animate-in data-[state=closed]:animate-out',
         'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
         'data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
@@ -74,7 +74,7 @@ export function ContextMenuContent({
       <ContextMenuPrimitive.Content
         ref={ref}
         className={cn(
-          'z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md',
+          'z-50 min-w-32 overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md',
           'animate-in fade-in-80 data-[state=open]:animate-in data-[state=closed]:animate-out',
           'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
           'data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
@@ -103,7 +103,7 @@ export function ContextMenuItem({
       className={cn(
         'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none',
         'focus:bg-accent focus:text-accent-foreground',
-        'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+        'data-disabled:pointer-events-none data-disabled:opacity-50',
         '[&>svg]:size-4 [&>svg]:shrink-0',
         inset && 'pl-8',
         className,
@@ -128,7 +128,7 @@ export function ContextMenuCheckboxItem({
       className={cn(
         'relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none',
         'focus:bg-accent focus:text-accent-foreground',
-        'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+        'data-disabled:pointer-events-none data-disabled:opacity-50',
         className,
       )}
       checked={checked}
@@ -158,7 +158,7 @@ export function ContextMenuRadioItem({
       className={cn(
         'relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none',
         'focus:bg-accent focus:text-accent-foreground',
-        'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+        'data-disabled:pointer-events-none data-disabled:opacity-50',
         className,
       )}
       {...props}

@@ -25,7 +25,7 @@ import {
   Label,
 } from '@/ui';
 import { cn } from '@/ui';
-import { useCanvasStore } from '../store/CanvasStoreContext';
+import { useCanvasStore } from '@/features/spatial-canvas';
 import { useNodesQuery } from '../hooks/useNodesQuery';
 import { useRoomNodeMutations, type NodePatch } from '../hooks/useRoomNodeMutations';
 import { useIsMobile } from '@/shared/hooks/useIsMobile';

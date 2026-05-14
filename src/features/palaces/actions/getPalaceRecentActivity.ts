@@ -20,7 +20,7 @@ export const getPalaceRecentActivity = defineAction({
   name: 'getPalaceRecentActivity',
   schema: palaceIdSchema,
   handler: async ({ user, input }): Promise<PalaceActivityRow[]> => {
-    const rows = await getDb()
+    return getDb()
       .select({
         id: practiceSessions.id,
         nodeTitle: nodes.title,
@@ -36,7 +36,5 @@ export const getPalaceRecentActivity = defineAction({
       .where(and(eq(rooms.palaceId, input.id), eq(practiceSessions.userId, user.id)))
       .orderBy(desc(practiceSessions.practicedAt))
       .limit(LIMIT);
-
-    return rows;
   },
 });

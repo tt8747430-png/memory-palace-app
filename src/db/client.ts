@@ -6,6 +6,7 @@ import * as tableSchema from './schema';
 const fullSchema = { ...tableSchema, ...relationsSchema };
 
 type DbClient = ReturnType<typeof drizzle<typeof fullSchema>>;
+export type DbTx = Parameters<Parameters<DbClient['transaction']>[0]>[0];
 
 let client: DbClient | null = null;
 

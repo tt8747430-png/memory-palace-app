@@ -13,6 +13,6 @@ async function fireConfetti() {
 
 export function useConfetti() {
   return useCallback(() => {
-    fireConfetti();
+    void fireConfetti();
   }, []);
 }

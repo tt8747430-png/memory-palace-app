@@ -6,7 +6,7 @@ export function CanvasLoadingSkeleton() {
       {}
       <div
         aria-hidden
-        className="absolute inset-0 bg-[radial-gradient(circle,hsl(var(--muted-foreground)/0.15)_1px,transparent_1px)] [background-size:20px_20px]"
+        className="absolute inset-0 bg-[radial-gradient(circle,hsl(var(--muted-foreground)/0.15)_1px,transparent_1px)] bg-size-[20px_20px]"
       />
 
       {}

@@ -17,7 +17,7 @@ import {
   Alert,
 } from '@/ui';
 import { useAppDialog } from '@/shared/components/AppDialogContext';
-import { createPalace } from '../actions/createPalace';
+import { createPalace } from '@/features/palaces';
 
 export function CreatePalaceDialog() {
   const { pending, open: openDialog, consume } = useAppDialog();

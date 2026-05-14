@@ -1,14 +1,14 @@
 'use client';
 
-import { useEffect, useMemo, useState, useTransition } from 'react';
+import { type SubmitEvent, useEffect, useMemo, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Check, X, Loader2 } from 'lucide-react';
 import { Button, Input, cn } from '@/ui';
-import { recordPractice } from '../actions/recordPractice';
-import { getQuestionContext } from '../actions/getQuestionContext';
+import { recordPractice } from '@/features/practice';
+import { getQuestionContext } from '@/features/practice';
 import { answerMatches } from '../lib/answer';
-import type { DueNodeWithMeta } from '../actions/getDueNodes';
+import type { DueNodeWithMeta } from '@/features/practice';
 
 type Mode = 'multiple-choice' | 'typed-recall' | 'flashcard';
 
@@ -123,7 +123,7 @@ export function QuizSession({ nodes, initialMode = 'multiple-choice' }: Props) {
     void submit(option === current.title);
   }
 
-  function handleTypedSubmit(e: React.FormEvent) {
+  function handleTypedSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     if (outcome) return;
     if (!current) return;

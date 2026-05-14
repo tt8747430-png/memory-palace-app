@@ -6,7 +6,7 @@ import { Activity, BarChart3, Clock, Flame, Target } from 'lucide-react';
 import { cn } from '@/ui';
 import { Sparkline } from '@/shared/components/Sparkline';
 import { MasteryRings } from '@/shared/components/MasteryRings';
-import type { PracticeStats } from '../actions/getPracticeStats';
+import type { PracticeStats } from '@/features/practice';
 
 interface Props {
   stats: PracticeStats;

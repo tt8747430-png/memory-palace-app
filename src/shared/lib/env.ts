@@ -1,19 +1,19 @@
 import { z } from 'zod';
 
 const schema = z.object({
-  NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
+  NEXT_PUBLIC_SUPABASE_URL: z.url(),
   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string().min(1),
 
-  NEXT_PUBLIC_SITE_URL: z.string().url().optional(),
+  NEXT_PUBLIC_SITE_URL: z.url().optional(),
 
-  UPSTASH_REDIS_REST_URL: z.string().url().optional(),
+  UPSTASH_REDIS_REST_URL: z.url().optional(),
   UPSTASH_REDIS_REST_TOKEN: z.string().min(1).optional(),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
 
   VERCEL_URL: z.string().min(1).optional(),
 
   NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN: z.string().min(1).optional(),
-  NEXT_PUBLIC_POSTHOG_HOST: z.string().url().optional(),
+  NEXT_PUBLIC_POSTHOG_HOST: z.url().optional(),
 });
 
 export const env = schema.parse({

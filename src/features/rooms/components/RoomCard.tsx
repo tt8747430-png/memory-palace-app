@@ -4,8 +4,8 @@ import { DoorOpen } from 'lucide-react';
 import type { SelectRoom } from '@/db';
 import { Card, CardHeader, CardTitle, CardFooter } from '@/ui';
 import { EditRoomDialog } from './EditRoomDialog';
-import { DeleteRoomButton } from './DeleteRoomButton';
-import { DuplicateRoomButton } from './DuplicateRoomButton';
+import { DeleteRoomButton } from '@/features/rooms';
+import { DuplicateRoomButton } from '@/features/rooms';
 
 interface RoomCardProps {
   room: SelectRoom;

@@ -1,6 +1,6 @@
 'use client';
 
-import { useId, useState } from 'react';
+import { type PointerEvent, useId, useState } from 'react';
 import { cn } from '@/ui';
 
 interface AreaChartProps {
@@ -72,7 +72,7 @@ export function AreaChart({
   const hoverValue = hover !== null ? values[hover] : null;
   const hoverLabel = hover !== null && labels ? labels[hover] : undefined;
 
-  const handlePointer = (event: React.PointerEvent<SVGRectElement>) => {
+  const handlePointer = (event: PointerEvent<SVGRectElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
     const ratio = (event.clientX - rect.left) / rect.width;
     const idx = Math.round(ratio * (values.length - 1));

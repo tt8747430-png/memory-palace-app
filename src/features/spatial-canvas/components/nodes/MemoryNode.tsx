@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, type ReactNode } from 'react';
 import type { NodeType } from '@/db';
 import { Handle, NodeToolbar, Position, type Node, type NodeProps } from '@xyflow/react';
 import { m, useReducedMotion } from 'framer-motion';
@@ -32,7 +32,7 @@ export interface MemoryNodeData extends Record<string, unknown> {
 
 export type MemoryNodeType = Node<MemoryNodeData, 'memoryNode'>;
 
-const TYPE_ICONS: Record<NodeType, React.ReactNode> = {
+const TYPE_ICONS: Record<NodeType, ReactNode> = {
   text: <FileText className="h-3 w-3 shrink-0" aria-hidden />,
   image: <ImageIcon className="h-3 w-3 shrink-0" aria-hidden />,
   link: <Link className="h-3 w-3 shrink-0" aria-hidden />,
@@ -131,7 +131,7 @@ export function MemoryNode({ data, selected, id }: NodeProps<MemoryNodeType>) {
             className={cn(
               'group relative rounded-lg border bg-card px-3 py-2 shadow-sm',
 
-              'min-h-[60px] min-w-[60px] md:min-w-[120px] md:max-w-[280px]',
+              'min-h-15 min-w-15 md:min-w-30 md:max-w-70',
               'transition-shadow duration-150 motion-reduce:transition-none',
               selected
                 ? 'border-primary shadow-md ring-2 ring-primary/30'

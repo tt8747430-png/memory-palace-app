@@ -6,8 +6,6 @@ import type { PanInfo } from 'framer-motion';
 const OFFSET_PX = 80;
 const VELOCITY_PX_PER_S = 500;
 
-export type SwipeDirection = 'left' | 'right' | 'up' | 'down';
-
 export interface SwipeNavigationOptions {
   onPrev?: () => void;
   onNext?: () => void;

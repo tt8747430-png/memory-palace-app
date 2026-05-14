@@ -16,7 +16,7 @@ import {
   Alert,
 } from '@/ui';
 import { useAppDialog } from '@/shared/components/AppDialogContext';
-import { createRoom } from '../actions/createRoom';
+import { createRoom } from '@/features/rooms';
 
 interface CreateRoomDialogProps {
   palaceId: string;

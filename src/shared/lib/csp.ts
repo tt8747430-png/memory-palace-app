@@ -1,7 +1,3 @@
-export function generateNonce(): string {
-  return Buffer.from(crypto.randomUUID()).toString('base64');
-}
-
 export function buildCsp(): string {
   const isProd = process.env.NODE_ENV === 'production';
   const lines = [

@@ -2,7 +2,7 @@
 
 import { PanelRightClose, PanelRightOpen } from 'lucide-react';
 import { cn } from '@/ui';
-import { useRoomInspector } from '../useRoomInspector';
+import { useRoomInspector } from '@/features/rooms';
 
 export function RoomInspectorToggle() {
   const { open, toggle } = useRoomInspector();

@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { getDb, nodes, rooms, palaces, and, eq, isNull, ne, sql } from '@/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
 
-const schema = z.object({ nodeId: z.string().uuid('Invalid node ID') }).strict();
+const schema = z.object({ nodeId: z.uuid({ error: 'Invalid node ID' }) }).strict();
 
 export type QuestionContext = {
   distractors: string[];

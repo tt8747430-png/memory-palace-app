@@ -4,20 +4,7 @@ import { useState, type ReactNode } from 'react';
 import { m, useMotionValue, useTransform, type PanInfo } from 'framer-motion';
 import { cn } from '@/ui';
 
-/**
- * Tinder-style swipe + iOS-style 3D-flip flashcard primitive.
- *
- * - Drag horizontally to mark the card (left → `onSwipeLeft`, right → `onSwipeRight`).
- *   The card snaps back if the user releases before crossing the threshold.
- * - Tap / click / Space / Enter flips the card on the Y axis.
- *
- * Designed for iOS PWA: `touch-action: pan-y` reserves the horizontal axis for
- * our drag handler (preventing Safari's edge-swipe-back), text selection and
- * long-press callouts are disabled, and `-webkit-backface-visibility` is set
- * to avoid flicker during the 3D flip.
- */
 export interface SwipeableFlashcardProps {
-  /** Stable identity for the current card — drives the enter animation. */
   cardKey: string | number;
   front: ReactNode;
   back: ReactNode;
@@ -26,7 +13,6 @@ export interface SwipeableFlashcardProps {
   onSwipeLeft: () => void;
   onSwipeRight: () => void;
   className?: string;
-  /** Pixel offset that must be crossed for a swipe to commit. */
   swipeThreshold?: number;
 }
 
@@ -61,7 +47,6 @@ export function SwipeableFlashcard({
   }
 
   function handleActivate(): void {
-    // Suppress flip if the gesture was actually a swipe.
     if (Math.abs(x.get()) > 8) return;
     onToggleFlip();
   }
@@ -81,15 +66,12 @@ export function SwipeableFlashcard({
       exit={{ opacity: 0, y: -12 }}
       transition={{ type: 'spring', stiffness: 320, damping: 28 }}
       className={cn(
-        // Layout
         'relative w-full max-w-2xl select-none',
-        // iOS PWA niceties
         'touch-pan-y [-webkit-touch-callout:none] [-webkit-user-select:none]',
         dragging ? 'cursor-grabbing' : 'cursor-grab',
         className,
       )}
     >
-      {/* Swipe affordance overlays — sit above the card edges */}
       <m.span
         aria-hidden
         style={{ opacity: leftOpacity }}
@@ -105,7 +87,6 @@ export function SwipeableFlashcard({
         Got it
       </m.span>
 
-      {/* 3D flip wrapper */}
       <m.div
         role="button"
         tabIndex={0}
@@ -120,11 +101,7 @@ export function SwipeableFlashcard({
         }}
         animate={{ rotateY: flipped ? 180 : 0 }}
         transition={{ type: 'spring', stiffness: 260, damping: 22 }}
-        className={cn(
-          'relative w-full transform-3d',
-          // Min height that scales with viewport but stays tappable
-          'min-h-56 sm:min-h-64',
-        )}
+        className={cn('relative w-full transform-3d', 'min-h-56 sm:min-h-64')}
       >
         <CardFace>{front}</CardFace>
         <CardFace flipped>{back}</CardFace>

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { exportDataSchemaV1, importInputSchema } from '../schemas/dataTransfer';
+import { exportDataSchemaV1, importInputSchema } from '@/features/palaces';
 
 const validNode = {
   id: '550e8400-e29b-41d4-a716-446655440001',

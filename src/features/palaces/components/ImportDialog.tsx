@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useTransition } from 'react';
+import { useRef, useState, useTransition, type ChangeEvent } from 'react';
 import { Upload } from 'lucide-react';
 import {
   Alert,
@@ -13,8 +13,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/ui';
-import { importPalaceData } from '../actions/importPalaceData';
-import type { ImportStats } from '../actions/importPalaceData';
+import { importPalaceData } from '@/features/palaces';
+import type { ImportStats } from '@/features/palaces';
 
 type ImportState =
   | { status: 'idle' }
@@ -37,7 +37,7 @@ export function ImportDialog() {
     }
   }
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
 

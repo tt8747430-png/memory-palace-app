@@ -66,7 +66,7 @@ export function MobileActionToolbar({ actions, className }: Props) {
                 a.onClick();
                 setOpen(false);
               }}
-              className="flex h-touch min-w-[10rem] items-center gap-3 rounded-full border bg-card px-4 shadow-lg"
+              className="flex h-touch min-w-40 items-center gap-3 rounded-full border bg-card px-4 shadow-lg"
             >
               <a.Icon className="h-5 w-5" />
               <span className="text-sm font-medium">{a.label}</span>

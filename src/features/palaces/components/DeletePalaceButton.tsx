@@ -3,8 +3,8 @@
 import { Trash2 } from 'lucide-react';
 import { Button, toast } from '@/ui';
 import { ConfirmDeleteDialog } from '@/shared/components/ConfirmDeleteDialog';
-import { deletePalace } from '../actions/deletePalace';
-import { restorePalace } from '../actions/restorePalace';
+import { deletePalace } from '@/features/palaces';
+import { restorePalace } from '@/features/palaces';
 
 interface DeletePalaceButtonProps {
   id: string;

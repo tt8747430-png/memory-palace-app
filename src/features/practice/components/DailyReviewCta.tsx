@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { BrainCircuit, ArrowRight } from 'lucide-react';
 import { buttonVariants, cn } from '@/ui';
-import { getDueNodes } from '../actions/getDueNodes';
+import { getDueNodes } from '@/features/practice';
 
 export async function DailyReviewCta() {
   const result = await getDueNodes({ limit: 1 });

@@ -21,7 +21,7 @@ describe('EmptyState', () => {
 
   it('omits the description element when none is provided', () => {
     render(<EmptyState title="Empty" />);
-    expect(screen.queryByText(/^.{1,}$/, { selector: 'p' })).not.toBeInTheDocument();
+    expect(screen.queryByText(/^.+$/, { selector: 'p' })).not.toBeInTheDocument();
   });
 
   it('renders an arbitrary action node', () => {

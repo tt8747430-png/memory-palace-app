@@ -9,7 +9,7 @@ export function useCrossTabSync(): void {
 
   useEffect(() => {
     return onCrossTabInvalidate((queryKey) => {
-      queryClient.invalidateQueries({ queryKey });
+      void queryClient.invalidateQueries({ queryKey });
     });
   }, [queryClient]);
 }

@@ -6,9 +6,9 @@ import { getDb, rooms, palaces, and, eq, isNull, inArray, sql } from '@/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
 
 const setRoomOrderSchema = z.object({
-  palaceId: z.string().uuid('Invalid palace ID'),
+  palaceId: z.uuid({ error: 'Invalid palace ID' }),
 
-  orderedIds: z.array(z.string().uuid()).min(1).max(500),
+  orderedIds: z.array(z.uuid()).min(1).max(500),
 });
 
 export const setRoomOrder = defineAction({

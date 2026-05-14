@@ -16,7 +16,7 @@ import {
   Label,
   Alert,
 } from '@/ui';
-import { updateRoom } from '../actions/updateRoom';
+import { updateRoom } from '@/features/rooms';
 
 interface EditRoomDialogProps {
   room: SelectRoom;

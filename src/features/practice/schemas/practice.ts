@@ -9,9 +9,9 @@ export const PRACTICE_MODES = ['multiple-choice', 'typed-recall', 'flashcard'] a
 
 export const getDueNodesSchema = z
   .object({
-    palaceId: z.string().uuid('Invalid palace ID').optional(),
+    palaceId: z.uuid({ error: 'Invalid palace ID' }).optional(),
 
-    roomId: z.string().uuid('Invalid room ID').optional(),
+    roomId: z.uuid({ error: 'Invalid room ID' }).optional(),
     limit: z.number().int().min(1).max(DUE_LIMIT_MAX).optional().default(DUE_LIMIT_DEFAULT),
 
     cursor: z.string().optional(),
@@ -20,7 +20,7 @@ export const getDueNodesSchema = z
 
 export const recordPracticeSchema = z
   .object({
-    nodeId: z.string().uuid('Invalid node ID'),
+    nodeId: z.uuid({ error: 'Invalid node ID' }),
     score: z
       .number()
       .int('Score must be an integer')
@@ -30,8 +30,6 @@ export const recordPracticeSchema = z
     mode: z.enum(PRACTICE_MODES),
   })
   .strict();
-
-export const getPracticeStatsSchema = z.object({}).optional();
 
 export type GetDueNodesInput = z.infer<typeof getDueNodesSchema>;
 export type RecordPracticeInput = z.infer<typeof recordPracticeSchema>;

@@ -10,9 +10,3 @@ export type ErrorCode =
 export type ActionResponse<T> =
   | { success: true; data: T }
   | { success: false; error: { code: ErrorCode; message: string } };
-
-export type CursorPage<T> = {
-  items: T[];
-
-  nextCursor: string | null;
-};

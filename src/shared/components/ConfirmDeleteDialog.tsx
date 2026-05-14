@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { ReactNode, useState, useTransition } from 'react';
 import { Trash2 } from 'lucide-react';
 import {
   Alert,
@@ -15,7 +15,7 @@ import {
 } from '@/ui';
 
 interface ConfirmDeleteDialogProps {
-  trigger: React.ReactNode;
+  trigger: ReactNode;
 
   title: string;
 

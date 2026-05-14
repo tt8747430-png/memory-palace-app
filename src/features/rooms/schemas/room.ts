@@ -3,7 +3,7 @@ import { z } from 'zod';
 const TITLE_MAX = 100;
 
 export const createRoomSchema = z.object({
-  palaceId: z.string().uuid('Invalid palace ID'),
+  palaceId: z.uuid({ error: 'Invalid palace ID' }),
   title: z
     .string()
     .min(1, 'Title is required')
@@ -12,19 +12,19 @@ export const createRoomSchema = z.object({
 });
 
 export const updateRoomSchema = z.object({
-  id: z.string().uuid('Invalid room ID'),
-  palaceId: z.string().uuid('Invalid palace ID'),
+  id: z.uuid({ error: 'Invalid room ID' }),
+  palaceId: z.uuid({ error: 'Invalid palace ID' }),
   title: z.string().min(1, 'Title cannot be empty').max(TITLE_MAX).optional(),
   position: z.number().int().min(0).optional(),
 });
 
 export const roomIdSchema = z.object({
-  id: z.string().uuid('Invalid room ID'),
-  palaceId: z.string().uuid('Invalid palace ID'),
+  id: z.uuid({ error: 'Invalid room ID' }),
+  palaceId: z.uuid({ error: 'Invalid palace ID' }),
 });
 
 export const getRoomsSchema = z.object({
-  palaceId: z.string().uuid('Invalid palace ID'),
+  palaceId: z.uuid({ error: 'Invalid palace ID' }),
 });
 
 export type CreateRoomInput = z.infer<typeof createRoomSchema>;

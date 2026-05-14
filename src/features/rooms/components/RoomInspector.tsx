@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from 'react';
 import { Activity, Info, X } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, cn } from '@/ui';
-import { useRoomInspector, type InspectorTab } from '../useRoomInspector';
+import { useRoomInspector, type InspectorTab } from '@/features/rooms';
 
 const LG_QUERY = '(min-width: 1024px)';
 

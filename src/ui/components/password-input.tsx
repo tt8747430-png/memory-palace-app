@@ -2,8 +2,8 @@
 
 import { useState, type ComponentPropsWithoutRef } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
-import { Input } from './input';
-import { cn } from '../lib/cn';
+import { Input } from '@/ui';
+import { cn } from '@/ui';
 
 export type PasswordInputProps = Omit<ComponentPropsWithoutRef<typeof Input>, 'type'> & {
   showLabel?: string;

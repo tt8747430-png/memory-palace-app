@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/ui';
 import { ChevronRight, Flame } from 'lucide-react';
-import type { DueNodeWithMeta } from '../actions/getDueNodes';
+import type { DueNodeWithMeta } from '@/features/practice';
 
 interface Props {
   due: DueNodeWithMeta[];

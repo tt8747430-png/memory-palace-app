@@ -2,7 +2,7 @@
 
 import posthog from 'posthog-js';
 import { PostHogProvider as PHProvider, usePostHog } from '@posthog/react';
-import { useEffect, Suspense } from 'react';
+import { useEffect, Suspense, ReactNode } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 function PostHogPageView() {
@@ -20,7 +20,7 @@ function PostHogPageView() {
   return null;
 }
 
-export function PostHogProvider({ children }: { children: React.ReactNode }) {
+export function PostHogProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const key = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN;
     const host = process.env.NEXT_PUBLIC_POSTHOG_HOST ?? 'https://eu.i.posthog.com';
