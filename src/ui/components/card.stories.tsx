@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './card';
-import { Button } from './button';
+import { Button } from '@/ui';
 
 type CardPlaygroundArgs = {
   title: string;

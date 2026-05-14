@@ -10,7 +10,7 @@ export type JourneyStepperItem = {
 export type JourneyStepperProps = {
   items: ReadonlyArray<JourneyStepperItem>;
   currentIndex: number;
-  onJump: (index: number) => void;
+  onJumpAction: (index: number) => void;
 
   label?: string;
   className?: string;
@@ -19,7 +19,7 @@ export type JourneyStepperProps = {
 export function JourneyStepper({
   items,
   currentIndex,
-  onJump,
+  onJumpAction,
   label = 'Journey progress',
   className,
 }: JourneyStepperProps) {
@@ -40,7 +40,7 @@ export function JourneyStepper({
               type="button"
               aria-label={`Go to step ${i + 1}: ${item.title}`}
               aria-current={isActive ? 'step' : undefined}
-              onClick={() => onJump(i)}
+              onClick={() => onJumpAction(i)}
               className={cn(
                 'h-2 rounded-full transition-all',
                 isActive
@@ -56,7 +56,7 @@ export function JourneyStepper({
               type="button"
               aria-label={`Go to step ${i + 1}: ${item.title}`}
               aria-current={isActive ? 'step' : undefined}
-              onClick={() => onJump(i)}
+              onClick={() => onJumpAction(i)}
               className={cn(
                 'hidden md:inline-flex shrink-0 items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors',
                 isActive

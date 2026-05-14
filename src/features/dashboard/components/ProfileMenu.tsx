@@ -11,7 +11,6 @@ interface ProfileMenuProps {
   displayName: string;
   email?: string | null;
   avatarUrl: string | null;
-  /** Render only the avatar — used by the collapsed sidebar rail. */
   compact?: boolean;
 }
 

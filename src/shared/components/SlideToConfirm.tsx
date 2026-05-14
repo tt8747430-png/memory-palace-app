@@ -6,7 +6,7 @@ import { ChevronRight } from 'lucide-react';
 import { cn } from '@/ui';
 
 export type SlideToConfirmProps = {
-  onConfirm: () => void;
+  onConfirmAction: () => void;
 
   label: string;
 
@@ -34,7 +34,7 @@ const TONE_THUMB: Record<NonNullable<SlideToConfirmProps['tone']>, string> = {
 };
 
 export function SlideToConfirm({
-  onConfirm,
+  onConfirmAction,
   label,
   confirmedLabel,
   className,
@@ -53,7 +53,7 @@ export function SlideToConfirm({
     if (ratio >= COMPLETE_RATIO) {
       animate(x, maxX, { duration: 0.15 });
       setConfirmed(true);
-      onConfirm();
+      onConfirmAction();
     } else {
       animate(x, 0, { type: 'spring', stiffness: 320, damping: 30 });
     }

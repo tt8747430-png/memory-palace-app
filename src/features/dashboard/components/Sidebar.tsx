@@ -19,13 +19,7 @@ interface UserProfile {
 
 interface SidebarProps {
   userProfile?: UserProfile | null;
-  /** Hook for the mobile drawer to close itself after a navigation tap. */
   onNavigate?: () => void;
-  /**
-   * Force expanded layout regardless of the persisted collapse state.
-   * The mobile drawer renders the sidebar inside a sheet where collapsing
-   * has no meaning, so it always passes `forceExpanded`.
-   */
   forceExpanded?: boolean;
 }
 
@@ -42,7 +36,6 @@ export function Sidebar({ userProfile, onNavigate, forceExpanded }: SidebarProps
       )}
       data-collapsed={collapsed || undefined}
     >
-      {/* Workspace header — profile expands, collapses to avatar-only */}
       <div className={cn('px-3 pt-[calc(env(safe-area-inset-top)+0.75rem)]', collapsed && 'px-2')}>
         {userProfile ? (
           <ProfileMenu
@@ -64,9 +57,6 @@ export function Sidebar({ userProfile, onNavigate, forceExpanded }: SidebarProps
           </Link>
         )}
       </div>
-
-      {/* Quick actions — hidden when rail-collapsed; the command palette is
-       * still reachable via the toolbar and ⌘K. */}
       {!collapsed ? (
         <div className="px-3 pt-3">
           <QuickActionsRow />
@@ -106,7 +96,6 @@ export function Sidebar({ userProfile, onNavigate, forceExpanded }: SidebarProps
         ))}
       </nav>
 
-      {/* Footer: pinned utility links, theme row, collapse toggle */}
       <div
         className={cn(
           'border-t border-sidebar-border px-3 pt-2 pb-[calc(env(safe-area-inset-bottom)+0.5rem)]',
@@ -126,9 +115,6 @@ export function Sidebar({ userProfile, onNavigate, forceExpanded }: SidebarProps
           ))}
         </ul>
 
-        {/* Theme row — peer setting alongside Settings. Hidden when collapsed
-         * to keep the rail minimal; users can still toggle theme from the
-         * mobile top bar and the profile menu. */}
         {!collapsed ? (
           <div className="mt-1 flex items-center justify-between rounded-md px-3 py-2 text-sm text-sidebar-foreground/80">
             <span>Theme</span>
@@ -136,7 +122,6 @@ export function Sidebar({ userProfile, onNavigate, forceExpanded }: SidebarProps
           </div>
         ) : null}
 
-        {/* Collapse toggle — desktop only (the mobile drawer never collapses). */}
         {!forceExpanded ? (
           <button
             type="button"

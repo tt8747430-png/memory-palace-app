@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import { BottomNav } from '../components/BottomNav';
+import { BottomNav } from '@/features/dashboard';
 import { navItems } from '../nav';
 
 vi.mock('next/navigation', () => ({

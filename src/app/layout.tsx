@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { headers } from 'next/headers';
+import type { ReactNode } from 'react';
 import { Geist, Geist_Mono, Space_Grotesk, Instrument_Serif, Barlow } from 'next/font/google';
 import { MotionProvider } from '@/shared/components/MotionProvider';
 import { ThemeProvider } from '@/shared/components/ThemeProvider';
@@ -85,21 +86,13 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  // Cap at 1 so iOS Safari doesn't double-tap-zoom or pinch-zoom the app shell.
-  // (pinch-zoom is still possible on images via the share/zoom UI; users who
-  // rely on browser zoom for a11y can use OS-level zoom or font-size settings.)
   maximumScale: 1,
   userScalable: false,
   viewportFit: 'cover',
-  // Shrink the layout viewport when the on-screen keyboard opens so `dvh`
-  // units and fixed-bottom sheets/dialogs resize to fit above the keyboard
-  // — this is what stops the iOS keyboard from covering input fields.
-  // (Safari iOS 17+, Chrome 108+. Older browsers fall back to overlay
-  // behavior, which we partially compensate for via dvh in shell layouts.)
   interactiveWidget: 'resizes-content',
 };
 
-async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   const nonce = (await headers()).get('x-nonce') ?? '';
   return (
     <html lang="en" suppressHydrationWarning nonce={nonce}>

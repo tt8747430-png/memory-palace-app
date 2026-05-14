@@ -2,13 +2,6 @@
 
 import { useSyncExternalStore } from 'react';
 
-/**
- * Sidebar collapse state — persisted to localStorage so the rail/expanded
- * choice survives reloads. A plain external store is enough; no Zustand
- * needed for a single boolean. Lives at the dashboard-feature level so the
- * sidebar and shell can share it without prop drilling.
- */
-
 const STORAGE_KEY = 'mp:sidebar-collapsed';
 const EVENT = 'mp:sidebar-collapsed-change';
 
@@ -42,19 +35,14 @@ export function useSidebarCollapsed(): {
     setCollapsed: (next) => {
       try {
         window.localStorage.setItem(STORAGE_KEY, next ? '1' : '0');
-      } catch {
-        // Storage may be unavailable (Safari private mode, quota); the UI
-        // still updates via the custom event.
-      }
+      } catch {}
       window.dispatchEvent(new Event(EVENT));
     },
     toggle: () => {
       const next = !read();
       try {
         window.localStorage.setItem(STORAGE_KEY, next ? '1' : '0');
-      } catch {
-        // See note above.
-      }
+      } catch {}
       window.dispatchEvent(new Event(EVENT));
     },
   };

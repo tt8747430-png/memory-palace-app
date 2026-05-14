@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight, Building2 } from 'lucide-react';
 import { buttonVariants, cn } from '@/ui';
-import type { RecentPalace } from '../actions/getRecentPalaces';
+import type { RecentPalace } from '@/features/dashboard';
 import { formatRelative } from '../activity';
 
 interface Props {

@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import Link from 'next/link';
 import { Skeleton } from '@/ui';
@@ -5,8 +6,7 @@ import { getDueNodes, PracticePicker } from '@/features/practice';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = {
-  title: 'Practice',
+export const metadata: Metadata = {
   description: 'Review your memory palace nodes with spaced repetition.',
 };
 

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { LoginForm } from '../components/LoginForm';
+import { LoginForm } from '@/features/auth';
 import type { AuthFormState } from '../actions/types';
 
 const mockSignIn = vi.fn<(prev: AuthFormState, formData: FormData) => Promise<AuthFormState>>();

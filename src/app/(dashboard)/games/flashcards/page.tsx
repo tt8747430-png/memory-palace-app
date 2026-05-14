@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
 import { getDueNodes, FlashcardDeck } from '@/features/practice';
@@ -6,8 +7,7 @@ import { getRooms } from '@/features/rooms';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = {
-  title: 'Flashcards',
+export const metadata: Metadata = {
   description: 'Anki-style flashcard deck powered by your spaced-repetition queue.',
 };
 

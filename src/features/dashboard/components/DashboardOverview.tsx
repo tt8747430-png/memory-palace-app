@@ -1,4 +1,4 @@
-import type { RecentPalace } from '../actions/getRecentPalaces';
+import type { RecentPalace } from '@/features/dashboard';
 import type { ActivityEvent } from '../activity';
 import { DashboardHeader } from './DashboardHeader';
 import { DashboardKpiRow } from './DashboardKpiRow';

@@ -1,7 +1,8 @@
+import type { Metadata } from 'next';
 import { AtSign, Calendar } from 'lucide-react';
 import { getProfile, SettingsSection, SignOutButton } from '@/features/settings';
 
-export const metadata = { title: 'Account · Settings' };
+export const metadata: Metadata = { title: 'Account · Settings' };
 
 function formatDate(date: Date | string | null | undefined): string {
   if (!date) return 'Unknown';

@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
 import { getDueNodes, QuizSession } from '@/features/practice';
@@ -6,8 +7,7 @@ import { getRooms } from '@/features/rooms';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = {
-  title: 'Quiz',
+export const metadata: Metadata = {
   description: 'Multiple-choice and typed-recall quizzes scoped to a room or palace.',
 };
 

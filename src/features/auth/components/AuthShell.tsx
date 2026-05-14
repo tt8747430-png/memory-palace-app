@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { Circle } from 'lucide-react';
 import { m } from 'framer-motion';
-import { CinematicBackground } from './CinematicBackground';
+import { CinematicBackground } from '@/features/auth';
 
 export type AuthStep = {
   number: number;

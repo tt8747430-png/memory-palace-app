@@ -1,5 +1,6 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Suspense } from 'react';
+import { Suspense, type ComponentType } from 'react';
 import { ChevronRight, Footprints, Layers, Sparkles, Zap } from 'lucide-react';
 import { Skeleton } from '@/ui';
 import { getPalaces } from '@/features/palaces';
@@ -7,8 +8,7 @@ import { DailyReviewCta } from '@/features/practice';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = {
-  title: 'Games',
+export const metadata: Metadata = {
   description: 'Pick a learning mode and a palace to practice.',
 };
 
@@ -16,7 +16,7 @@ interface GameMode {
   href: string;
   title: string;
   description: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: ComponentType<{ className?: string }>;
   badge?: string;
 }
 

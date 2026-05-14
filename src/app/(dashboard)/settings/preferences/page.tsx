@@ -1,6 +1,7 @@
+import type { Metadata } from 'next';
 import { ReducedMotionStatus, SettingsSection, ThemePicker } from '@/features/settings';
 
-export const metadata = { title: 'Preferences · Settings' };
+export const metadata: Metadata = { title: 'Preferences · Settings' };
 
 export default function SettingsPreferencesPage() {
   return (

@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
@@ -22,7 +23,7 @@ interface RoomPageProps {
   params: Promise<{ palaceId: string; roomId: string }>;
 }
 
-export async function generateMetadata({ params }: RoomPageProps) {
+export async function generateMetadata({ params }: RoomPageProps): Promise<Metadata> {
   const { palaceId, roomId } = await params;
   const result = await getCachedRoom(roomId, palaceId);
   return {

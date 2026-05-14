@@ -22,8 +22,14 @@ type SearchFn = (input: {
 
 const SearchContext = createContext<SearchFn | null>(null);
 
-export function SearchProvider({ children, value }: { children: ReactNode; value: SearchFn }) {
-  return <SearchContext.Provider value={value}>{children}</SearchContext.Provider>;
+export function SearchProvider({
+  children,
+  searchAction,
+}: {
+  children: ReactNode;
+  searchAction: SearchFn;
+}) {
+  return <SearchContext.Provider value={searchAction}>{children}</SearchContext.Provider>;
 }
 
 export function useSearch(): SearchFn | null {

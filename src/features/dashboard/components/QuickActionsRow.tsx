@@ -9,7 +9,7 @@ const noopSubscribe = () => () => {};
 function readIsMac(): boolean {
   const platform =
     (navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData?.platform ??
-    navigator.platform;
+    navigator.userAgent;
   return /mac/i.test(platform);
 }
 

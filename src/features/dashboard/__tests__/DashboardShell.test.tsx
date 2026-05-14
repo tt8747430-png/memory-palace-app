@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import { DashboardShell } from '../components/DashboardShell';
+import { DashboardShell } from '@/features/dashboard';
 
 vi.mock('next/navigation', () => ({
   usePathname: vi.fn(() => '/'),
@@ -14,30 +14,6 @@ vi.mock('next-themes', () => ({
 vi.mock('@/shared/lib/signOut', () => ({
   signOut: vi.fn(),
 }));
-
-vi.mock('@/ui', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('@/ui')>();
-  return {
-    ...actual,
-    Sheet: ({ children }: { children: React.ReactNode }) => (
-      <div data-testid="sheet">{children}</div>
-    ),
-    SheetTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-    SheetContent: ({ children }: { children: React.ReactNode }) => (
-      <div data-testid="sheet-content">{children}</div>
-    ),
-    SheetTitle: ({ children, className }: { children: React.ReactNode; className?: string }) => (
-      <div className={className}>{children}</div>
-    ),
-    SheetDescription: ({
-      children,
-      className,
-    }: {
-      children: React.ReactNode;
-      className?: string;
-    }) => <div className={className}>{children}</div>,
-  };
-});
 
 describe('DashboardShell', () => {
   it('renders children inside main content area', () => {
@@ -90,7 +66,7 @@ describe('DashboardShell', () => {
     render(<DashboardShell>Content</DashboardShell>);
     const main = screen.getByRole('main');
     expect(main.className).toMatch(
-      /pt-\[calc\(env\(safe-area-inset-top\)\+var\(--height-top-bar\)\)\]/,
+      /pt-\[calc\(env\(safe-area-inset-top\)\+var\(--height-top-bar\)\)]/,
     );
     expect(main.className).toMatch(/md:pt-0/);
   });

@@ -1,6 +1,7 @@
+import type { Metadata } from 'next';
 import { getProfile, ProfileForm, SettingsSection } from '@/features/settings';
 
-export const metadata = { title: 'Profile · Settings' };
+export const metadata: Metadata = { title: 'Profile · Settings' };
 
 export default async function SettingsProfilePage() {
   const result = await getProfile();

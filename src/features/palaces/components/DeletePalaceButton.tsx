@@ -27,7 +27,7 @@ export function DeletePalaceButton({ id, title }: DeletePalaceButtonProps) {
       }
       title={`Delete "${title}"?`}
       description="This palace and all its rooms will be moved to the trash. You can undo within 30 seconds."
-      onConfirm={async () => {
+      onConfirmAction={async () => {
         const result = await deletePalace({ id });
         if (!result.success) throw new Error(result.error.message);
         const { undoToken } = result.data;

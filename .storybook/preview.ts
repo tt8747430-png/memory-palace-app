@@ -23,6 +23,7 @@ const withTheme: Decorator = (Story, context) => {
 const preview: Preview = {
   parameters: {
     layout: 'centered',
+
     controls: {
       matchers: {
         color: /(background|color)$/i,
@@ -31,6 +32,7 @@ const preview: Preview = {
       expanded: true,
       sort: 'requiredFirst',
     },
+
     backgrounds: {
       default: 'app',
       values: [
@@ -39,6 +41,7 @@ const preview: Preview = {
         { name: 'muted', value: 'hsl(240 5% 96%)' },
       ],
     },
+
     viewport: {
       viewports: {
         mobile: { name: 'Mobile', styles: { width: '375px', height: '667px' } },
@@ -46,8 +49,16 @@ const preview: Preview = {
         desktop: { name: 'Desktop', styles: { width: '1280px', height: '800px' } },
       },
     },
+
     nextjs: {
       appDirectory: true,
+    },
+
+    a11y: {
+      // 'todo' - show a11y violations in the test UI only
+      // 'error' - fail CI on a11y violations
+      // 'off' - skip a11y checks entirely
+      test: 'todo',
     },
   },
   globalTypes: {

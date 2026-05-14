@@ -120,7 +120,7 @@ export function RoomJourney({ palaceId, roomId, roomTitle, palaceTitle, mode, no
           <JourneyStepper
             items={nodes.map((n) => ({ id: n.id, title: n.title }))}
             currentIndex={index}
-            onJump={(i) => {
+            onJumpAction={(i) => {
               setHintRevealed(false);
               setDirection(i > index ? 1 : -1);
               setIndex(i);

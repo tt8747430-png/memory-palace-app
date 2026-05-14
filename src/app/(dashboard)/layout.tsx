@@ -19,7 +19,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <QueryProvider>
-      <SearchProvider value={searchNodes}>
+      <SearchProvider searchAction={searchNodes}>
         <DashboardShell userProfile={userProfile}>
           <PageTransition>{children}</PageTransition>
         </DashboardShell>

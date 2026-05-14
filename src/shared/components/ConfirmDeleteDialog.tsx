@@ -21,14 +21,14 @@ interface ConfirmDeleteDialogProps {
 
   description: string;
 
-  onConfirm: () => Promise<void>;
+  onConfirmAction: () => Promise<void>;
 }
 
 export function ConfirmDeleteDialog({
   trigger,
   title,
   description,
-  onConfirm,
+  onConfirmAction,
 }: ConfirmDeleteDialogProps) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -45,7 +45,7 @@ export function ConfirmDeleteDialog({
     setError(null);
     startTransition(async () => {
       try {
-        await onConfirm();
+        await onConfirmAction();
         setOpen(false);
       } catch {
         setError('Something went wrong. Please try again.');

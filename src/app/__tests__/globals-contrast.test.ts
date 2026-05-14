@@ -11,7 +11,7 @@ function getLightness(varName: string, block: string): number | null {
   return m ? parseInt(m[1], 10) : null;
 }
 
-const rootMatch = css.match(/:root\s*\{([^}]+)\}/s);
+const rootMatch = css.match(/:root\s*\{([^}]+)}/s);
 const rootBlock = rootMatch ? rootMatch[1] : '';
 
 describe('globals.css — WCAG AA contrast sanity', () => {

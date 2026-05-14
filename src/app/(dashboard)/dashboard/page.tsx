@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { Skeleton } from '@/ui';
 import {
@@ -10,8 +11,7 @@ import {
 import { getDueNodes, getPracticeStats } from '@/features/practice';
 import { getUserProfile } from '@/shared/lib/userProfile';
 
-export const metadata = {
-  title: 'Home',
+export const metadata: Metadata = {
   description: 'Your Memory Palace dashboard — stats, recent palaces, and quick actions.',
 };
 

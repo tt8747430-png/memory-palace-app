@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { Building2 } from 'lucide-react';
 import {
@@ -12,8 +13,7 @@ import { CardSkeleton } from '@/shared/components/CardSkeleton';
 import { EmptyStateCreateButton } from '@/shared/components/EmptyStateCreateButton';
 import { MobileCreateFab } from '@/shared/components/MobileCreateFab';
 
-export const metadata = {
-  title: 'Palaces',
+export const metadata: Metadata = {
   description: 'View and manage all your memory palaces.',
 };
 

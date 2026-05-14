@@ -1,7 +1,14 @@
+import type {
+  ButtonHTMLAttributes,
+  HTMLAttributes,
+  InputHTMLAttributes,
+  LabelHTMLAttributes,
+  ReactNode,
+} from 'react';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { LoginForm } from '../components/LoginForm';
+import { LoginForm } from '@/features/auth';
 import type { AuthFormState } from '../actions/types';
 
 const mockSignIn = vi.fn<(prev: AuthFormState, formData: FormData) => Promise<AuthFormState>>();
@@ -11,7 +18,7 @@ vi.mock('../actions/signIn', () => ({
 }));
 
 vi.mock('@/ui', () => ({
-  Alert: ({ children, ...rest }: React.HTMLAttributes<HTMLDivElement>) => (
+  Alert: ({ children, ...rest }: HTMLAttributes<HTMLDivElement>) => (
     <div role="alert" {...rest}>
       {children}
     </div>
@@ -19,18 +26,18 @@ vi.mock('@/ui', () => ({
   Button: ({
     children,
     ...props
-  }: React.ButtonHTMLAttributes<HTMLButtonElement> & Record<string, unknown>) => {
+  }: ButtonHTMLAttributes<HTMLButtonElement> & Record<string, unknown>) => {
     const { variant, size, ...rest } = props;
     void variant;
     void size;
     return <button {...rest}>{children}</button>;
   },
-  Input: (props: React.InputHTMLAttributes<HTMLInputElement>) => <input {...props} />,
+  Input: (props: InputHTMLAttributes<HTMLInputElement>) => <input {...props} />,
   PasswordInput: ({
     showLabel,
     hideLabel,
     ...props
-  }: React.InputHTMLAttributes<HTMLInputElement> & {
+  }: InputHTMLAttributes<HTMLInputElement> & {
     showLabel?: string;
     hideLabel?: string;
   }) => {
@@ -38,7 +45,10 @@ vi.mock('@/ui', () => ({
     void hideLabel;
     return <input type="password" {...props} />;
   },
-  Label: ({ children, ...props }: React.LabelHTMLAttributes<HTMLLabelElement>) => (
+  Label: ({
+    children,
+    ...props
+  }: LabelHTMLAttributes<HTMLLabelElement> & { children?: ReactNode }) => (
     <label {...props}>{children}</label>
   ),
 }));
@@ -87,7 +97,7 @@ describe('LoginForm', () => {
     render(<LoginForm />);
 
     await user.type(screen.getByLabelText('Email'), 'wrong@example.com');
-    await user.type(screen.getByLabelText('Password'), 'wrongpass');
+    await user.type(screen.getByLabelText('Password'), 'badpassword');
     await user.click(screen.getByRole('button', { name: /sign in/i }));
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Invalid login credentials');

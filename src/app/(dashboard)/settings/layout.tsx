@@ -1,8 +1,8 @@
+import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { SettingsNav } from '@/features/settings';
 
-export const metadata = {
-  title: 'Settings',
+export const metadata: Metadata = {
   description: 'Manage your profile, preferences, account, and data.',
 };
 

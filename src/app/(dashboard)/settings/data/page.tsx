@@ -1,8 +1,9 @@
+import type { Metadata } from 'next';
 import { Alert, AlertDescription, AlertTitle } from '@/ui';
 import { SettingsSection } from '@/features/settings';
 import { ExportButton, ImportDialog } from '@/features/palaces';
 
-export const metadata = { title: 'Data · Settings' };
+export const metadata: Metadata = { title: 'Data · Settings' };
 
 export default function SettingsDataPage() {
   return (

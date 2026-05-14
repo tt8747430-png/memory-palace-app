@@ -27,7 +27,7 @@ export function DeleteRoomButton({ id, palaceId, title }: DeleteRoomButtonProps)
       }
       title={`Delete "${title}"?`}
       description="All nodes inside this room will be permanently removed. This action cannot be undone."
-      onConfirm={async () => {
+      onConfirmAction={async () => {
         const result = await deleteRoom({ id, palaceId });
         if (!result.success) throw new Error(result.error.message);
       }}

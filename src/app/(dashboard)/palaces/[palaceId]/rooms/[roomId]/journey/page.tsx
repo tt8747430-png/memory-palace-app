@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import { getPalaceById } from '@/features/palaces';
@@ -14,7 +15,7 @@ interface JourneyPageProps {
   params: Promise<{ palaceId: string; roomId: string }>;
 }
 
-export async function generateMetadata({ params }: JourneyPageProps) {
+export async function generateMetadata({ params }: JourneyPageProps): Promise<Metadata> {
   const { palaceId, roomId } = await params;
   const result = await getCachedRoom(roomId, palaceId);
   return {

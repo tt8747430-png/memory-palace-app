@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { cache, Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { DoorOpen } from 'lucide-react';
@@ -22,7 +23,7 @@ interface PalacePageProps {
   params: Promise<{ palaceId: string }>;
 }
 
-export async function generateMetadata({ params }: PalacePageProps) {
+export async function generateMetadata({ params }: PalacePageProps): Promise<Metadata> {
   const { palaceId } = await params;
   const result = await getCachedPalace(palaceId);
   return {

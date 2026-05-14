@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ModeToggle } from '../components/ModeToggle';
+import { ModeToggle } from '@/features/dashboard';
 
 const setTheme = vi.fn();
 const useThemeMock = vi.fn();

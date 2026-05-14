@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -13,7 +14,7 @@ export async function generateMetadata({
   params,
 }: {
   params: Promise<{ palaceId: string; roomId: string }>;
-}) {
+}): Promise<Metadata> {
   const { roomId } = await params;
   const result = await getRoomById({ id: roomId });
   const title = result.success ? result.data.title : 'Practice';

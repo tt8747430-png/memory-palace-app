@@ -1,3 +1,5 @@
+import storybook from 'eslint-plugin-storybook';
+
 import { defineConfig, globalIgnores } from 'eslint/config';
 import nextVitals from 'eslint-config-next/core-web-vitals';
 import nextTs from 'eslint-config-next/typescript';
@@ -44,7 +46,6 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   ...boundaryRules,
-
   {
     rules: {
       ...jsxA11y.configs.strict.rules,
@@ -55,7 +56,6 @@ const eslintConfig = defineConfig([
       'jsx-a11y/no-static-element-interactions': 'warn',
     },
   },
-
   {
     files: ['src/**/*.{ts,tsx}'],
     ignores: [
@@ -75,9 +75,7 @@ const eslintConfig = defineConfig([
         },
       ],
     },
-  },
-
-  // shadcn-style primitives in src/ui/ are wrappers around Radix. Content/labels/
+  }, // shadcn-style primitives in src/ui/ are wrappers around Radix. Content/labels/
   // associations are provided by consumers, and ref composition follows Radix's
   // own pattern — relax the rules that produce false positives for this layer.
   {
@@ -88,7 +86,6 @@ const eslintConfig = defineConfig([
       'react-hooks/immutability': 'off',
     },
   },
-
   globalIgnores([
     '.next/**',
     'out/**',
@@ -100,6 +97,7 @@ const eslintConfig = defineConfig([
     'drizzle/**',
     'coverage/**',
   ]),
+  ...storybook.configs['flat/recommended'],
 ]);
 
 export default eslintConfig;
