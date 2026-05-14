@@ -20,18 +20,14 @@ const config: StorybookConfig = {
       enforce: 'pre' as const,
       load(id: string) {
         const normalized = id.split('?')[0];
-        const actionMatch = normalized.match(
-          /\/apps\/web\/src\/features\/[^/]+\/actions\/([^/]+)\.ts$/,
-        );
+        const actionMatch = normalized.match(/\/src\/features\/[^/]+\/actions\/([^/]+)\.ts$/);
         if (actionMatch) {
           const name = actionMatch[1];
           return `export const ${name} = async () => ({ success: true, data: null });
 export default ${name};`;
         }
         // Stub shared server-only modules if imported transitively
-        if (
-          /\/apps\/web\/src\/shared\/lib\/(supabase|action)(\.ts|\/index\.ts)?$/.test(normalized)
-        ) {
+        if (/\/src\/shared\/lib\/(supabase|action)(\.ts|\/index\.ts)?$/.test(normalized)) {
           return `export const defineAction = () => async () => ({ success: true, data: null });
 export class ActionError extends Error { code; constructor(code, message) { super(message); this.code = code; } }
 export const getCurrentUser = async () => null;
@@ -44,7 +40,7 @@ export default {};`;
 
     viteConfig.plugins = [...(viteConfig.plugins ?? []), stubServerOnly];
 
-    // Ensure @/ alias resolves to apps/web/src for stories importing from app code
+    // Ensure @/ alias resolves to /src for stories importing from app code
     viteConfig.resolve = viteConfig.resolve ?? {};
     viteConfig.resolve.alias = {
       ...(viteConfig.resolve.alias as Record<string, string> | undefined),

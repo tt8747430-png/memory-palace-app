@@ -6,7 +6,7 @@ dist
 coverage
 
 # Generated / lock files
-packages/db/migrations
+drizzle/
 next-env.d.ts
 pnpm-lock.yaml
 skills-lock.json

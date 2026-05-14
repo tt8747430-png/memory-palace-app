@@ -20,9 +20,7 @@ export default defineConfig({
         { name: 'mobile-chrome', use: { ...devices['Pixel 5'] } },
       ],
   webServer: {
-    command: process.env.CI
-      ? 'pnpm --filter @memory-palace/web start'
-      : 'pnpm turbo build --filter=@memory-palace/web && pnpm --filter @memory-palace/web start',
+    command: process.env.CI ? 'pnpm start' : 'pnpm build && pnpm start',
     port: 3000,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

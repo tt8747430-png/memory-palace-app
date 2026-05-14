@@ -44,7 +44,7 @@ function getLimiter(bucket: Bucket): Ratelimit | null {
   const limiter = new Ratelimit({
     redis,
     limiter: Ratelimit.slidingWindow(limit, window),
-    prefix: `@memory-palace/${bucket}`,
+    prefix: `memory-palace/${bucket}`,
   });
   limiters.set(bucket, limiter);
   return limiter;

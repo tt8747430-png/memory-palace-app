@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 
-const proxyPath = 'apps/web/src/proxy.ts';
-const middlewarePath = 'apps/web/src/middleware.ts';
+const proxyPath = 'src/proxy.ts';
+const middlewarePath = 'src/middleware.ts';
 
 const hasProxy = existsSync(proxyPath);
 const hasMiddleware = existsSync(middlewarePath);
