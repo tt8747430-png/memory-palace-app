@@ -1,8 +1,0 @@
-{
-  "extends": "@memory-palace/typescript-config/base.json",
-  "compilerOptions": {
-    "outDir": "./dist"
-  },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist", "migrations"]
-}

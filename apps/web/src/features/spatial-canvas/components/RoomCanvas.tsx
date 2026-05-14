@@ -28,7 +28,7 @@ import {
   type OnSelectionChangeFunc,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import type { PalaceMode, SelectEdge, SelectNode } from '@memory-palace/db';
+import type { PalaceMode, SelectEdge, SelectNode } from '@/db';
 import { nodeTypes } from './nodes/nodeTypes';
 import type { MemoryNodeType } from './nodes/MemoryNode';
 import { CanvasToolbar } from './CanvasToolbar';

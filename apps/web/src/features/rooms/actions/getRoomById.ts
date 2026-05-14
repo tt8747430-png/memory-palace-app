@@ -1,6 +1,6 @@
 'use server';
 
-import { getDb, rooms, palaces, and, eq, isNull } from '@memory-palace/db';
+import { getDb, rooms, palaces, and, eq, isNull } from '@/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
 import { roomIdSchema } from '../schemas/room';
 

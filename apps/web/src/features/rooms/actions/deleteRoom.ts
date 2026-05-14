@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { getDb, rooms, and, eq, isNull, sql } from '@memory-palace/db';
+import { getDb, rooms, and, eq, isNull, sql } from '@/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
 import { roomIdSchema } from '../schemas/room';
 

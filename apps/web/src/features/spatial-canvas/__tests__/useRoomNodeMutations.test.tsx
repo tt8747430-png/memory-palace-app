@@ -2,7 +2,7 @@ import { renderHook, act, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
-import type { SelectNode } from '@memory-palace/db';
+import type { SelectNode } from '@/db';
 import { roomNodesQueryKey } from '../hooks/useNodesQuery';
 
 const mockUpdateNodePosition = vi.fn();

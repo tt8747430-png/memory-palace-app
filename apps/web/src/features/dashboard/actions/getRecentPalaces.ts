@@ -13,7 +13,7 @@ import {
   inArray,
   count,
   max,
-} from '@memory-palace/db';
+} from '@/db';
 import { defineAction } from '@/shared/lib/action';
 
 export type RecentPalace = {

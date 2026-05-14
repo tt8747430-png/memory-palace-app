@@ -162,7 +162,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Check Drizzle migration consistency
-        run: pnpm --filter @memory-palace/db exec drizzle-kit check
+        run: pnpm --filter @memory-palace/web exec drizzle-kit check
         env:
           DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
 
@@ -226,7 +226,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Apply migrations to test database
-        run: pnpm --filter @memory-palace/db exec drizzle-kit push
+        run: pnpm --filter @memory-palace/web exec drizzle-kit push
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/memory_palace_test
 

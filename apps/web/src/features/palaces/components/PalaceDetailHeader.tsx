@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
-import type { SelectPalace } from '@memory-palace/db';
+import type { SelectPalace } from '@/db';
 import { EditPalaceDialog } from './EditPalaceDialog';
 import { DeletePalaceButton } from './DeletePalaceButton';
 import { DuplicatePalaceButton } from './DuplicatePalaceButton';

@@ -1,6 +1,6 @@
 'use server';
 
-import { getDb, practiceSessions, nodes, rooms, and, desc, eq } from '@memory-palace/db';
+import { getDb, practiceSessions, nodes, rooms, and, desc, eq } from '@/db';
 import { defineAction } from '@/shared/lib/action';
 import { palaceIdSchema } from '../schemas/palace';
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
-import type { SelectEdge } from '@memory-palace/db';
+import type { SelectEdge } from '@/db';
 import { getRoomEdges } from '@/features/nodes';
 
 export const roomEdgesQueryKey = (roomId: string) => ['rooms', roomId, 'edges'] as const;

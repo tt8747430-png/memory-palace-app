@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
-import { getDb, palaces, and, eq, isNotNull } from '@memory-palace/db';
+import { getDb, palaces, and, eq, isNotNull } from '@/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
 import { verifyUndoToken } from '@/shared/lib/undoToken';
 

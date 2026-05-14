@@ -1,7 +1,7 @@
 'use client';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { SelectNode } from '@memory-palace/db';
+import type { SelectNode } from '@/db';
 import {
   updateNodePosition,
   batchUpdateNodePositions,

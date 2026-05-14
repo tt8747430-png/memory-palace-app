@@ -1,6 +1,6 @@
 'use server';
 
-import { getDb, edges, nodes, eq, and } from '@memory-palace/db';
+import { getDb, edges, nodes, eq, and } from '@/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
 import { deleteEdgeSchema } from '../schemas/node';
 

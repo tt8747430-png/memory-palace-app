@@ -1,6 +1,6 @@
 'use server';
 
-import { getDb, edges, nodes, eq, and, isNull } from '@memory-palace/db';
+import { getDb, edges, nodes, eq, and, isNull } from '@/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
 import { createEdgeSchema } from '../schemas/node';
 

@@ -1,7 +1,7 @@
 'use server';
 
 import { z } from 'zod';
-import { getDb, palaces, rooms } from '@memory-palace/db';
+import { getDb, palaces, rooms } from '@/db';
 import { defineAction } from '@/shared/lib/action';
 
 const schema = z.object({

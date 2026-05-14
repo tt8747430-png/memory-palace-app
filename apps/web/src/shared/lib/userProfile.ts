@@ -1,4 +1,4 @@
-import { getDb, users, eq } from '@memory-palace/db';
+import { getDb, users, eq } from '@/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
 
 export type UserProfile = {

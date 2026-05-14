@@ -1,6 +1,6 @@
 'use server';
 
-import { getDb, edges, nodes, eq, and } from '@memory-palace/db';
+import { getDb, edges, nodes, eq, and } from '@/db';
 import { defineAction } from '@/shared/lib/action';
 import { getRoomEdgesSchema } from '../schemas/node';
 

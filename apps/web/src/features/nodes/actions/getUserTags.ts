@@ -1,6 +1,6 @@
 'use server';
 
-import { getDb, tags, eq, and, ilike } from '@memory-palace/db';
+import { getDb, tags, eq, and, ilike } from '@/db';
 import { defineAction } from '@/shared/lib/action';
 import { getUserTagsSchema } from '../schemas/node';
 

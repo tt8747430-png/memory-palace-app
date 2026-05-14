@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { getDb, palaces, and, eq, isNull } from '@memory-palace/db';
+import { getDb, palaces, and, eq, isNull } from '@/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
 import { signUndoToken } from '@/shared/lib/undoToken';
 import { palaceIdSchema } from '../schemas/palace';

@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { getDb, palaces } from '@memory-palace/db';
+import { getDb, palaces } from '@/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
 import { createPalaceSchema } from '../schemas/palace';
 

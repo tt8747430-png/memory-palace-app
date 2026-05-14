@@ -1,5 +1,5 @@
 import { notFound, redirect } from 'next/navigation';
-import { getDb, nodes, rooms, palaces, nodeReviewState, and, eq, isNull } from '@memory-palace/db';
+import { getDb, nodes, rooms, palaces, nodeReviewState, and, eq, isNull } from '@/db';
 import { getCurrentUser } from '@/shared/lib/supabase';
 import { QuizSession, type DueNodeWithMeta } from '@/features/practice';
 

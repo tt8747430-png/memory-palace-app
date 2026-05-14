@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
-import { getDb, rooms, palaces, and, eq, isNull, inArray, sql } from '@memory-palace/db';
+import { getDb, rooms, palaces, and, eq, isNull, inArray, sql } from '@/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
 
 const setRoomOrderSchema = z.object({

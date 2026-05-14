@@ -4,8 +4,7 @@ Next.js 16 + React 19 (React Compiler on) memory-palace SPA. Turborepo + pnpm wo
 
 ## Workspace layout
 
-- `apps/web` — the only app. Path alias `@/*` → `apps/web/src/*`.
-- `packages/db` (`@memory-palace/db`) — Drizzle schema, client, seed, raw `migrations/*.sql` applied via `scripts/apply-migration.mjs`.
+- `apps/web` — the only app. Path alias `@/*` → `apps/web/src/*`. Database (Drizzle schema, client, seed) lives at `apps/web/src/db/`; drizzle-kit config + scripts live at the app root (`apps/web/drizzle.config.ts`, scripts `db:generate`, `db:push`, `db:studio`, `db:seed`).
 - `packages/ui` (`@memory-palace/ui`) — shadcn-style primitives only. App-specific components live under `apps/web/src/shared/components` or feature folders.
 - `packages/eslint-config`, `packages/typescript-config` — shared configs (extend `@memory-palace/typescript-config/nextjs.json`).
 - Tests: unit/integration co-located in `__tests__/` (vitest, jsdom); e2e in `playwright/tests` (run against a built `next start`).
@@ -33,7 +32,7 @@ After mutating, call `revalidatePath()` for affected routes inside the handler.
 
 ## Database
 
-Use `getDb()` from `@memory-palace/db` and import operators (`eq`, `and`, `desc`, `sql`, …) from the same package — it re-exports drizzle-orm. SQL migrations are hand-written under `packages/db/migrations/` and applied with `pnpm --filter @memory-palace/db tsx scripts/apply-migration.mjs <file>`. `drizzle-kit generate`/`push` exist but the source of truth is the raw SQL files plus `apply-rls.mjs` for RLS.
+Use `getDb()` from `@/db` and import operators (`eq`, `and`, `desc`, `sql`, …) from the same barrel — `@/db` re-exports drizzle-orm. Schema lives at [apps/web/src/db/schema.ts](apps/web/src/db/schema.ts) and relations at [apps/web/src/db/relations.ts](apps/web/src/db/relations.ts). Drizzle-kit scripts (`pnpm --filter @memory-palace/web db:generate | db:push | db:migrate | db:studio | db:seed`) read [apps/web/drizzle.config.ts](apps/web/drizzle.config.ts). Generated migrations land in `apps/web/drizzle/`.
 
 ## Auth & middleware
 
@@ -101,7 +100,7 @@ pnpm test:unit                    # vitest across workspace
 pnpm --filter @memory-palace/web test:unit -- <pattern>
 pnpm check:prepush                # guardrails + lint + format:check + build (run before pushing)
 pnpm exec playwright test         # builds web then runs e2e
-pnpm --filter @memory-palace/db seed
+pnpm --filter @memory-palace/web db:seed
 ```
 
 Node ≥22, pnpm ≥9. Git hooks are auto-installed via `prepare` → `scripts/setup-git-hooks.sh`.
@@ -109,6 +108,6 @@ Node ≥22, pnpm ≥9. Git hooks are auto-installed via `prepare` → `scripts/s
 ## Don't
 
 - Don't add `middleware.ts` (guardrail fails). Edit `proxy.ts`.
-- Don't import from `drizzle-orm` directly in app code — go through `@memory-palace/db`.
+- Don't import from `drizzle-orm` directly in app code — go through `@/db` (it re-exports operators alongside the schema).
 - Don't bypass `defineAction` for server mutations (loses auth + rate limit + error envelope).
 - Don't deep-import into `features/*/`; use the barrel.

@@ -12,7 +12,7 @@ import {
   eq,
   isNull,
   sql,
-} from '@memory-palace/db';
+} from '@/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
 import { recordPracticeSchema } from '../schemas/practice';
 import { applyReview, initialReviewState } from '../lib/srs';

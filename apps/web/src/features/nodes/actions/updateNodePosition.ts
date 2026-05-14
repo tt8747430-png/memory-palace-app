@@ -1,6 +1,6 @@
 'use server';
 
-import { getDb, nodes, and, eq, isNull } from '@memory-palace/db';
+import { getDb, nodes, and, eq, isNull } from '@/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
 import { updateNodePositionSchema } from '../schemas/node';
 

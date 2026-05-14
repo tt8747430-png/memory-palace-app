@@ -1,7 +1,7 @@
 'use client';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { SelectEdge } from '@memory-palace/db';
+import type { SelectEdge } from '@/db';
 import { createEdge, deleteEdge } from '@/features/nodes';
 import { broadcastInvalidate } from '@/shared/lib/cross-tab-sync';
 import { roomEdgesQueryKey } from './useEdgesQuery';

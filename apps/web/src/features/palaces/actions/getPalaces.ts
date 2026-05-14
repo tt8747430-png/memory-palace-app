@@ -1,6 +1,6 @@
 'use server';
 
-import { getDb, palaces, and, eq, isNull, desc } from '@memory-palace/db';
+import { getDb, palaces, and, eq, isNull, desc } from '@/db';
 import { defineAction } from '@/shared/lib/action';
 
 export const getPalaces = defineAction({

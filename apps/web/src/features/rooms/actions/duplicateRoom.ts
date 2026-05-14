@@ -15,7 +15,7 @@ import {
   inArray,
   isNull,
   sql,
-} from '@memory-palace/db';
+} from '@/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
 import { roomIdSchema } from '../schemas/room';
 

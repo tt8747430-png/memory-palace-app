@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { Pencil } from 'lucide-react';
-import type { PalaceMode, SelectPalace } from '@memory-palace/db';
+import type { PalaceMode, SelectPalace } from '@/db';
 import {
   Button,
   Dialog,

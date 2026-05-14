@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { PalaceCard } from './PalaceCard';
-import type { SelectPalace } from '@memory-palace/db';
+import type { SelectPalace } from '@/db';
 
 type PalacePlaygroundArgs = {
   title: string;

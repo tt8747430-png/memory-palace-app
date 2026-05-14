@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { DoorOpen } from 'lucide-react';
-import type { SelectRoom } from '@memory-palace/db';
+import type { SelectRoom } from '@/db';
 import { Card, CardHeader, CardTitle, CardFooter } from '@memory-palace/ui';
 import { EditRoomDialog } from './EditRoomDialog';
 import { DeleteRoomButton } from './DeleteRoomButton';

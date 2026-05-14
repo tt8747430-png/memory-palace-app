@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/shared/lib/supabase';
 import { checkRateLimit } from '@/shared/lib/ratelimit';
-import { getDb, palaces, rooms, nodes, eq, isNull, and, asc } from '@memory-palace/db';
+import { getDb, palaces, rooms, nodes, eq, isNull, and, asc } from '@/db';
 import type {
   ExportDataV1,
   ExportPalace,

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import type { NodeType } from '@memory-palace/db';
+import type { NodeType } from '@/db';
 import { Handle, NodeToolbar, Position, type Node, type NodeProps } from '@xyflow/react';
 import { m, useReducedMotion } from 'framer-motion';
 import {

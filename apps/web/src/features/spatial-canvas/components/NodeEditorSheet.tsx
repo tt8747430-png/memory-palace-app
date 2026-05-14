@@ -11,7 +11,7 @@ import {
 import { Loader2, Plus, Trash2, X } from 'lucide-react';
 import { useDebouncedCallback } from 'use-debounce';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import type { NodeType, PalaceMode, SelectNode } from '@memory-palace/db';
+import type { NodeType, PalaceMode, SelectNode } from '@/db';
 import {
   Sheet,
   SheetContent,

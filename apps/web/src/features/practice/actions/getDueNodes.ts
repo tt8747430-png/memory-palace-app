@@ -15,7 +15,7 @@ import {
   lte,
   sql,
   type SQL,
-} from '@memory-palace/db';
+} from '@/db';
 import { defineAction } from '@/shared/lib/action';
 import { getDueNodesSchema } from '../schemas/practice';
 

@@ -1,6 +1,6 @@
 'use server';
 
-import { getDb, palaces, rooms, nodes, count, and, eq, isNull } from '@memory-palace/db';
+import { getDb, palaces, rooms, nodes, count, and, eq, isNull } from '@/db';
 import { defineAction } from '@/shared/lib/action';
 
 export type DashboardStats = {

@@ -1,17 +1,6 @@
 'use server';
 
-import {
-  getDb,
-  nodes,
-  rooms,
-  and,
-  desc,
-  eq,
-  getTableColumns,
-  isNull,
-  sql,
-  type SQL,
-} from '@memory-palace/db';
+import { getDb, nodes, rooms, and, desc, eq, getTableColumns, isNull, sql, type SQL } from '@/db';
 import { defineAction } from '@/shared/lib/action';
 import { searchNodesSchema } from '../schemas/node';
 

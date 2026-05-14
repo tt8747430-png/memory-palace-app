@@ -15,7 +15,7 @@ import {
   gte,
   isNull,
   sql,
-} from '@memory-palace/db';
+} from '@/db';
 import { defineAction } from '@/shared/lib/action';
 
 export type WeakestNode = {

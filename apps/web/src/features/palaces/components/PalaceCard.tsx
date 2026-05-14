@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import type { SelectPalace } from '@memory-palace/db';
+import type { SelectPalace } from '@/db';
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from '@memory-palace/ui';
 import { EditPalaceDialog } from './EditPalaceDialog';
 import { DeletePalaceButton } from './DeletePalaceButton';

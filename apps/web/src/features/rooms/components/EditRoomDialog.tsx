@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { Pencil } from 'lucide-react';
-import type { SelectRoom } from '@memory-palace/db';
+import type { SelectRoom } from '@/db';
 import {
   Button,
   Dialog,

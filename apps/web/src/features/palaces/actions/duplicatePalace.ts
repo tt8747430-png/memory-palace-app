@@ -1,19 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import {
-  getDb,
-  palaces,
-  rooms,
-  nodes,
-  nodeTags,
-  tags,
-  and,
-  asc,
-  eq,
-  inArray,
-  isNull,
-} from '@memory-palace/db';
+import { getDb, palaces, rooms, nodes, nodeTags, tags, and, asc, eq, inArray, isNull } from '@/db';
 import { ActionError, defineAction } from '@/shared/lib/action';
 import { palaceIdSchema } from '../schemas/palace';
 

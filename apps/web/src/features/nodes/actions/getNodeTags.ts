@@ -1,6 +1,6 @@
 'use server';
 
-import { getDb, tags, nodeTags, nodes, eq, and, isNull } from '@memory-palace/db';
+import { getDb, tags, nodeTags, nodes, eq, and, isNull } from '@/db';
 import { defineAction } from '@/shared/lib/action';
 import { getNodeTagsSchema } from '../schemas/node';
 
