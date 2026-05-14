@@ -24,10 +24,8 @@ for (const key of requiredStringKeys) {
   }
 }
 
-if (!parsed.buildCommand.includes('@memory-palace/web')) {
-  console.error(
-    'Vercel config check failed: buildCommand must target @memory-palace/web in this monorepo.',
-  );
+if (!/^pnpm\s+build\b/.test(parsed.buildCommand.trim())) {
+  console.error('Vercel config check failed: buildCommand must start with "pnpm build".');
   process.exit(1);
 }
 

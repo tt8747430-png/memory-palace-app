@@ -1,0 +1,153 @@
+'use client';
+
+import * as React from 'react';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { X } from 'lucide-react';
+import { cn } from '@/ui';
+import { useDragToDismiss } from '../lib/useDragToDismiss';
+
+const Sheet = DialogPrimitive.Root;
+
+const SheetTrigger = DialogPrimitive.Trigger;
+
+const SheetClose = DialogPrimitive.Close;
+
+const SheetPortal = DialogPrimitive.Portal;
+
+function SheetOverlay({
+  className,
+  ...props
+}: React.ComponentProps<typeof DialogPrimitive.Overlay>) {
+  return (
+    <DialogPrimitive.Overlay
+      data-slot="sheet-overlay"
+      className={cn(
+        'fixed inset-0 z-50 bg-black/80',
+        'data-[state=open]:animate-in data-[state=closed]:animate-out',
+        'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+const sheetContentVariants = cva(
+  'fixed z-50 gap-4 bg-background px-6 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500 data-[state=open]:animate-in data-[state=closed]:animate-out',
+  {
+    variants: {
+      side: {
+        top: 'inset-x-0 top-0 border-b pt-[max(env(safe-area-inset-top),1.5rem)] pb-6 data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top',
+
+        bottom:
+          'inset-x-0 bottom-0 border-t pt-6 pb-[max(env(safe-area-inset-bottom),1.5rem)] data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom',
+        left: 'inset-y-0 left-0 h-full w-3/4 border-r py-6 data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm',
+        right:
+          'inset-y-0 right-0 h-full w-3/4 border-l py-6 data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm',
+      },
+    },
+    defaultVariants: {
+      side: 'right',
+    },
+  },
+);
+
+interface SheetContentProps
+  extends
+    React.ComponentProps<typeof DialogPrimitive.Content>,
+    VariantProps<typeof sheetContentVariants> {}
+
+function SheetContent({ side = 'right', className, children, ...props }: SheetContentProps) {
+  const closeRef = React.useRef<HTMLButtonElement>(null);
+  const drag = useDragToDismiss(() => closeRef.current?.click());
+  const isBottom = side === 'bottom';
+  return (
+    <SheetPortal>
+      <SheetOverlay />
+      <DialogPrimitive.Content
+        ref={isBottom ? drag.ref : undefined}
+        data-slot="sheet-content"
+        className={cn(sheetContentVariants({ side }), className)}
+        {...props}
+      >
+        {isBottom ? (
+          <div
+            aria-hidden
+            onPointerDown={drag.onPointerDown}
+            onPointerMove={drag.onPointerMove}
+            onPointerUp={drag.onPointerUp}
+            onPointerCancel={drag.onPointerUp}
+            className="absolute inset-x-0 top-0 mx-auto flex h-6 w-full max-w-[80%] cursor-grab touch-none items-center justify-center"
+          >
+            <span className="mt-2 h-1.5 w-10 rounded-full bg-muted-foreground/30" />
+          </div>
+        ) : null}
+        <DialogPrimitive.Close className="absolute right-2 top-[calc(env(safe-area-inset-top)+0.5rem)] inline-flex min-h-touch min-w-touch items-center justify-center rounded-md opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+          <X className="h-4 w-4" />
+          <span className="sr-only">Close</span>
+        </DialogPrimitive.Close>
+        {children}
+        {isBottom ? (
+          <DialogPrimitive.Close ref={closeRef} className="hidden" tabIndex={-1} aria-hidden />
+        ) : null}
+      </DialogPrimitive.Content>
+    </SheetPortal>
+  );
+}
+
+function SheetHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      data-slot="sheet-header"
+      className={cn('flex flex-col space-y-2 text-center sm:text-left', className)}
+      {...props}
+    />
+  );
+}
+
+function SheetFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      data-slot="sheet-footer"
+      className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', className)}
+      {...props}
+    />
+  );
+}
+
+function SheetTitle({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Title>) {
+  return (
+    <DialogPrimitive.Title
+      data-slot="sheet-title"
+      className={cn('text-lg font-semibold text-foreground', className)}
+      {...props}
+    />
+  );
+}
+
+function SheetDescription({
+  className,
+  ...props
+}: React.ComponentProps<typeof DialogPrimitive.Description>) {
+  return (
+    <DialogPrimitive.Description
+      data-slot="sheet-description"
+      className={cn('text-sm text-muted-foreground', className)}
+      {...props}
+    />
+  );
+}
+
+export {
+  Sheet,
+  SheetPortal,
+  SheetOverlay,
+  SheetTrigger,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
+};

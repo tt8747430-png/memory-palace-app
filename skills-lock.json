@@ -1,10 +1,82 @@
 {
   "version": 1,
   "skills": {
+    "accessibility": {
+      "source": "addyosmani/web-quality-skills",
+      "sourceType": "github",
+      "skillPath": "skills/accessibility/SKILL.md",
+      "computedHash": "10e83284d3395ab5ec2f2db602b663480a37a4ff404d16510eefe86b034fcc1a"
+    },
+    "agent-governance": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "skillPath": "skills/agent-governance/SKILL.md",
+      "computedHash": "a91eb8ef638422fa4ec457d81e270f79fe5040b41d7f137dba35016bc20529f5"
+    },
+    "agent-supply-chain": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "skillPath": "skills/agent-supply-chain/SKILL.md",
+      "computedHash": "af309696b57bb67cffc07d23fc44f052ca2f9d7fdea8af2e30e06f3ad5dc2c6f"
+    },
+    "agent-tool-builder": {
+      "source": "sickn33/antigravity-awesome-skills",
+      "sourceType": "github",
+      "skillPath": "skills/agent-tool-builder/SKILL.md",
+      "computedHash": "238e9ac45a90d984de5a2a74d2fa01184a7369aa43751add6ccccc4dc5062e40"
+    },
+    "agentic-actions-auditor": {
+      "source": "trailofbits/skills",
+      "sourceType": "github",
+      "skillPath": "plugins/agentic-actions-auditor/skills/agentic-actions-auditor/SKILL.md",
+      "computedHash": "96598a560124e5d86df4ef42fc3d97d9875ddcc66d4aff1d839e696a288c88e4"
+    },
+    "app-builder": {
+      "source": "davila7/claude-code-templates",
+      "sourceType": "github",
+      "skillPath": "cli-tool/components/skills/business-marketing/app-builder/SKILL.md",
+      "computedHash": "9810619c47a30b5b3a3605b36e0e68dc420ad8b61205e9f4764073c8bedd87a5"
+    },
+    "architecture-decision-records": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/documentation-generation/skills/architecture-decision-records/SKILL.md",
+      "computedHash": "bffeafc71791924809ca9e24bfe3f18e87b2a060dbe5484468b4ff06c8e693b2"
+    },
     "best-practices": {
       "source": "davila7/claude-code-templates",
       "sourceType": "github",
       "computedHash": "98dafea60ec1a7f5f70f6febcdd4b4fa3fe15723ad9c0b991c0818615bff7ba6"
+    },
+    "clean-code": {
+      "source": "sickn33/antigravity-awesome-skills",
+      "sourceType": "github",
+      "skillPath": "skills/clean-code/SKILL.md",
+      "computedHash": "74bf6ded4f61ddcb593e7a29beb96c284f888cbe0639ad6e23710447c36ff19a"
+    },
+    "code-review-excellence": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/developer-essentials/skills/code-review-excellence/SKILL.md",
+      "computedHash": "0f585a4ad2f6d8353069ca9051c6f0e8865abb9d3a6a268d423784c3c3852962"
+    },
+    "conventional-commit": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "skillPath": "skills/conventional-commit/SKILL.md",
+      "computedHash": "f29c9486cede6c7b2df0cfb0a2e4aa67446552b991bcf17d1b309e903171f03d"
+    },
+    "convert-plaintext-to-md": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "skillPath": "skills/convert-plaintext-to-md/SKILL.md",
+      "computedHash": "934c017d41118a44f4db0e80b526db175cadcfdf8c5354fc9eceb0b3cb6beb50"
+    },
+    "create-agentsmd": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "skillPath": "skills/create-agentsmd/SKILL.md",
+      "computedHash": "bfbdbb76b17cca970d1d624e36ce72b6847860d740581c8865da796c1fef8552"
     },
     "find-skills": {
       "source": "vercel-labs/skills",
@@ -20,6 +92,12 @@
       "source": "wshobson/agents",
       "sourceType": "github",
       "computedHash": "082be44c6320ce348b19c33f08f527ad604eed2da48f92e8c7010e206d5450cd"
+    },
+    "multi-agent-orchestration": {
+      "source": "qodex-ai/ai-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/multi-agent-orchestration/SKILL.md",
+      "computedHash": "e5517caccf376ec61d8f94cd22f1bdd44a588a61214fcf8a67b75ba3d23a1864"
     },
     "nextjs-app-router-fundamentals": {
       "source": "wsimmonds/claude-nextjs-skills",
@@ -46,6 +124,30 @@
       "sourceType": "github",
       "computedHash": "8584b77e9491af20225a185bebdb3823bbc3e66e1da74d2e5e9dc5114559ef19"
     },
+    "react-performance-optimization": {
+      "source": "nickcrew/claude-ctx-plugin",
+      "sourceType": "github",
+      "skillPath": "skills/react-performance-optimization/SKILL.md",
+      "computedHash": "8338b086e8e166e0b32ec3493a6b0f80c2e388cb5d3da10bcecaa1f2ce34d43d"
+    },
+    "receiving-code-review": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/receiving-code-review/SKILL.md",
+      "computedHash": "2760c85d4f4117b0006e7ba755f4bbd61f8f4c185f347999763c97f507274e30"
+    },
+    "requesting-code-review": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/requesting-code-review/SKILL.md",
+      "computedHash": "874f3786b05007a8b4a60452a4cd89b9917c645d34b6b1e40ea05037d12f0e67"
+    },
+    "self-improve": {
+      "source": "yeachan-heo/oh-my-claudecode",
+      "sourceType": "github",
+      "skillPath": "skills/self-improve/SKILL.md",
+      "computedHash": "7ba479bd67b77c86e9bc8f96671fe24d4bb95132734baaef1bfb2ac581d10b5b"
+    },
     "shadcn-ui": {
       "source": "existential-birds/beagle",
       "sourceType": "github",
@@ -68,6 +170,12 @@
       "skillPath": "skills/supabase-postgres-best-practices/SKILL.md",
       "computedHash": "d606a1146be6d54fb9e73f718b5320b9acac5ff2ba2d7230a555df4b5a923b4a"
     },
+    "tailwind-design-system": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/frontend-mobile-development/skills/tailwind-design-system/SKILL.md",
+      "computedHash": "988d80e52c67c3692d43cc963b6a048a239895e88b272b061de55370d0f8efc3"
+    },
     "tailwind-theme-builder": {
       "source": "jezweb/claude-skills",
       "sourceType": "github",
@@ -87,6 +195,12 @@
       "source": "bobmatnyc/claude-mpm-skills",
       "sourceType": "github",
       "computedHash": "9d2eef62dbba4528c258222534cf2f1bfa37bdc1a00547add05e3367ac4946f3"
+    },
+    "workflow-orchestrator": {
+      "source": "charon-fan/agent-playbook",
+      "sourceType": "github",
+      "skillPath": "skills/workflow-orchestrator/SKILL.md",
+      "computedHash": "177b9620bfa5b0dbf024eec4bd2de3a0b62a0ece5d8e74495f02892e8453ba80"
     },
     "zod": {
       "source": "bobmatnyc/claude-mpm-skills",

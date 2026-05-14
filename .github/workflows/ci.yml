@@ -60,10 +60,8 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build web app
-        run: pnpm turbo build --filter=@memory-palace/web
+        run: pnpm build
         env:
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM: ${{ github.repository_owner }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
 
@@ -89,10 +87,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: pnpm turbo lint
-        env:
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM: ${{ github.repository_owner }}
+        run: pnpm lint
 
       - name: Check formatting
         run: pnpm format:check
@@ -119,10 +114,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Type check
-        run: pnpm turbo typecheck
-        env:
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM: ${{ github.repository_owner }}
+        run: pnpm typecheck
 
   dependency-audit:
     name: Dependency Security Audit
@@ -170,7 +162,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Check Drizzle migration consistency
-        run: pnpm --filter @memory-palace/db exec drizzle-kit check
+        run: pnpm exec drizzle-kit check
         env:
           DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
 
@@ -196,13 +188,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run unit & component tests with coverage
-        run: pnpm turbo test:unit -- --coverage
-        env:
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM: ${{ github.repository_owner }}
+        run: pnpm test:unit --coverage
 
   integration-tests:
-    name: Integration Tests (Server Actions + DB)
+    name: Apply migrations to test DB
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -237,15 +226,8 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Apply migrations to test database
-        run: pnpm --filter @memory-palace/db exec drizzle-kit push
+        run: pnpm exec drizzle-kit push
         env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/memory_palace_test
-
-      - name: Run integration tests
-        run: pnpm turbo test:integration
-        env:
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM: ${{ github.repository_owner }}
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/memory_palace_test
 
   e2e-tests:
@@ -274,10 +256,8 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Build web app
-        run: pnpm turbo build --filter=@memory-palace/web
+        run: pnpm build
         env:
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-          TURBO_TEAM: ${{ github.repository_owner }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
 

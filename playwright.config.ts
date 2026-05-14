@@ -20,11 +20,7 @@ export default defineConfig({
         { name: 'mobile-chrome', use: { ...devices['Pixel 5'] } },
       ],
   webServer: {
-    // In CI the app is pre-built by the workflow; just start it.
-    // Locally, build + start so Playwright can serve a production build.
-    command: process.env.CI
-      ? 'pnpm --filter @memory-palace/web start'
-      : 'pnpm turbo build --filter=@memory-palace/web && pnpm --filter @memory-palace/web start',
+    command: process.env.CI ? 'pnpm start' : 'pnpm build && pnpm start',
     port: 3000,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

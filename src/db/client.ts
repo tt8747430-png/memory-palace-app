@@ -1,0 +1,27 @@
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
+import * as relationsSchema from './relations';
+import * as tableSchema from './schema';
+
+const fullSchema = { ...tableSchema, ...relationsSchema };
+
+type DbClient = ReturnType<typeof drizzle<typeof fullSchema>>;
+export type DbTx = Parameters<Parameters<DbClient['transaction']>[0]>[0];
+
+let client: DbClient | null = null;
+
+export function getDb(): DbClient {
+  if (client) return client;
+  const url = process.env.DATABASE_URL;
+  if (!url) {
+    throw new Error(
+      'DATABASE_URL is not set. Use the Supavisor pooled connection string (port 6543).',
+    );
+  }
+
+  const isLocal = url.includes('localhost') || url.includes('127.0.0.1');
+  client = drizzle(postgres(url, { prepare: false, ssl: isLocal ? false : 'require' }), {
+    schema: fullSchema,
+  });
+  return client;
+}

@@ -1,46 +1,88 @@
 {
-  "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": ["**/.env.*local"],
-  "globalEnv": [
-    "DATABASE_URL",
-    "DIRECT_DATABASE_URL",
-    "UPSTASH_REDIS_REST_URL",
-    "UPSTASH_REDIS_REST_TOKEN"
+  "$schema": "https://turborepo.dev/schema.json",
+  "ui": "stream",
+  "globalDependencies": [
+    "tsconfig.json",
+    "next.config.ts",
+    "postcss.config.mjs",
+    "eslint.config.mjs",
+    ".prettierrc*",
+    ".prettierignore",
+    "vitest.config.ts",
+    "src/test-setup.ts",
+    ".env",
+    ".env.local",
+    ".env.production"
   ],
+  "globalEnv": ["NODE_ENV", "VERCEL", "CI"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "inputs": [
+        "src/**",
+        "public/**",
+        "next.config.ts",
+        "postcss.config.mjs",
+        "tsconfig.json",
+        "package.json"
+      ],
+      "outputs": [".next/**", "!.next/cache/**"],
+      "env": [
+        "NEXT_PUBLIC_*",
+        "DATABASE_URL",
+        "DIRECT_URL",
+        "SUPABASE_URL",
+        "SUPABASE_ANON_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "UPSTASH_REDIS_REST_URL",
+        "UPSTASH_REDIS_REST_TOKEN",
+        "OTEL_*"
+      ]
     },
-    "lint": {},
+    "lint": {
+      "inputs": [
+        "src/**/*.{ts,tsx,js,jsx,mjs}",
+        "scripts/**/*.{ts,tsx,js,jsx,mjs}",
+        "eslint.config.mjs",
+        "package.json"
+      ],
+      "outputs": []
+    },
     "typecheck": {
-      "dependsOn": ["^typecheck"]
+      "inputs": ["src/**/*.{ts,tsx}", "tsconfig.json", "next-env.d.ts", "package.json"],
+      "outputs": []
+    },
+    "test:unit": {
+      "inputs": ["src/**", "vitest.config.ts", "tsconfig.json", "package.json"],
+      "outputs": []
+    },
+    "format:check": {
+      "inputs": [
+        "**/*.{ts,tsx,js,jsx,mjs,json,md,mdx,css,yaml,yml}",
+        "!node_modules/**",
+        "!.next/**",
+        "!.turbo/**",
+        "!coverage/**",
+        ".prettierrc*",
+        ".prettierignore"
+      ],
+      "outputs": []
+    },
+    "check:guardrails": {
+      "inputs": ["scripts/ci/check-guardrails.mjs", "src/proxy.ts"],
+      "outputs": []
+    },
+    "check:vercel-config": {
+      "inputs": ["scripts/ci/validate-vercel-config.mjs", "vercel.json"],
+      "outputs": []
     },
     "dev": {
       "cache": false,
       "persistent": true
     },
-    "start": {
-      "dependsOn": ["build"],
+    "storybook": {
       "cache": false,
       "persistent": true
-    },
-    "format": {
-      "cache": false
-    },
-    "format:check": {
-      "cache": false
-    },
-    "test:unit": {
-      "dependsOn": [],
-      "outputs": ["coverage/**"]
-    },
-    "test:integration": {
-      "dependsOn": ["^build"],
-      "outputs": []
-    },
-    "seed": {
-      "cache": false
     }
   }
 }

@@ -1,12 +1,11 @@
-#!/usr/bin/env sh
 set -eu
 
 echo "Running pre-push checks..."
 pnpm check:guardrails
 pnpm check:vercel-config
-pnpm turbo lint
+pnpm lint
 pnpm format:check
-pnpm turbo build --filter=@memory-palace/web
+pnpm build
 
 echo "Pre-push checks passed."
 
