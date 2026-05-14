@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { AtSign, Calendar } from 'lucide-react';
-import { getProfile, SettingsSection, SignOutButton } from '@/features/settings';
+import { getUserProfile as getProfile } from '@/shared/lib/userProfile';
+import { SettingsSection, SignOutButton } from '@/features/settings';
 
 export const metadata: Metadata = { title: 'Account · Settings' };
 
