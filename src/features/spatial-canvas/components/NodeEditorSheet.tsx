@@ -29,6 +29,7 @@ import { useCanvasStore } from '@/features/spatial-canvas';
 import { useNodesQuery } from '../hooks/useNodesQuery';
 import { useRoomNodeMutations, type NodePatch } from '../hooks/useRoomNodeMutations';
 import { useIsMobile } from '@/shared/hooks/useIsMobile';
+import { useBodyScrollLock } from '@/shared/hooks/useBodyScrollLock';
 import { getNodeTags, addNodeTag, removeNodeTag } from '@/features/nodes';
 
 const NODE_TYPES: ReadonlyArray<{ value: NodeType; label: string }> = [
@@ -93,12 +94,19 @@ export function NodeEditorSheet({ roomId, palaceMode = 'simple' }: NodeEditorShe
   const close = () => setEditingNodeId(null);
 
   const sheetContentClass = isMobile
-    ? 'flex h-[92dvh] flex-col rounded-t-2xl overflow-y-auto pt-4'
+    ? 'flex h-[92svh] flex-col rounded-t-2xl overflow-y-auto overscroll-contain pt-4'
     : 'flex w-full max-w-sm flex-col';
 
+  const open = Boolean(editingNode);
+  useBodyScrollLock(open);
+
   return (
-    <Sheet open={Boolean(editingNode)} onOpenChange={(open) => !open && close()}>
-      <SheetContent side={isMobile ? 'bottom' : 'right'} className={sheetContentClass}>
+    <Sheet open={open} onOpenChange={(next) => !next && close()}>
+      <SheetContent
+        side={isMobile ? 'bottom' : 'right'}
+        onOpenAutoFocus={(event) => event.preventDefault()}
+        className={sheetContentClass}
+      >
         <SheetHeader>
           <SheetTitle>Edit Node</SheetTitle>
           <SheetDescription>

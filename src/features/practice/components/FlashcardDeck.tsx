@@ -76,7 +76,7 @@ export function FlashcardDeck({ nodes }: Props) {
 
   if (nodes.length === 0) {
     return (
-      <div className="-mx-4 -my-6 flex min-h-[calc(100dvh-3.5rem-3rem-var(--height-bottom-nav)-env(safe-area-inset-top)-env(safe-area-inset-bottom))] flex-col items-center justify-center gap-3 p-8 text-center sm:-mx-6 md:min-h-dvh lg:-mx-8">
+      <div className="-mx-4 -my-6 flex min-h-[calc(100svh-3.5rem-3rem-var(--height-bottom-nav)-env(safe-area-inset-top)-env(safe-area-inset-bottom))] flex-col items-center justify-center gap-3 p-8 text-center sm:-mx-6 md:min-h-svh lg:-mx-8">
         <h2 className="text-lg font-semibold">No cards in this deck</h2>
         <p className="text-sm text-muted-foreground">
           Add some nodes to a room and they&apos;ll show up here once they&apos;re due for review.
@@ -93,7 +93,7 @@ export function FlashcardDeck({ nodes }: Props) {
 
   if (!current) {
     return (
-      <div className="-mx-4 -my-6 flex min-h-[calc(100dvh-3.5rem-3rem-var(--height-bottom-nav)-env(safe-area-inset-top)-env(safe-area-inset-bottom))] flex-col items-center justify-center gap-3 p-8 text-center sm:-mx-6 md:min-h-dvh lg:-mx-8">
+      <div className="-mx-4 -my-6 flex min-h-[calc(100svh-3.5rem-3rem-var(--height-bottom-nav)-env(safe-area-inset-top)-env(safe-area-inset-bottom))] flex-col items-center justify-center gap-3 p-8 text-center sm:-mx-6 md:min-h-svh lg:-mx-8">
         <h2 className="text-lg font-semibold">Deck complete</h2>
         <p className="text-sm text-muted-foreground">
           You&apos;ve reviewed every card in this set. Come back later for the next round.
@@ -117,7 +117,7 @@ export function FlashcardDeck({ nodes }: Props) {
   const progress = nodes.length > 0 ? ((index + 1) / nodes.length) * 100 : 0;
 
   return (
-    <div className="-mx-4 -my-6 flex h-[calc(100dvh-3.5rem-3rem-var(--height-bottom-nav)-env(safe-area-inset-top)-env(safe-area-inset-bottom))] flex-col bg-background sm:-mx-6 md:h-dvh lg:-mx-8">
+    <div className="-mx-4 -my-6 flex h-[calc(100svh-3.5rem-3rem-var(--height-bottom-nav)-env(safe-area-inset-top)-env(safe-area-inset-bottom))] flex-col bg-background sm:-mx-6 md:h-svh lg:-mx-8">
       <header className="sticky top-0 z-20 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/75">
         <div className="flex items-center justify-between gap-3 px-4 py-2.5 text-xs sm:px-6">
           <span className="tabular-nums text-muted-foreground">
@@ -149,7 +149,7 @@ export function FlashcardDeck({ nodes }: Props) {
         </div>
       </header>
 
-      <main className="flex flex-1 items-start justify-center overflow-y-auto px-4 py-6 sm:items-center sm:px-6 sm:py-10">
+      <main className="flex flex-1 items-start justify-center overflow-y-auto overscroll-contain px-4 py-6 sm:items-center sm:px-6 sm:py-10">
         <SwipeableFlashcard
           cardKey={current.id}
           flipped={flipped}
