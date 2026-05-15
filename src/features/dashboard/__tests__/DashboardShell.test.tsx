@@ -65,9 +65,7 @@ describe('DashboardShell', () => {
   it('main content reserves space for the fixed mobile top bar', () => {
     render(<DashboardShell>Content</DashboardShell>);
     const main = screen.getByRole('main');
-    expect(main.className).toMatch(
-      /pt-\[calc\(env\(safe-area-inset-top\)\+var\(--height-top-bar\)\)]/,
-    );
+    expect(main.className).toMatch(/pt-14/);
     expect(main.className).toMatch(/md:pt-0/);
   });
 });

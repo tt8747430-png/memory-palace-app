@@ -194,13 +194,6 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  --height-bottom-nav: 3.5rem;
-  --height-top-bar: 3.5rem;
-
-  --height-bottom-nav-reserved: calc(
-    3.5rem + min(max(env(safe-area-inset-bottom, 0px), 0.5rem), 1.25rem)
-  );
-
   --spacing-touch: 3rem;
 }
 

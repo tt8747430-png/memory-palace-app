@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function SettingsLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="space-y-6 pb-(--height-bottom-nav) sm:space-y-8 md:pb-0">
+    <div className="space-y-6 pb-14 sm:space-y-8 md:pb-0">
       <header>
         <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Settings</h1>
         <p className="mt-1 text-sm text-muted-foreground">

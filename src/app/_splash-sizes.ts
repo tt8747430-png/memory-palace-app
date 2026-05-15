@@ -6,10 +6,18 @@ export interface SplashSize {
 }
 
 export const SPLASH_SIZES = [
+  { id: 'iphone-17-pro-max-portrait', width: 1320, height: 2868, ratio: 3 },
+  { id: 'iphone-17-pro-max-landscape', width: 2868, height: 1320, ratio: 3 },
+  { id: 'iphone-17-pro-portrait', width: 1206, height: 2622, ratio: 3 },
+  { id: 'iphone-17-pro-landscape', width: 2622, height: 1206, ratio: 3 },
   { id: 'iphone-15-pro-max-portrait', width: 1290, height: 2796, ratio: 3 },
   { id: 'iphone-15-pro-max-landscape', width: 2796, height: 1290, ratio: 3 },
   { id: 'iphone-15-pro-portrait', width: 1179, height: 2556, ratio: 3 },
   { id: 'iphone-15-pro-landscape', width: 2556, height: 1179, ratio: 3 },
+  { id: 'iphone-14-pro-max-portrait', width: 1290, height: 2796, ratio: 3 },
+  { id: 'iphone-14-pro-max-landscape', width: 2796, height: 1290, ratio: 3 },
+  { id: 'iphone-14-pro-portrait', width: 1179, height: 2556, ratio: 3 },
+  { id: 'iphone-14-pro-landscape', width: 2556, height: 1179, ratio: 3 },
   { id: 'iphone-14-portrait', width: 1170, height: 2532, ratio: 3 },
   { id: 'iphone-14-landscape', width: 2532, height: 1170, ratio: 3 },
   { id: 'iphone-se-portrait', width: 750, height: 1334, ratio: 2 },
