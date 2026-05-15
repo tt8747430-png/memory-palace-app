@@ -16,8 +16,6 @@ export function BottomNav() {
           <TabLink key={item.href} item={item} active={isNavItemActive(pathname, item.href)} />
         ))}
       </div>
-
-      <div className="h-[env(safe-area-inset-bottom)]" />
     </div>
   );
 }

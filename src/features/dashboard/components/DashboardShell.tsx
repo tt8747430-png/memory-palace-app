@@ -51,7 +51,7 @@ export function DashboardShell({ children, userProfile }: DashboardShellProps) {
 
         <main
           id="main-content"
-          className="min-h-0 flex-1 overflow-y-auto overscroll-contain pt-[calc(env(safe-area-inset-top)+var(--height-top-bar))] pb-[calc(env(safe-area-inset-bottom)+var(--height-bottom-nav))] md:pt-0 md:pb-0"
+          className="min-h-0 flex-1 overflow-y-auto overscroll-contain pt-[calc(env(safe-area-inset-top)+var(--height-top-bar))] pb-[var(--height-bottom-nav)] md:pt-0 md:pb-0"
         >
           <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</div>
         </main>
