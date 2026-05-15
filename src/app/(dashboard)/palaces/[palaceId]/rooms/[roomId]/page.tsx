@@ -42,7 +42,7 @@ export default async function RoomPage({ params }: RoomPageProps) {
   const initialNodes = nodesResult.success ? nodesResult.data : [];
 
   return (
-    <div className="-mx-4 -my-6 flex h-[calc(100svh-3.5rem-3rem-var(--height-bottom-nav)-env(safe-area-inset-top)-env(safe-area-inset-bottom))] flex-col sm:-mx-6 md:h-svh lg:-mx-8">
+    <div className="-mx-4 -my-6 flex h-[calc(100svh-3.5rem-3rem-var(--height-bottom-nav))] flex-col sm:-mx-6 md:h-svh lg:-mx-8">
       <div className="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-2 border-b bg-background/95 px-4 py-2.5 backdrop-blur supports-backdrop-filter:bg-background/75 sm:px-6 lg:px-8">
         <nav
           className="flex min-w-0 items-center gap-1 text-sm text-muted-foreground"

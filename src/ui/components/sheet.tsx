@@ -38,10 +38,10 @@ const sheetContentVariants = cva(
   {
     variants: {
       side: {
-        top: 'inset-x-0 top-0 border-b pt-[max(env(safe-area-inset-top),1.5rem)] pb-6 data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top',
+        top: 'inset-x-0 top-0 border-b pt-6 pb-6 data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top',
 
         bottom:
-          'inset-x-0 bottom-0 border-t pt-6 pb-[max(env(safe-area-inset-bottom),1.5rem)] data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom',
+          'inset-x-0 bottom-0 border-t pt-6 pb-6 data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom',
         left: 'inset-y-0 left-0 h-full w-3/4 border-r py-6 data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm',
         right:
           'inset-y-0 right-0 h-full w-3/4 border-l py-6 data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm',
@@ -83,7 +83,7 @@ function SheetContent({ side = 'right', className, children, ...props }: SheetCo
             <span className="mt-2 h-1.5 w-10 rounded-full bg-muted-foreground/30" />
           </div>
         ) : null}
-        <DialogPrimitive.Close className="absolute right-2 top-[calc(env(safe-area-inset-top)+0.5rem)] inline-flex min-h-touch min-w-touch items-center justify-center rounded-md opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+        <DialogPrimitive.Close className="absolute right-2 top-2 inline-flex min-h-touch min-w-touch items-center justify-center rounded-md opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
           <X className="h-4 w-4" />
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>

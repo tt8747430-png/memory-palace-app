@@ -36,7 +36,7 @@ export function Sidebar({ userProfile, onNavigate, forceExpanded }: SidebarProps
       )}
       data-collapsed={collapsed || undefined}
     >
-      <div className={cn('px-3 pt-[calc(env(safe-area-inset-top)+0.75rem)]', collapsed && 'px-2')}>
+      <div className={cn('px-3 pt-3', collapsed && 'px-2')}>
         {userProfile ? (
           <ProfileMenu
             displayName={userProfile.displayName}
@@ -95,12 +95,7 @@ export function Sidebar({ userProfile, onNavigate, forceExpanded }: SidebarProps
         ))}
       </nav>
 
-      <div
-        className={cn(
-          'border-t border-sidebar-border px-3 pt-2 pb-[calc(env(safe-area-inset-bottom)+0.5rem)]',
-          collapsed && 'px-2',
-        )}
-      >
+      <div className={cn('border-t border-sidebar-border px-3 pt-2 pb-2', collapsed && 'px-2')}>
         {collapsed ? (
           <ul className="space-y-0.5">
             {sidebarFooterItems.map((item) => (

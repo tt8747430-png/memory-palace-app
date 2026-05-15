@@ -16,7 +16,7 @@ export function CanvasFab({ roomId }: CanvasFabProps) {
     <div
       role="toolbar"
       aria-label="Canvas tools"
-      className="pointer-events-auto absolute bottom-[max(1.25rem,env(safe-area-inset-bottom))] left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 rounded-full border bg-card/95 p-1 shadow-lg backdrop-blur-sm md:hidden"
+      className="pointer-events-auto absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 rounded-full border bg-card/95 p-1 shadow-lg backdrop-blur-sm md:hidden"
     >
       {}
       <button

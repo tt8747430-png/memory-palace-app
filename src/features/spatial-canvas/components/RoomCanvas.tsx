@@ -614,7 +614,7 @@ function InnerCanvas({ roomId, initialNodes, palaceMode }: InnerCanvasProps) {
             className="flex md:flex"
             showInteractive={false}
             style={{
-              bottom: 'max(1rem, env(safe-area-inset-bottom))',
+              bottom: '1rem',
               left: '1rem',
             }}
           />

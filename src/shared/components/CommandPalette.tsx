@@ -118,7 +118,7 @@ export function CommandPalette() {
           requestAnimationFrame(() => inputRef.current?.focus({ preventScroll: true }));
         }}
         className={[
-          'inset-x-3 bottom-auto top-[max(env(safe-area-inset-top),1rem)] w-auto max-h-[80dvh]',
+          'inset-x-3 bottom-auto top-4 w-auto max-h-[80dvh]',
           'overflow-hidden rounded-2xl border bg-background p-0 shadow-2xl',
           'data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top',
 
