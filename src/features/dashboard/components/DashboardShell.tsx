@@ -57,7 +57,10 @@ export function DashboardShell({ children, userProfile }: DashboardShellProps) {
         </main>
 
         <nav
-          className="pointer-events-none fixed inset-x-0 bottom-0 z-50 px-3 pb-[max(env(safe-area-inset-bottom),0.5rem)] md:hidden"
+          className="pointer-events-none fixed inset-x-0 bottom-0 z-50 px-3 md:hidden"
+          style={{
+            paddingBottom: 'min(max(env(safe-area-inset-bottom, 0px), 0.5rem), 1.25rem)',
+          }}
           aria-label="Bottom navigation"
         >
           <div className="pointer-events-auto">
