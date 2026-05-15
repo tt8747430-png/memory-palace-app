@@ -7,9 +7,12 @@ export default function manifest(): MetadataRoute.Manifest {
     description:
       'Spatial learning through connected memory nodes. Build your palace, own your knowledge.',
     start_url: '/',
+    scope: '/',
     display: 'standalone',
+    orientation: 'portrait',
     background_color: '#0f172a',
-    theme_color: '#6366f1',
+    theme_color: '#0f172a',
+    categories: ['education', 'productivity'],
     icons: [
       {
         src: '/icon/sm',
@@ -23,11 +26,33 @@ export default function manifest(): MetadataRoute.Manifest {
         purpose: 'any',
       },
       {
+        src: '/icon/md',
+        sizes: '192x192',
+        type: 'image/png',
+        purpose: 'maskable',
+      },
+      {
         src: '/icon/lg',
         sizes: '512x512',
         type: 'image/png',
         purpose: 'any',
       },
+      {
+        src: '/icon/lg',
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'maskable',
+      },
     ],
+    share_target: {
+      action: '/share',
+      method: 'POST',
+      enctype: 'multipart/form-data',
+      params: {
+        title: 'title',
+        text: 'text',
+        url: 'url',
+      },
+    },
   };
 }

@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import { withSerwist } from '@serwist/turbopack';
 
 const securityHeaders = [
   { key: 'X-Frame-Options', value: 'DENY' },
@@ -29,4 +30,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withSerwist(nextConfig);
