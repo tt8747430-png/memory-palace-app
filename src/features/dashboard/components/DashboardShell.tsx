@@ -51,13 +51,13 @@ export function DashboardShell({ children, userProfile }: DashboardShellProps) {
 
         <main
           id="main-content"
-          className="min-h-0 flex-1 overflow-y-auto overscroll-contain pt-[var(--height-top-bar)] pb-[var(--height-bottom-nav)] md:pt-0 md:pb-0"
+          className="min-h-0 flex-1 overflow-y-auto overscroll-contain pt-[var(--height-top-bar)] pb-[var(--height-bottom-nav-reserved)] md:pt-0 md:pb-0"
         >
           <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</div>
         </main>
 
         <nav
-          className="pointer-events-none fixed inset-x-0 bottom-0 z-50 md:hidden"
+          className="pointer-events-none fixed inset-x-0 bottom-0 z-50 px-3 pb-[max(env(safe-area-inset-bottom),0.5rem)] md:hidden"
           aria-label="Bottom navigation"
         >
           <div className="pointer-events-auto">

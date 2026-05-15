@@ -194,8 +194,13 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  --height-bottom-nav: 3.75rem;
+  --height-bottom-nav: 3.5rem;
   --height-top-bar: 3.5rem;
+
+  /* Reserved space below scrollable <main> so the floating tab bar never overlaps content.
+     Must match the nav wrapper's own height (pill 3.5rem + bottom safe-area padding) so the
+     content area ends exactly where the pill begins. */
+  --height-bottom-nav-reserved: calc(3.5rem + max(env(safe-area-inset-bottom), 0.5rem));
 
   --spacing-touch: 3rem;
 }

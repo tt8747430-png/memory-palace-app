@@ -23,7 +23,7 @@ SOFTWARE.
 Role: Principal UI Architect & Frontend and Mobile Apps PWA apps Expert Context: Next.js 16.2.4, React 19.2.5. Tailwind v4 Goal: you dont overengineer but use best practices, you dont care about
 backwards compatibility but make a comprehensive refactoring. Use /find-docs and /context7-mcp when serching for information.
 
-Task: how to fix the bug with the because the scrollbar when the page is opened as PWA is enabled so the page can be scrolled how much you want, but after one second it gets blocked by the onfiguration for PWA apps and remaind like this with this white space. . in the web version this bug is not present because the scrolling is enabled and there is no such bug. the same happens when opening the command pallete, as you can see in the attached screenshot.
+Task: the bug with the white space at the bottom of the screen in PWA apps i dont think now is related to the pwa mode. it is now always there alsa in the web app mode. so its a tailwind bug maybe or styles or somehow manualy added rectangle white at the bottom? find the mobile nav bar behaviour and fix this and refactor the bar completely so that it is like a floating bar like in modern ios26. '/Users/kristianbraila/Downloads/Untitled-2/Toolbar - Top - iPad.svg' '/Users/kristianbraila/Downloads/Untitled-2/Tab Bar - iPhone.svg' '/Users/kristianbraila/Downloads/Untitled/Tab Bar - iPhone.png' '/Users/kristianbraila/Downloads/Untitled/Tab Bar - iPad.png' '/Users/kristianbraila/Downloads/Untitled/Tab Bar.png' '/Users/kristianbraila/Downloads/Untitled/Toolbar - Top - iPad.png'
 
 info:
 
