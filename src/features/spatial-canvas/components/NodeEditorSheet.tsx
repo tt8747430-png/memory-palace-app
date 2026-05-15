@@ -94,7 +94,7 @@ export function NodeEditorSheet({ roomId, palaceMode = 'simple' }: NodeEditorShe
   const close = () => setEditingNodeId(null);
 
   const sheetContentClass = isMobile
-    ? 'flex h-[92svh] flex-col rounded-t-2xl overflow-y-auto overscroll-contain pt-4'
+    ? 'flex h-[92svh] flex-col rounded-t-2xl overflow-y-auto pt-4'
     : 'flex w-full max-w-sm flex-col';
 
   const open = Boolean(editingNode);

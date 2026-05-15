@@ -130,7 +130,7 @@ export function RoomJourney({ palaceId, roomId, roomTitle, palaceTitle, mode, no
       </header>
 
       {}
-      <main className="flex flex-1 items-start justify-center overflow-y-auto overscroll-contain px-4 py-6 sm:items-center sm:px-6 sm:py-10">
+      <main className="flex flex-1 items-start justify-center overflow-y-auto px-4 py-6 sm:items-center sm:px-6 sm:py-10">
         <m.article
           key={current.id}
           drag={swipe.drag}

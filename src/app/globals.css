@@ -205,12 +205,6 @@
 }
 
 @layer base {
-  html,
-  body {
-    height: 100%;
-    overflow: hidden;
-    overscroll-behavior: none;
-  }
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 5.5rem;
@@ -229,26 +223,8 @@
     }
   }
 
-  @media (display-mode: standalone) {
-    html,
-    body {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      overflow: hidden;
-      overscroll-behavior: none;
-    }
-  }
-
   body[data-scroll-locked] {
-    --removed-body-scroll-bar-size: 0px;
-    margin-right: 0 !important;
-    padding-right: 0 !important;
-  }
-
-  body[data-scroll-locked] main {
-    overflow: hidden !important;
-    overscroll-behavior: contain;
+    overflow: hidden;
   }
 }
 
