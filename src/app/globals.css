@@ -225,6 +225,40 @@
     }
   }
 
+  /*
+   * PWA standalone hardening.
+   * Without `position: fixed` on html/body, iOS Safari in standalone mode
+   * lets the document element rubber-band scroll for ~1s after launch
+   * (until the inner React tree mounts), revealing the background as
+   * white space. Pinning both roots removes the bounce entirely while
+   * delegating scroll to the inner `<main>` container.
+   */
+  @media (display-mode: standalone) {
+    html,
+    body {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      overflow: hidden;
+      overscroll-behavior: none;
+    }
+  }
+
+  /*
+   * Neutralise react-remove-scroll's scrollbar-gutter compensation.
+   * Radix Dialog (CommandPalette, etc.) sets `data-scroll-locked` and
+   * injects inline padding/margin on <body> equal to
+   * `--removed-body-scroll-bar-size`. Our body is already overflow:hidden
+   * so no real gutter exists, but iOS standalone occasionally reports a
+   * non-zero width — producing a white strip on the right while the
+   * dialog is open. Force the gutter to zero.
+   */
+  body[data-scroll-locked] {
+    --removed-body-scroll-bar-size: 0px;
+    margin-right: 0 !important;
+    padding-right: 0 !important;
+  }
+
   body[data-scroll-locked] main {
     overflow: hidden !important;
     overscroll-behavior: contain;

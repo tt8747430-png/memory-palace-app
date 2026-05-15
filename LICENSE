@@ -19,3 +19,19 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+Role: Principal UI Architect & Frontend and Mobile Apps PWA apps Expert Context: Next.js 16.2.4, React 19.2.5. Tailwind v4 Goal: you dont overengineer but use best practices, you dont care about
+backwards compatibility but make a comprehensive refactoring. Use /find-docs and /context7-mcp when serching for information.
+
+Task: how to fix the bug with the because the scrollbar when the page is opened as PWA is enabled so the page can be scrolled how much you want, but after one second it gets blocked by the onfiguration for PWA apps and remaind like this with this white space. . in the web version this bug is not present because the scrolling is enabled and there is no such bug. the same happens when opening the command pallete, as you can see in the attached screenshot.
+
+info:
+
+1. Fixes nav bar tailwind css https://www.geeksforgeeks.org/css/tailwind-css-fixed-navbar/
+2. Overscroll behaviour https://www.geeksforgeeks.org/css/tailwind-css-overscroll-behavior/
+3. Overflow behaviour https://www.geeksforgeeks.org/css/tailwind-css-overflow
+4. and also we dont have a manifest.json. do we need it? - see https://learn.microsoft.com/en-us/microsoft-edge/progressive-web-apps/how-to/
+5. other best practices - https://web.dev/articles/pwa-checklist
+6. What about motion sensor api - https://brainhub.eu/library/pwa-on-ios
+   use relevant skills like /code-review-excellence /best-practices /requesting-code-review /code-architect /code-reviewer /refactor-cleaner /typescript-reviewer /typescript-magician
+   /workflow-orchestrator
