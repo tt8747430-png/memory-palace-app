@@ -79,5 +79,12 @@ test.describe('PWA iOS scroll bug — iPhone 14 Pro (402x874)', () => {
     const maxScrollTop = await main.evaluate((el) => el.scrollHeight - el.clientHeight);
     const afterScroll = await main.evaluate((el) => el.scrollTop);
     expect(afterScroll).toBeLessThanOrEqual(Math.max(0, maxScrollTop));
+
+    const mainBottom = await main.evaluate(
+      (el) => el.getBoundingClientRect().top + el.clientHeight,
+    );
+    if (navBoxAfter) {
+      expect(Math.round(mainBottom)).toBe(Math.round(navBoxAfter.y));
+    }
   });
 });
