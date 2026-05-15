@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
+import { useBodyScrollLock } from '@/shared/hooks/useBodyScrollLock';
 
 interface CommandPaletteContextValue {
   open: boolean;
@@ -15,6 +16,8 @@ export function CommandPaletteProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const openPalette = useCallback(() => setOpen(true), []);
   const closePalette = useCallback(() => setOpen(false), []);
+
+  useBodyScrollLock(open);
   const value = useMemo<CommandPaletteContextValue>(
     () => ({ open, setOpen, openPalette, closePalette }),
     [open, openPalette, closePalette],

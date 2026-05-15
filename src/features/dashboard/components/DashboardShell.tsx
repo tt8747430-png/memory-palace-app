@@ -26,7 +26,7 @@ export function DashboardShell({ children, userProfile }: DashboardShellProps) {
 
   return (
     <AppCommandProvider>
-      <div className="flex h-dvh flex-col md:flex-row">
+      <div className="flex h-svh flex-col md:flex-row">
         <aside
           className={cn(
             'hidden md:flex md:flex-col md:border-r md:border-sidebar-border md:bg-sidebar',
@@ -51,7 +51,7 @@ export function DashboardShell({ children, userProfile }: DashboardShellProps) {
 
         <main
           id="main-content"
-          className="flex-1 overflow-y-auto pt-[calc(env(safe-area-inset-top)+var(--height-top-bar))] md:pt-0"
+          className="flex-1 overflow-y-auto overscroll-contain pt-[calc(env(safe-area-inset-top)+var(--height-top-bar))] md:pt-0"
         >
           <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</div>
         </main>

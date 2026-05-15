@@ -95,7 +95,7 @@ export const viewport: Viewport = {
 async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   const nonce = (await headers()).get('x-nonce') ?? '';
   return (
-    <html lang="en" suppressHydrationWarning nonce={nonce}>
+    <html lang="en" suppressHydrationWarning nonce={nonce} data-scroll-behavior="smooth">
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${instrumentSerif.variable} ${barlow.variable} antialiased`}
       >

@@ -206,20 +206,21 @@
 }
 
 @layer base {
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
   html {
     scroll-behavior: smooth;
-
     scroll-padding-top: 5.5rem;
-
-    overscroll-behavior-x: none;
-
     touch-action: pan-x pan-y;
   }
   body {
     background-color: var(--background);
     color: var(--foreground);
     font-family: var(--font-sans), system-ui, sans-serif;
-
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -229,10 +230,14 @@
     }
   }
 
+  body[data-scroll-locked] main {
+    overflow: hidden !important;
+    overscroll-behavior: contain;
+  }
+
   @media (display-mode: standalone) {
     html,
     body {
-      overscroll-behavior: none;
       -webkit-touch-callout: none;
     }
     body {
