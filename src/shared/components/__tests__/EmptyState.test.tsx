@@ -29,6 +29,7 @@ describe('EmptyState', () => {
       <EmptyState
         title="No palaces"
         action={
+          // eslint-disable-next-line @next/next/no-html-link-for-pages -- plain anchor under test, not a real route
           <a href="/palace/new" data-testid="cta">
             Create palace
           </a>
