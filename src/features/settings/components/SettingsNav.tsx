@@ -43,32 +43,34 @@ export function SettingsNav() {
   const pathname = usePathname();
   return (
     <nav aria-label="Settings sections">
-      {}
-      <ul className="-mx-4 flex gap-1.5 overflow-x-auto px-4 pb-2 lg:hidden sm:-mx-6 sm:px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {SETTINGS_SECTIONS.map(({ href, label, Icon }) => {
-          const active = pathname === href || pathname.startsWith(`${href}/`);
-          return (
-            <li key={href} className="shrink-0">
-              <Link
-                href={href}
-                aria-current={active ? 'page' : undefined}
-                className={cn(
-                  'inline-flex min-h-touch items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-                  active
-                    ? 'border-primary/40 bg-primary/10 text-foreground'
-                    : 'border-border/60 text-muted-foreground hover:bg-muted hover:text-foreground',
-                )}
-              >
-                <Icon className="h-4 w-4" aria-hidden />
-                {label}
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
+      {/* Mobile: compact horizontally-scrollable pill row */}
+      <div className="-mx-4 overflow-x-auto pb-1 lg:hidden sm:-mx-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <ul className="flex w-max gap-1.5 px-4 sm:px-6">
+          {SETTINGS_SECTIONS.map(({ href, label, Icon }) => {
+            const active = pathname === href || pathname.startsWith(`${href}/`);
+            return (
+              <li key={href}>
+                <Link
+                  href={href}
+                  aria-current={active ? 'page' : undefined}
+                  className={cn(
+                    'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-medium transition-colors',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                    active
+                      ? 'border-primary/40 bg-primary/10 text-foreground'
+                      : 'border-border/60 text-muted-foreground hover:bg-muted hover:text-foreground',
+                  )}
+                >
+                  <Icon className="h-3.5 w-3.5" aria-hidden />
+                  {label}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
 
-      {}
+      {/* Desktop: vertical list */}
       <ul className="hidden flex-col gap-1 lg:flex">
         {SETTINGS_SECTIONS.map(({ href, label, description, Icon }) => {
           const active = pathname === href || pathname.startsWith(`${href}/`);
