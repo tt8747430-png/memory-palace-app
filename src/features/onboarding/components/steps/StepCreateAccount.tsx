@@ -1,6 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
+import Link from 'next/link';
 import { Button, Input, Label, PasswordInput } from '@/ui';
 import { createWizardAccount, type WizardAccountState } from '../../actions/createWizardAccount';
 import {
@@ -94,9 +95,9 @@ export function StepCreateAccount({ onSuccess }: StepCreateAccountProps) {
 
       <p className={`text-center text-xs ${onboardingMutedTextClass}`}>
         Already have an account?{' '}
-        <a href="/login" className={onboardingLinkClass}>
+        <Link href="/login" className={onboardingLinkClass}>
           Log in
-        </a>
+        </Link>
       </p>
     </div>
   );

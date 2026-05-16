@@ -6,9 +6,11 @@ import { MotionProvider } from '@/shared/components/MotionProvider';
 import { ThemeProvider } from '@/shared/components/ThemeProvider';
 import { SkipToContent } from '@/shared/components/SkipToContent';
 import { StandaloneGestureGuard } from '@/shared/components/StandaloneGestureGuard';
+import { ServiceWorkerRegistrar } from '@/shared/components/ServiceWorkerRegistrar';
 import { PostHogProvider } from '@/shared/components/PostHogProvider';
 import { Toaster } from '@/shared/components/Toaster';
 import { siteUrl } from '@/shared/lib/env';
+import { SPLASH_LINKS } from './_splash-sizes';
 import './globals.css';
 
 const geistSans = Geist({
@@ -89,18 +91,25 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: 'cover',
-  interactiveWidget: 'resizes-content',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#0a0a0f' },
+  ],
 };
 
 async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   const nonce = (await headers()).get('x-nonce') ?? '';
   return (
-    <html lang="en" suppressHydrationWarning nonce={nonce}>
+    <html lang="en" suppressHydrationWarning nonce={nonce} data-scroll-behavior="smooth">
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${instrumentSerif.variable} ${barlow.variable} antialiased`}
       >
+        {SPLASH_LINKS.map(({ href, media }) => (
+          <link key={href} rel="apple-touch-startup-image" href={href} media={media} />
+        ))}
         <SkipToContent />
         <StandaloneGestureGuard />
+        <ServiceWorkerRegistrar />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

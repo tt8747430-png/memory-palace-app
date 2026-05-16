@@ -56,6 +56,7 @@ export function CommandPalette() {
 
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const searchAbortRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!searchFn || deferredQuery.trim().length === 0) return;
@@ -112,8 +113,12 @@ export function CommandPalette() {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
+        onOpenAutoFocus={(event) => {
+          event.preventDefault();
+          requestAnimationFrame(() => inputRef.current?.focus({ preventScroll: true }));
+        }}
         className={[
-          'inset-x-3 bottom-auto top-[max(env(safe-area-inset-top),1rem)] w-auto max-h-[80dvh]',
+          'inset-x-3 bottom-auto top-4 w-auto max-h-[80dvh]',
           'overflow-hidden rounded-2xl border bg-background p-0 shadow-2xl',
           'data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top',
 
@@ -134,8 +139,8 @@ export function CommandPalette() {
           className="**:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:font-medium **:[[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 **:[[cmdk-input]]:h-12 **:[[cmdk-item]]:px-2 **:[[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5"
         >
           <CommandInput
+            ref={inputRef}
             placeholder="Type a command or search…"
-            autoFocus
             value={inputValue}
             onValueChange={setInputValue}
           />

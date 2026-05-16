@@ -66,8 +66,8 @@ export function KpiTile({
       </div>
 
       <div className="mt-3 flex items-end justify-between gap-3">
-        <div>
-          <p className="text-3xl font-bold tabular-nums sm:text-4xl">{value}</p>
+        <div className="min-w-0">
+          <p className="text-2xl font-bold tabular-nums sm:text-3xl lg:text-4xl">{value}</p>
           {caption ? <p className="mt-0.5 text-xs text-muted-foreground">{caption}</p> : null}
         </div>
         {spark ? <div className={cn('shrink-0', TONE_RING[tone])}>{spark}</div> : null}
@@ -82,7 +82,7 @@ export function KpiTile({
   );
 
   const shell = cn(
-    'group flex flex-col justify-between rounded-2xl border bg-card p-4 shadow-sm transition-all sm:p-5',
+    'group flex flex-col justify-between rounded-2xl border bg-card p-3 shadow-sm transition-all sm:p-4 lg:p-5',
     href &&
       'hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md motion-reduce:hover:translate-y-0',
     className,

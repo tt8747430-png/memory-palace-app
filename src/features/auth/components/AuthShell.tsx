@@ -77,7 +77,7 @@ export function AuthShell({
   footer,
 }: AuthShellProps) {
   return (
-    <main className="flex min-h-dvh w-full lg:h-full">
+    <main className="flex min-h-svh w-full lg:h-full">
       <aside className="relative hidden h-full w-[52%] flex-col items-center justify-end overflow-hidden rounded-3xl px-12 pb-32 shadow-2xl lg:flex">
         <CinematicBackground />
 

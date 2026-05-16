@@ -55,7 +55,7 @@ export function DialogContent({
         }}
         className={cn(
           'fixed inset-x-0 bottom-0 z-50 w-full max-h-[92dvh] overflow-y-auto',
-          'rounded-t-2xl border-x-0 border-b-0 border-t bg-background pb-[max(1.5rem,env(safe-area-inset-bottom))] pl-6 pr-6 pt-3 shadow-2xl',
+          'rounded-t-2xl border-x-0 border-b-0 border-t bg-background pb-6 pl-6 pr-6 pt-3 shadow-2xl',
           'data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom',
 
           'sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-h-[85dvh] sm:w-full sm:max-w-lg sm:-translate-x-1/2 sm:-translate-y-1/2',

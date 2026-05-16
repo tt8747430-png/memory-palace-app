@@ -149,7 +149,7 @@ export function StatisticsPanel({ stats }: Props) {
             stats.weakestNodes.map((node) => (
               <Link
                 key={node.id}
-                href={`/practice/${node.id}`}
+                href={`/practice?roomId=${node.roomId}`}
                 className="flex items-center justify-between rounded-lg border px-3 py-2 transition-colors hover:bg-muted/50"
               >
                 <span className="truncate font-medium">{node.title}</span>

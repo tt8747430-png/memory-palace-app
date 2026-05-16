@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Button, Sheet, SheetContent, SheetTitle, SheetDescription, SheetTrigger } from '@/ui';
 import { Menu } from 'lucide-react';
+import { useBodyScrollLock } from '@/shared/hooks/useBodyScrollLock';
 import { Sidebar } from './Sidebar';
 
 interface UserProfile {
@@ -17,6 +18,7 @@ interface MobileDrawerProps {
 
 export function MobileDrawer({ userProfile }: MobileDrawerProps) {
   const [open, setOpen] = useState(false);
+  useBodyScrollLock(open);
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -31,6 +33,7 @@ export function MobileDrawer({ userProfile }: MobileDrawerProps) {
       </SheetTrigger>
       <SheetContent
         side="left"
+        onOpenAutoFocus={(event) => event.preventDefault()}
         className="w-[18rem] max-w-[85vw] border-r border-sidebar-border bg-sidebar p-0"
       >
         <SheetTitle className="sr-only">Navigation menu</SheetTitle>

@@ -45,7 +45,7 @@ export function PracticePicker({ due }: Props) {
               {node.palaceTitle} · {node.roomTitle} · {Math.round(node.mastery)}% mastery
             </p>
           </div>
-          <Link href={`/practice/${node.id}`} prefetch className="shrink-0">
+          <Link href={`/practice?roomId=${node.roomId}`} prefetch className="shrink-0">
             <Button size="md" variant="outline" className="min-h-touch">
               Quiz <ChevronRight className="ml-1 h-4 w-4" />
             </Button>

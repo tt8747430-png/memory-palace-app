@@ -19,3 +19,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+Role: Principal UI Architect & Frontend and Mobile Apps PWA apps Expert Context: Next.js 16.2.4, React 19.2.5. Tailwind v4 Goal: you dont overengineer but use best practices, you dont care about
+backwards compatibility but make a comprehensive refactoring. Use /find-docs and /context7-mcp when serching for information.
+
+Task: check out how tall this toolbar at the bottom is and make our the same height. '/Users/kristianbraila/Downloads/Untitled/Tab Bar.png'

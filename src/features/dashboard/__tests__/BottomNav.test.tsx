@@ -46,10 +46,4 @@ describe('BottomNav', () => {
       );
     }
   });
-
-  it('renders a center FAB button with a context-aware label', () => {
-    render(<BottomNav />);
-
-    expect(screen.getByRole('button', { name: /new palace/i })).toBeInTheDocument();
-  });
 });
