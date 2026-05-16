@@ -57,7 +57,7 @@ export function DashboardShell({ children, userProfile }: DashboardShellProps) {
         </main>
 
         <nav
-          className="pointer-events-none fixed inset-x-0 bottom-0 z-50 px-3 pb-[calc(0.625rem+env(safe-area-inset-bottom))] md:hidden"
+          className="pointer-events-none fixed inset-x-0 bottom-0 z-50 px-3 pb-2.5 md:hidden"
           aria-label="Bottom navigation"
         >
           <div className="pointer-events-auto">
