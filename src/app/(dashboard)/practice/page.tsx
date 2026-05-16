@@ -25,7 +25,7 @@ export default async function PracticePage({ searchParams }: PageProps) {
     const palacesResult = await getPalaces();
     const palaces = palacesResult.success ? palacesResult.data : [];
     return (
-      <div className="space-y-6 pb-14 md:pb-0">
+      <div className="space-y-6 pb-16 md:pb-0">
         <header>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Practice</h1>
           <p className="mt-1 text-sm text-muted-foreground">

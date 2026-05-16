@@ -148,7 +148,7 @@ export function QuizSession({ nodes, initialMode = 'multiple-choice' }: Props) {
   }
 
   return (
-    <div className="space-y-4 pb-14 md:pb-0">
+    <div className="space-y-4 pb-16 md:pb-0">
       <header className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
         <span className="shrink-0 tabular-nums">
           Question {index + 1} of {nodes.length}
@@ -204,7 +204,7 @@ export function QuizSession({ nodes, initialMode = 'multiple-choice' }: Props) {
       </div>
 
       {}
-      <div className="sticky bottom-14 -mx-4 space-y-3 border-t bg-background/95 px-4 pt-3 pb-3 backdrop-blur supports-backdrop-filter:bg-background/75 sm:-mx-6 sm:px-6 md:static md:mx-0 md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none">
+      <div className="sticky bottom-16 -mx-4 space-y-3 border-t bg-background/95 px-4 pt-3 pb-3 backdrop-blur supports-backdrop-filter:bg-background/75 sm:-mx-6 sm:px-6 md:static md:mx-0 md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none">
         {question.mode === 'multiple-choice' ? (
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             {question.options.map((option, i) => {
