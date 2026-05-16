@@ -13,7 +13,6 @@ interface Props {
   recentPalaces: RecentPalace[];
   dueCount: number;
   topStreak: number;
-  weeklyActivity: number[];
   mastery: { mastered: number; total: number };
 }
 
@@ -23,7 +22,6 @@ export function DashboardOverview({
   recentPalaces,
   dueCount,
   topStreak,
-  weeklyActivity,
   mastery,
 }: Props) {
   return (
@@ -37,7 +35,6 @@ export function DashboardOverview({
         masteredCount={mastery.mastered}
         totalNodes={mastery.total}
         topStreak={topStreak}
-        weeklyActivity={weeklyActivity}
       />
 
       <RecentPalacesPanel palaces={recentPalaces} />

@@ -39,7 +39,6 @@ async function DashboardData() {
       recentPalaces={recentPalaces}
       dueCount={dueCount}
       topStreak={practice?.topStreak ?? 0}
-      weeklyActivity={practice?.weeklyActivity ?? Array.from({ length: 7 }, () => 0)}
       mastery={{
         mastered: practice?.mastery.mastered ?? 0,
         total: practice?.mastery.total ?? 0,

@@ -1,6 +1,5 @@
 import { Building2, BrainCircuit, DoorOpen, Flame } from 'lucide-react';
 import { KpiTile } from '@/shared/components/KpiTile';
-import { Sparkline } from '@/shared/components/Sparkline';
 
 interface DashboardKpiRowProps {
   palaceCount: number;
@@ -9,7 +8,6 @@ interface DashboardKpiRowProps {
   masteredCount: number;
   totalNodes: number;
   topStreak: number;
-  weeklyActivity: number[];
 }
 
 export function DashboardKpiRow({
@@ -19,7 +17,6 @@ export function DashboardKpiRow({
   masteredCount,
   totalNodes,
   topStreak,
-  weeklyActivity,
 }: DashboardKpiRowProps) {
   const masteryPct = totalNodes > 0 ? Math.round((masteredCount / totalNodes) * 100) : 0;
   return (
@@ -43,11 +40,6 @@ export function DashboardKpiRow({
         tone="primary"
         value={nodeCount}
         caption={totalNodes > 0 ? `${masteryPct}% mastered` : 'practice to start mastery'}
-        spark={
-          weeklyActivity.length >= 2 ? (
-            <Sparkline values={weeklyActivity} width={96} height={28} fill />
-          ) : undefined
-        }
       />
       <KpiTile
         label="Streak"
