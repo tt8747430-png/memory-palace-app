@@ -65,7 +65,7 @@ export function RoomJourney({ palaceId, roomId, roomTitle, palaceTitle, mode, no
 
   if (!current) {
     return (
-      <div className="-mx-4 -my-6 flex min-h-[calc(100svh-6.125rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] flex-col items-center justify-center gap-4 p-8 text-center sm:-mx-6 md:min-h-svh lg:-mx-8">
+      <div className="-mx-4 -my-6 flex min-h-[calc(100svh-8.5rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] flex-col items-center justify-center gap-4 p-8 text-center sm:-mx-6 md:min-h-svh lg:-mx-8">
         <h1 className="text-2xl font-semibold">{roomTitle}</h1>
         <p className="text-muted-foreground">This room has no nodes yet.</p>
         <Link
@@ -85,7 +85,7 @@ export function RoomJourney({ palaceId, roomId, roomTitle, palaceTitle, mode, no
   const progress = total > 0 ? ((index + 1) / total) * 100 : 0;
 
   return (
-    <div className="-mx-4 -my-6 flex h-[calc(100svh-6.125rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] flex-col bg-background sm:-mx-6 md:h-svh lg:-mx-8">
+    <div className="-mx-4 -my-6 flex h-[calc(100svh-8.5rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] flex-col bg-background sm:-mx-6 md:h-svh lg:-mx-8">
       {}
       <header className="sticky top-0 z-20 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/75">
         <div className="flex items-center justify-between gap-3 px-4 py-2.5 sm:px-6">
