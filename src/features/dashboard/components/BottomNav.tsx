@@ -13,7 +13,7 @@ export function BottomNav() {
     <div
       data-testid="bottom-nav-pill"
       className={cn(
-        'mx-auto flex h-[3.25rem] max-w-sm items-stretch gap-1 rounded-full px-1.5',
+        'mx-auto flex h-14 max-w-sm items-stretch gap-1 rounded-full px-1.5',
         'border border-border/40 bg-background/65 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.25)]',
         'supports-[backdrop-filter]:bg-background/40 supports-[backdrop-filter]:backdrop-blur-2xl',
         'supports-[backdrop-filter]:backdrop-saturate-150',
