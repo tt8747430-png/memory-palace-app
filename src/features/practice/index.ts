@@ -9,6 +9,10 @@ export type { QuestionContext } from './actions/getQuestionContext';
 
 export { PracticePicker } from './components/PracticePicker';
 export { FlashcardDeck } from './components/FlashcardDeck';
+export { PracticeSwipePicker } from './components/PracticeSwipePicker';
+
+export { usePracticePreferences, SWIPE_ACTIONS } from './usePracticePreferences';
+export type { SwipeAction, PracticePreferences } from './usePracticePreferences';
 
 export { getDueNodesSchema, recordPracticeSchema, PRACTICE_MODES } from './schemas/practice';
 export type { GetDueNodesInput, RecordPracticeInput } from './schemas/practice';

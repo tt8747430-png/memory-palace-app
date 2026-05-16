@@ -8,6 +8,7 @@ import { Button, toast } from '@/ui';
 import { recordPractice } from '@/features/practice';
 import type { DueNodeWithMeta } from '@/features/practice';
 import { SwipeableFlashcard } from './SwipeableFlashcard';
+import { usePracticePreferences, type SwipeAction } from '../usePracticePreferences';
 
 type Quality = 'again' | 'hard' | 'good' | 'easy';
 
@@ -18,12 +19,21 @@ const QUALITY_TO_SCORE: Record<Quality, { score: number; correct: boolean }> = {
   easy: { score: 100, correct: true },
 };
 
+const SWIPE_LABELS: Record<SwipeAction, string> = {
+  again: 'Forgot',
+  hard: 'Hard',
+  good: 'Got it',
+  easy: 'Easy',
+  skip: 'Skip',
+};
+
 interface Props {
   nodes: DueNodeWithMeta[];
 }
 
 export function FlashcardDeck({ nodes }: Props) {
   const router = useRouter();
+  const { preferences } = usePracticePreferences();
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const current = nodes[index];
@@ -35,6 +45,11 @@ export function FlashcardDeck({ nodes }: Props) {
   const back = () => {
     setFlipped(false);
     setIndex((i) => Math.max(i - 1, 0));
+  };
+  const restart = () => {
+    setFlipped(false);
+    setIndex(0);
+    router.refresh();
   };
 
   useEffect(() => {
@@ -74,6 +89,14 @@ export function FlashcardDeck({ nodes }: Props) {
     advance();
   }
 
+  function runSwipeAction(action: SwipeAction): void {
+    if (action === 'skip') {
+      advance();
+      return;
+    }
+    void rate(action);
+  }
+
   if (nodes.length === 0) {
     return (
       <div className="-mx-4 -my-6 flex min-h-[calc(100svh-6.125rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] flex-col items-center justify-center gap-3 p-8 text-center sm:-mx-6 md:min-h-svh lg:-mx-8">
@@ -99,14 +122,14 @@ export function FlashcardDeck({ nodes }: Props) {
           You&apos;ve reviewed every card in this set. Come back later for the next round.
         </p>
         <div className="flex justify-center gap-2">
-          <Button variant="outline" onClick={() => router.refresh()}>
+          <Button variant="outline" onClick={restart}>
             Reload deck
           </Button>
           <Link
-            href="/dashboard"
+            href="/palaces"
             className="inline-flex items-center gap-1 rounded-md border px-3 py-2 text-sm hover:bg-muted"
           >
-            Back to dashboard
+            Back to palaces
           </Link>
         </div>
       </div>
@@ -127,7 +150,7 @@ export function FlashcardDeck({ nodes }: Props) {
             {current.palaceTitle} · {current.roomTitle}
           </span>
           <Link
-            href="/dashboard"
+            href="/palaces"
             aria-label="Exit deck"
             className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
           >
@@ -154,8 +177,10 @@ export function FlashcardDeck({ nodes }: Props) {
           cardKey={current.id}
           flipped={flipped}
           onToggleFlip={() => setFlipped((f) => !f)}
-          onSwipeLeft={() => (flipped ? void rate('again') : back())}
-          onSwipeRight={() => (flipped ? void rate('good') : advance())}
+          onSwipeLeft={() => runSwipeAction(preferences.swipeLeft)}
+          onSwipeRight={() => runSwipeAction(preferences.swipeRight)}
+          leftLabel={SWIPE_LABELS[preferences.swipeLeft]}
+          rightLabel={SWIPE_LABELS[preferences.swipeRight]}
           front={
             <>
               <p className="text-xs uppercase tracking-wider text-muted-foreground">

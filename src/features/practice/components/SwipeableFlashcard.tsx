@@ -12,6 +12,8 @@ export interface SwipeableFlashcardProps {
   onToggleFlip: () => void;
   onSwipeLeft: () => void;
   onSwipeRight: () => void;
+  leftLabel?: string;
+  rightLabel?: string;
   className?: string;
   swipeThreshold?: number;
 }
@@ -27,6 +29,8 @@ export function SwipeableFlashcard({
   onToggleFlip,
   onSwipeLeft,
   onSwipeRight,
+  leftLabel = 'Forgot',
+  rightLabel = 'Got it',
   className,
   swipeThreshold = DEFAULT_THRESHOLD,
 }: SwipeableFlashcardProps): ReactNode {
@@ -77,14 +81,14 @@ export function SwipeableFlashcard({
         style={{ opacity: leftOpacity }}
         className="pointer-events-none absolute left-3 top-3 z-10 rounded-full border border-destructive/40 bg-destructive-soft px-3 py-1 text-xs font-semibold uppercase tracking-wider text-destructive"
       >
-        Forgot
+        {leftLabel}
       </m.span>
       <m.span
         aria-hidden
         style={{ opacity: rightOpacity }}
         className="pointer-events-none absolute right-3 top-3 z-10 rounded-full border border-success/40 bg-success-soft px-3 py-1 text-xs font-semibold uppercase tracking-wider text-success"
       >
-        Got it
+        {rightLabel}
       </m.span>
 
       <m.div

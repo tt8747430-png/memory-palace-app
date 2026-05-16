@@ -138,10 +138,10 @@ export function QuizSession({ nodes, initialMode = 'multiple-choice' }: Props) {
           You have no nodes due for review right now.
         </p>
         <Link
-          href="/dashboard"
+          href="/palaces"
           className="mt-4 inline-flex items-center gap-1 text-sm text-primary hover:underline"
         >
-          Back to dashboard
+          Back to palaces
         </Link>
       </div>
     );
