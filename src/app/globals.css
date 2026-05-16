@@ -189,6 +189,8 @@
   html {
     scroll-behavior: smooth;
     touch-action: pan-x pan-y;
+    background-color: var(--background);
+    overscroll-behavior: none;
   }
   body {
     background-color: var(--background);
@@ -198,6 +200,7 @@
     user-select: none;
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: transparent;
+    overscroll-behavior: none;
   }
   input,
   textarea,
